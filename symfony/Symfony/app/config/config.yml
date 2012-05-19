@@ -98,7 +98,7 @@ fos_user:
 doctrine_mongodb:
     connections:
         default:
-            server:   mongodb://codebender:CODEb3nd3r!@ds031847.mongolab.com:31847/codebender
+            server:  %database.mongo% 
             options:
                 connect: true
     default_database: codebender
