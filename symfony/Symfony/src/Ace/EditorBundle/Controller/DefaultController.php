@@ -15,8 +15,8 @@ class DefaultController extends Controller
 {
     public $default_file = "default_text.txt";
 	public $directory = "/var/www/aceduino/symfony/files/";
-	public $examples_directory = "/var/www/aceduino/symfony/examples/";
-	public $libs_directory = "/var/www/aceduino/symfony/libraries/";
+	public $examples_directory = "/var/www/aceduino/symfony/files/examples/";
+	public $libs_directory = "/var/www/aceduino/symfony/files/libraries/";
     public function indexAction()
     {
 		// if($name == "tzikis")
