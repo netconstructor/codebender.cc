@@ -98,10 +98,10 @@ fos_user:
 doctrine_mongodb:
     connections:
         default:
-            server:  %database.mongo% 
+            server:  %mongo.uri% 
             options:
                 connect: true
-    default_database: codebender
+    default_database: %mongo.dbname%
     document_managers:
         default:
             auto_mapping: true
