@@ -1,0 +1,19 @@
+AceMiscBundle_about:
+    pattern:  /about
+    defaults: { _controller: AceMiscBundle:Default:about }
+
+AceMiscBundle_team:
+    pattern:  /team
+    defaults: { _controller: AceMiscBundle:Default:team }
+
+AceMiscBundle_blog:
+    pattern:  /blog
+    defaults: { _controller: AceMiscBundle:Default:blog }
+
+AceMiscBundle_blognew:
+    pattern:  /blog/new
+    defaults: { _controller: AceMiscBundle:Default:blog_new }
+
+AceMiscBundle_tutorials:
+    pattern:  /tutorials
+    defaults: { _controller: AceMiscBundle:Default:tutorials }

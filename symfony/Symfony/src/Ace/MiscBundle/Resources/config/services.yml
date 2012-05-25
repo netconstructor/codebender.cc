@@ -1,0 +1,7 @@
+parameters:
+#    ace_misc.example.class: Ace\MiscBundle\Example
+
+services:
+#    ace_misc.example:
+#        class: %ace_misc.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

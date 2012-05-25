@@ -1,3 +1,7 @@
+AceMiscBundle:
+    resource: "@AceMiscBundle/Resources/config/routing.yml"
+    prefix:   /misc
+
 AceFileBundle:
     resource: "@AceFileBundle/Resources/config/routing.yml"
     prefix:   /

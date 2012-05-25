@@ -1,0 +1,18 @@
+{% extends 'AceEditorBundle:Default:container.html.twig' %}
+{% block title "About Codebender" %}
+{% block mainspan %}
+<div class="page-header">
+  <h1>ze blog<small> our latest news</small></h1>
+</div>
+
+{% for i in posts %}
+<div class="row-fluid">
+	<div class="span12">
+		<h3>{{ i.title }}</h3>
+		<p>{{ i.description|raw }}</p>
+	</div>
+</div>
+{% endfor %}
+
+{% endblock %}
+

@@ -3,6 +3,38 @@
   <p>{{ site_name }} allows you to code on the web, using an awesome HTML editor, faster and easier than you ever did before. With advanced code indentation, syntax highlighting, and compilation error reporting, its goal is to be the best Arduino editor in the world. Give it a try. Join the cloud today.</p>
   <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
+
+{% if is_granted('ROLE_USER') %}
+{% else %}
+<div id="myCarousel" class="carousel slide well span9">
+            <div class="carousel-inner">
+              <div class="item">
+                <img src="http://twitter.github.com/bootstrap/assets/img/bootstrap-mdo-sfmoma-01.jpg" alt="">
+                <div class="carousel-caption">
+                  <h4>First Thumbnail label</h4>
+                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+              </div>
+              <div class="item active">
+                <img src="http://twitter.github.com/bootstrap/assets/img/bootstrap-mdo-sfmoma-02.jpg" alt="">
+                <div class="carousel-caption">
+                  <h4>Second Thumbnail label</h4>
+                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+              </div>
+              <div class="item">
+                <img src="http://twitter.github.com/bootstrap/assets/img/bootstrap-mdo-sfmoma-03.jpg" alt="">
+                <div class="carousel-caption">
+                  <h4>Third Thumbnail label</h4>
+                  <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                </div>
+              </div>
+            </div>
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
+</div>
+{% endif %}
+
 <div class="row-fluid">
   <div class="span4">
     <h2>Code</h2>
