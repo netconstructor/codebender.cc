@@ -85,6 +85,11 @@ security:
             logout:
                 path: /logout
             anonymous:    true
+            remember_me:
+                    key:      mySecretKey
+                    lifetime: 604800
+                    path:     /
+                    domain:   codebender.cc
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
