@@ -91,13 +91,7 @@ class DefaultController extends Controller
 
     public function blog_newAction()
     {
-		$text2 = "This is codebender calling.
-		And we are a-live! 
-		Given this is our first post, we are all very excited to reach a point were we are live, stable, and feature-rich. At the moment, we are still working on fixing our alpha-testing bugs and completing our feature set, but we are very pleased with everything so far.
-		As far as our main functionality is concerned, we are succesfully compiling and flashing, and all that's left is to complete our functionality for all cases. For example, not all of the Arduino's bundled libraries compile at the moment and the uploader doesn't work on Windows. This is, of course, our main focus for the near future. We hope to be ready for beta testing within a few weeks, so be sure to check often for updates and news.";
-		$second = new post("Hello, world!", $text2);
-		$posts = array($second);
-       return $this->render('AceMiscBundle:Default:blog_new.html.twig', array("posts" => $posts));
+       return $this->render('AceMiscBundle:Default:blog_new.html.twig');
     }
 
     public function tutorialsAction()

@@ -1,97 +1,90 @@
 {% extends 'AceEditorBundle:Default:container.html.twig' %}
-{% block title "About Codebender" %}
+{% block title %}
+About {{ site_name }}
+{% endblock %}
 {% block mainspan %}
 <style type="text/css">
-.bs-icon
+.bs-icon, .small-bs-icon
 {
 	float: left;
 	margin: 7px 10px 0 0;
 	opacity: .8;
 }
 </style>
-Codebender is the next step to the maker revolution. Our aim is to provide all the necessary tools to help engineers and makers develop their awesome gadgets and mega-constructions.
-
-Sample about page:
-<hr class="soften">
-
+<h1>{{site_name}} <small>so what&#39;s the deal?</small></h1>
 <div class="marketing">
-  <h1>Designed for everyone, everywhere.</h1>
-  <p class="marketing-byline">Need reasons to love Bootstrap? Look no further.</p>
-  <div class="row">
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_042_group.png">
-      <h2>Built for and by nerds</h2>
-      <p>Like you, we love building awesome products on the web. We love it so much, we decided to help people just like us do it easier, better, and faster. Bootstrap is built for you.</p>
-    </div>
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_079_podium.png">
-      <h2>For all skill levels</h2>
-      <p>Bootstrap is designed to help people of all skill levels—designer or developer, huge nerd or early beginner. Use it as a complete kit or use to start something more complex.</p>
-    </div>
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_163_iphone.png">
-      <h2>Cross-everything</h2>
-      <p>Originally built with only modern browsers in mind, Bootstrap has evolved to include support for all major browsers (even IE7!) and, with Bootstrap 2, tablets and smartphones, too.</p>
-    </div>
-  </div><!--/row-->
-  <div class="row">
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_155_show_thumbnails.png">
-      <h2>12-column grid</h2>
-      <p>Grid systems aren't everything, but having a durable and flexible one at the core of your work can make development much simpler. Use our built-in grid classes or roll your own.</p>
-    </div>
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_214_resize_small.png">
-      <h2>Responsive design</h2>
-      <p>With Bootstrap 2, we've gone fully responsive. Our components are scaled according to a range of resolutions and devices to provide a consistent experience, no matter what.</p>
-    </div>
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_266_book_open.png">
-      <h2>Styleguide docs</h2>
-      <p>Unlike other front-end toolkits, Bootstrap was designed first and foremost as a styleguide to document not only our features, but best practices and living, coded examples.</p>
-    </div>
-  </div><!--/row-->
-  <div class="row">
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_082_roundabout.png">
-      <h2>Growing library</h2>
-      <p>Despite being only 10kb (gzipped), Bootstrap is one of the most complete front-end toolkits out there with dozens of fully functional components ready to be put to use.</p>
-    </div>
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_009_magic.png">
-      <h2>Custom jQuery plugins</h2>
-      <p>What good is an awesome design component without easy-to-use, proper, and extensible interactions? With Bootstrap, you get custom-built jQuery plugins to bring your projects to life.</p>
-    </div>
-    <div class="span4">
-      <img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/less-small.png">
-      <h2>Built on LESS</h2>
-      <p>Where vanilla CSS falters, LESS excels. Variables, nesting, operations, and mixins in LESS makes coding CSS faster and more efficient with minimal overhead.</p>
-    </div>
-  </div><!--/row-->
-  <div class="row">
-    <div class="span3">
-      <img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-html5.png">
-      <h3>HTML5</h3>
-      <p>Built to support new HTML5 elements and syntax.</p>
-    </div>
-    <div class="span3">
-      <img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-css3.png">
-      <h3>CSS3</h3>
-      <p>Progressively enhanced components for ultimate style.</p>
-    </div>
-    <div class="span3">
-      <img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-github.png">
-      <h3>Open-source</h3>
-      <p>Built for and maintained by the community via <a href="https://github.com">GitHub</a>.</p>
-    </div>
-    <div class="span3">
-      <img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-twitter.png">
-      <h3>Made at Twitter</h3>
-      <p>Brought to you by an experienced <a href="http://twitter.com/fat">engineer</a> and <a href="http://twitter.com/mdo">designer</a>.</p>
-    </div>
-  </div><!--/row-->
+	{{site_name}} is the next step to the maker revolution. Our aim is to provide all the necessary tools to help engineers and makers develop their awesome gadgets and mega-constructions.
 
-  <hr class="soften">
+	<hr class="soften">
+	<div class="row-fluid">
+		<div class="span4">
+		<img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_042_group.png">
+	    <h2>Code</h2>
+	    <p>{{ site_name }} uses Ace, an awesome web code editor written in pure HTML5 and Javascript, which is the best thing ever since sliced bread, at least as far as code editors go. Use it now and enjoy indentation that just works™, great syntax highlighting, auto-completion, highlighting of matching parentheses and brackets and highlighting of a selected keyword. Oh, and of course, you can't call it an editor if it doesn't have Vim and EMACS keybindings. Built-in.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_079_podium.png">
+	    <h2>Compile</h2>
+	    <p>Compile your code, on the cloud. With {{ site_name }}, you can compile your code on our servers, saving you the hassle of downloading and installing the necessary tools to compile. No more upgrading to newer versions and managing incompatible library versions. It also improves compilation times in old machines, simplifies checking for syntax errors in your program and with improved reporting on the faulty lines of code, you can find and squash bugs in no time.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="http://twitter.github.com/bootstrap/assets/img/glyphicons/glyphicons_163_iphone.png">
+	    <h2>Built-in Libraries</h2>
+	    <p>Never mind about finding, installing, and updating external libraries anymore. With {{ site_name }}, you only need to include the library you want to use, and we automatically compile it with your code. And we also take care of updating them when a new version is released. All just for you. Stop worrying about libraries, and start coding your Arduino. That autonomous space BBQ laser grill isn't going to build itself, you know.</p>
+	  </div><!--/span-->
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span4">
+	    <h2>Code</h2>
+	    <p>{{ site_name }} uses Ace, an awesome web code editor written in pure HTML5 and Javascript, which is the best thing ever since sliced bread, at least as far as code editors go. Use it now and enjoy indentation that just works™, great syntax highlighting, auto-completion, highlighting of matching parentheses and brackets and highlighting of a selected keyword. Oh, and of course, you can't call it an editor if it doesn't have Vim and EMACS keybindings. Built-in.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+	    <h2>Compile</h2>
+	    <p>Compile your code, on the cloud. With {{ site_name }}, you can compile your code on our servers, saving you the hassle of downloading and installing the necessary tools to compile. No more upgrading to newer versions and managing incompatible library versions. It also improves compilation times in old machines, simplifies checking for syntax errors in your program and with improved reporting on the faulty lines of code, you can find and squash bugs in no time.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+	    <h2>Built-in Libraries</h2>
+	    <p>Never mind about finding, installing, and updating external libraries anymore. With {{ site_name }}, you only need to include the library you want to use, and we automatically compile it with your code. And we also take care of updating them when a new version is released. All just for you. Stop worrying about libraries, and start coding your Arduino. That autonomous space BBQ laser grill isn't going to build itself, you know.</p>
+	  </div><!--/span-->
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span4">
+	    <h2>Code</h2>
+	    <p>{{ site_name }} uses Ace, an awesome web code editor written in pure HTML5 and Javascript, which is the best thing ever since sliced bread, at least as far as code editors go. Use it now and enjoy indentation that just works™, great syntax highlighting, auto-completion, highlighting of matching parentheses and brackets and highlighting of a selected keyword. Oh, and of course, you can't call it an editor if it doesn't have Vim and EMACS keybindings. Built-in.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+	    <h2>Compile</h2>
+	    <p>Compile your code, on the cloud. With {{ site_name }}, you can compile your code on our servers, saving you the hassle of downloading and installing the necessary tools to compile. No more upgrading to newer versions and managing incompatible library versions. It also improves compilation times in old machines, simplifies checking for syntax errors in your program and with improved reporting on the faulty lines of code, you can find and squash bugs in no time.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+	    <h2>Built-in Libraries</h2>
+	    <p>Never mind about finding, installing, and updating external libraries anymore. With {{ site_name }}, you only need to include the library you want to use, and we automatically compile it with your code. And we also take care of updating them when a new version is released. All just for you. Stop worrying about libraries, and start coding your Arduino. That autonomous space BBQ laser grill isn't going to build itself, you know.</p>
+	  </div><!--/span-->
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span3">
+			<img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-html5.png">
+			<h3>HTML5</h3>
+			<p>Built to support new HTML5 elements and syntax.</p>
+		</div>
+		<div class="span3">
+			<img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-css3.png">
+			<h3>CSS3</h3>
+			<p>Progressively enhanced components for ultimate style.</p>
+		</div>
+		<div class="span3">
+			<img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-github.png">
+			<h3>Open-source</h3>
+			<p>Built for and maintained by the community via <a href="https://github.com">GitHub</a>.</p>
+		</div>
+		<div class="span3">
+			<img class="small-bs-icon" src="http://twitter.github.com/bootstrap/assets/img/icon-twitter.png">
+			<h3>Made at Twitter</h3>
+			<p>Brought to you by an experienced <a href="http://twitter.com/fat">engineer</a> and <a href="http://twitter.com/mdo">designer</a>.</p>
+		</div>
+	</div><!--/row-->
+
+	<hr class="soften">
 </div>
 {% endblock %}
 

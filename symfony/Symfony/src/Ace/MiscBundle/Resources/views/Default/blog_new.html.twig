@@ -1,66 +1,9 @@
 {% extends 'AceEditorBundle:Default:container.html.twig' %}
-{% block title "About Codebender" %}
-
-{% block stylesheets %}
-<!-- Skin CSS file -->
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/assets/skins/sam/skin.css">
-{% endblock %}
-{% block javascripts %}
-<!-- Utility Dependencies -->
-<script src="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
-<script src="http://yui.yahooapis.com/2.9.0/build/element/element-min.js"></script> 
-<!-- Needed for Menus, Buttons and Overlays used in the Toolbar -->
-<script src="http://yui.yahooapis.com/2.9.0/build/container/container_core-min.js"></script>
-<script src="http://yui.yahooapis.com/2.9.0/build/menu/menu-min.js"></script>
-<script src="http://yui.yahooapis.com/2.9.0/build/button/button-min.js"></script>
-<!-- Source file for Rich Text Editor-->
-<script src="http://yui.yahooapis.com/2.9.0/build/editor/editor-min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function()
-{	
-	
-	var myEditor = new YAHOO.widget.Editor('msgpost',
-	{
-	    height: '300px',
-	    width: '100%',
-	    dompath: true, //Turns on the bar at the bottom
-	    animate: true //Animates the opening, closing and moving of Editor windows
-	});
-	myEditor.render();
-});
-</script>
-
-<script>
-$(function() {
-	$( "#accordion" ).accordion({
-		collapsible: true,
-		active: false,
-		autoHeight: false
-	});
-});
-</script>
-
-{% endblock %}
+{% block title "blog new" %}
 
 {% block mainspan %}
 <div class="page-header">
-  <h1>ze blog<small> our latest news</small></h1>
-</div>
-
-<div id="accordion">
-    <h3><a href="#">New Post</a></h3>
-	<div class="yui-skin-sam">
-		<textarea name="msgpost" id="msgpost">
-		</textarea>
-	</div>
-</div>
-
-<div id="posts">
-{% for i in posts %}
-		<h3>{{ i.title }}</h3>
-		<p>{{ i.description|raw }}</p>
-{% endfor %}
+  <h1>ze blog new<small> our latest news</small></h1>
 </div>
 
 {% endblock %}
