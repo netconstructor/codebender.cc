@@ -52,13 +52,16 @@ body
 	height:0px;
 	padding: 0px;
 	overflow-y: scroll;
-	background: white;
+/*	background: white;*/
+	backround-image: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/wp-content/themes/tweaker6/images/bgnoise.gif);
 	/*	width: 280px;*/
 	white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
 	white-space: -pre-wrap;      /* Opera 4-6 */
 	white-space: -o-pre-wrap;    /* Opera 7 */
 	white-space: pre-wrap;       /* css-3 */
 	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	text-shadow: #999999 1px 1px 1px;
+	border-width: 0px;
 }
 .btn
 {
@@ -120,7 +123,7 @@ body
 		<pre id="editor" class="span9">{% render "AceFileBundle:Default:getCode" with {'project_name': project_name} %}</pre>
 		</div>
 		<div class="row-fluid">
-		<div id="compile_output" class="span9"></div>
+			<pre id="compile_output" class="span9"></pre>
 		</div>
 	</div>	
 </div>
