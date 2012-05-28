@@ -3,6 +3,7 @@
 namespace Ace\MiscBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Ace\MiscBundle\Entity\BlogPost;
 
 class developer
