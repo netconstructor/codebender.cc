@@ -29,6 +29,8 @@
 		{
 		    height: '300px',
 		    width: '100%',
+			handleSubmit:true,
+		    ptags: true,
 		    dompath: true, //Turns on the bar at the bottom
 		    animate: true //Animates the opening, closing and moving of Editor windows
 		});
@@ -54,10 +56,12 @@
 			</a>
 		</div>
 		<div id="collapseOne" class="accordion-body collapse">
-			<div class="accordion-inner">
-				<div class="yui-skin-sam">
-					<textarea name="msgpost" id="msgpost"></textarea>
-				</div>
+			<div class="accordion-inner yui-skin-sam">
+				<form action = "{{ path('AceMiscBundle_blognew')}}">
+				Title: <input type="text" name="title" style="width:94.9%"/>
+				<textarea name="msgpost" id="msgpost"></textarea>
+				<button type="submit">New Post!</button>
+				</form>
 		</div>
 		</div>
 	</div>
@@ -69,7 +73,7 @@
 <div class="row-fluid">
 	<div class="span12">
 		<h3>{{ i.title }}</h3>
-		<p>{{ i.description|raw }}</p>
+		{{ i.text|raw }}
 	</div>
 </div>
 {% endfor %}

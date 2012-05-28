@@ -3,6 +3,7 @@
 namespace Ace\MiscBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Ace\MiscBundle\Entity\BlogPost;
 
 class developer
 {
@@ -18,37 +19,26 @@ class developer
 	}
 }
 
-class post
-{
-	public $title;
-	public $description;
-	function __construct($title, $description)
-	{
-		$this->title = $title;
-		$this->description = $description;
-	}
-}
-
 class DefaultController extends Controller
 {
 
-    public function aboutAction()
-    {
-        return $this->render('AceMiscBundle:Default:about.html.twig');
-    }
+	public function aboutAction()
+	{
+		return $this->render('AceMiscBundle:Default:about.html.twig');
+	}
 
-    public function teamAction()
-    {
-                $tzikis_name = "Vasilis Georgitzikis";
-                $tzikis_title = "teh lead";
-                $tzikis_avatar = "http://www.gravatar.com/avatar/1a6a5289ac4473b5731fa9d9a3032828?s=260";
-                $tzikis_desc = "I am a student at the Computer Engineering and Informatics Department of the University of Patras, Greece, a researcher at the Research Academic Computer Technology Institute, and an Arduino and iPhone/OSX/Cocoa developer. Basically, just a geek who likes building stuff, which is what started codebender in the first place.";
+	public function teamAction()
+	{
+		$tzikis_name = "Vasilis Georgitzikis";
+		$tzikis_title = "teh lead";
+		$tzikis_avatar = "http://www.gravatar.com/avatar/1a6a5289ac4473b5731fa9d9a3032828?s=260";
+		$tzikis_desc = "I am a student at the Computer Engineering and Informatics Department of the University of Patras, Greece, a researcher at the Research Academic Computer Technology Institute, and an Arduino and iPhone/OSX/Cocoa developer. Basically, just a geek who likes building stuff, which is what started codebender in the first place.";
 		$tzikis = new developer($tzikis_name, $tzikis_title, $tzikis_avatar, $tzikis_desc);
 
 		$tsampas_name = "Stelios Tsampas";
 		$tsampas_title = "teh crazor";
-                $tsampas_avatar = "http://secure.gravatar.com/avatar/a5eb2b494a07a39ab0eef0d10aa86c84?s=260";
-                $tsampas_desc="Yet another student at CEID. My task is to make sure to bring crazy ideas to the table and let others assess their value. I'm also responsible for the Arduino Ethernet TFTP bootloader, the only crazy idea that didn't originate from me.";
+		$tsampas_avatar = "http://secure.gravatar.com/avatar/a5eb2b494a07a39ab0eef0d10aa86c84?s=260";
+		$tsampas_desc="Yet another student at CEID. My task is to make sure to bring crazy ideas to the table and let others assess their value. I'm also responsible for the Arduino Ethernet TFTP bootloader, the only crazy idea that didn't originate from me.";
 		$tsampas = new developer($tsampas_name, $tsampas_title, $tsampas_avatar, $tsampas_desc);
 
 		$amaxilatis_name = "Dimitris Amaxilatis";
@@ -65,37 +55,53 @@ class DefaultController extends Controller
 
 		$orfanos_name = "Markellos Orfanos";
 		$orfanos_title = "teh fireman";
-                $orfanos_avatar = "http://codebender.cc/images/orfanos.jpg";
-                $orfanos_desc = "I am also (not for long I hope) a student at the Computer Engineering & Informatics Department and probably the most important person in the team. My task? Make sure everyone keeps calm and the team is having fun. And yes, I'm the one who developed our wonderful options page. Apart from that, I'm trying to graduate and some time in the future to become a full blown Gentoo developer.";
+		$orfanos_avatar = "http://codebender.cc/images/orfanos.jpg";
+		$orfanos_desc = "I am also (not for long I hope) a student at the Computer Engineering & Informatics Department and probably the most important person in the team. My task? Make sure everyone keeps calm and the team is having fun. And yes, I'm the one who developed our wonderful options page. Apart from that, I'm trying to graduate and some time in the future to become a full blown Gentoo developer.";
 		$orfanos = new developer($orfanos_name, $orfanos_title, $orfanos_avatar, $orfanos_desc);
 
 		$developers = array($tzikis, $tsampas, $amaxilatis, $kousta, $orfanos);
-        return $this->render('AceMiscBundle:Default:team.html.twig', array("developers" => $developers));
-    }
-    public function blogAction()
-    {
-		// $text1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum varius nisi blandit leo tempor feugiat. Vestibulum semper elementum sem at convallis. Fusce ac cursus est. Aliquam adipiscing tristique sapien id venenatis. Ut vel tincidunt ligula. Etiam interdum sollicitudin nisl, vel pulvinar urna suscipit sed. Duis laoreet, est eget tristique pellentesque, metus risus luctus augue, in luctus risus mi sit amet nibh. Morbi rhoncus erat eget mauris viverra vulputate.
-		// Cras pretium aliquam urna. Donec adipiscing vestibulum nisl non eleifend. Sed ultricies tincidunt turpis, sed ornare odio luctus in. Cras lacinia, quam vitae tincidunt volutpat, elit lacus aliquet turpis, nec aliquam dui tellus eget purus. Praesent bibendum enim quis urna porttitor at pretium odio feugiat. Nam ut nulla tellus, rutrum semper ipsum. Morbi laoreet consequat arcu nec pharetra. Nullam fermentum porta fringilla. Proin risus nisi, pellentesque sit amet vulputate vel, malesuada sed mauris. Sed in purus ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque risus tortor, porttitor eget vulputate a, mattis sed augue. Integer venenatis venenatis vestibulum. Proin commodo sem vel lectus aliquam sed bibendum odio gravida. Fusce eu interdum libero.
-		// Suspendisse vel arcu elit. Vestibulum fermentum, nulla a sollicitudin eleifend, lacus lorem laoreet arcu, porta consequat erat elit in urna. Vestibulum nec felis ut nunc aliquet pharetra. Mauris nec mi sit amet lectus tincidunt dapibus. Proin hendrerit ornare quam, sed consectetur risus accumsan nec. Etiam non mi eu dui semper suscipit at tincidunt neque. Quisque luctus, odio ut condimentum euismod, nulla ligula vulputate purus, ut scelerisque est nisl ut erat. Duis vel quam eu est interdum cursus. Quisque non diam diam. Quisque laoreet nunc pellentesque risus pulvinar non eleifend ante auctor. Quisque eu erat nisi, et scelerisque augue. Aenean imperdiet metus at nisl vestibulum scelerisque. Sed ultricies viverra consequat. Integer in lectus dapibus ligula ultrices eleifend ac a libero.";
-		$text2 = "This is codebender calling.
-		And we are a-live! 
-		Given this is our first post, we are all very excited to reach a point were we are live, stable, and feature-rich. At the moment, we are still working on fixing our alpha-testing bugs and completing our feature set, but we are very pleased with everything so far.
-		As far as our main functionality is concerned, we are succesfully compiling and flashing, and all that's left is to complete our functionality for all cases. For example, not all of the Arduino's bundled libraries compile at the moment and the uploader doesn't work on Windows. This is, of course, our main focus for the near future. We hope to be ready for beta testing within a few weeks, so be sure to check often for updates and news.";
-		$text2 = str_replace("\n", "</p>\n<p>", $text2);
-		// $text1 = str_replace("\n", "</p>\n<p>", $text1);
- 		// $first = new post("Sample blog post", $text1);
-		$second = new post("Hello, world!", $text2);
-		$posts = array(/* $first, */$second);
-       return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
-    }
+		return $this->render('AceMiscBundle:Default:team.html.twig', array("developers" => $developers));
+	}
+	public function blogAction()
+	{
+		// $posts = $this->getDoctrine()->getRepository('AceMiscBundle:BlogPost')->findAll();
 
-    public function blog_newAction()
-    {
-       return $this->render('AceMiscBundle:Default:blog_new.html.twig');
-    }
+		$em = $this->getDoctrine()->getEntityManager();
+		$qb = $em->createQueryBuilder();
+		
+		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
+		$posts = $qb->getQuery()->getResult();
+				
+		return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
+	}
 
-    public function tutorialsAction()
-    {
-        return $this->render('AceMiscBundle:Default:tutorials.html.twig');
-    }
+	public function blog_newAction()
+	{
+		if (false === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+		{
+			throw new AccessDeniedException();
+		}
+		else
+		{
+			$title = $this->getRequest()->query->get('title');
+			$text = $this->getRequest()->query->get('msgpost');
+			$author = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+			$em = $this->getDoctrine()->getEntityManager();
+			$post = new BlogPost();
+			$post->setTitle($title);
+			$post->setText($text);
+			$post->setAuthor($author);
+			$post->setDate(new \DateTime("now"));
+			$em->persist($post);
+			$em->flush();
+			return $this->redirect($this->generateUrl('AceMiscBundle_blog'));
+		}
+
+
+	}
+
+	public function tutorialsAction()
+	{
+		return $this->render('AceMiscBundle:Default:tutorials.html.twig');
+	}
 }
