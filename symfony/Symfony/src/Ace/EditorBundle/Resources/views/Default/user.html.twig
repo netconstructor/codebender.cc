@@ -36,7 +36,7 @@
 		{% if files %}
 		<tbody>
 			{% for file in files %}
-			<tr><td>{{file.name}}</td></tr>
+			<tr><td><a href="{{path('AceEditorBundle_project',{'project_name':file.name})}}">{{file.name}}</a></td></tr>
 			{% endfor %}
 		</tbody>
 		{% endif %}

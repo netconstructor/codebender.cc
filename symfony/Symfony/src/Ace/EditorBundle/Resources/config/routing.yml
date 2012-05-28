@@ -45,3 +45,7 @@ AceEditorBundle_checkmail:
 AceEditorBundle_user:
     pattern:  /user/{user}
     defaults: { _controller: AceEditorBundle:Default:user }
+
+AceEditorBundle_project:
+    pattern:  /project/{project_name}
+    defaults: { _controller: AceEditorBundle:Default:project }
