@@ -2,8 +2,20 @@
 {% block title %}
 About {{ site_name }}
 {% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+	$('a[rel="tooltip"]').tooltip();
+	$('a[rel="popover"]').popover();
+});
+
+</script>
+{% endblock %}
 {% block mainspan %}
 Hello
+<a href="#" rel="tooltip" title="first tooltip">hover over me</a>
 
 <a href="#" class="btn btn-danger" rel="popover" data-content="And here's some amazing content. It's very engaging. right?" data-original-title="A Title">hover for popover</a>
 
