@@ -39,7 +39,7 @@ class DefaultController extends Controller
 		$tsampas_name = "Stelios Tsampas";
 		$tsampas_title = "teh crazor";
 		$tsampas_avatar = "http://secure.gravatar.com/avatar/a5eb2b494a07a39ab0eef0d10aa86c84?s=260";
-		$tsampas_desc="Yet another student at CEID. My task is to make sure to bring crazy ideas to the table and let others assess their value. I'm also responsible for the Arduino Ethernet TFTP bootloader, the only crazy idea that didn't originate from me.";
+		$tsampas_desc="Yet another student at CEID. My task is to make sure to bring crazy ideas to the table and let others assess their value. I'm also responsible for the Arduino Ethernet TFTP bootloader, the only crazy idea that didn't originate from me. I also have a 'wierd' coding style that causes much distress to $tzikis_name.";
 		$tsampas = new developer($tsampas_name, $tsampas_title, $tsampas_avatar, $tsampas_desc);
 
 		$amaxilatis_name = "Dimitris Amaxilatis";
@@ -69,10 +69,10 @@ class DefaultController extends Controller
 
 		$em = $this->getDoctrine()->getEntityManager();
 		$qb = $em->createQueryBuilder();
-		
+
 		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
 		$posts = $qb->getQuery()->getResult();
-				
+
 		return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
 	}
 
