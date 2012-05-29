@@ -427,22 +427,21 @@ class DefaultController extends Controller
 	{
 		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($user);
 
-		//findBy(array('username' => 'tzikis', 'twitter' => 'bla'));
 		if (!$user) {
 			return new Response('There is no such user');
 		}
 		$files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')->findByOwner($user->getId());
-		if($user->getTwitter()) {
+		//if($user->getTwitter()) {
 			$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
 			if ( $result != false ) {
 				$tweet=json_decode($result); // get tweets and decode them into a variable
 				$lastTweet = $tweet[0]->text; // show latest tweet
 			} else {
-				$lastTweet="Not authorized";
+				$lastTweet=0;
 			}
-		} else {
-			$lastTweet="Twitter not configured";
-		}
+		//} else {
+			//$lastTweet="No Twitter";
+		//}
 		$image = $this->get_gravatar($user->getEmail());
 		return $this->render('AceEditorBundle:Default:user.html.twig', array( 'user' => $user, 'files' => $files, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}

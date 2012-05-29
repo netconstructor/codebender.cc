@@ -18,28 +18,31 @@
 		<div><i class="icon-envelope"></i>
 			<a href="mailto:{{user.getEmail()}}">{{user.getEmail()}}</a> 
 		</div>
+		{% if user.getTwitter() %}
 		<div><img src="https://si0.twimg.com/images/dev/cms/intents/bird/bird_blue/bird_16_blue.png"/>
 			@{{user.getTwitter()}}
 		</div>
+		{% endif %}
 	</div>
+	{% if lastTweet %}
 	<div class="span6 offset6">
 		<em style="font-weight:bold;text-align:center">latest tweet from {{user.getTwitter()}}</em>
 		<div class="well">
 			{{lastTweet}}
 		</div>
 	</div>
+	{% endif %}
 </div>
-
-<div id="user_projects">
-	<table class="table table-bordered">
-		<thead><tr><th>Projects</th></tr></thead>
-		{% if files %}
+<br />
+<table id="user_projects" class="table table-bordered">
+	<thead><tr><th>Projects</th></tr></thead>
+	{% if files %}
 		<tbody>
-			{% for file in files %}
+		{% for file in files %}
 			<tr><td><a href="{{path('AceEditorBundle_project',{'project_name':file.name})}}">{{file.name}}</a></td></tr>
-			{% endfor %}
+		{% endfor %}
 		</tbody>
-		{% endif %}
-	</table>
-</div>
+	{% endif %}
+</table>
+
 {% endblock %}
