@@ -70,6 +70,19 @@ class DefaultController extends Controller
 	        throw $this->createNotFoundException('No POST data!');		
 	}
 	
+	public function deleteAction($project_name)
+	{
+		$file = $this->getProject($project_name, $error);
+		if(!$error)
+		{
+		    $dm = $this->get('doctrine.odm.mongodb.document_manager');
+			$dm->remove($file);
+			$dm->flush();
+		}
+		
+		return $this->redirect($this->generateUrl('AceEditorBundle_list'));	
+	}
+	
 	public function getTimestampAction($project_name, $type)
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
@@ -94,6 +107,15 @@ class DefaultController extends Controller
 		else
 			return new Response("");
 	}
+
+	public function getEscapedCodeAction($project_name)
+	{
+		$file = $this->getProject($project_name, $error);
+		if(!$error)
+			return new Response(htmlspecialchars($file->getCode()));
+		else
+			return new Response("");
+	}
 	
 	public function saveCodeAction()
     {
@@ -107,7 +129,7 @@ class DefaultController extends Controller
 				$file = $this->getProject($project_name, $error);
 				if(!$error)
 				{
-					$file->setCode($mydata);
+					$file->setCode(htmlspecialchars_decode($mydata));
 					$timestamp = new \DateTime;
 					$file->setCodeTimestamp($timestamp);
 				    $dm = $this->get('doctrine.odm.mongodb.document_manager');
@@ -130,32 +152,6 @@ class DefaultController extends Controller
 			return new Response("");
 	}
 	
-	// public function saveHexAction()
-	//     {
-	// 	$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-	//     if ($this->getRequest()->getMethod() === 'POST')
-	//     	{
-	// 		$project_name = $this->getRequest()->request->get('project_name');
-	// 		$mydata = $this->getRequest()->request->get('data');
-	// 		if($project_name && $mydata)
-	// 		{
-	// 			$file = $this->getProject($project_name, $error);
-	// 			if(!$error)
-	// 			{
-	// 				$file->setHex($mydata);
-	// 				$timestamp = new \DateTime;
-	// 				$file->setHexTimestamp($timestamp);
-	// 			    $dm = $this->get('doctrine.odm.mongodb.document_manager');
-	// 			    $dm->persist($file);
-	// 			    $dm->flush();					
-	// 				$response->setContent("OK");
-	// 				$response->setStatusCode(200);
-	// 				$response->headers->set('Content-Type', 'text/html');
-	// 			}
-	// 		}
-	// 	}
-	// 	return $response;
-	//     }	
 	public function saveHexAction($project_name, $data)
     {
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));

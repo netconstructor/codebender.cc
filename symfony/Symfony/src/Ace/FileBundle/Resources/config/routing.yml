@@ -10,6 +10,10 @@ AceFileBundle_getCode:
     pattern:  /get_code/{project_name}
     defaults: { _controller: AceFileBundle:Default:getCode}
 
+AceFileBundle_getEscapedCode:
+    pattern:  /get_esc_code/{project_name}
+    defaults: { _controller: AceFileBundle:Default:getEscapedCode}
+
 AceFileBundle_saveCode:
     pattern:  /save_code
     defaults: { _controller: AceFileBundle:Default:saveCode }
@@ -25,3 +29,7 @@ AceFileBundle_getHex:
 AceFileBundle_saveHex:
     pattern:  /save_hex/{project_name}/{data}
     defaults: { _controller: AceFileBundle:Default:saveHex }
+
+AceFileBundle_delete:
+    pattern:  /delete/{project_name}
+    defaults: { _controller: AceFileBundle:Default:delete }
