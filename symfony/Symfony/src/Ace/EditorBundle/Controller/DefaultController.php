@@ -111,9 +111,8 @@ class DefaultController extends Controller
 				$value = $resp->getContent();
 
 				$data = "ERROR";
-				$url = fopen("http://compiler.codebender.cc?data=".urlencode($value), 'r');
-				$data = fread($url, 30000);
-				fclose($url);
+				
+				$data = $this->get_data("http://compiler.codebender.cc?data=".urlencode($value));
 
 				$json_data = json_decode($data, true);
 				if($json_data['success'])
@@ -421,6 +420,18 @@ class DefaultController extends Controller
 			$url .= ' />';
 		}
 		return $url;
+	}
+	
+	private function get_data($url)
+	{
+	  $ch = curl_init();
+	  $timeout = 5;
+	  curl_setopt($ch,CURLOPT_URL,$url);
+	  curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+	  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+	  $data = curl_exec($ch);
+	  curl_close($ch);
+	  return $data;
 	}
 
 	public function userAction($user)
