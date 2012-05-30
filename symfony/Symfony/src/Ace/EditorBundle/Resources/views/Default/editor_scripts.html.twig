@@ -53,6 +53,21 @@ function setProgress(newprogress)
 	$("#progress").show('fast');
 	$("#progress_val").width(newprogress+'%');
 	$("#operation_output").hide('fast');
+	// $("#progress").show('fast');
+	// if(newprogress < 10)
+	// 	window.currentProgress = 0.5*newprogress;
+	// else
+	// 	window.currentProgress = 0;
+	// $("#progress_val").width(window.currentProgress+'%');
+	// 
+	// window.maxProgress = newprogress;
+	// window.interval = setInterval(function()
+	// {
+	// 	$("#progress_val").width(window.currentProgress+'%');
+	// 	if(window.currentProgress < window.maxProgress)
+	// 		window.currentProgress++;
+	// },10);
+	// $("#operation_output").hide('fast');
 }
 
 function clearProgress(output)
@@ -60,6 +75,7 @@ function clearProgress(output)
 	$("#progress").hide('fast');
 	$("#progress_val").width('0%');	
 	$("#operation_output").html(output).show('fast');
+	//clear the interval here
 }
 
 function save()
@@ -82,7 +98,7 @@ function save()
 function revert()
 {
 	setProgress(90);
-	$.get("{{ path('AceFileBundle_getCode',{'project_name':project_name}) }}", function(data)
+	$.get("{{ path('AceFileBundle_getEscapedCode',{'project_name':project_name}) }}", function(data)
 	{
 		editor.getSession().setValue(data);
 		$("#revert").addClass("btn-success");
@@ -137,7 +153,9 @@ function build()
 			$("#compile").addClass("btn-success");
 			$("#compile_icon").addClass("icon-ok");
 
-			clearProgress(obj.text)
+			var progressText = "<p>" + obj.text + "<br /> Code Size: " + obj.size + " bytes<br /><small>(out of <strong>"+ getMaxSize()+"</strong> available.)</small></p>";
+			clearProgress(progressText)
+			window.sketch_size = obj.size;
 			$("#compile_output").html("");
 			enableLink($(".link_hex"));
 		}
@@ -151,31 +169,77 @@ function build()
 	});	
 }
 
+function getMaxSize()
+{
+	var max_size;
+	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
+	{
+		max_size = 32256;
+	}
+	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
+	{
+		max_size = 30720;
+	}
+	return max_size;
+}
+
+function getBaudrate()
+{
+	var baudrate;
+	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
+	{
+		baudrate = "115200";
+	}
+	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
+	{
+		baudrate = "57600";
+	}
+	return baudrate;
+}
+
 function upload()
 {
 	if($("#ports").val() != null && $("#ports").val() != "")
 	{
-		setProgress(90);
+		var baudrate = getBaudrate();
+		var max_size = getMaxSize();
+		if(window.size > max_size)
+		{
+			clearProgress("There is not enough space!");
+			return;
+		}
+
+		// window.startup_value = 10;
+		// window.stop_value = 50;
+		// setProgress(window.startup_value++);
+		// window.progressInterval = setInterval(function()
+		// {
+		// 	if(window.startup_value < window.stop_value)
+		// 		setProgress(window.startup_value);
+		// 	window.startup_value+5;
+		// }, 50);
+		setProgress(50);
+		
+		
 		$.get("{{ path('AceEditorBundle_download', { 'project_name': project_name, 'type' : 'hex'}) }}", function(data)
 		{
+			window.hex = data;
 			$("#upload").addClass("btn-success");
 			$("#upload_icon").addClass("icon-white");
-			clearProgress("Uploaded successfuly.");
 			// cleanUp();
 			window.setTimeout(function () {
 			    $("#upload").removeClass("btn-success");
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
-			window.hex = data;
-			
-			var baudrate;
-			
-			if($("select[id='boards'] option:selected").html() == "Arduino Uno")
-				baudrate = "115200";
-			else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
-				baudrate = "57600";
 				
-			applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
+			// window.stop_value=80;
+			setProgress(80);
+			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
+			// clearInterval(window.progressInterval);
+			if(progress)
+				clearProgress("There was an error uploading. Error #" + progress);			
+			else
+				clearProgress("Upload successful.");
 			// alert("Data received: " + data);
 		});		
 	}
