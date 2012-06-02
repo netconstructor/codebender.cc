@@ -107,11 +107,11 @@ class DefaultController extends Controller
 			$project_name = $this->getRequest()->request->get('project_name');
 			if($project_name)
 			{
-				$resp = $this->forward('AceFileBundle:Default:getCode', array('project_name' => $project_name));
+				$resp = $this->forward('AceFileBundle:Default:getMyCode', array('project_name' => $project_name));
 				$value = $resp->getContent();
 
 				$data = "ERROR";
-				
+
 				$data = $this->get_data("http://compiler.codebender.cc?data=".urlencode($value));
 
 				$json_data = json_decode($data, true);
@@ -137,12 +137,12 @@ class DefaultController extends Controller
 		$response;
 		if($type == 'hex')
 		{
-			$response = $this->forward('AceFileBundle:Default:getHex', array('project_name' => $project_name));
+			$response = $this->forward('AceFileBundle:Default:getMyHex', array('project_name' => $project_name));
 			$extension = ".hex";
 		}
 		else
 		{
-			$response = $this->forward('AceFileBundle:Default:getCode', array('project_name' => $project_name));
+			$response = $this->forward('AceFileBundle:Default:getMyCode', array('project_name' => $project_name));
 		}
 
 		$value = $response->getContent();
@@ -421,7 +421,7 @@ class DefaultController extends Controller
 		}
 		return $url;
 	}
-	
+
 	private function get_data($url)
 	{
 	  $ch = curl_init();
@@ -442,22 +442,19 @@ class DefaultController extends Controller
 			return new Response('There is no such user');
 		}
 		$files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')->findByOwner($user->getId());
-		//if($user->getTwitter()) {
-			$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
-			if ( $result != false ) {
-				$tweet=json_decode($result); // get tweets and decode them into a variable
-				$lastTweet = $tweet[0]->text; // show latest tweet
-			} else {
-				$lastTweet=0;
-			}
-		//} else {
-			//$lastTweet="No Twitter";
-		//}
-		$image = $this->get_gravatar($user->getEmail());
+		
+		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
+		if ( $result != false ) {
+			$tweet=json_decode($result); // get tweets and decode them into a variable
+			$lastTweet = $tweet[0]->text; // show latest tweet
+		} else {
+			$lastTweet=0;
+		}
+		$image = $this->get_gravatar($user->getEmail(),120);
 		return $this->render('AceEditorBundle:Default:user.html.twig', array( 'user' => $user, 'files' => $files, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
-	public function projectAction($project_name)
+	public function projectAction($username, $project_name)
 	{
-		return new Response('Under Construction...');
+		return $this->render('AceEditorBundle:Default:project.html.twig', array('username'=> $username, 'project'=>$project_name));
 	}
 }

@@ -47,5 +47,5 @@ AceEditorBundle_user:
     defaults: { _controller: AceEditorBundle:Default:user }
 
 AceEditorBundle_project:
-    pattern:  /project/{project_name}
+    pattern:  /project/{username}/{project_name}
     defaults: { _controller: AceEditorBundle:Default:project }
