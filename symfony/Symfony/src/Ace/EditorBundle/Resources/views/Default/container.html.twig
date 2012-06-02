@@ -35,7 +35,9 @@ button.btn
 			<div class="row-fluid">
 				{% if is_granted('ROLE_USER') %}		      
 				{% block sidebar %}
-				    {% render "AceEditorBundle:Default:sidebar" %}        	
+				<div class="span3">
+				    {% render "AceEditorBundle:Default:sidebar" %}    
+				</div>    	
 				{% endblock %}
 				<div class="span9">
 				{% else %}
