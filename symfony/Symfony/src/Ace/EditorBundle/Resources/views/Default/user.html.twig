@@ -8,9 +8,15 @@
 	});
 </script>
 
-<div class="page-header">
-	<h1><img id="user_avatar" src="{{image}}" alt="avatar of user"/>
-	{{ user.getUsername() }} ({{user.getLastname()}} {{user.getFirstname()}})</h1>
+<div class="page-header row-fluid" >
+	<ul class="thumbnails">
+		<li class="span2">
+		<a href="{{path('AceEditorBundle_user',{'user':user.username})}}" class="thumbnail">
+		<img id="user_avatar" src="{{image}}" alt="avatar of user"/>
+		</a>
+		</li>
+	</ul>
+<h1>{{ user.getUsername() }} ({{user.getLastname()}} {{user.getFirstname()}})</h1>
 </div>
 
 <div id="user_info" class="row-fluid">
@@ -39,7 +45,7 @@
 	{% if files %}
 		<tbody>
 		{% for file in files %}
-			<tr><td><a href="{{path('AceEditorBundle_project',{'project_name':file.name})}}">{{file.name}}</a></td></tr>
+			<tr><td><a href="{{path('AceEditorBundle_project',{'project_name':file.name, 'username': user.getUsername()})}}">{{file.name}}</a></td></tr>
 		{% endfor %}
 		</tbody>
 	{% endif %}
