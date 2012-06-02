@@ -100,7 +100,7 @@
 					{% render "AceEditorBundle:Default:image" %}
 				</ul>
 				<p class="navbar-text pull-right">
-					Logged in as <a href="javascript:void(0)">{{ app.user.username }}</a>
+					Logged in as <a href="{{path('AceEditorBundle_user',{'user':app.user.username})}}">{{ app.user.username }}</a>
 				</p>
 				{% endif %}
 		      </div><!--/.nav-collapse -->
