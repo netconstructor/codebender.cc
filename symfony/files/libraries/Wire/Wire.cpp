@@ -17,12 +17,12 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-extern "C" {
+// extern "C" {
   #include <stdlib.h>
   #include <string.h>
   #include <inttypes.h>
   #include "twi.h"
-}
+// }
 
 #include "Wire.h"
 
