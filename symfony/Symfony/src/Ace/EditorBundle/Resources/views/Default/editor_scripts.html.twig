@@ -98,7 +98,7 @@ function save()
 function revert()
 {
 	setProgress(90);
-	$.get("{{ path('AceFileBundle_getEscapedCode',{'project_name':project_name}) }}", function(data)
+	$.get("{{ path('AceFileBundle_getMyEscapedCode',{'project_name':project_name}) }}", function(data)
 	{
 		editor.getSession().setValue(data);
 		$("#revert").addClass("btn-success");
