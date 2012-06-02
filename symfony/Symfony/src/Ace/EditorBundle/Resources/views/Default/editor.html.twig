@@ -68,9 +68,10 @@ body
 	margin-left:14px;
 }
 
-#boards
+.myoptions
 {
 	width:100%;
+	margin-bottom:10px;
 }
 </style>
 {% endblock %}
@@ -93,51 +94,84 @@ body
   </div>
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn">Cancel</a>
-    <a href="{{ path('AceFileBundle_delete', {'project_name':project_name}) }}" class="btn btn-danger"><i id="delete_icon" class="icon-trash icon-white"></i> Delete!</a>
+    <a href="{{ path('AceFileBundle_delete', {'project_name':project_name}) }}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete!</a>
   </div>
 </div>
+
+<div class="modal hide fade" id="descriptionModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Enter your new project description.</h3>
+  </div>
+  <div class="modal-body span5">
+	<textarea style="resize: none;" rows="4" class="span5">Deleting your sketch is going to destroy all of its data. This action is irreversible. If you chose to delete your project, all the files associated with it are going to be destroyed and the data will be irrecoverable. You <strong>WILL BE UNABLE</strong> to back up your files.</textarea>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn">Cancel</a>
+    <a href="javascript:void()" class="btn btn-primary"><i class="icon-download icon-white"></i> Save Changes</a>
+  </div>
+</div>
+
 
 <div class="container">
 <div id="container" class="row-fluid">	
 	<div class="row-fluid">
-	<div id="container_left" class="span2">
-		<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
-		<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
-	    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
-		<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Build</span></button>
-		<select id="boards" class="span12" style="margin-bottom:10px;">
-			<option>Arduino Uno</option>
-			<option>Arduino Duemilanove</option>
-		</select>
-		<hr>
-		    <div id="scanning">
-				<button id = "upload" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> Upload</span></button>
-		        <button id="connect" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
-				<select id="ports" class="span12" style="margin-bottom:10px;"></select>
-				<select id="baudrates" class="span12" style="margin-bottom:10px;"></select>
-	    </div>
-		<div id="saves" class="well">
-			<i class="icon-file"></i>Download:<br />
-			<a href="{{ path('AceEditorBundle_download', { 'project_name': project_name }) }}" class="download_link link_ino">Download .ino</a>
-			<a href="{{ path('AceEditorBundle_download', { 'project_name': project_name, 'type' : "hex"}) }}" class="download_link link_hex">Download .hex</a>
-		</div>
-		<div><p>Total Number of lines: <span id="line_count">0</span></div>
-		<div id="progress" class="progress progress-striped active">
-		    <div id="progress_val" class="bar" style="width: 40%;"></div>
+	<div id="container_left" class="span3">
+		  <ul class="nav nav-tabs">
+		    <li class="active"><a href="#tab1" data-toggle="tab">Operations</a></li>
+		    <li><a href="#tab2" data-toggle="tab"> Settings</a></li>
+		    <li><a href="#tab3" data-toggle="tab"> Projects</a></li>
+		  </ul>
+		  <div class="tab-content">
+		    <div class="tab-pane active" id="tab1">
+				<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
+				<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
+			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
+				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Build</span></button>
+				<select id="boards"  class="myoptions">
+					<option>Arduino Uno</option>
+					<option>Arduino Duemilanove</option>
+				</select>
+				<hr>
+				    <div id="scanning">
+						<button id = "upload" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> Upload</span></button>
+				        <button id="connect" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
+						<select id="ports" class="myoptions"></select>
+						<select id="baudrates" class="myoptions"></select>
+			    </div>
+				<div id="saves" class="well">
+					<i class="icon-file"></i>Download:<br />
+					<a href="{{ path('AceEditorBundle_download', { 'project_name': project_name }) }}" class="download_link link_ino">Download .ino</a><br />
+					<a href="{{ path('AceEditorBundle_download', { 'project_name': project_name, 'type' : "hex"}) }}" class="download_link link_hex">Download .hex</a>
+				</div>
+				<div><p>Total Number of lines: <span id="line_count">0</span></div>
+				<div id="progress" class="progress progress-striped active">
+				    <div id="progress_val" class="bar" style="width: 40%;"></div>
+				    </div>
+				<div id="operation_output">
+				</div>
+				<applet width="1" height="1"  id="myapplet" style="visibility:hidden;"
+				        code="eu.amaxilatis.codebender.CodeBenderApplet"
+				        archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}">
+				</applet>
 		    </div>
-		<div id="operation_output">
-		</div>
-		<applet width="1" height="1"  id="myapplet" style="visibility:hidden;"
-		        code="eu.amaxilatis.codebender.CodeBenderApplet"
-		        archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}">
-		</applet>
+		    <div class="tab-pane" id="tab2">
+				<h3>Description:</h3>
+				<p>None</p>
+				<a data-toggle="modal" href="#descriptionModal" style="float:right;">edit</a>
+		    </div>
+		    <div class="tab-pane" id="tab3">
+		      {% render "AceEditorBundle:Default:sidebar" %}
+		    </div>
+		  </div>
+		
 	</div>
-	<div id="container_right" class="span10">
+	<div id="container_right" class="span9">
 		<div class="row-fluid">
-		<pre id="editor" class="span9">{% render "AceFileBundle:Default:getEscapedCode" with {'project_name': project_name} %}</pre>
+		<pre id="editor" class="span8">{% render "AceFileBundle:Default:getMyEscapedCode" with {'project_name': project_name} %}</pre>
 		</div>
 		<div class="row-fluid">
-			<pre id="compile_output" class="span9"></pre>
+			<pre id="compile_output" class="span8"></pre>
 		</div>
 	</div>	
 </div>
