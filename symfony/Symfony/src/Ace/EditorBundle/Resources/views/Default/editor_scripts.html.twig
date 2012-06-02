@@ -11,6 +11,15 @@ function getExample(filename){
 </script>
 <script type="text/javascript">
 
+function saveDescription()
+{
+	$.post("{{ path('AceFileBundle_saveDescription') }}", {data: $("#newDescription").val(), project_name:"{{project_name}}"}, function(data)
+	{
+		$("#oldDescription").html($("#newDescription").val());
+		$("#descriptionModal").modal('hide');
+	});	
+	
+}
 
 function throwMud()
 {

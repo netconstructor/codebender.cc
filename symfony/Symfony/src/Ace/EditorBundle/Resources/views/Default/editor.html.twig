@@ -104,11 +104,11 @@ body
     <h3>Enter your new project description.</h3>
   </div>
   <div class="modal-body span5">
-	<textarea style="resize: none;" rows="4" class="span5">Deleting your sketch is going to destroy all of its data. This action is irreversible. If you chose to delete your project, all the files associated with it are going to be destroyed and the data will be irrecoverable. You <strong>WILL BE UNABLE</strong> to back up your files.</textarea>
+	<textarea id="newDescription" style="resize: none;" rows="4" class="span5">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_name} %}</textarea>
   </div>
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn">Cancel</a>
-    <a href="javascript:void()" class="btn btn-primary"><i class="icon-download icon-white"></i> Save Changes</a>
+    <a href="javascript:saveDescription()" class="btn btn-primary"><i class="icon-download icon-white"></i> Save Changes</a>
   </div>
 </div>
 
@@ -157,7 +157,7 @@ body
 		    </div>
 		    <div class="tab-pane" id="tab2">
 				<h3>Description:</h3>
-				<p>None</p>
+				<p id="oldDescription">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_name} %}</p>
 				<a data-toggle="modal" href="#descriptionModal" style="float:right;">edit</a>
 		    </div>
 		    <div class="tab-pane" id="tab3">

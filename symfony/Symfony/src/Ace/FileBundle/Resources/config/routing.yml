@@ -41,3 +41,17 @@ AceFileBundle_saveHex:
 AceFileBundle_delete:
     pattern:  /delete/{project_name}
     defaults: { _controller: AceFileBundle:Default:delete }
+
+
+AceFileBundle_getDescription:
+    pattern:  /get_desc/{username}/{project_name}
+    defaults: { _controller: AceFileBundle:Default:getDescription}
+
+AceFileBundle_getMyDescription:
+    pattern:  /get_desc/{project_name}
+    defaults: { _controller: AceFileBundle:Default:getMyDescription}
+
+AceFileBundle_saveDescription:
+    pattern:  /save_desc
+    defaults: { _controller: AceFileBundle:Default:saveDescription }
+

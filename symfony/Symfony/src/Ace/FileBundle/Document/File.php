@@ -59,6 +59,10 @@ class File
      */
     protected $image;
 
+    /**
+     * @MongoDB\String
+     */
+    protected $description;
 
     /**
      * Get id
@@ -249,5 +253,25 @@ class File
     public function getHex()
     {
         return $this->hex;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string $description
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

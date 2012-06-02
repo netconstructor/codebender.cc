@@ -49,6 +49,7 @@ class DefaultController extends Controller
 				$file->setIsPublic(1);
 				$file->setSchematic("");
 				$file->setImage("");
+				$file->setDescription("");
 
 			    $dm = $this->get('doctrine.odm.mongodb.document_manager');
 			    $dm->persist($file);
@@ -134,6 +135,50 @@ class DefaultController extends Controller
 		else
 			return new Response("");
 	}
+	
+	public function getMyDescriptionAction($project_name)
+	{
+		$file = $this->getMyProject($project_name, $error);
+		if(!$error)
+			return new Response($file->getDescription());
+		else
+			return new Response("");
+	}
+
+	public function getDescriptionAction($username, $project_name)
+	{
+		$file = $this->getProject($username, $project_name, $error);
+		if(!$error)
+			return new Response($file->getDescription());
+		else
+			return new Response("");
+	}
+	
+	public function saveDescriptionAction()
+    {
+		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
+	    if ($this->getRequest()->getMethod() === 'POST')
+    	{
+			$project_name = $this->getRequest()->request->get('project_name');
+			$mydata = $this->getRequest()->request->get('data');
+			if($project_name && $mydata)
+			{
+				$file = $this->getMyProject($project_name, $error);
+				if(!$error)
+				{
+					$file->setDescription($mydata);
+				    $dm = $this->get('doctrine.odm.mongodb.document_manager');
+				    $dm->persist($file);
+				    $dm->flush();					
+					$response->setContent("OK");
+					$response->setStatusCode(200);
+					$response->headers->set('Content-Type', 'text/html');
+				}
+			}
+		}
+		return $response;
+    }	
+	
 	
 	public function saveCodeAction()
     {
