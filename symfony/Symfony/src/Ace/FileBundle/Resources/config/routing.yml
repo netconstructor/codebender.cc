@@ -6,21 +6,29 @@ AceFileBundle_getTimestamp:
     pattern: /get_timestamp/{project_name}/{type}
     defaults: { _controller: AceFileBundle:Default:getTimestamp }
 
-AceFileBundle_getCode:
+AceFileBundle_getMyCode:
     pattern:  /get_code/{project_name}
+    defaults: { _controller: AceFileBundle:Default:getMyCode}
+
+AceFileBundle_getMyEscapedCode:
+    pattern:  /get_esc_code/{project_name}
+    defaults: { _controller: AceFileBundle:Default:getMyEscapedCode}
+
+AceFileBundle_getCode:
+    pattern:  /get_code/{username}/{project_name}
     defaults: { _controller: AceFileBundle:Default:getCode}
 
 AceFileBundle_getEscapedCode:
-    pattern:  /get_esc_code/{project_name}
+    pattern:  /get_esc_code/{username}/{project_name}
     defaults: { _controller: AceFileBundle:Default:getEscapedCode}
 
 AceFileBundle_saveCode:
     pattern:  /save_code
     defaults: { _controller: AceFileBundle:Default:saveCode }
 
-AceFileBundle_getHex:
+AceFileBundle_getMyHex:
     pattern:  /get_hex/{project_name}
-    defaults: { _controller: AceFileBundle:Default:getHex}
+    defaults: { _controller: AceFileBundle:Default:getMyHex}
 
 # AceFileBundle_saveHex:
 #     pattern:  /save_hex

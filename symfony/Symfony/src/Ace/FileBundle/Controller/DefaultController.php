@@ -25,7 +25,7 @@ class DefaultController extends Controller
 				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
 			}
 			
-			$file = $this->getProject($project_name, $error);
+			$file = $this->getMyProject($project_name, $error);
 			if($error == -2)
 			{
 				$file = fopen($this->directory.$this->default_file, 'r');
@@ -72,7 +72,7 @@ class DefaultController extends Controller
 	
 	public function deleteAction($project_name)
 	{
-		$file = $this->getProject($project_name, $error);
+		$file = $this->getMyProject($project_name, $error);
 		if(!$error)
 		{
 		    $dm = $this->get('doctrine.odm.mongodb.document_manager');
@@ -86,7 +86,7 @@ class DefaultController extends Controller
 	public function getTimestampAction($project_name, $type)
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		$file = $this->getProject($project_name, $error);
+		$file = $this->getMyProject($project_name, $error);
 		if($type == "code" || $type == "hex")
 		{
 			if($type == "code")
@@ -99,18 +99,36 @@ class DefaultController extends Controller
 		return $response;
 	}
 
-	public function getCodeAction($project_name)
+	public function getMyCodeAction($project_name)
 	{
-		$file = $this->getProject($project_name, $error);
+		$file = $this->getMyProject($project_name, $error);
 		if(!$error)
 			return new Response($file->getCode());
 		else
 			return new Response("");
 	}
 
-	public function getEscapedCodeAction($project_name)
+	public function getCodeAction($username, $project_name)
 	{
-		$file = $this->getProject($project_name, $error);
+		$file = $this->getProject($username, $project_name, $error);
+		if(!$error)
+			return new Response($file->getCode());
+		else
+			return new Response("");
+	}
+
+	public function getMyEscapedCodeAction($project_name)
+	{
+		$file = $this->getMyProject($project_name, $error);
+		if(!$error)
+			return new Response(htmlspecialchars($file->getCode()));
+		else
+			return new Response("");
+	}
+
+	public function getEscapedCodeAction($username, $project_name)
+	{
+		$file = $this->getProject($username, $project_name, $error);
 		if(!$error)
 			return new Response(htmlspecialchars($file->getCode()));
 		else
@@ -126,7 +144,7 @@ class DefaultController extends Controller
 			$mydata = $this->getRequest()->request->get('data');
 			if($project_name && $mydata)
 			{
-				$file = $this->getProject($project_name, $error);
+				$file = $this->getMyProject($project_name, $error);
 				if(!$error)
 				{
 					$file->setCode(htmlspecialchars_decode($mydata));
@@ -143,9 +161,9 @@ class DefaultController extends Controller
 		}
 		return $response;
     }	
-	public function getHexAction($project_name)
+	public function getMyHexAction($project_name)
 	{
-		$file = $this->getProject($project_name, $error);
+		$file = $this->getMyProject($project_name, $error);
 		if(!$error)
 			return new Response($file->getHex());
 		else
@@ -155,7 +173,7 @@ class DefaultController extends Controller
 	public function saveHexAction($project_name, $data)
     {
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		$file = $this->getProject($project_name, $error);
+		$file = $this->getMyProject($project_name, $error);
 		if(!$error)
 		{
 			$file->setHex($data);
@@ -171,10 +189,17 @@ class DefaultController extends Controller
 		return $response;
     }	
 
-	private function getProject($project_name, &$error)
+	private function getMyProject($project_name, &$error)
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
 		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$file = $this->getProject($name, $project_name, $error);
+		return $file;
+	}
+    
+	private function getProject($username, $project_name, &$error)
+	{
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
 		
 		if(!$user)
 		{
@@ -194,6 +219,5 @@ class DefaultController extends Controller
 			return $file;
 		}		
 	}
-    
 	
 }
