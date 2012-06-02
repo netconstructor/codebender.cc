@@ -15,7 +15,7 @@
 	<tbody>
 	{% for file in files %}
 		<tr>
-		<td><a href="{{path('AceEditorBundle_project',{'project_name':file.name})}}">{{file.name}}</a></td>
+		<td><a href="{{path('AceEditorBundle_project',{'project_name':file.name, 'username': owners[file.owner]})}}">{{file.name}}</a></td>
 		<td>{{owners[file.owner]}}</td>
 		</tr>
 	{% endfor %}
