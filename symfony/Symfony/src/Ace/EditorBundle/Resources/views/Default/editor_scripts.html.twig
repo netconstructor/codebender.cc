@@ -34,6 +34,7 @@ function throwMud()
 		save();
 	})
 	disableLink($(".download_link"));
+	$("#upload").addClass("disabled").off('click');
 }
 function cleanUp()
 {
@@ -167,6 +168,11 @@ function build()
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
 			enableLink($(".link_hex"));
+			$("#upload").removeClass("disabled").click(function()
+			{
+				upload();
+			})
+			
 		}
 		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
 
@@ -390,14 +396,6 @@ function addCommands()
 		if(typeof applet.isActive === "function")
 		{
 			$("#scanning").toggle("blind", {}, 1000);
-			$("#connect").removeClass("disabled").off('click').click(function()
-			{
-				connect();
-			})
-			$("#upload").removeClass("disabled").off('click').click(function()
-			{
-				upload();
-			})
 
 			ratesAvail=applet.getFireRates().split(",");
 			for (var i =0 ;i <ratesAvail.length;i++)

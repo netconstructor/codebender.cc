@@ -135,7 +135,7 @@ body
 				<hr>
 				    <div id="scanning">
 						<button id = "upload" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> Upload</span></button>
-				        <button id="connect" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
+				        <button id="connect" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
 						<select id="ports" class="myoptions"></select>
 						<select id="baudrates" class="myoptions"></select>
 			    </div>
@@ -211,8 +211,19 @@ $(document).ready(function()
 	$("#line_count").html(editor.getSession().getValue().split("\n").length);
 	{% if hex_exists == false %}
 		disableLink($(".link_hex"));
+	{% else %}
+	$("#upload").removeClass("disabled").click(function()
+	{
+		upload();
+	})
+					
 	{% endif %}	
 	
+	$("#connect").click(function()
+	{
+		connect();
+	})
+
 	$("#compile").click(function() 
 	{
 		motherInLaw();
