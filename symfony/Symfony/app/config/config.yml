@@ -53,14 +53,14 @@ doctrine:
         auto_mapping: true
 
 # Swiftmailer Configuration
-#swiftmailer:
-#    transport:	smtp
-#    host:	localhost
-#    username:	~
-#    password:	~
-#    port:	465
-#    encryption:	tls
-    #auth_mode:	~
+swiftmailer:
+   transport:   smtp
+   host:    smtp.gmail.com
+   username:    %email.user%
+   password:    %email.pass%
+   # port:    465
+   encryption:  ssl
+   auth_mode:  login
     #spool:
         #type:                 file
         #path:                 %kernel.cache_dir%/swiftmailer/spool
@@ -80,17 +80,18 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: Ace\ExperimentalUserBundle\Entity\ExperimentalUser
-#    service:
+    service:
+       mailer: fos_user.mailer.default
 #        mailer: fos_user.mailer.twig_swift
-#    from_email:
-#        address:        girder@codebender.cc
-#        sender_name:    Codebender Support
+    from_email:
+       address:        codebender.cc@gmail.com
+       sender_name:    codebender
     registration:
-#        confirmation:
-#            enabled: true
+       confirmation:
+           enabled: true
 #            email:
 #               template: AceExperimentalUserBundle:User:resetting.email.twig
-        form:
+       form:
             type: ace_experimental_user_registration
 #    resetting:
 #        email:
