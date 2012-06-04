@@ -85,7 +85,7 @@ class DefaultController extends Controller
 		$examples = $this->getExamplesAction($this->examples_directory,"");
 		$lib_examples = $this->getExamplesAction($this->libs_directory,"/examples");
 
-		return $this->render('AceEditorBundle:Default:editor.html.twig', array('project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples, 'hex_exists' => $hex_exists));
+		return $this->render('AceEditorBundle:Default:editor.html.twig', array('username'=>$name, 'project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples, 'hex_exists' => $hex_exists));
 	}
 
 	public function getExamplesAction($mydir, $middle)
@@ -130,7 +130,7 @@ class DefaultController extends Controller
 		return $response;
 	}
 
-	public function downloadAction($project_name, $type)
+	public function downloadAction($username, $project_name, $type)
 	{
 		$filename=$project_name;
 		$extension = ".ino";
@@ -142,7 +142,7 @@ class DefaultController extends Controller
 		}
 		else
 		{
-			$response = $this->forward('AceFileBundle:Default:getMyCode', array('project_name' => $project_name));
+			$response = $this->forward('AceFileBundle:Default:getCode', array('username'=>$username,'project_name' => $project_name));
 		}
 
 		$value = $response->getContent();
@@ -425,7 +425,7 @@ class DefaultController extends Controller
 	private function get_data($url)
 	{
 	  $ch = curl_init();
-	  $timeout = 5;
+	  $timeout = 10;
 	  curl_setopt($ch,CURLOPT_URL,$url);
 	  curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
 	  curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
@@ -455,6 +455,7 @@ class DefaultController extends Controller
 	}
 	public function projectAction($username, $project_name)
 	{
-		return $this->render('AceEditorBundle:Default:project.html.twig', array('username'=> $username, 'project'=>$project_name));
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
+		return $this->render('AceEditorBundle:Default:project.html.twig', array('project'=>$project_name, 'user'=>$user));
 	}
 }

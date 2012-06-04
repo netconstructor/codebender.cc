@@ -23,7 +23,7 @@ AceEditorBundle_compile:
 #     defaults: { _controller: AceEditorBundle:Default:compile }
 
 AceEditorBundle_download:
-    pattern:  /download/{project_name}/{type}
+    pattern:  /download/{username}/{project_name}/{type}
     defaults: { _controller: AceEditorBundle:Default:download, type: file }
     
 AceEditorBundle_options:

@@ -119,8 +119,8 @@ body
 	<div id="container_left" class="span3">
 		  <ul class="nav nav-tabs">
 		    <li class="active"><a href="#tab1" data-toggle="tab">Operations</a></li>
-		    <li><a href="#tab2" data-toggle="tab"> Settings</a></li>
-		    <li><a href="#tab3" data-toggle="tab"> Projects</a></li>
+		    <li><a href="#tab2" data-toggle="tab">Info</a></li>
+		    <li><a href="#tab3" data-toggle="tab">Sidebar</a></li>
 		  </ul>
 		  <div class="tab-content">
 		    <div class="tab-pane active" id="tab1">
@@ -141,8 +141,8 @@ body
 			    </div>
 				<div id="saves" class="well">
 					<i class="icon-file"></i>Download:<br />
-					<a href="{{ path('AceEditorBundle_download', { 'project_name': project_name }) }}" class="download_link link_ino">Download .ino</a><br />
-					<a href="{{ path('AceEditorBundle_download', { 'project_name': project_name, 'type' : "hex"}) }}" class="download_link link_hex">Download .hex</a>
+					<a href="{{ path('AceEditorBundle_download', { 'username' : username, 'project_name': project_name }) }}" class="download_link link_ino">Download .ino</a><br />
+					<a href="{{ path('AceEditorBundle_download', { 'username' : username, 'project_name': project_name, 'type' : "hex"}) }}" class="download_link link_hex">Download .hex</a>
 				</div>
 				<div><p>Total Number of lines: <span id="line_count">0</span></div>
 				<div id="progress" class="progress progress-striped active">

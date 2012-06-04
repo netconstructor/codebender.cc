@@ -236,7 +236,7 @@ function upload()
 		setProgress(50);
 		
 		
-		$.get("{{ path('AceEditorBundle_download', { 'project_name': project_name, 'type' : 'hex'}) }}", function(data)
+		$.get("{{ path('AceEditorBundle_download', { 'username':username,'project_name': project_name, 'type' : 'hex'}) }}", function(data)
 		{
 			window.hex = data;
 			$("#upload").addClass("btn-success");
