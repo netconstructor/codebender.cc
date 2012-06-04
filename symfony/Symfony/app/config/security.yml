@@ -86,7 +86,7 @@ security:
                 path: /logout
             anonymous:    true
             remember_me:
-                    key:      mySecretKey
+                    key:      %mykey%
                     lifetime: 604800
                     path:     /
                     domain:   codebender.cc
