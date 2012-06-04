@@ -6,8 +6,8 @@ framework:
     profiler: { only_exceptions: false }
 
 web_profiler:
-    toolbar: true
-    # toolbar: false
+    # toolbar: true
+    toolbar: false
     # display secondary information, disable to make the toolbar shorter
     verbose:             true
     intercept_redirects: false
