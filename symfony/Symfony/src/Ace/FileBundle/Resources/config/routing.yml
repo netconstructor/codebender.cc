@@ -55,3 +55,6 @@ AceFileBundle_saveDescription:
     pattern:  /save_desc
     defaults: { _controller: AceFileBundle:Default:saveDescription }
 
+AceFileBundle_clone:
+    pattern:  /clone/{old_user}/{old_project_name}
+    defaults: { _controller: AceFileBundle:Default:clone }

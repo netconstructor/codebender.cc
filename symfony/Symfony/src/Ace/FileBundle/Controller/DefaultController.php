@@ -84,6 +84,62 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceEditorBundle_list'));	
 	}
 	
+	public function cloneAction($old_user, $old_project_name)
+	{
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
+			$new_project_name = $this->getRequest()->request->get('name');
+			
+			if($new_project_name == '')
+			{
+				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+			}
+			$file = $this->getMyProject($new_project_name, $error);
+			if($error == -2)
+			{
+				$old_file = $this->getProject($old_user, $old_project_name, $old_error);
+				
+				$code = $old_file->getcode();
+				$description = $old_file->getDescription();
+				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+				$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+				
+				$file = new File();
+			    $file->setName($new_project_name);
+			    $file->setCode($code);
+				$timestamp = new \DateTime;
+				$file->setCodeTimestamp($timestamp);
+				$file->setHex("");
+				$timestamp2 = new \DateTime;
+				$interval = new \DateInterval('PT5M');
+				$timestamp2->sub($interval);
+				$file->setHexTimestamp($timestamp2);
+			    $file->setOwner($user->getId());
+				$file->setIsPublic(1);
+				$file->setSchematic("");
+				$file->setImage("");
+				$file->setDescription($description);
+
+			    $dm = $this->get('doctrine.odm.mongodb.document_manager');
+			    $dm->persist($file);
+			    $dm->flush();
+
+				return $this->redirect($this->generateUrl('AceEditorBundle_editor',array('project_name' => $new_project_name)));
+				
+			}
+			else if($error==-1)
+			{
+		        throw $this->createNotFoundException('No user found with username '.$name);				
+			}
+			else if($error == 0)
+			{
+				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+			}
+		}
+		else
+	        throw $this->createNotFoundException('No POST data!');
+	}
+	
 	public function getTimestampAction($project_name, $type)
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
