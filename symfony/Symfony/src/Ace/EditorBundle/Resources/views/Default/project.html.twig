@@ -41,11 +41,9 @@ h1 small
 			<h3>Clone Project</h3>
 		</div>
 		<div class="modal-body">
-			<p>Create a new project from existing with name...</p>
-			<form method='post' action='{{ path('AceFileBundle_create')}}'>
-			<input type="text" name='project_name' class="input-medium search-query" placeholder="Type the name of your new project">
-		
-			
+			<p>Create new project from existing with name...</p>
+			<form method='post' action='{{ path('AceFileBundle_clone',{'old_user':user.getUsername(),'old_project_name': project}) }}'>
+			<input type="text" name='name' class="input-medium search-query" placeholder="Type the name of your new project">	
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal">Cancel</button>

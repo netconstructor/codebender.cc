@@ -456,6 +456,14 @@ class DefaultController extends Controller
 	public function projectAction($username, $project_name)
 	{
 		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
-		return $this->render('AceEditorBundle:Default:project.html.twig', array('project'=>$project_name, 'user'=>$user));
+		$file = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')
+			->findOneBy(array('name' => $project_name, 'owner' => $user->getID()));
+		
+		if(!$file)
+		{
+			return new Response("There is no such project");		
+		}
+		else
+			return $this->render('AceEditorBundle:Default:project.html.twig', array('project'=>$project_name, 'user'=>$user));
 	}
 }
