@@ -6,7 +6,6 @@ namespace Ace\EditorBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
-use Ace\EditorBundle\Entity\EditorFile;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 //use Ace\FileBundle\Controller\DefaultController;
@@ -184,11 +183,6 @@ class DefaultController extends Controller
 		if (!$user) {
 			throw $this->createNotFoundException('No user found with username '.$name);
 		}
-		//$files = $this->getDoctrine()->getRepository('AceEditorBundle:EditorFile')->findByOwner($product->getId());
-		// do something, like pass the $product object into a template
-		//$fname= $product->getFirstname();
-		//$lname= $product->getLastname();
-
 		return $this->render('AceEditorBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user));
 	}
 
@@ -333,14 +327,20 @@ class DefaultController extends Controller
 			{
 				throw $this->createNotFoundException('No user found with username '.$name);
 			}
-			$files = $this->getDoctrine()->getRepository('AceEditorBundle:EditorFile')->findByOwner($user->getId());
-			foreach ($files as $file)
-			{
-				if($project_name == $file->getName())
-				{
-					return $this->redirect($this->generateUrl('AceEditorBundle_list'));
-				}
-			}
+			
+			//*******************************************************************************************************************
+			//WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF 
+			//WHY WAS THIS STILL HERE? WHAT _EXACTLY_ DID IT DO, AND AM I TAKING CARE OF IT NOW THAT WE'VE SWITCHED TO MONGODB?
+			//*******************************************************************************************************************
+			
+			// $files = $this->getDoctrine()->getRepository('AceEditorBundle:EditorFile')->findByOwner($user->getId());
+			// foreach ($files as $file)
+			// {
+			// 	if($project_name == $file->getName())
+			// 	{
+			// 		return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+			// 	}
+			// }
 
 			$file = fopen($this->directory.$this->default_file, 'r');
 			$value = fread($file, filesize($this->directory.$this->default_file));
