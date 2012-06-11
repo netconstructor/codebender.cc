@@ -28,6 +28,10 @@ class DefaultController extends Controller
 		return $this->render('AceMiscBundle:Default:about.html.twig');
 	}
 
+	public function techspecsAction()
+	{
+		return $this->render('AceMiscBundle:Default:techspecs.html.twig');
+	}
 	public function teamAction()
 	{
 		$tzikis_name = "Vasilis Georgitzikis";

@@ -1,0 +1,127 @@
+{% extends 'AceEditorBundle:Default:container.html.twig' %}
+{% block title %}
+{{ site_name }} tech specs
+{% endblock %}
+{% block mainspan %}
+<style type="text/css">
+.bs-icon, .small-bs-icon
+{
+	float: left;
+	margin: 7px 10px 0 0;
+	opacity: .8;
+}
+</style>
+<h1>{{site_name}} <small>under the hood</small></h1>
+<div class="marketing">
+	<p>{{site_name}} uses a lot of 3rd party open source projects, as well as open source projects developed in-house by us. Bellow is a comprehensive list of the more important ones. If you would like to know more, we would be thrilled to tell you more. Just contact us on customer support.</p>
+	<hr class="soften">
+	<div class="row-fluid">
+		<div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_039_notes.png')}}">
+	    <h2>Code</h2>
+	    <p>{{ site_name }} uses Ace, an awesome web code editor written in pure HTML5 and Javascript, which is the best thing ever since sliced bread, at least as far as code editors go. Use it now and enjoy indentation that just works™, great syntax highlighting, auto-completion, highlighting of matching parentheses and brackets and highlighting of a selected keyword. Oh, and of course, you can't call it an editor if it doesn't have Vim and EMACS keybindings. Built-in.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_206_ok_2.png')}}">
+	    <h2>Compile</h2>
+	    <p>Compile your code, on the cloud. With {{ site_name }}, you can compile your code on our servers, saving you the hassle of downloading and installing all the necessary tools to build your sketches. No more upgrading to newer versions and managing incompatible library versions. This also improves compilation times in old machines and simplifies syntax error checks.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_319_sort.png')}}">
+	    <h2>Built-in Libraries</h2>
+	    <p>Never mind about finding, installing, and updating external libraries anymore. With {{ site_name }}, you only need to include the library you want to use, and we automatically compile it with your code. And we also take care of updating them when a new version is released. All just for you. Stop worrying about libraries, and start coding your Arduino. That autonomous space BBQ laser grill isn't going to build itself, you know.</p>
+	  </div><!--/span-->
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_027_search.png')}}">
+	    <h2>Advanced Code Analysis</h2>
+	    <p>{{ site_name }} uses Clang, a state-of-the-art C++ code analyzer and compiler to perform syntax analysis in your programs, and give you precise and accurate information on your bugs. Using {{ site_name }}'s improved reporting on the faulty lines of code, you can find and squash bugs in no time. Using {{site_name}}, you can now get more precise reports on your errors, and better suggestions on how to fix them.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_071_book.png')}}">
+	    <h2>Documentation and Suggestions</h2>
+	    <p>{{site_name}} makes finding the documentation for that one function you are looking for as easy as it can get. Just select it, press Ctrl-Space, and you will be take to its arduino.cc Reference page. And it gets better. We are actively documenting Arduino's codebase, in order to provide a better reference, as well as suggestions and auto-completion in the near future.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_232_cloud.png')}}">
+	    <h2>Cloud Architecture</h2>
+	    <p>{{site_name}} is built from the ground up with a Cloud perspective. We use the best engineering practices to be scalable, fast, responsive, stable, and safe. We use top notch technology and the best infrastructure, to make sure that your data is safe and our website runs smoothly 24/7. We will be online whenever you need us, and you will never have to back up your sketches, or worry about losing your data due to hardware faults again.</p>
+	  </div><!--/span-->
+	</div><!--/row-->
+	<div class="row-fluid">
+	  <div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_211_right_arrow.png')}}">
+	    <h2>Flashing</h2>
+	    <p>Upload your code to your Arduino, straight from your browser. No inconvenient software installations needed to flash your sketch on your Arduino board. All you need to do is run our Java applet straight from your browser, and you gain immediate access to your Serial ports to Upload your sketch, or open the Serial Monitor to communicate with your Arduino.</p>
+	  </div><!--/span-->
+		<div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_032_wifi_alt.png')}}">
+	    <h2>Remote Flashing</h2>
+	    <p>Still using your USB port to flash your new sketches on your Arduino? Come on, that is sooo 2010. Using our open-source TFTP bootloader for Arduino Ethernet and Arduinos with Ethernet Shield, you can upload your sketch to any internet-connected Arduino, anywhere in the world, straight from {{ site_name }}. Add your Ethernet-equipped Arduino to your list and you are set.</p>
+	  </div><!--/span-->
+	  <div class="span4">
+		<img class="bs-icon" src="{{asset('glyphicons/glyphicons_009_magic.png')}}">
+	    <h2>Cross-platform</h2>
+	    <p>{{site_name}} loves all operating systems, and we love everyone. That's why we support all major platforms (OS X, Windows, Linux)   in {{site_name}}. And since we love everyone, we also support all major browsers. {{site_name}} will look great, wether you use Firefox, Chrome, Internet Explorer <small>(not tested)</small> or Opera <small>(not tested)</small>.</p>
+	  </div><!--/span-->
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span3">
+			<h3>HTML5</h3>
+			<p>{{ site_name }} is built using HTML5 technologies to make the most out of the web.</p>
+		</div>
+		<div class="span3">
+			<h3>CSS3</h3>
+			<p>Beautiful transitions and styling brought to you using CSS3.</p>
+		</div>
+		<div class="span3">
+			<h3>Ace</h3>
+			<p>{{site_name}} uses Ace, the state-of-the-art, open-source javascript editor, to provide a great coding environment.</p>
+		</div>
+		<div class="span3">
+			<h3>Bootstrap</h3>
+			<p>We are using Twitter's <a href="http://twitter.github.com/bootstrap/">Bootstrap</a> for our design.</p>
+		</div>
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span3">
+			<h3>Symfony</h3>
+			<p>{{site_name}} is built on Symfony 2, the awesome PHP framework that helps us make {{site_name}} scalable, fast, and maintainable.</p>
+		</div>
+		<div class="span3">
+			<h3>MySQL</h3>
+			<p>MySQL may not be the newest kid on the block, but it sure is well-known and stable. That's why {{site_name}} uses MySQL to manage your projects and settings.</p>
+		</div>
+		<div class="span3">
+			<h3>MongoDB</h3>
+			<p>Unlike MySQL, MongoDB is extremely scalable. This is why we're using MongoDB to save your projects. To make sure that they will stay safe, backed up, and online whenever you need them, no matter what.</p>
+		</div>
+		<div class="span3">
+			<h3>PHP Fog &amp; AWS</h3>
+			<p>{{site_name}} is hosted on PHP Fog, the great PaaS built for PHP applications to ensure scalability and great uptime. We are also using Amazon Web Services for the compiler to make sure it is just as fast, responsive, and stable, 24/7.</p>
+		</div>
+	</div><!--/row-->
+	<div class="row-fluid">
+		<div class="span3">
+			<h3>Arduino</h3>
+			<p>Besides using and targeting the Arduino platform, we are actively involved in advancing the platform. We have contributed in the TFTP bootloader, as well as various libraries, such as the GNTP library, the FIO Xbee Config Tool, and more.</p>
+		</div>
+		<div class="span3">
+			<h3>TFTP Bootloader</h3>
+			<p>We are proudly some of the guys behind the TFTP bootloader, which we also support for remote programming. One of our developers built upon the work done by the Arduino team and completed it. That's why we are the first ones to use it to remotely flash  an Arduino, anywhere in the world.</p>
+		</div>
+		<div class="span3">
+			<h3>Clang</h3>
+			<p>We are using Clang, the awesome C/C++/Obj-C compiler, to perform syntax analysis on your Arduino sketches. By using Clang, we can give you much more refined and precise error reporting, which helps you squash bugs in no time.</p>
+		</div>
+		<div class="span3">
+			<h3>Open Source</h3>
+			<p>We are completely and utterly open source, and we strongly believe in it, which is why we support only open-source sketches at launch. You can always check our code on <a href="https://github.com/codebendercc">GitHub</a>. Got a patch? Please send it our way!</p>
+		</div>
+	</div><!--/row-->
+
+	<hr class="soften">
+</div>
+{% endblock %}
+

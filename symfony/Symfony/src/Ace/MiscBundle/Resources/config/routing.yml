@@ -2,6 +2,10 @@ AceMiscBundle_about:
     pattern:  /about
     defaults: { _controller: AceMiscBundle:Default:about }
 
+AceMiscBundle_techspecs:
+    pattern:  /techspecs
+    defaults: { _controller: AceMiscBundle:Default:techspecs }
+
 AceMiscBundle_team:
     pattern:  /team
     defaults: { _controller: AceMiscBundle:Default:team }
