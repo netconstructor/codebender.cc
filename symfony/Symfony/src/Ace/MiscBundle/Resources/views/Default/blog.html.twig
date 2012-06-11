@@ -73,6 +73,7 @@
 <div class="row-fluid">
 	<div class="span12">
 		<h3>{{ i.title }}</h3>
+		<h3><small>{{ i.date|date("M jS, Y") }}</small></h3>
 		{{ i.text|raw }}
 	</div>
 </div>
