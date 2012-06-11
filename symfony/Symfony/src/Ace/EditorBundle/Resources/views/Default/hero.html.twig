@@ -1,11 +1,10 @@
 <div class="hero-unit">
-  <h1>Arduino, join the cloud.</h1>
-  <p>{{ site_name }} allows you to code on the web, using an awesome HTML editor, faster and easier than you ever did before. With advanced code indentation, syntax highlighting, and compilation error reporting, its goal is to be the best Arduino editor in the world. Give it a try. Join the cloud today.</p>
+  <h1>enter the cloud. enter codebender.</h1>
+  <p>Time to revolutionize the way you develop and hack on your projects. {{site_name}} is a platform that helps your next idea come to life. Wether you are a maker, a hardware hacker or an artist, {{ site_name }} allows you to code on the web, faster and easier, using our awesome web editor. Host your Arduino sketches on the cloud and use our next-gen compiler to build and debug your sketches from your browser. When you are done, upload them to your Arduino, straight from your browser. No installations required. Give it a try, join the cloud today. </p>
   <p><a class="btn btn-primary btn-large" href="{{ path('AceMiscBundle_about') }}">Learn more &raquo;</a></p>
 </div>
 
-{% if is_granted('ROLE_USER') %}
-{% else %}
+{% if is_granted('ROLE_USER') == false %}
 <div id="myCarousel" class="carousel slide well">
             <div class="carousel-inner">
               <div class="item">
@@ -46,36 +45,17 @@
 <div class="row-fluid">
   <div class="span4">
     <h2>Code</h2>
-    <p>{{ site_name }} uses Ace, an awesome web code editor written in pure HTML5 and Javascript, which is the best thing ever since sliced bread, at least as far as code editors go. Use it now and enjoy indentation that just works™, great syntax highlighting, auto-completion, highlighting of matching parentheses and brackets and highlighting of a selected keyword. Oh, and of course, you can't call it an editor if it doesn't have Vim and EMACS keybindings. Built-in.</p>
+    <p>{{ site_name }} uses Ace, an awesome web code editor written in pure HTML5 and Javascript, which is the best thing ever since sliced bread, at least as far as code editors go.  With advanced code indentation, syntax highlighting, and compilation error reporting, we think it's the best Arduino editor in the world. Oh, and of course, if it doesn't have Vim and EMACS keybindings it's not an editor.</p>
    {# <p><a class="btn" href="javascript:void(0)">View details &raquo;</a></p> #}
   </div><!--/span-->
   <div class="span4">
     <h2>Compile</h2>
-    <p>Compile your code, on the cloud. With {{ site_name }}, you can compile your code on our servers, saving you the hassle of downloading and installing the necessary tools to compile. No more upgrading to newer versions and managing incompatible library versions. It also improves compilation times in old machines, simplifies checking for syntax errors in your program and with improved reporting on the faulty lines of code, you can find and squash bugs in no time.</p>
+    <p>Compile your code, on the cloud. With {{ site_name }}, your code is compiled on our servers, saving you the hassle of downloading, installing, and maintaining the necessary tools to compile. No need to upgrade to newer versions and managing incompatible library versions. {{site_name}} also improves compilation time and with our next-gen compiler which give you improved error reporting, you can eliminate bugs in no time.</p>
     {# <p><a class="btn" href="javascript:void(0)">View details &raquo;</a></p> #}
   </div><!--/span-->
   <div class="span4">
-    <h2>Built-in Libraries</h2>
-    <p>Never mind about finding, installing, and updating external libraries anymore. With {{ site_name }}, you only need to include the library you want to use, and we automatically compile it with your code. And we also take care of updating them when a new version is released. All just for you. Stop worrying about libraries, and start coding your Arduino. That autonomous space BBQ laser grill isn't going to build itself, you know.</p>
+    <h2>Upload</h2>
+    <p>Uploading (also known as flashing) your program on the Arduino has never been easier. When you are done coding, you can use {{ site_name }}'s Java Applet to give your browser access to you serial ports. This enables you to program your Arduino straight from your browser.<a href="javascript:void()" rel="tooltip" data-original-title="If you are using the Arduino Duemilanove, you're only going to need the FTDI drivers. If you are using the Arduino Uno, you're already set to go in Mac OS X and Linux, and you will only need to install drivers for Windows">No installations required*</a>. But why live in the past? With {{site_name}}, you will soon be able to program your Arduino &amp; Ethernet remotely, from anywhere in the word, straight from your browser.</p>
     {# <p><a class="btn" href="javascript:void(0)">View details &raquo;</a></p> #}
   </div><!--/span-->
 </div><!--/row-->
-{#
-<div class="row-fluid">
-  <div class="span4">
-    <h2>Heading</h2>
-    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-    <p><a class="btn" href="#">View details &raquo;</a></p>
-  </div><!--/span-->
-  <div class="span4">
-    <h2>Heading</h2>
-    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-    <p><a class="btn" href="#">View details &raquo;</a></p>
-  </div><!--/span-->
-  <div class="span4">
-    <h2>Heading</h2>
-    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-    <p><a class="btn" href="#">View details &raquo;</a></p>
-  </div><!--/span-->
-</div><!--/row-->
-#}
