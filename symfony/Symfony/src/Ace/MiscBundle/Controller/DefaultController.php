@@ -5,6 +5,9 @@ namespace Ace\MiscBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Ace\MiscBundle\Entity\BlogPost;
+use Ace\MiscBundle\Entity\Contact;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class developer
 {
@@ -108,5 +111,23 @@ class DefaultController extends Controller
 	public function tutorialsAction()
 	{
 		return $this->render('AceMiscBundle:Default:tutorials.html.twig');
+	}
+
+	public function contactAction()
+	{
+        // create a task and give it some dummy data for this example
+        $task = new Contact();
+        $task->setName('vasilis georgitzikis');
+        $task->setEmail("billgeo13@gmail.com");
+
+        $form = $this->createFormBuilder($task)
+            ->add('name', 'text')
+            ->add('email', 'email')
+            ->add('text', 'textarea')
+            ->getForm();
+
+        return $this->render('AceMiscBundle:Default:contact.html.twig', array(
+            'form' => $form->createView(),
+        ));
 	}
 }

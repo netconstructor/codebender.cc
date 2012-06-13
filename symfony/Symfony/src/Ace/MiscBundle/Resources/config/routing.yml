@@ -21,3 +21,11 @@ AceMiscBundle_blognew:
 AceMiscBundle_tutorials:
     pattern:  /tutorials
     defaults: { _controller: AceMiscBundle:Default:tutorials }
+
+AceMiscBundle_contact:
+    pattern:  /contact
+    defaults: { _controller: AceMiscBundle:Default:contact }
+
+AceMiscBundle_contact_new:
+    pattern:  /contact_new
+    defaults: { _controller: AceMiscBundle:Default:contact }

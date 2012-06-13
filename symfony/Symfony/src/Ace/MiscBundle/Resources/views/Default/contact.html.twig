@@ -1,0 +1,12 @@
+{# src/Ace/MiscBundle/Resources/views/Default/contact.html.twig #}
+{% extends 'AceEditorBundle:Default:container.html.twig' %}
+{% block title %}
+Contact {{ site_name }}
+{% endblock %}
+{% block mainspan %}
+<form action="{{ path('AceMiscBundle_contact_new') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" />
+</form>
+{% endblock %}
