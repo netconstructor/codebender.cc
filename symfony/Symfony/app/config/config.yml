@@ -25,6 +25,7 @@ twig:
     strict_variables: %kernel.debug%
     globals:
         site_name: "codebender"
+        email_addr: %email.addr%
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -54,8 +55,7 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-   transport:   smtp
-   host:    smtp.gmail.com
+   transport:   gmail
    username:    %email.user%
    password:    %email.pass%
    # port:    465
@@ -84,7 +84,7 @@ fos_user:
        mailer: fos_user.mailer.default
 #        mailer: fos_user.mailer.twig_swift
     from_email:
-       address:        codebender.cc@gmail.com
+       address:        %email.addr%
        sender_name:    codebender
     registration:
        confirmation:
