@@ -1,4 +1,4 @@
-<?
+<?php
 //just for see if there are errors
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -10,7 +10,11 @@ $objects = scandir($dir);
 foreach ($objects as $object) {
 if ($object != "." && $object != "..") {
 if (filetype($dir . "/" . $object) == "dir")
-rrmdir($dir . "/" . $object); else
+{
+	echo("Deleted: $dir/$object<br />\n");
+	rrmdir($dir . "/" . $object);
+}
+else
 unlink($dir . "/" . $object);
 }
 }
