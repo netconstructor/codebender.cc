@@ -4,9 +4,9 @@
 Contact {{ site_name }}
 {% endblock %}
 {% block mainspan %}
-<form action="{{ path('AceMiscBundle_contact_new') }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('AceMiscBundle_contact') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
-    <input type="submit" />
+    <input type="submit" class="btn btn-primary"/>
 </form>
 {% endblock %}

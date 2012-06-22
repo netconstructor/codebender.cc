@@ -113,18 +113,45 @@ class DefaultController extends Controller
 		return $this->render('AceMiscBundle:Default:tutorials.html.twig');
 	}
 
-	public function contactAction()
-	{
+	public function contactAction(Request $request)
+	{	    
         // create a task and give it some dummy data for this example
         $task = new Contact();
-        $task->setName('vasilis georgitzikis');
-        $task->setEmail("billgeo13@gmail.com");
+		if ($this->get('security.context')->isGranted('ROLE_USER') === true)
+		{
+			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+	        $task->setName($user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().")");
+	        $task->setEmail($user->getEmail());
+		}
 
         $form = $this->createFormBuilder($task)
             ->add('name', 'text')
             ->add('email', 'email')
             ->add('text', 'textarea')
             ->getForm();
+
+		if ($request->getMethod() == 'POST') 
+		{
+			$form->bindRequest($request);
+
+			if ($form->isValid())
+			{
+				$email_addr = $this->container->getParameter('email.addr');
+				
+				// perform some action, such as saving the task to the database
+			    $message = \Swift_Message::newInstance()
+			        ->setSubject('codebender contact request')
+			        ->setFrom($email_addr)
+			        ->setTo($email_addr)
+			        ->setBody($this->renderView('AceMiscBundle:Default:contact_email_form.txt.twig', array('task' => $task)))
+			    ;
+			    $this->get('mailer')->send($message);
+				$this->get('session')->setFlash('notice', 'Your message was sent!');
+
+				return $this->redirect($this->generateUrl('AceMiscBundle_contact'));
+			}
+		}
 
         return $this->render('AceMiscBundle:Default:contact.html.twig', array(
             'form' => $form->createView(),
