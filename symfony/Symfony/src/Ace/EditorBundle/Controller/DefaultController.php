@@ -81,8 +81,8 @@ class DefaultController extends Controller
 		if($hexTimestamp > $codeTimestamp)
 			$hex_exists = true;
 
-		$examples = $this->getExamplesAction($this->examples_directory,"");
-		$lib_examples = $this->getExamplesAction($this->libs_directory,"/examples");
+		$examples = $this->getExamplesAction($this::examples_directory,"");
+		$lib_examples = $this->getExamplesAction($this::libs_directory,"/examples");
 
 		return $this->render('AceEditorBundle:Default:editor.html.twig', array('username'=>$name, 'project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples, 'hex_exists' => $hex_exists));
 	}
@@ -342,8 +342,8 @@ class DefaultController extends Controller
 			// 	}
 			// }
 
-			$file = fopen($this->directory.$this->default_file, 'r');
-			$value = fread($file, filesize($this->directory.$this->default_file));
+			$file = fopen($this::directory.$this::default_file, 'r');
+			$value = fread($file, filesize($this::directory.$this::default_file));
 			fclose($file);
 
 			$file = new EditorFile();
@@ -382,9 +382,9 @@ class DefaultController extends Controller
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
 		$file_path = "";
 		if($type == 1)
-			$file_path = $this->examples_directory.$category."/".$name."/".$name.".ino";
+			$file_path = $this::examples_directory.$category."/".$name."/".$name.".ino";
 		else if($type == 2)
-			$file_path = $this->libs_directory.$category."/examples/".$name."/".$name.".ino";
+			$file_path = $this::libs_directory.$category."/examples/".$name."/".$name.".ino";
 		if(file_exists($file_path))
 		{
 			$file = fopen($file_path, 'r');
