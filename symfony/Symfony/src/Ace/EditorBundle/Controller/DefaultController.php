@@ -12,10 +12,10 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class DefaultController extends Controller
 {
-	public $default_file = "default_text.txt";
-	public $directory = "/var/www/aceduino/symfony/files/";
-	public $examples_directory = "/var/www/aceduino/symfony/files/examples/";
-	public $libs_directory = "/var/www/aceduino/symfony/files/libraries/";
+	const default_file = "default_text.txt";
+	const directory = "../../files/";
+	const examples_directory = "../../files/examples/";
+	const libs_directory = "../../files/libraries/";
 
 	public function indexAction()
 	{
