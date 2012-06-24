@@ -10,10 +10,8 @@ use Ace\FileBundle\Document\File;
 
 class DefaultController extends Controller
 {
-    public $default_file = "default_text.txt";
-	public $directory = "/var/www/aceduino/symfony/files/";
-	public $examples_directory = "/var/www/aceduino/symfony/examples/";
-	public $libs_directory = "/var/www/aceduino/symfony/libraries/";
+	const default_file = "default_text.txt";
+	const directory = "../../files/";
 
 	public function createAction()
 	{
@@ -28,8 +26,8 @@ class DefaultController extends Controller
 			$file = $this->getMyProject($project_name, $error);
 			if($error == -2)
 			{
-				$file = fopen($this->directory.$this->default_file, 'r');
-				$value = fread($file, filesize($this->directory.$this->default_file));
+				$file = fopen($this::directory.$this::default_file, 'r');
+				$value = fread($file, filesize($this::directory.$this::default_file));
 				fclose($file);
 
 				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
