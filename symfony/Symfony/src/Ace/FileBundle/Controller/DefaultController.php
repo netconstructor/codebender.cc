@@ -147,9 +147,9 @@ class DefaultController extends Controller
 		if($type == "code" || $type == "hex")
 		{
 			if($type == "code")
-				$response->setContent($file->getCodeTimestamp()->getTimestamp());
+				$response->setContent($file->getCodeTimestamp());
 			else
-				$response->setContent($file->getHexTimestamp()->getTimestamp());
+				$response->setContent($file->getHexTimestamp());
 			$response->setStatusCode(200);
 			$response->headers->set('Content-Type', 'text/html');
 		}
