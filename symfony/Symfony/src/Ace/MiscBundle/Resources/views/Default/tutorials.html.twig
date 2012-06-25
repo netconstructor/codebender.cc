@@ -3,18 +3,40 @@
 About {{ site_name }}
 {% endblock %}
 {% block javascripts %}
+<script type="text/javascript" src={{asset("jplayer/jquery.jplayer.min.js")}}></script>
 <script type="text/javascript">
 
 $(document).ready(function()
 {
 	$('a[rel="tooltip"]').tooltip();
-	$('a[rel="popover"]').popover();
+	$('a[rel="popover"]').popover({placement:"left"});
+		
+	$("#jquery_jplayer_1").jPlayer({
+		ready: function () {
+			$(this).jPlayer("setMedia", {
+				m4v: "{{asset("tutorials/codebender_tutorial.m4v")}}",
+				// ogv: "http://www.jplayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogv",
+				// webmv: "http://www.jplayer.org/video/webm/Big_Buck_Bunny_Trailer.webm",
+				// poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"
+			});
+		},
+//		supplied: "webmv, ogv, m4v",
+		swfPath: "{{asset("jplayer/")}}",
+		supplied: "m4v",
+		size: {
+			width: "480px",
+			height: "270px",
+			cssClass: "jp-video-270p"
+		}
+	});
 });
 
 </script>
 {% endblock %}
 
 {% block stylesheets %}
+<link type="text/css" href={{asset("jplayer/blue.monday/jplayer.blue.monday.css")}} rel="stylesheet" />
+
 <style type="text/css">
 .myoptions
 {
@@ -33,10 +55,76 @@ $(document).ready(function()
 {% block mainspan %}
 <h1>Tutorials <small>Learn how to use {{site_name}}</small></h1>
 
+<div class="row-fluid">
+	{% if is_granted('ROLE_USER') %}		      
+	<div class="span7">
+	{% else %}
+	<div class="span6">
+	{% endif %}
+		<div id="jp_container_1" class="jp-video ">
+			<div class="jp-type-single">
+				<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+				<div class="jp-gui">
+					<div class="jp-video-play">
+						<a href="javascript:;" class="jp-video-play-icon" tabindex="1">play</a>
+					</div>
+					<div class="jp-interface">
+						<div class="jp-progress">
+							<div class="jp-seek-bar">
+								<div class="jp-play-bar"></div>
+							</div>
+						</div>
+						<div class="jp-current-time"></div>
+						<div class="jp-duration"></div>
+						<div class="jp-controls-holder">
+							<ul class="jp-controls">
+								<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+								<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+								<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+								<li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+								<li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+								<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+							</ul>
+							<div class="jp-volume-bar">
+								<div class="jp-volume-bar-value"></div>
+							</div>
+							<ul class="jp-toggles">
+								<li><a href="javascript:;" class="jp-full-screen" tabindex="1" title="full screen">full screen</a></li>
+								<li><a href="javascript:;" class="jp-restore-screen" tabindex="1" title="restore screen">restore screen</a></li>
+								<li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+								<li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+							</ul>
+						</div>
+						<div class="jp-title">
+							<ul>
+								<li>codebender</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="jp-no-solution">
+					<span>Update Required</span>
+					To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if is_granted('ROLE_USER') %}		      
+	<div class="span5">
+	{% else %}
+	<div class="span6">
+	{% endif %}
+		<h3>Video!</h3>
+		<p>Interested in codebender? Get a quick preview of the features we offer in the video on the left. Take a small tour of the website and see codebender in action. Create a project and see how easy it is to save it compile it and upload it to your Arduino. Then add some great error reporting to help you fix those pesky bugs. Did we wet your appetite yet?</p>
+	</div>	
+</div>
+
+<hr />
+
 {% if is_granted('ROLE_USER') %}		      
 <div class="span4">
 {% else %}
-<div class="span2"></div>
+<div class="span1"></div>
 <div class="span3">
 {% endif %}
 <h3>Sidebar</h3>
@@ -70,14 +158,8 @@ $(document).ready(function()
   </div>
 </div>
 
-{% if is_granted('ROLE_USER') %}		      
-<div class="span1"></div>
-<div class="span4">
-{% else %}
-<div class="span2"></div>
 <div class="span3">
-{% endif %}
-	<h3>Project Sidebar</h3>
+	<h3>Project Actions</h3>
 	<p>This is the sidebar you are going to see by default in the project editor. It lets you perform various project-related tasks with just one click.</p>
 	<a rel="popover" data-content="Clicking this button will launch a popup confirmation window, to make sure you want to Delete your project. Try it out by clicking the button now. Keep in mind that deleting your project results in the immediate deletion of all the data associated with it." data-original-title="Deletion" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</a>
 	<a rel="popover" data-content="Most of the times, you will want to undo and redo your actions. This is easily accomplished on the editor by pressing Ctrl-Z/Ctrl-Y on Windows, Ctrl-Z/Ctrl-Shift-Z for Linux or Cmd-Z/Cmd-Shift-Z for Mac OS X respectively. However, there are times when you want to revert backed to your last saved version of your project. This is when you'll find the Revert button very useful. Simply put, it fetches the last saved version from the server and refreshes the editor with that version." data-original-title="Reverting back" class="btn span12" data-toggle="modal" href="javascript:void()" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</a>
@@ -89,7 +171,9 @@ $(document).ready(function()
 		<option>Arduino Duemilanove</option>
 	</select>
 	</a>
-				<hr>
+	</div>
+	<div class="span3">
+	<h3>Serial Actions</h3>
 				    <div id="scanning" style="display: block; ">
 						<a rel="popover" data-content="The Upload button allows you to upload your compiled code to an Arduino connected to your computer via USB. By using our home-made Java applet, you can flash your Arduino board with your new code straight from the browser. Just select your Arduino board, click Upload, and watch the beauty of the blinking Tx/RX lights as your code is being flashed to the Arduino." data-original-title="Uploading" class="btn span12" data-toggle="modal" href="javascript:void()" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> Upload</span></a>
 				        <a rel="popover" data-content="Sometimes you need to communicate to the Arduino through the Serial Port. Wether you want to debug your programs, get sensor values, or send commands, we've got you covered. Just select your Arduino's serial port and the correct baudrate, and click on the Serial Monitor button." data-original-title="Serial Monitor" class="btn span12" data-toggle="modal" href="javascript:void()" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</a>
