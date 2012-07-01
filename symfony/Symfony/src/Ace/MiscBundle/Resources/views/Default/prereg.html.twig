@@ -1,0 +1,20 @@
+{# src/Ace/MiscBundle/Resources/views/Default/contact.html.twig #}
+{% extends 'AceEditorBundle:Default:container.html.twig' %}
+{% block title %}
+{{ site_name }}
+{% endblock %}
+{% block mainspan %}
+<h2>Pre-register <small>get a chance to try codebender!</small></h2>
+<p>Thanks for taking the time to check out codebender! If you are interested in trying codebender, we will be launching an Indiegogo campaign soon, in order to cover our operating costs for the first year. You can also pre-register using the form bellow, and we'll be incrementally adding people as we test out how our servers are handling the traffic. If you have a registration code, please add it to the description.</p>
+<hr class="soft"/>
+<div class="row-fluid">
+	<div class="span12">
+		<form action="{{ path('AceMiscBundle_prereg') }}" method="post" {{ form_enctype(form) }}>
+		    {{ form_widget(form) }}
+
+		    <input type="submit" class="btn btn-primary"/>
+		</form>
+</div>
+
+</div>
+{% endblock %}

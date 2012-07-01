@@ -25,3 +25,7 @@ AceMiscBundle_contact:
 AceMiscBundle_contact_new:
     pattern:  /contact_new
     defaults: { _controller: AceMiscBundle:Default:contact }
+
+AceMiscBundle_prereg:
+    pattern:  /prereg
+    defaults: { _controller: AceMiscBundle:Default:prereg }
