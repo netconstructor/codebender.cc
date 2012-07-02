@@ -4,12 +4,3 @@
     RewriteRule ^(.*)$ app.php [QSA,L]
 </IfModule>
 
-# It is important for server performance to order your .htaccess "deny from" and "allow from" statements with deny first, then allow after all of the deny directives.
-
-order allow,deny
-deny from 216.252.64.219
-deny from 10.90.247.160
-deny from 10.38.38.21
-deny from 10.92.235.153
-deny from 10.68.53.191
-allow from all
