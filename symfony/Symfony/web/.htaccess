@@ -8,3 +8,7 @@
 
 order deny,allow
 deny from 216.252.64.219
+deny from 10.90.247.160
+deny from 10.38.38.21
+deny from 10.92.235.153
+deny from 10.68.53.191
