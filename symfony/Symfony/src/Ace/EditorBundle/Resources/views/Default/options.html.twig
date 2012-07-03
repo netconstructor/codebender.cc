@@ -17,16 +17,16 @@ function isvalidpass(pass)
 	var regnum = /.*\d/; //number
 	var reglet = /.*[a-z]/; //letters
 	var regcaps = /.*[A-Z]/; //caps
-	var regpunc = /.*[@#$%\!\^\&\*\(\)\_\+\=\~]/; //symbols
+	var regpunc = /.*[@#$%\!\^\&\*\(\)\_\+\=\~\<\>]/; //symbols
 	var regexp = [regnum, reglet, regcaps, regpunc];
 	var sets = 0;
-	
+
 	var len = $("#"+pass).val().length;
-	
-	if ( len == 0)
-		return 2; 
+
+	if (len == 0)
+		return 2;
 	else if(len < 6 || len > 15)
-		return 3;	
+		return 3;
 	else
 	{
 		for(var i=0 ; i < 4; i++)
@@ -48,22 +48,31 @@ function oldpasscheck(id)
 	{
 		if(len > 5 && len < 16)//reduce validation overhead
 		{
+			$(".oldpass-info").html('');
 			if(isvalidpass(id)==1)
 			{
 				$(".oldpass").removeClass("error").removeClass("success").addClass("warning");
 				$(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
+				$(".oldpass-info").html('<i>Valid, type your Password and press Tab key</i>');
+				//setInterval(validation(id),100000);
 			}
+			else{
+				$(".oldpass-info").html('<i>Invalid Password,Password must contain characters from at least 3 of 4 characters sets([a..z][A..Z][0..9][~!@#$%^&*()_+=])</i>');
+			}
+
 		}
 		else
 		{
 			$(".oldpass").removeClass("warning").removeClass("success").addClass("error");
-			$(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");		
+			$(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
+			$(".oldpass-info").html('<i>Passwords are 6-15 characters long</i>');
 		}
 	}
 	else
 	{
 		$(".oldpass").removeClass("error").removeClass("success").removeClass("warning");
 		$(".password_old").removeClass("icon-remove").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-exclamation-sign");
+		$(".oldpass-info").html('');
 	}
 };
 
@@ -78,7 +87,7 @@ function validation(id)
 			//new_pass set OK
 			$(".password_signs").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
 			$(".newpass-info").html('');
-			
+
 			if($("#new_pass").val() == $("#confirm_pass").val()) //passwords match
 			{
 				//confirm_pass set OK
@@ -86,12 +95,14 @@ function validation(id)
 				$(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
 				$(".confirmpass-info").html('');
 			}
-			else 
+			else
 			{
+				if($("#confirm_pass").val().length!=0){
 				//confirm_pass != new_pass, confirm_pass set to error
 				$(".passwords").removeClass("success").addClass("error");
 				$(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
 				$(".confirmpass-info").html('<i>Passwords do not match!</i>');
+				}
 			}
 		}
 		else if(s == 2) //new_pass is empty
@@ -99,7 +110,7 @@ function validation(id)
 			//bring new_pass to normal
 			$(".password_signs").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
 			$(".newpass-info").html('');
-		
+
 			if($("#new_pass").val() == $("#confirm_pass").val()) //both empty
 			{
 				//bring confirm_pass to normal
@@ -120,20 +131,23 @@ function validation(id)
 			//set passwords to error
 			$(".passwords").removeClass("success").addClass("error");
 			$(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-			
+
 			if(s == 3)
 				$(".newpass-info").html('<i>Passwords must be 6-15 characters long</i>');
 			else
 				$(".newpass-info").html('<i>Password must contain characters from at least 3 of 4 characters sets([a..z][A..Z][0..9][~!@#$%^&*()_+=])</i>');
-			
+
 			$(".confirmpass-info").html('');
 		}
 	}
-	
+
 	else if(id=="old_pass")
 	{
 		if ($("#"+id).val().length != 0)
 		{
+			$(".oldpass").removeClass("error").removeClass("success").addClass("warning");
+			$(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
+			$(".oldpass-info").html('<i>Checking Password</i>');
 			$.post("{{ path('AceEditorBundle_checkpass') }}", {oldpass: $("#"+id).val() },
 			function(info)
 			{
@@ -141,17 +155,19 @@ function validation(id)
 				{
 					$(".oldpass").removeClass("warning").addClass("success");
 					$(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
+					$(".oldpass-info").html('');
 				}
 				else
 				{
 					$(".oldpass").removeClass("warning").removeClass("success").addClass("error");
 					$(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
+					$(".oldpass-info").html('<i>Wrong Password!</i>');
 				}
-			});
+			}).error(function() { alert("error"); });
 		}
 	}
-	
-	
+
+
 	else if(id=="email") //using type="email" instead
 	{
 		if ($("#"+id).val().length > 4)
@@ -196,9 +212,9 @@ function validation(id)
 			$(".mail-info").html('');
 		}
 	}
-	
+
 	else{}
-	
+
 };
 </script>
 
@@ -211,7 +227,7 @@ function validation(id)
 }
 </style>
 
-Change your details, then click 'save' to save your changes.<br /><br />
+Change your personal information, then click 'save' to save your changes.<br /><br />
 
 <form name="form" id="form" action="{{ path('AceEditorBundle_homepage') }}">
 <div class="row-fluid">
@@ -248,7 +264,7 @@ Change your details, then click 'save' to save your changes.<br /><br />
 			<div class="controls">
 				<div class="input-prepend">
 					<span class="add-on">	<i class="icon-envelope mail-icon"></i></span>
-					<input class="input-large" type="email" name="email" id="email" value="{{ settings.getEmail() }}" onkeyup="validation(id)"/> 
+					<input class="input-large" type="email" name="email" id="email" value="{{ settings.getEmail() }}" onkeyup="validation(id)"/>
 					<span class="help-inline mail-info"></span>
 				</div>
 			</div>
@@ -269,7 +285,8 @@ Change your details, then click 'save' to save your changes.<br /><br />
 			<div class="controls">
 				<div class="input-prepend">
 					<span class="add-on">	<i class="icon-exclamation-sign password_old"></i></span>
-					<input class="input-large" type="password" name="old_pass" id="old_pass" value="" onkeyup="oldpasscheck(id)" onchange="validation(id)"/>
+					<input class="input-large" type="password" name="old_pass" id="old_pass" value="" onkeyup="oldpasscheck(id)" onblur="validation(id)"/>
+					<span class="help-inline oldpass-info"></span>
 				</div>
 			</div>
 		</div>
@@ -302,8 +319,8 @@ Change your details, then click 'save' to save your changes.<br /><br />
 
 <script>
 $(document).ready(function()
-	{	
-		$("#modify").click(function() 
+	{
+		$("#modify").click(function()
 		{
 			//construct array name=>value from form fields
 			var items = {};
