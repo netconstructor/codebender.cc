@@ -289,17 +289,19 @@ class DefaultController extends Controller
 					$response->setContent($errorList[0]->getMessage());
 
 				//TODO:hash the password
-				/*
+
 				if($oldpass){
-					if ($user->getPassword()===$oldpass)
-					{
-						$user->setPassword($newpass);
-						$response->setContent('OK');
+					$encoder_service = $this->get('security.encoder_factory');
+					$encoder = $encoder_service->getEncoder($user);
+					$encoded_oldpass = $encoder->encodePassword($oldpass, $user->getSalt());
+					if ($user->getPassword()===$encoded_oldpass){
+						$user->setPassword($encoder->encodePassword($newpass, $user->getSalt()));
+						$response->setContent('OK, Password Updated');
 					}
 					else
 						$response->setContent('OK, Password Not Updated');
 				}
-				*/
+
 				//$response->setContent('OK');
 				$em->flush();
 
