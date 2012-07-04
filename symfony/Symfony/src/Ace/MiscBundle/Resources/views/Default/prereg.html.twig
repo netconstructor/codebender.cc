@@ -5,16 +5,25 @@
 {% endblock %}
 {% block mainspan %}
 <h2>Pre-register <small>get a chance to try codebender!</small></h2>
-<p>Thanks for taking the time to check out codebender! If you are interested in trying codebender, we will be launching an Indiegogo campaign soon, in order to cover our operating costs for the first year. You can also pre-register using the form bellow, and we'll be incrementally adding people as we test out how our servers are handling the traffic. If you have a registration code, please add it to the description.</p>
+<p>Thanks for taking the time to check out codebender! If you are interested in trying codebender, we have launched an Indiegogo campaign in order to fund our launch. Please consider supporting us. You can also pre-register using the form bellow, and we'll be slowly adding some people as we test out how our servers are handling the traffic. If you have a registration code, please add it to the description to make sure you get in.</p>
+
 <hr class="soft"/>
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span6">
+		<h3>Help us launch</h3>
+		<p>Before pre-registering, please consider supporting <a href="http://igg.me/p/155075?a=803683" target="_new">our Indiegogo campaign</a>. We are trying to cover our first year of hosting and operating costs in order to keep codebender free for everyone. With a small donation, you'll get an invite and you will be helping us launch this service, and keep it free for the community.</p>
+		<p style="text-align:center; margin-top:0px; margin-bottom:0px; padding:0px;">
+			<a href="http://igg.me/p/155075?a=803683" target="_new"><img src="http://www.indiegogo.com/images/igg_lockup_funded_color_black.jpg"></a>
+		</p>
+	</div>
+	<div class="span6">
+		<h3>Pre-registration Form</h3>
 		<form action="{{ path('AceMiscBundle_prereg') }}" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 
 		    <input type="submit" class="btn btn-primary"/>
 		</form>
-</div>
+	</div>
 
 </div>
 {% endblock %}
