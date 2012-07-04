@@ -155,7 +155,7 @@ class DefaultController extends Controller
 	private function iterate_dir($directory)
 	{
 		$dir = opendir($directory);
-		$iter = readdir();
+		$iter = readdir($dir);
 		$array = array();
 		while(!($iter === FALSE))
 		{
@@ -329,12 +329,12 @@ class DefaultController extends Controller
 			{
 				throw $this->createNotFoundException('No user found with username '.$name);
 			}
-			
+
 			//*******************************************************************************************************************
-			//WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF 
+			//WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF
 			//WHY WAS THIS STILL HERE? WHAT _EXACTLY_ DID IT DO, AND AM I TAKING CARE OF IT NOW THAT WE'VE SWITCHED TO MONGODB?
 			//*******************************************************************************************************************
-			
+
 			// $files = $this->getDoctrine()->getRepository('AceEditorBundle:EditorFile')->findByOwner($user->getId());
 			// foreach ($files as $file)
 			// {
@@ -444,7 +444,7 @@ class DefaultController extends Controller
 			return new Response('There is no such user');
 		}
 		$files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')->findByOwner($user->getId());
-		
+
 		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
 		if ( $result != false ) {
 			$tweet=json_decode($result); // get tweets and decode them into a variable
@@ -460,10 +460,10 @@ class DefaultController extends Controller
 		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
 		$file = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')
 			->findOneBy(array('name' => $project_name, 'owner' => $user->getID()));
-		
+
 		if(!$file)
 		{
-			return new Response("There is no such project");		
+			return new Response("There is no such project");
 		}
 		else
 			return $this->render('AceEditorBundle:Default:project.html.twig', array('project'=>$project_name, 'user'=>$user));
