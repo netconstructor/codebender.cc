@@ -6,6 +6,8 @@ class Prereg
 {
     protected $name;
 
+    protected $username;
+
     protected $email;
 
     protected $site;
@@ -21,6 +23,15 @@ class Prereg
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+    public function setUsername($username)
+    {
+        $this->username = $username;
     }
 
     public function getEmail()

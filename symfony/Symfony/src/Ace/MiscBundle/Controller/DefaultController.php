@@ -169,6 +169,7 @@ class DefaultController extends Controller
 
         $form = $this->createFormBuilder($task)
             ->add('name', 'text')
+            ->add('username', 'text')
             ->add('email', 'email')
             ->add('site', 'text')
             ->add('description', 'textarea')
