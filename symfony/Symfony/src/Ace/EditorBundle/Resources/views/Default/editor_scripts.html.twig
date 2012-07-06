@@ -131,7 +131,7 @@ function build()
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
 		{
-			$("#compile_output").css('color', 'red');
+			$("#compile_output").css('color', 'black');
 			for (var i=0; i<obj.lines.length; i++)
 			{
 				$(".ace_gutter-cell").filter(function(index) {
