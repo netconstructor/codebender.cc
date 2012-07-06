@@ -1,8 +1,6 @@
 {% extends '::base.html.twig' %}
 {% block body %}
 
-<script src={{asset('jquery.pjax.js')}}></script>
-
 <script>
 $(document).ready(function()
 {	
@@ -11,7 +9,6 @@ $(document).ready(function()
 		$('[name=project_name]').val($("#your-repos-filter").val());
 		$("#create").submit();
 	});
-	$('a').pjax('#mycontainer',{ fragment: "#mycontainer" });			
 });
 </script>
 
