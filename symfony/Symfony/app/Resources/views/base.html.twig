@@ -56,6 +56,38 @@
         {% block stylesheets %}{% endblock %}
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+		
+		
+		<script src="http://tab-slide-out.googlecode.com/files/jquery.tabSlideOut.v1.3.js"></script>
+
+<script type = "text/javascript">
+$(function(){
+	$('.slide-out-div').tabSlideOut({
+		tabHandle: '.handle',                     //class of the element that will become your tab
+		pathToTabImage: '{{asset("images/indiegogo.png")}}', //path to the image for the tab //Optionally can be set using css
+		imageHeight: '127px', 										//height of tab image //Optionally can be set using css
+		imageWidth: '32px',                       //width of tab image //Optionally can be set using css
+		tabLocation: 'left',                      //side of screen where tab lives, top, right, bottom, or left
+		speed: 300,                               //speed of animation
+		action: 'click',                          //options: 'click' or 'hover', action to trigger animation
+		topPos: '100px',                          //position from the top/ use if tabLocation is left or right
+		leftPos: '20px',                          //position from left/ use if tabLocation is bottom or top
+		fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
+			});
+
+		});
+
+</script>
+<style type="text/css">
+
+.slide-out-div {
+		background: url({{ asset("blizzard.png")}});
+    padding: 20px;
+    width: 250px;
+/*    border: 1px solid #29216d;*/
+}      
+</style>
+
 	    {% block javascripts %}{% endblock %}
 	
 		<script type="text/javascript">
@@ -148,4 +180,13 @@
 		/* custom configuration goes here (www.olark.com/documentation) */
 		olark.identify('7078-297-10-7791');/*]]>{/literal}*/</script><noscript><a href="https://www.olark.com/site/7078-297-10-7791/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript><!-- end olark code -->
     </body>
+    <div class="slide-out-div well">
+          <a class="handle" href="http://www.indiegogo.com/codebender">Indiegogo</a>
+					<h3>Help us launch</h3>
+					<p>Before pre-registering, please consider supporting <a href="http://igg.me/p/155075?a=803683" target="_new">our Indiegogo campaign</a>. We are trying to cover our first year of hosting and operating costs in order to keep codebender free for everyone. With a small donation, you'll get an invite and you will be helping us launch this service, and keep it free for the community.</p>
+					<p style="text-align:center; margin-top:0px; margin-bottom:0px; padding:0px;">
+						<iframe src="http://www.indiegogo.com/project/155075/widget/803692" width="224px" height="429px" frameborder="0" scrolling="no"></iframe>
+					</p>
+      </div>
+
 </html>
