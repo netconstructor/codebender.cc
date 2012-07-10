@@ -74,18 +74,59 @@ $(function(){
 		leftPos: '20px',                          //position from left/ use if tabLocation is bottom or top
 		fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
 			});
-
 		});
 
 </script>
 <style type="text/css">
 
 .slide-out-div {
-		background: url({{ asset("blizzard.png")}});
-    padding: 20px;
-    width: 250px;
+	background: url('{{ asset("blizzard.png")}}');
+	padding: 20px;
+	width: 250px;
 /*    border: 1px solid #29216d;*/
-}      
+
+	line-height: 1em;
+	position: fixed!important;
+	height: 575px!important;
+	top: 120px!important;
+	left: -292px;
+	background-color: #CC6D00;
+	border-style: solid none solid solid;
+	border-top-color: white;
+	border-bottom-color: white;
+	border-left-color: white;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 0px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.246094) 1px 1px 1px inset, rgba(0, 0, 0, 0.496094) 0px 1px 2px;
+	box-shadow: rgba(255, 255, 255, 0.246094) 1px 1px 1px inset, rgba(0, 0, 0, 0.496094) 0px 1px 2px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	right: 0px;
+	z-index: 9999;
+	margin-top: -60px;
+	margin-right: 0px;
+	display: block;
+} 
+
+.handle
+{
+	background-image: url(http://codebender.cc/images/indiegogo.png); 
+	width: 32px;
+	height: 127px;
+	display: block;
+	text-indent: -99999px;
+	outline: none;
+	position: absolute;
+	top: 0%!important;
+	right: -32px;
+	background-position: initial initial;
+	background-repeat: no-repeat no-repeat;
+}     
 </style>
 
 	    {% block javascripts %}{% endblock %}
@@ -183,7 +224,7 @@ $(function(){
     <div class="slide-out-div well">
           <a class="handle" href="http://www.indiegogo.com/codebender">Indiegogo</a>
 					<h3>Help us launch</h3>
-					<p>Before pre-registering, please consider supporting <a href="http://igg.me/p/155075?a=803683" target="_new">our Indiegogo campaign</a>. We are trying to cover our first year of hosting and operating costs in order to keep codebender free for everyone. With a small donation, you'll get an invite and you will be helping us launch this service, and keep it free for the community.</p>
+					<p>Please consider supporting us on <a href="http://igg.me/p/155075?a=803683" target="_new">Indiegogo</a>. We're trying to cover our costs for the first year in order to keep codebender free for everyone. With a small donation, you can help us launch this service, and keep it free.</p>
 					<p style="text-align:center; margin-top:0px; margin-bottom:0px; padding:0px;">
 						<iframe src="http://www.indiegogo.com/project/155075/widget/803692" width="224px" height="429px" frameborder="0" scrolling="no"></iframe>
 					</p>
