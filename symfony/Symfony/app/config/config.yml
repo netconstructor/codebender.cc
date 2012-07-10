@@ -81,21 +81,20 @@ fos_user:
     firewall_name: main
     user_class: Ace\ExperimentalUserBundle\Entity\ExperimentalUser
     service:
-       mailer: fos_user.mailer.default
-#        mailer: fos_user.mailer.twig_swift
+       # mailer: fos_user.mailer.default
+       mailer: fos_user.mailer.twig_swift
     from_email:
        address:        %email.addr%
        sender_name:    codebender
     registration:
        confirmation:
-           enabled: true
-#            email:
-#               template: AceExperimentalUserBundle:User:resetting.email.twig
+            enabled: true
+            template: AceExperimentalUserBundle:User:confirmation.email.twig
        form:
             type: ace_experimental_user_registration
-#    resetting:
-#        email:
-#            template: AceExperimentalUserBundle:User:resetting.email.twig
+    resetting:
+       email:
+           template: AceExperimentalUserBundle:User:resetting.email.twig
 
 doctrine_mongodb:
     connections:
