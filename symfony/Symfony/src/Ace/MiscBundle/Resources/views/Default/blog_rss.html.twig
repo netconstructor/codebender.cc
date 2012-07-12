@@ -11,9 +11,9 @@
 	{% for post in posts %}
 	<item> 
 		<title>{{ post.title }}</title>  
-		<description>{{ post.text | raw }}</description>  
 		<link>{{ url('AceMiscBundle_blog') }}</link>  
-		<pubDate>{{ post.date | date('jS F Y') }}</pubDate>  
+		<description><![CDATA[{{ post.text | raw }}]]></description>  
+		<pubDate>{{ post.date | date('r') }}</pubDate>  
 	</item>  
 	{% endfor %}
 </channel> 
