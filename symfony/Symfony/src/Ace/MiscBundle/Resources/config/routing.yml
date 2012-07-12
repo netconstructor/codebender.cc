@@ -33,3 +33,7 @@ AceMiscBundle_contact_new:
 AceMiscBundle_prereg:
     pattern:  /prereg
     defaults: { _controller: AceMiscBundle:Default:prereg }
+
+AceMiscBundle_notify:
+    pattern:  /notify
+    defaults: { _controller: AceMiscBundle:Default:notify }
