@@ -113,7 +113,9 @@ class DefaultController extends Controller
 		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
 		$posts = $qb->getQuery()->getResult();
 
-		return $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
+		$response = $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
+		$response->headers->set('Content-Type', 'application/rss+xml');
+		return $response;
 	}
 	
 
