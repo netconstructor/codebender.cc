@@ -8,6 +8,7 @@ use Ace\MiscBundle\Entity\BlogPost;
 use Ace\MiscBundle\Entity\Contact;
 use Ace\MiscBundle\Entity\Prereg;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class developer
