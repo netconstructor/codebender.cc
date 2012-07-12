@@ -219,14 +219,14 @@ class DefaultController extends Controller
 	
 	public function notifyAction()
 	{
-		$message = $this->getRequest()->query->get('message');
+		$msg = $this->getRequest()->query->get('message');
 
 		$email_addr = $this->container->getParameter('email.addr');
 		$message = \Swift_Message::newInstance()
 	        ->setSubject('[codebender][notification] Java Notification')
 	        ->setFrom($email_addr)
 	        ->setTo("amaxilatis@codebender.cc")
-	        ->setBody($message);
+	        ->setBody($msg);
 	    $this->get('mailer')->send($message);
 	    
 		return new Response("OK");
