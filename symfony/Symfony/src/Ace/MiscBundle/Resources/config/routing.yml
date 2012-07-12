@@ -10,6 +10,10 @@ AceMiscBundle_blog:
     pattern:  /blog
     defaults: { _controller: AceMiscBundle:Default:blog }
 
+AceMiscBundle_blog_rss:
+    pattern:  /blog/rss
+    defaults: { _controller: AceMiscBundle:Default:blog_rss }
+
 AceMiscBundle_blognew:
     pattern:  /blog/new
     defaults: { _controller: AceMiscBundle:Default:blog_new }

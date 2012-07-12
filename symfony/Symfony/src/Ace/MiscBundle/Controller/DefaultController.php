@@ -101,9 +101,21 @@ class DefaultController extends Controller
 			$em->flush();
 			return $this->redirect($this->generateUrl('AceMiscBundle_blog'));
 		}
-
-
 	}
+	
+	public function blog_rssAction()
+	{
+		// $posts = $this->getDoctrine()->getRepository('AceMiscBundle:BlogPost')->findAll();
+
+		$em = $this->getDoctrine()->getEntityManager();
+		$qb = $em->createQueryBuilder();
+
+		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
+		$posts = $qb->getQuery()->getResult();
+
+		return $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
+	}
+	
 
 	public function tutorialsAction()
 	{
