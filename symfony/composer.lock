@@ -1,0 +1,19 @@
+{
+    "hash": "1f3410c4d9ce8bf6a2e66cc3494480b8",
+    "packages": [
+        {
+            "package": "codebendercc/arduino-files",
+            "version": "dev-master",
+            "source-reference": "5e38283a73fd902c1210b55ef50891ac2151a0ff",
+            "commit-date": "1342464403"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": [
+
+    ]
+}
