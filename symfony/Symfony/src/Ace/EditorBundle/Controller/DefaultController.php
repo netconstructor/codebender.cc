@@ -16,6 +16,7 @@ class DefaultController extends Controller
 	const directory = "../../files/";
 	const examples_directory = "../../files/examples/";
 	const libs_directory = "../../files/libraries/";
+	const extra_libs_directory = "../../files/extra-libraries/";
 
 	public function indexAction()
 	{
@@ -83,8 +84,9 @@ class DefaultController extends Controller
 
 		$examples = $this->getExamplesAction($this::examples_directory,"");
 		$lib_examples = $this->getExamplesAction($this::libs_directory,"/examples");
+		$extra_lib_examples = $this->getExamplesAction($this::extra_libs_directory,"/examples");
 
-		return $this->render('AceEditorBundle:Default:editor.html.twig', array('username'=>$name, 'project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples, 'hex_exists' => $hex_exists));
+		return $this->render('AceEditorBundle:Default:editor.html.twig', array('username'=>$name, 'project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'hex_exists' => $hex_exists));
 	}
 
 	public function getExamplesAction($mydir, $middle)
@@ -387,6 +389,15 @@ class DefaultController extends Controller
 			$file_path = $this::examples_directory.$category."/".$name."/".$name.".ino";
 		else if($type == 2)
 			$file_path = $this::libs_directory.$category."/examples/".$name."/".$name.".ino";
+		else if($type == 3)
+		{
+			$file_path = $this::extra_libs_directory.$category."/examples/".$name."/".$name;
+			if(file_exists($file_path.".ino"))
+				$file_path = $file_path.".ino";
+			else if(file_exists($file_path.".pde"))
+				$file_path = $file_path.".pde";
+		}
+		
 		if(file_exists($file_path))
 		{
 			$file = fopen($file_path, 'r');
