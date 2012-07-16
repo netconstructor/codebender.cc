@@ -68,7 +68,7 @@ class DefaultController extends Controller
 		$developers = array($tzikis, $tsampas, $amaxilatis, $kousta, $orfanos);
 		return $this->render('AceMiscBundle:Default:team.html.twig', array("developers" => $developers));
 	}
-	public function blogAction()
+	public function blogAction($arg)
 	{
 		// $posts = $this->getDoctrine()->getRepository('AceMiscBundle:BlogPost')->findAll();
 
@@ -77,8 +77,15 @@ class DefaultController extends Controller
 
 		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
 		$posts = $qb->getQuery()->getResult();
-
-		return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
+		
+		if($arg == 'html')
+			return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
+		else if ($arg == 'rss' )
+			$response = $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
+			$response->headers->set('Content-Type', 'application/rss+xml');
+			return $response;
+			
+		
 	}
 
 	public function blog_newAction()
@@ -102,23 +109,7 @@ class DefaultController extends Controller
 			$em->flush();
 			return $this->redirect($this->generateUrl('AceMiscBundle_blog'));
 		}
-	}
-	
-	public function blog_rssAction()
-	{
-		// $posts = $this->getDoctrine()->getRepository('AceMiscBundle:BlogPost')->findAll();
-
-		$em = $this->getDoctrine()->getEntityManager();
-		$qb = $em->createQueryBuilder();
-
-		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
-		$posts = $qb->getQuery()->getResult();
-
-		$response = $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
-		$response->headers->set('Content-Type', 'application/rss+xml');
-		return $response;
-	}
-	
+	}			
 
 	public function tutorialsAction()
 	{
