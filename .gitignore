@@ -3,3 +3,4 @@ symfony/Symfony/app/logs
 compiler/tempfiles
 *~
 .DS_Store
+symfony/vendor/codebendercc/arduino-files/.git
