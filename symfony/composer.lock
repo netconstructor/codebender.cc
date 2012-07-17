@@ -4,8 +4,8 @@
         {
             "package": "codebendercc/arduino-files",
             "version": "dev-master",
-            "source-reference": "5e38283a73fd902c1210b55ef50891ac2151a0ff",
-            "commit-date": "1342464403"
+            "source-reference": "ab788dbdf5462d4867db7b6cc3c25ee243240632",
+            "commit-date": "1342522038"
         }
     ],
     "packages-dev": null,
