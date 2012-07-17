@@ -13,10 +13,10 @@ use Symfony\Component\Validator\Constraints\Regex;
 class DefaultController extends Controller
 {
 	const default_file = "default_text.txt";
-	const directory = "../../files/";
-	const examples_directory = "../../files/examples/";
-	const libs_directory = "../../files/libraries/";
-	const extra_libs_directory = "../../files/extra-libraries/";
+	const directory = "../../vendor/codebendercc/arduino-files/";
+	const examples_directory = "../../vendor/codebendercc/arduino-files/examples/";
+	const libs_directory = "../../vendor/codebendercc/arduino-files/libraries/";
+	const extra_libs_directory = "../../vendor/codebendercc/arduino-files/extra-libraries/";
 
 	public function indexAction()
 	{
