@@ -49,3 +49,11 @@ AceEditorBundle_user:
 AceEditorBundle_project:
     pattern:  /project/{username}/{project_name}
     defaults: { _controller: AceEditorBundle:Default:project }
+
+AceEditorBundle_libraries:
+    pattern: /libraries
+    defaults: {_controller: AceEditorBundle:Default:libraries }
+
+# AceEditorBundle_upload:
+#     pattern: /
+#     defaults:{}
