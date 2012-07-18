@@ -483,4 +483,9 @@ class DefaultController extends Controller
 		else
 			return $this->render('AceEditorBundle:Default:project.html.twig', array('project'=>$project_name, 'user'=>$user));
 	}
+	
+	public function librariesAction()
+	{
+		return $this->render('AceEditorBundle:Default:libraries.html.twig');		
+	}
 }
