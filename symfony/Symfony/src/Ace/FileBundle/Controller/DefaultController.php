@@ -17,7 +17,8 @@ class DefaultController extends Controller
 	{
 	    if ($this->getRequest()->getMethod() === 'POST')
 		{
-			$project_name = $this->getRequest()->request->get('project_name');
+			$project_name = trim(basename(stripslashes($this->getRequest()->request->get('project_name'))), ".\x00..\x20");
+			
 			if($project_name == '')
 			{
 				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
