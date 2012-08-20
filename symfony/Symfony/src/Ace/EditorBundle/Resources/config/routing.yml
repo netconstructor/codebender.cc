@@ -54,6 +54,6 @@ AceEditorBundle_libraries:
     pattern: /libraries
     defaults: {_controller: AceEditorBundle:Default:libraries }
 
-# AceEditorBundle_upload:
-#     pattern: /
-#     defaults:{}
+AceEditorBundle_upload:
+    pattern: /upload/
+    defaults: {_controller: AceEditorBundle:Default:upload }
