@@ -160,15 +160,10 @@
 		      <a class="brand" href="{{ path('AceEditorBundle_homepage')}}">{{ site_name }} (beta)</a>
 		      <div class="nav-collapse">
 		        <ul class="nav">		
-		          <li id="homepage"><a href="{{ path('AceEditorBundle_homepage')}}">Home</a></li>
-
-					{% if is_granted('ROLE_USER') %}		      
-			          <li id="options"><a href="{{ path('AceEditorBundle_options')}}">Options</a></li>
-				      {# <li><a href="{{ path('_security_logout')}}" id="logout">Log Out</a></li> #}
-					{% endif %}
+					<li id="homepage"><a href="{{ path('AceEditorBundle_homepage')}}">Home</a></li>
 					<li><form class="navbar-search pull-left" action="{{ path('AceSearchBundle_search')}}" method="get">
-					  <input type="text" name="query" class="search-query" placeholder="Search">
-					</form>
+							<input type="text" name="query" class="search-query" placeholder="Search">
+						</form>
 					</li>
 		        </ul>
 				{% block examples %}
