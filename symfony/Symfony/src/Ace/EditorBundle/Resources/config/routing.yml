@@ -18,10 +18,6 @@ AceEditorBundle_compile:
     pattern:  /compile
     defaults: { _controller: AceEditorBundle:Default:compile }
 
-# AceEditorBundle_compile:
-#     pattern:  /compile/{filename}
-#     defaults: { _controller: AceEditorBundle:Default:compile }
-
 AceEditorBundle_download:
     pattern:  /download/{username}/{project_name}/{type}
     defaults: { _controller: AceEditorBundle:Default:download, type: file }
