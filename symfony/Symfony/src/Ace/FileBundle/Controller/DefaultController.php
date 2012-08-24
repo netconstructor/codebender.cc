@@ -11,7 +11,7 @@ use Ace\FileBundle\Document\File;
 class DefaultController extends Controller
 {
 	const default_file = "default_text.txt";
-	const directory = "../../files/";
+	const directory = "../../vendor/codebendercc/arduino-files/";
 
 	public function createAction()
 	{
