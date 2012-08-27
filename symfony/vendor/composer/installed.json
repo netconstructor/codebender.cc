@@ -3,16 +3,16 @@
         "name": "codebendercc/arduino-files",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
-        "time": "2012-08-07 13:41:37",
+        "time": "2012-08-27 17:37:52",
         "source": {
             "type": "git",
             "url": "https://github.com/codebendercc/arduino-files",
-            "reference": "3be1f46b2e6a2e1d96c12927ab8d24a6aee7d514"
+            "reference": "06822e57f649ec2717af21b712cf113e85e600d0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/codebendercc/arduino-files/zipball/3be1f46b2e6a2e1d96c12927ab8d24a6aee7d514",
-            "reference": "3be1f46b2e6a2e1d96c12927ab8d24a6aee7d514",
+            "url": "https://github.com/codebendercc/arduino-files/zipball/06822e57f649ec2717af21b712cf113e85e600d0",
+            "reference": "06822e57f649ec2717af21b712cf113e85e600d0",
             "shasum": ""
         },
         "type": "library",
