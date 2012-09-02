@@ -98,6 +98,20 @@ body
   </div>
 </div>
 
+<div class="modal hide fade" id="warningModal">
+		<div class="modal-header">
+		<button class="close" data-dismiss="modal">&#215</button>
+		<h3>Are you sure you want to load an example?</h3>
+		</div>
+		<div class="modal-body">
+			<p>Loading an example is going to <strong>OVERWRITE</strong> the data of your current project. If you wish to maintain your current project please create a new empty project and then load your preferred example. </p>
+		</div>
+		<div class="modal-footer">
+		<a data-dismiss="modal" class="btn">Cancel</a>
+		<a data-dismiss="modal" id="loadLink" onclick="" href="javascript:void(0)" class="btn btn-warning"><i class=" icon-chevron-right icon-white"></i> Load Example</a>
+		</div>
+</div>
+
 <div class="modal hide fade" id="descriptionModal">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">×</button>

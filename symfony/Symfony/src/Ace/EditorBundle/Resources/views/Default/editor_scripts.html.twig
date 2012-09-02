@@ -9,6 +9,15 @@ function getExample(filename){
 	});
 }
 </script>
+
+<script type="text/javascript">
+function warnModal(filename){
+	 //alert(filename);
+	 $('#loadLink').attr('onclick','getExample("'+filename+'")');
+	 $('#warningModal').modal('show');	
+}
+</script>
+
 <script type="text/javascript">
 
 function saveDescription()
