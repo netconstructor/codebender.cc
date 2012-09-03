@@ -133,7 +133,7 @@ body
 		    <li><a href="#tab2" data-toggle="tab">Info</a></li>
 		    <li><a href="#tab3" data-toggle="tab">Sidebar</a></li>
 		  </ul>
-		  <div class="tab-content">
+		  <div class="tab-content" >
 		    <div class="tab-pane active" id="tab1">
 				<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
 				<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
@@ -149,31 +149,75 @@ body
 				<div id="usb-sidebar-div">
 					<h4>USB Upload</h4>					
 					<div id="prescanning">
-						<h3>Uploading</h3>
-						<p>If you'd like to upload your code to your Arduino, please run our Java applet. If you don't see this option, you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
+						<p><small>If you'd like to upload your code to your USB-connected Arduino, please run our Java applet.</small></p>
+						<div id="missingjava">
+							<p>It seems like you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
+						</div>
+						<div id="enableUSBdiv">
+							<button id = "enableUSB" class="btn span12" style="margin-bottom:10px; margin-left:0px;" onclick="enableUSB();"><i id="upload_icon" class="icon-play"></i><span id="upload_text"> Enable USB flash </span></button>
+						</div>
+						<script type="text/javascript">
+							if (!navigator.javaEnabled()){
+								$("#enableUSBdiv").toggle("blind", {}, 1000);
+							}
+							else{
+								$("#missingjava").toggle("blind", {}, 1000);
+							}
+						</script>
 					</div>
 				    <div id="scanning">
-						<button id = "upload" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> Upload</span></button>
-				        <button id="connect" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
-						<select id="ports" class="myoptions"></select>
-						<select id="baudrates" class="myoptions"></select>
-			    </div>
-				<div id="saves" class="well">
-					<i class="icon-file"></i>Download:<br />
-					<a href="{{ path('AceEditorBundle_download', { 'username' : username, 'project_name': project_name }) }}" class="download_link link_ino">Download .ino</a><br />
-					<a href="{{ path('AceEditorBundle_download', { 'username' : username, 'project_name': project_name, 'type' : "hex"}) }}" class="download_link link_hex">Download .hex</a>
+				        <select id="ports" class="myoptions"></select>
+						<button id="connect" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
+						<button id = "uploadusb" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
+				        <!--<select id="baudrates" class="myoptions"></select>-->
+					</div>
 				</div>
+				</div>
+				<h4>Remote Upload <small>Got an Arduino with Ariadne? Flash it remotely over the cloud or your network</small></h4>
+				<input type="text" id='ip' style="width:96%;" value="Address (IP or Domain)" onclick="cleanupIPhelp();" onkeyup="cleanupIPhelp();">
+				<div id="netupload-alternative" class="hide"> 
+					<div class="btn-group">
+					  <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" style="margin-bottom:10px; margin-left:0px;"> Remote Upload <span id="netload-ip"></span> <span class="caret"></span> </a>
+					  <ul class="dropdown-menu">
+						<li><a href="#" onclick="cloudload();return false;"><i class="icon-globe"></i> Cloud Upload</a></li>
+						<li id="removeme"><a href="#" onclick="netload();return false;"><i class="icon-upload"></i> NET Upload</a></li>
+					  </ul>
+					</div>
+				</div>
+				<script type="text/javascript">
+				if (!navigator.javaEnabled()){
+					var elem = document.getElementById('removeme');
+					elem.parentNode.removeChild(elem);
+				}
+				</script>
+
+				<div id="netupload-original" class="hide"> 
+					<div id="desktop-tools-2" class="visible-desktop">
+						<div id="net-sidebar-div">															
+							<button id="netload" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i class="icon-upload"></i> NET Flash <span id="netload-ip"></span></button>					
+						</div>
+					</div>
+				</div>
+				<div id="cloud-sidebar-div" >
+					<button id="cloudload" onclick="cloudload()" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i class="icon-globe"></i> Cloud Upload <span id="cloudload-ip"></span></button>
+				</div>
+				<hr>
 				<div><p>Total Number of lines: <span id="line_count">0</span></div>
 				<div id="progress" class="progress progress-striped active">
 				    <div id="progress_val" class="bar" style="width: 40%;"></div>
 				    </div>
 				<div id="operation_output">
 				</div>
-				<applet width="1" height="1"  id="myapplet" style="visibility:hidden;"
-				        code="eu.amaxilatis.codebender.CodeBenderApplet"
-				        archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}">
-				</applet>
+				
+				<div id="usbappletdiv">
+				</div>
+				<script src="https://www.java.com/js/deployJava.js"></script>
+				{#
+				<applet width="1" height="1"  id="tftpapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.tftp.TftpApplet" archive="{{ asset('tftpUploader-jar-with-dependencies.jar')}}"> </applet>
+				#}
+				
 		    </div>
+		    <hr>
 		    <div class="tab-pane" id="tab2">
 				<h3>Description:</h3>
 				<p id="oldDescription">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_name} %}</p>
@@ -217,8 +261,8 @@ window.onload = function()
 	});
 	
 	addCommands();
-	getIds();	
-	scan();
+
+	window.enabledapplet=false;
 };
 
 
@@ -226,6 +270,7 @@ $(document).ready(function()
 {	
 	$("#progress").hide();
 	$("#scanning").hide();
+	$("#net-tools").hide();
 
 	$("#line_count").html(editor.getSession().getValue().split("\n").length);
 	{% if hex_exists == false %}
@@ -234,6 +279,10 @@ $(document).ready(function()
 	$("#upload").removeClass("disabled").click(function()
 	{
 		upload();
+	})
+	$("#uploadusb").removeClass("disabled").click(function()
+	{
+		uploadusb();
 	})
 					
 	{% endif %}	
@@ -247,6 +296,23 @@ $(document).ready(function()
 	{
 		motherInLaw();
 	});
+	
+	$("#netload").click(function()
+	{
+		netload();
+	})
+	
+	{% if user_enable_usb is defined %}
+		enableUSB();	
+	{% endif %}	
+	{% if user_enable_net is defined %}
+		enableNET();
+	{% endif %}	
+	
+	if (isMobile()){
+		$("#desktop-tools-1").hide();
+		$("#desktop-tools-2").hide();
+	}
 });
 </script>
 	
@@ -274,3 +340,5 @@ $(document).ready(function()
 </ul>
 
 {% endblock %}
+
+

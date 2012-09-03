@@ -43,7 +43,8 @@ function throwMud()
 		save();
 	})
 	disableLink($(".download_link"));
-	$("#upload").addClass("disabled").off('click');
+	$("#netload").addClass("disabled").off('click');
+	$("#uploadusb").addClass("disabled").off('click');
 }
 function cleanUp()
 {
@@ -177,10 +178,14 @@ function build()
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
 			enableLink($(".link_hex"));
-			$("#upload").removeClass("disabled").click(function()
+			$("#netload").removeClass("disabled").click(function()
 			{
-				upload();
-			})
+				netload();
+			});
+			$("#uploadusb").removeClass("disabled").click(function()
+			{
+				uploadusb();
+			});
 			
 		}
 		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
@@ -277,7 +282,7 @@ function getBaudrate()
 	return baudrate;
 }
 
-function upload()
+function uploadusb()
 {
 	if($("#ports").val() != null && $("#ports").val() != "")
 	{
@@ -304,11 +309,11 @@ function upload()
 		$.get("{{ path('AceEditorBundle_download', { 'username':username,'project_name': project_name, 'type' : 'hex'}) }}", function(data)
 		{
 			window.hex = data;
-			$("#upload").addClass("btn-success");
+			$("#uploadusb").addClass("btn-success");
 			$("#upload_icon").addClass("icon-white");
 			// cleanUp();
 			window.setTimeout(function () {
-			    $("#upload").removeClass("btn-success");
+			    $("#uploadusb").removeClass("btn-success");
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
 				
@@ -354,6 +359,7 @@ function enableLink(link)
 }
 </script>
 
+
 <script type="text/javascript" charset="utf-8">
 function addCommands()
 {
@@ -389,7 +395,7 @@ function addCommands()
 	        sender: 'editor|cli'
 	    },
 	    exec: function(env, args, request) {
-			upload();
+			uploadusb();
 	    }
 	});
 	
@@ -448,27 +454,14 @@ function addCommands()
 </script>
 
 <script type="text/javascript">
-	function getIds()
-	{
-		window.applet = $("#myapplet")[0];
-	    window.portslist= $("#ports")[0];
-	    window.rateslist= $("#baudrates")[0];
-		window.oldPorts = "";
-	}
-	
-    function scan()
-	{
-		if(typeof applet.isActive === "function")
-		{
-			$("#prescanning").toggle("blind", {}, 1000);
-			$("#scanning").toggle("blind", {}, 1000);
 
-			ratesAvail=applet.getFireRates().split(",");
-			for (var i =0 ;i <ratesAvail.length;i++)
-			{
-				rateslist.options[i]=new Option(ratesAvail[i],ratesAvail[i],true,false);
-			}
-			$("#baudrates option[value='9600']").prop("selected", true);
+    function scan()
+	{ 
+		if (!window.enabledapplet) return;
+
+		if(typeof myapplet.isActive === "function")
+		{
+
 		    getFire();
 			setInterval(function(){
 				getFire();
@@ -481,6 +474,20 @@ function addCommands()
 			}, 3000);
 		}
     }
+    
+    function getIds()
+	{
+		window.applet = $("#myapplet")[0];
+		window.tftpapplet = $("#tftpapplet")[0];
+	    window.portslist= $("#ports")[0];
+	    window.rateslist= $("#baudrates")[0];
+		window.oldPorts = "";
+		setTimeout(function(){
+			scan();	
+		}, 200);
+}
+	
+	
     function connect()
 	{
 		if($("#ports").val() != null && $("#ports").val() != "")
@@ -488,10 +495,9 @@ function addCommands()
 
 		    //alert('called connect ');
 		    var port= portslist.options[portslist.selectedIndex].value;
-		    var rate= rateslist.options[rateslist.selectedIndex].value;
 		    //alert("overrideConnect('"+portslist.selectedIndex+"','"+rateslist.selectedIndex+"')");
 
-		    applet.overrideConnect(portslist.selectedIndex,rateslist.selectedIndex);
+		    applet.overrideConnect(portslist.selectedIndex);
 		}
 		else
 		{
@@ -500,16 +506,84 @@ function addCommands()
     }
     function getFire()
 	{
-		var ports = applet.getFire2();
-		if(ports != oldPorts)
-		{
+		var ports="";
+		try{
+			ports = applet.probeUsb();
+			if(ports != oldPorts){
+				$('#ports').find('option').remove();
+				portsAvail=ports.split(",");
+				for (var i =0 ;i< portsAvail.length ; i++){
+					portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
+				}
+				oldPorts = ports;
+			}
+		}
+		catch(err){
 			$('#ports').find('option').remove();
-			portsAvail=ports.split(",");
-		    for (var i =0 ;i< portsAvail.length ; i++)
-			{
-		    portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
-		    }
 			oldPorts = ports;
 		}
     }
+    
+    
+function enableUSB(){
+   if (!window.enabledapplet){
+		appletsource='<applet width="1" height="1"  id="myapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.CodeBenderApplet" archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}"> </applet>';
+		$("#usbappletdiv").html(appletsource);
+		window.enabledapplet=true;
+	}
+	
+	setTimeout(function(){
+				checkRunningApplet();
+			}, 2000);
+			
+}
+
+function checkRunningApplet(){
+	applet = $("#myapplet")[0];
+	
+	if(applet.isActive()){
+		$("#prescanning").toggle("blind", {}, 1000);
+		$("#scanning").toggle("blind", {}, 1000);
+		
+			setTimeout(function(){
+				getIds();
+			}, 200);
+	}
+	else{
+		setTimeout(function(){checkRunningApplet();}, 400);
+	}
+}
+
+function enableNET(){
+			$("#net-info").toggle("blind", {}, 1000);
+			$("#net-tools").toggle("blind", {}, 1000);
+}
+
+function cleanupIPhelp(){
+	if ($("#ip").val()=="Address (IP or Domain)"){
+		$("#ip").val("")
+		$("#netload-ip").text("")
+		$("#cloudload-ip").text("")
+	}else{
+		if ($("#ip").val()==""){
+			$("#ip").val("Address (IP or Domain)")
+			$("#netload-ip").text("")
+			$("#cloudload-ip").text("")
+		}
+		else{
+			$("#netload-ip").text($("#ip").val())
+			$("#cloudload-ip").text($("#ip").val())
+		}
+		$("#ip").val();
+	}	
+}
+
+function isMobile(){
+
+     return navigator.userAgent.match(/Android/i) ? true : false 
+     || navigator.userAgent.match(/BlackBerry/i) ? true : false
+     || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
+     ||navigator.userAgent.match(/IEMobile/i) ? true : false;
+}
+
 </script>
