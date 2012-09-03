@@ -193,6 +193,62 @@ function build()
 	});	
 }
 
+function cloudload()
+{
+	setProgress(90);
+	$.post("{{ path('AceEditorBundle_netload') }}", { project_name:"{{project_name}}", ip: $("#ip").val()}, function(data)
+	{
+		var obj = jQuery.parseJSON(data);
+		if(obj.success == 0)
+		{
+			$("#compile_output").css('color', 'black');
+			for (var i=0; i<obj.lines.length; i++)
+			{
+				$(".ace_gutter-cell").filter(function(index) {
+				  return $(this).html() == obj.lines[i];
+				}).css("text-decoration","underline").css("color","red");
+			}
+			 
+			$("#editor").css("bottom","150px");
+			$("#compile_output").css("bottom","0px");
+			$("#compile_output").css("padding-top","10px");
+			$("#compile_output").css("height","120px");
+			$("#compile_output").addClass("well");			
+			
+			$("#compile_output").html(obj.text);
+			clearProgress("Upload failed.")
+		}
+		else
+		{
+			$("#compile_output").css('color', '');
+			$(".ace_gutter-cell").css("text-decoration", "").css("color","");
+			$("#editor").css("bottom","");
+			$("#compile_output").css("bottom","");
+			$("#compile_output").css("height","");
+			$("#compile_output").css("padding-top","");
+			$("#compile_output").removeClass("well");
+
+			var progressText = "<p>" + obj.text + "</p>";
+			clearProgress(progressText)
+			window.sketch_size = obj.size;
+			$("#compile_output").html("");			
+		}
+
+		window.setTimeout(function () {
+		    $("#compile").removeClass("btn-success").removeClass("btn-warning");
+				$("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
+		}, 500);
+		// alert("Data received: " + data);
+	});	
+	if (!window.enabledapplet){
+	setTimeout(function(){
+				getIds();
+			}, 500);
+	window.enabledapplet=true;
+	}
+}
+
+
 function getMaxSize()
 {
 	var max_size;

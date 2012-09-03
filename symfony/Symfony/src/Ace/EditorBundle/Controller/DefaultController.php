@@ -133,6 +133,29 @@ class DefaultController extends Controller
 		return $response;
 	}
 
+	public function netloadAction()
+	{
+		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
+			$project_name = $this->getRequest()->request->get('project_name');
+			$ip = $this->getRequest()->request->get('ip');
+			if($project_name && $ip)
+			{
+				$resp = $this->forward('AceFileBundle:Default:getMyHex', array('project_name' => $project_name));
+				$value = $resp->getContent();
+
+				$data = "ERROR";
+
+				$data = $this->get_data("http://tftp.dev.codebender.cc", 'hex', urlencode($value)."&ip=".$ip);
+				$response->setContent($data);
+				$response->setStatusCode(200);
+				$response->headers->set('Content-Type', 'text/html');
+			}
+		}
+		return $response;
+	}
+
 	public function downloadAction($username, $project_name, $type)
 	{
 		$filename=$project_name;
