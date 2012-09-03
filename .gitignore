@@ -1,6 +1,5 @@
-symfony/Symfony/app/cache
-symfony/Symfony/app/logs
-compiler/tempfiles
+Symfony/app/cache
+Symfony/app/logs
 *~
 .DS_Store
-symfony/vendor/codebendercc/arduino-files/.git
+vendor/codebendercc/arduino-files/.git
