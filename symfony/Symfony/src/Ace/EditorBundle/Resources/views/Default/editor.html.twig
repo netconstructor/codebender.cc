@@ -64,10 +64,6 @@ body
 	/* text-shadow: #999999 1px 1px 1px; */
 	border-width: 0px;
 }
-.download_link
-{
-	margin-left:14px;
-}
 
 .myoptions
 {
@@ -147,7 +143,11 @@ body
 					<option>Arduino Uno</option>
 					<option>Arduino Duemilanove</option>
 				</select>
-				<hr>
+				<a href="{{ path('AceEditorBundle_download', { 'username' : username, 'project_name': project_name }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
+				<hr>			
+				<div id="desktop-tools-1" class="visible-desktop">
+				<div id="usb-sidebar-div">
+					<h4>USB Upload</h4>					
 					<div id="prescanning">
 						<h3>Uploading</h3>
 						<p>If you'd like to upload your code to your Arduino, please run our Java applet. If you don't see this option, you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
