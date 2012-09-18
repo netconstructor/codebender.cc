@@ -81,11 +81,34 @@ class DefaultController extends Controller
 		if($arg == 'html')
 			return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
 		else if ($arg == 'rss' )
+		{
 			$response = $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
 			$response->headers->set('Content-Type', 'application/rss+xml');
 			return $response;
+		}
+		else if($arg == 'new')
+		{
+			if (false === $this->get('security.context')->isGranted('ROLE_ADMIN'))
+			{
+				throw new AccessDeniedException();
+			}
+			else
+			{
+				$title = $this->getRequest()->query->get('title');
+				$text = $this->getRequest()->query->get('msgpost');
+				$author = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+				$em = $this->getDoctrine()->getEntityManager();
+				$post = new BlogPost();
+				$post->setTitle($title);
+				$post->setText($text);
+				$post->setAuthor($author);
+				$post->setDate(new \DateTime("now"));
+				$em->persist($post);
+				$em->flush();
+				return $this->redirect($this->generateUrl('AceMiscBundle_blog'));
+			}
 			
-		
+		}
 	}
 
 	public function blog_newAction()
