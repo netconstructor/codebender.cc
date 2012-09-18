@@ -22,6 +22,11 @@ AceEditorBundle:
     resource: "@AceEditorBundle/Resources/config/routing.yml"
     prefix:   /
 
+#temp toronto link
+utoronto:
+    pattern:   /utoronto/register
+    defaults:  { _controller: FOSUserBundle:Registration:register }
+
 #login:
 #    pattern:   /login
 #    defaults:  { _controller: AceSecurityBundle:Security:login }
