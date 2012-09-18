@@ -65,7 +65,13 @@ class DefaultController extends Controller
 		$orfanos_desc = "I am also (not for long I hope) a student at the Computer Engineering & Informatics Department and probably the most important person in the team. My task? Make sure everyone keeps calm and the team is having fun. And yes, I'm the one who developed our wonderful options page. Apart from that, I'm trying to graduate and some time in the future to become a full blown Gentoo developer.";
 		$orfanos = new developer($orfanos_name, $orfanos_title, $orfanos_avatar, $orfanos_desc);
 
-		$developers = array($tzikis, $tsampas, $amaxilatis, $kousta, $orfanos);
+		$dimakopoulos_name = "Dimitris Dimakopoulos";
+		$dimakopoulos_title = "teh awesome";
+		$dimakopoulos_avatar = "http://codebender.cc/images/dimakopoulos.jpg";
+		$dimakopoulos_desc = "Student at the Computer Engineering and Informatics Department of the University of Patras, Greece, have worked as an intern for Philips Consumer Lifestyle in Eindhoven and for the Research Academic Computer Technology Institute in Patras. Totally excited with Codebender as it combines web development and distributed systems, them being among my favorite fields.";
+		$dimakopoulos = new developer($dimakopoulos_name, $dimakopoulos_title, $dimakopoulos_avatar, $dimakopoulos_desc);
+
+		$developers = array($tzikis, $tsampas, $amaxilatis, $kousta, $orfanos, $dimakopoulos);
 		return $this->render('AceMiscBundle:Default:team.html.twig', array("developers" => $developers));
 	}
 	public function blogAction($arg)
