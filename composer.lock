@@ -2,10 +2,26 @@
     "hash": "1f3410c4d9ce8bf6a2e66cc3494480b8",
     "packages": [
         {
-            "package": "codebendercc/arduino-files",
+            "name": "codebendercc/arduino-files",
             "version": "dev-master",
-            "source-reference": "06822e57f649ec2717af21b712cf113e85e600d0",
-            "commit-date": "1346089072"
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codebendercc/arduino-files",
+                "reference": "10c22bb620f33e422f51037d9cba7377bacd2d78"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/codebendercc/arduino-files/zipball/10c22bb620f33e422f51037d9cba7377bacd2d78",
+                "reference": "10c22bb620f33e422f51037d9cba7377bacd2d78",
+                "shasum": ""
+            },
+            "time": "1348071917",
+            "type": "library",
+            "installation-source": "source",
+            "support": {
+                "source": "https://github.com/codebendercc/arduino-files/tree/master",
+                "issues": "https://github.com/codebendercc/arduino-files/issues"
+            }
         }
     ],
     "packages-dev": null,
