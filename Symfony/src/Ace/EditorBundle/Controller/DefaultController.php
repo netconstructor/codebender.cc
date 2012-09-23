@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Ace\FileBundle\Document\File;
 use Ace\EditorBundle\Classes\UploadHandler;
-//use Ace\FileBundle\Controller\DefaultController;
+use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
 {
@@ -84,9 +84,10 @@ class DefaultController extends Controller
 		if($hexTimestamp > $codeTimestamp)
 			$hex_exists = true;
 
-		$examples = json_decode($this->get_data("http://libs.codebender.cc", 'data', "builtin"), true);
-		$lib_examples = json_decode($this->get_data("http://libs.codebender.cc", 'data', "included"), true);
-		$extra_lib_examples = json_decode($this->get_data("http://libs.codebender.cc", 'data', "external"), true);
+		$utilities = new DefaultHandler();			
+		$examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "builtin"), true);
+		$lib_examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "included"), true);
+		$extra_lib_examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "external"), true);
 
 		$examples = $examples["list"];
 		$lib_examples = $lib_examples["list"];
@@ -110,7 +111,8 @@ class DefaultController extends Controller
 
 				$data = "ERROR";
 
-				$data = $this->get_data("http://compiler.codebender.cc", 'data', urlencode($value));
+				$utilities = new DefaultHandler();			
+				$data = $utilities->get_data("http://compiler.codebender.cc", 'data', urlencode($value));
 
 				$json_data = json_decode($data, true);
 				if($json_data['success'])
@@ -142,7 +144,8 @@ class DefaultController extends Controller
 
 				$data = "ERROR";
 
-				$data = $this->get_data("http://tftp.dev.codebender.cc", 'hex', urlencode($value)."&ip=".$ip);
+				$utilities = new DefaultHandler();			
+				$data = $utilities->get_data("http://tftp.dev.codebender.cc", 'hex', urlencode($value)."&ip=".$ip);
 				$response->setContent($data);
 				$response->setStatusCode(200);
 				$response->headers->set('Content-Type', 'text/html');
@@ -424,22 +427,6 @@ class DefaultController extends Controller
 			$url .= ' />';
 		}
 		return $url;
-	}
-
-	private function get_data($url, $var, $value)
-	{
-		$ch = curl_init();
-		$timeout = 10;
-		curl_setopt($ch,CURLOPT_URL,$url);
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-
-		curl_setopt($ch,CURLOPT_POST,1);
-		curl_setopt($ch,CURLOPT_POSTFIELDS,$var.'='.$value);
-
-		$data = curl_exec($ch);
-		curl_close($ch);
-		return $data;
 	}
 
 	public function userAction($user)
