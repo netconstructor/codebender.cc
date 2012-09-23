@@ -27,6 +27,7 @@ class AppKernel extends Kernel
             new Ace\FileBundle\AceFileBundle(),
             new Ace\MiscBundle\AceMiscBundle(),
             new Ace\UtilitiesBundle\AceUtilitiesBundle(),
+            new Ace\BlogBundle\AceBlogBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

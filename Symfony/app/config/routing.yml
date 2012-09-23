@@ -1,3 +1,7 @@
+AceBlogBundle:
+    resource: "@AceBlogBundle/Resources/config/routing.yml"
+    prefix:   /
+
 AceUtilitiesBundle:
     resource: "@AceUtilitiesBundle/Resources/config/routing.yml"
     prefix:   /
