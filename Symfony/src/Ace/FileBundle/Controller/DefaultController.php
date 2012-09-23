@@ -7,12 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ace\FileBundle\Document\File;
+use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
 {
-	const default_file = "default_text.txt";
-	const directory = "../../vendor/codebendercc/arduino-files/";
-
 	public function createAction()
 	{
 	    if ($this->getRequest()->getMethod() === 'POST')
@@ -27,16 +25,16 @@ class DefaultController extends Controller
 			$file = $this->getMyProject($project_name, $error);
 			if($error == -2)
 			{
-				$file = fopen($this::directory.$this::default_file, 'r');
-				$value = fread($file, filesize($this::directory.$this::default_file));
-				fclose($file);
+
+				$utilities = new DefaultHandler();
+				$default_text = $utilities->default_text();
 
 				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
 				$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
 				
 				$file = new File();
 			    $file->setName($project_name);
-			    $file->setCode($value);
+			    $file->setCode($default_text);
 				$timestamp = new \DateTime;
 				$file->setCodeTimestamp($timestamp);
 				$file->setHex("");
