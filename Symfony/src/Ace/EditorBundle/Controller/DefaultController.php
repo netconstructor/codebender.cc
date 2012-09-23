@@ -13,13 +13,7 @@ use Ace\EditorBundle\Classes\UploadHandler;
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
-{
-	const default_file = "default_text.txt";
-	const directory = "../../vendor/codebendercc/arduino-files/";
-	const examples_directory = "../../vendor/codebendercc/arduino-files/examples/";
-	const libs_directory = "../../vendor/codebendercc/arduino-files/libraries/";
-	const extra_libs_directory = "../../vendor/codebendercc/arduino-files/extra-libraries/";
-
+{	
 	public function indexAction()
 	{
 		// if($name == "tzikis")
@@ -311,58 +305,6 @@ class DefaultController extends Controller
 				$response->headers->set('Content-Type', 'text/html');
 			}
 			return $response;
-		}
-		else
-			throw $this->createNotFoundException('No POST data!');
-	}
-
-	public function createAction()
-	{
-		if ($this->getRequest()->getMethod() === 'POST')
-		{
-			$project_name = $this->getRequest()->request->get('project_name');
-			if($project_name == '')
-			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
-			}
-			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-			if (!$user)
-			{
-				throw $this->createNotFoundException('No user found with username '.$name);
-			}
-
-			//*******************************************************************************************************************
-			//WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF WTF
-			//WHY WAS THIS STILL HERE? WHAT _EXACTLY_ DID IT DO, AND AM I TAKING CARE OF IT NOW THAT WE'VE SWITCHED TO MONGODB?
-			//*******************************************************************************************************************
-
-			// $files = $this->getDoctrine()->getRepository('AceEditorBundle:EditorFile')->findByOwner($user->getId());
-			// foreach ($files as $file)
-			// {
-			// 	if($project_name == $file->getName())
-			// 	{
-			// 		return $this->redirect($this->generateUrl('AceEditorBundle_list'));
-			// 	}
-			// }
-
-			$file = fopen($this::directory.$this::default_file, 'r');
-			$value = fread($file, filesize($this::directory.$this::default_file));
-			fclose($file);
-
-			$file = new EditorFile();
-			$file->setName($project_name);
-			$file->setFilename($filename);
-			$file->setOwner($user->getId());
-			$file->setIsPublic(1);
-			$file->setSchematic("");
-			$file->setImage("");
-
-			$em = $this->getDoctrine()->getEntityManager();
-			$em->persist($file);
-			$em->flush();
-			// return new Response($filename);
-			return $this->redirect($this->generateUrl('AceEditorBundle_editor',array('project_name' => $project_name)));
 		}
 		else
 			throw $this->createNotFoundException('No POST data!');
