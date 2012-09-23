@@ -1,0 +1,3 @@
+AceBlogBundle_blog:
+    pattern:  /blog/{arg}
+    defaults: { _controller: AceBlogBundle:Default:blog , arg: "html" }
