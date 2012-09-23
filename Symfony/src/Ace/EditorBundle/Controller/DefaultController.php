@@ -84,22 +84,17 @@ class DefaultController extends Controller
 		if($hexTimestamp > $codeTimestamp)
 			$hex_exists = true;
 
-		$examples = $this->getExamplesAction($this::examples_directory,"");
-		$lib_examples = $this->getExamplesAction($this::libs_directory,"/examples");
-		$extra_lib_examples = $this->getExamplesAction($this::extra_libs_directory,"/examples");
+		$examples = json_decode($this->get_data("http://libs.codebender.cc", 'data', "builtin"), true);
+		$lib_examples = json_decode($this->get_data("http://libs.codebender.cc", 'data', "included"), true);
+		$extra_lib_examples = json_decode($this->get_data("http://libs.codebender.cc", 'data', "external"), true);
+
+		$examples = $examples["list"];
+		$lib_examples = $lib_examples["list"];
+		$extra_lib_examples = $extra_lib_examples["list"];
+
+		// die(var_dump($examples)." ".var_dump($lib_examples)." ".var_dump($extra_lib_examples)." ");
 
 		return $this->render('AceEditorBundle:Default:editor.html.twig', array('username'=>$name, 'project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'hex_exists' => $hex_exists));
-	}
-
-	public function getExamplesAction($mydir, $middle)
-	{
-		$examples = $this->iterate_dir($mydir);
-		for($i = 0; $i < count($examples); $i++ )
-		{
-			$array = $this->iterate_dir($mydir.$examples[$i].$middle);
-			$examples[$i] = array($examples[$i], $array);
-		}
-		return $examples;
 	}
 
 	public function compileAction()
@@ -404,35 +399,6 @@ class DefaultController extends Controller
 		$image = $this->get_gravatar($user->getEmail());
 
 		return $this->render('AceEditorBundle:Default:image.html.twig', array('user' => $user->getUsername(),'image' => $image));
-	}
-
-	public function fetchExampleAction($type, $category, $name)
-	{
-		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		$file_path = "";
-		if($type == 1)
-			$file_path = $this::examples_directory.$category."/".$name."/".$name.".ino";
-		else if($type == 2)
-			$file_path = $this::libs_directory.$category."/examples/".$name."/".$name.".ino";
-		else if($type == 3)
-		{
-			$file_path = $this::extra_libs_directory.$category."/examples/".$name."/".$name;
-			if(file_exists($file_path.".ino"))
-				$file_path = $file_path.".ino";
-			else if(file_exists($file_path.".pde"))
-				$file_path = $file_path.".pde";
-		}
-		
-		if(file_exists($file_path))
-		{
-			$file = fopen($file_path, 'r');
-			$value = fread($file, filesize($file_path));
-			fclose($file);
-			$response->setContent($value);
-			$response->setStatusCode(200);
-			$response->headers->set('Content-Type', 'text/html');
-		}
-		return $response;
 	}
 
 	/**

@@ -10,10 +10,6 @@ AceEditorBundle_editor:
     pattern:  /edit/{project_name}
     defaults: { _controller: AceEditorBundle:Default:edit}
 
-AceEditorBundle_fetchexample:
-    pattern:  /fetch/example/{type}/{category}/{name}
-    defaults: { _controller: AceEditorBundle:Default:fetchExample}
-
 AceEditorBundle_compile:
     pattern:  /compile
     defaults: { _controller: AceEditorBundle:Default:compile }
