@@ -142,7 +142,7 @@ class DefaultController extends Controller
 
 				$data = "ERROR";
 
-				$data = $this->get_data("http://tftp.dev.codebender.cc", 'hex', urlencode($value)."&ip=".$ip);
+				$data = $this->get_data("http://sender.codebender.cc", 'hex', urlencode($value)."&ip=".$ip);
 				$response->setContent($data);
 				$response->setStatusCode(200);
 				$response->headers->set('Content-Type', 'text/html');
