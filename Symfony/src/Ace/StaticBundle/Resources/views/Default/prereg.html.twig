@@ -1,4 +1,4 @@
-{# src/Ace/MiscBundle/Resources/views/Default/contact.html.twig #}
+{# src/Ace/StaticBundle/Resources/views/Default/contact.html.twig #}
 {% extends '::container.html.twig' %}
 {% block title %}
 {{ site_name }}
@@ -18,7 +18,7 @@
 	</div>
 	<div class="span6">
 		<h3>Pre-registration Form</h3>
-		<form action="{{ path('AceMiscBundle_prereg') }}" method="post" {{ form_enctype(form) }}>
+		<form action="{{ path('AceStaticBundle_prereg') }}" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 
 		    <input type="submit" class="btn btn-primary"/>

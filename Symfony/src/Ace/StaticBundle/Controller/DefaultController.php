@@ -1,12 +1,12 @@
 <?php
 
-namespace Ace\MiscBundle\Controller;
+namespace Ace\StaticBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Ace\MiscBundle\Entity\BlogPost;
-use Ace\MiscBundle\Entity\Contact;
-use Ace\MiscBundle\Entity\Prereg;
+use Ace\StaticBundle\Entity\BlogPost;
+use Ace\StaticBundle\Entity\Contact;
+use Ace\StaticBundle\Entity\Prereg;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,7 +30,7 @@ class DefaultController extends Controller
 
 	public function aboutAction()
 	{
-		return $this->render('AceMiscBundle:Default:about.html.twig');
+		return $this->render('AceStaticBundle:Default:about.html.twig');
 	}
 
 	public function teamAction()
@@ -72,23 +72,23 @@ class DefaultController extends Controller
 		$dimakopoulos = new developer($dimakopoulos_name, $dimakopoulos_title, $dimakopoulos_avatar, $dimakopoulos_desc);
 
 		$developers = array($tzikis, $tsampas, $amaxilatis, $kousta, $orfanos, $dimakopoulos);
-		return $this->render('AceMiscBundle:Default:team.html.twig', array("developers" => $developers));
+		return $this->render('AceStaticBundle:Default:team.html.twig', array("developers" => $developers));
 	}
 	public function blogAction($arg)
 	{
-		// $posts = $this->getDoctrine()->getRepository('AceMiscBundle:BlogPost')->findAll();
+		// $posts = $this->getDoctrine()->getRepository('AceStaticBundle:BlogPost')->findAll();
 
 		$em = $this->getDoctrine()->getEntityManager();
 		$qb = $em->createQueryBuilder();
 
-		$qb->add('select', 'u')->add('from', 'AceMiscBundle:BlogPost u')->add('orderBy', 'u.date DESC');
+		$qb->add('select', 'u')->add('from', 'AceStaticBundle:BlogPost u')->add('orderBy', 'u.date DESC');
 		$posts = $qb->getQuery()->getResult();
 		
 		if($arg == 'html')
-			return $this->render('AceMiscBundle:Default:blog.html.twig', array("posts" => $posts));
+			return $this->render('AceStaticBundle:Default:blog.html.twig', array("posts" => $posts));
 		else if ($arg == 'rss' )
 		{
-			$response = $this->render('AceMiscBundle:Default:blog_rss.html.twig', array("posts" => $posts));
+			$response = $this->render('AceStaticBundle:Default:blog_rss.html.twig', array("posts" => $posts));
 			$response->headers->set('Content-Type', 'application/rss+xml');
 			return $response;
 		}
@@ -111,7 +111,7 @@ class DefaultController extends Controller
 				$post->setDate(new \DateTime("now"));
 				$em->persist($post);
 				$em->flush();
-				return $this->redirect($this->generateUrl('AceMiscBundle_blog'));
+				return $this->redirect($this->generateUrl('AceStaticBundle_blog'));
 			}
 			
 		}
@@ -136,13 +136,13 @@ class DefaultController extends Controller
 			$post->setDate(new \DateTime("now"));
 			$em->persist($post);
 			$em->flush();
-			return $this->redirect($this->generateUrl('AceMiscBundle_blog'));
+			return $this->redirect($this->generateUrl('AceStaticBundle_blog'));
 		}
 	}			
 
 	public function tutorialsAction()
 	{
-		return $this->render('AceMiscBundle:Default:tutorials.html.twig');
+		return $this->render('AceStaticBundle:Default:tutorials.html.twig');
 	}
 
 	public function contactAction(Request $request)
@@ -176,16 +176,16 @@ class DefaultController extends Controller
 			        ->setSubject('codebender contact request')
 			        ->setFrom($email_addr)
 			        ->setTo($email_addr)
-			        ->setBody($this->renderView('AceMiscBundle:Default:contact_email_form.txt.twig', array('task' => $task)))
+			        ->setBody($this->renderView('AceStaticBundle:Default:contact_email_form.txt.twig', array('task' => $task)))
 			    ;
 			    $this->get('mailer')->send($message);
 				$this->get('session')->setFlash('notice', 'Your message was sent!');
 
-				return $this->redirect($this->generateUrl('AceMiscBundle_contact'));
+				return $this->redirect($this->generateUrl('AceStaticBundle_contact'));
 			}
 		}
 
-        return $this->render('AceMiscBundle:Default:contact.html.twig', array(
+        return $this->render('AceStaticBundle:Default:contact.html.twig', array(
             'form' => $form->createView(),
         ));
 	}
@@ -224,16 +224,16 @@ class DefaultController extends Controller
 			        ->setSubject('[codebender][preregistration] Preregistration Request')
 			        ->setFrom($task->getEmail())
 			        ->setTo($email_addr)
-			        ->setBody($this->renderView('AceMiscBundle:Default:prereg_email_form.txt.twig', array('task' => $task)))
+			        ->setBody($this->renderView('AceStaticBundle:Default:prereg_email_form.txt.twig', array('task' => $task)))
 			    ;
 			    $this->get('mailer')->send($message);
 				$this->get('session')->setFlash('notice', 'Your registration request was sent!');
 
-				return $this->redirect($this->generateUrl('AceMiscBundle_prereg'));
+				return $this->redirect($this->generateUrl('AceStaticBundle_prereg'));
 			}
 		}
 
-        return $this->render('AceMiscBundle:Default:prereg.html.twig', array(
+        return $this->render('AceStaticBundle:Default:prereg.html.twig', array(
             'form' => $form->createView(),
         ));
 	}

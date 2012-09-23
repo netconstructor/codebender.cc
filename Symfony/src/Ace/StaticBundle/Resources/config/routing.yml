@@ -1,0 +1,35 @@
+AceStaticBundle_about:
+    pattern:  /about
+    defaults: { _controller: AceStaticBundle:Default:about }
+
+AceStaticBundle_team:
+    pattern:  /team
+    defaults: { _controller: AceStaticBundle:Default:team }
+
+AceStaticBundle_blog:
+    pattern:  /blog/{arg}
+    defaults: { _controller: AceStaticBundle:Default:blog, arg: "html" }
+
+AceStaticBundle_blognew:
+    pattern:  /blog/new
+    defaults: { _controller: AceStaticBundle:Default:blog_new }
+
+AceStaticBundle_tutorials:
+    pattern:  /tutorials
+    defaults: { _controller: AceStaticBundle:Default:tutorials }
+
+AceStaticBundle_contact:
+    pattern:  /contact
+    defaults: { _controller: AceStaticBundle:Default:contact }
+
+AceStaticBundle_contact_new:
+    pattern:  /contact_new
+    defaults: { _controller: AceStaticBundle:Default:contact }
+
+AceStaticBundle_prereg:
+    pattern:  /prereg
+    defaults: { _controller: AceStaticBundle:Default:prereg }
+
+AceStaticBundle_notify:
+    pattern:  /notify
+    defaults: { _controller: AceStaticBundle:Default:notify }

@@ -1,6 +1,6 @@
 <?php
 // src/Ace/TaskBundle/Entity/Contact.php
-namespace Ace\MiscBundle\Entity;
+namespace Ace\StaticBundle\Entity;
 
 class Contact
 {

@@ -2,9 +2,9 @@ AceUtilitiesBundle:
     resource: "@AceUtilitiesBundle/Resources/config/routing.yml"
     prefix:   /
 
-AceMiscBundle:
-    resource: "@AceMiscBundle/Resources/config/routing.yml"
-    prefix:   /misc
+AceStaticBundle:
+    resource: "@AceStaticBundle/Resources/config/routing.yml"
+    prefix:   /static
 
 AceFileBundle:
     resource: "@AceFileBundle/Resources/config/routing.yml"

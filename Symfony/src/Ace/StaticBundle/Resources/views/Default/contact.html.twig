@@ -1,4 +1,4 @@
-{# src/Ace/MiscBundle/Resources/views/Default/contact.html.twig #}
+{# src/Ace/StaticBundle/Resources/views/Default/contact.html.twig #}
 {% extends '::container.html.twig' %}
 {% block title %}
 Contact {{ site_name }}
@@ -33,7 +33,7 @@ Contact {{ site_name }}
 
 	<div class="span6">
 		<h2>Contact Form</h2>
-		<form action="{{ path('AceMiscBundle_contact') }}" method="post" {{ form_enctype(form) }}>
+		<form action="{{ path('AceStaticBundle_contact') }}" method="post" {{ form_enctype(form) }}>
 		    {{ form_widget(form) }}
 
 		    <input type="submit" class="btn btn-primary"/>

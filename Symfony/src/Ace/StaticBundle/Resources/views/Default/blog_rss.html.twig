@@ -11,7 +11,7 @@
 	{% for post in posts %}
 	<item> 
 		<title>{{ post.title }}</title>  
-		<link>{{ url('AceMiscBundle_blog') }}</link>  
+		<link>{{ url('AceStaticBundle_blog') }}</link>  
 		<description><![CDATA[{{ post.text | raw }}]]></description>  
 		<pubDate>{{ post.date | date('r') }}</pubDate>  
 	</item>  

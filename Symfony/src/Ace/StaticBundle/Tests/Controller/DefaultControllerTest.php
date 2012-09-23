@@ -1,6 +1,6 @@
 <?php
 
-namespace Ace\MiscBundle\Tests\Controller;
+namespace Ace\StaticBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

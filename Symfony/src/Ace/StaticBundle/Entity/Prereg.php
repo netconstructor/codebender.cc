@@ -1,6 +1,6 @@
 <?php
 // src/Ace/TaskBundle/Entity/Prereg.php
-namespace Ace\MiscBundle\Entity;
+namespace Ace\StaticBundle\Entity;
 
 class Prereg
 {

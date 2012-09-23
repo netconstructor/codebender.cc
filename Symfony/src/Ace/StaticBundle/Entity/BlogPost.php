@@ -1,6 +1,6 @@
 <?php
-// src/Ace/MiscBundle/Entity/Blogpost.php
-namespace Ace\MiscBundle\Entity;
+// src/Ace/StaticBundle/Entity/Blogpost.php
+namespace Ace\StaticBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
