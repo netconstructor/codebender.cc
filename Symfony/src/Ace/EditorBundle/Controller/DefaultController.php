@@ -176,29 +176,6 @@ class DefaultController extends Controller
 		return new Response($value, 200, $headers);
 	}
 
-
-	private function iterate_dir($directory)
-	{
-		$dir = opendir($directory);
-		$iter = readdir($dir);
-		$array = array();
-		while(!($iter === FALSE))
-		{
-			$array[] = $iter;
-			// echo $dir."<br />";
-			$iter = readdir();
-		}
-		for($i = 0; $i <= count($array); $i++ )
-		{
-			if($array[$i] == "." || $array[$i] == "..")
-				unset($array[$i]);
-		}
-
-		sort($array);
-		closedir($dir);
-		return $array;
-	}
-
 	//TODO:email is not loaded correctly if page is refreshed
 	public function optionsAction()
 	{
