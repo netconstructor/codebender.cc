@@ -5,7 +5,7 @@ namespace Ace\UtilitiesBundle\Handler;
 class DefaultHandler
 {
 	const default_file = "default_text.txt";
-	const directory = "../../vendor/codebendercc/arduino-files/";
+	const directory = "../../";
 	
 	public function get_data($url, $var, $value)
 	{
