@@ -19,7 +19,6 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Ace\EditorBundle\AceEditorBundle(),
-            new Ace\SecurityBundle\AceSecurityBundle(),
             new Ace\ExperimentalUserBundle\AceExperimentalUserBundle(),
             new Ace\SearchBundle\AceSearchBundle(),
             new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
