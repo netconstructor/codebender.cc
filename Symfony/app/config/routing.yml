@@ -18,10 +18,6 @@ AceSearchBundle:
 #     resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"
 #     prefix:   /
 
-AceUserBundle:
-    resource: "@AceUserBundle/Resources/config/routing.yml"
-    prefix:   /
-
 AceEditorBundle:
     resource: "@AceEditorBundle/Resources/config/routing.yml"
     prefix:   /
