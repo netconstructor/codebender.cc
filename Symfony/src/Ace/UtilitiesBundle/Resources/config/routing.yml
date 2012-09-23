@@ -1,0 +1,3 @@
+AceUtilitiesBundle_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: AceUtilitiesBundle:Default:index }
