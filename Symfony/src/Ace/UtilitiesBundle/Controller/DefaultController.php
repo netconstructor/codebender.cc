@@ -12,4 +12,19 @@ class DefaultController extends Controller
     {
         return $this->render('AceUtilitiesBundle:Default:index.html.twig', array('name' => $name));
     }
+
+	public function sidebarAction()
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user) {
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+		$files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')
+			->findByOwner($user->getID());
+
+		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
+	}
+
 }
