@@ -110,7 +110,7 @@ class DefaultController extends Controller
 
 				$data = "ERROR";
 
-				$data = $this->get_data("http://compiler.codebender.cc", 'data', urlencode($value));
+				$data = $this->get_data($this->container->getParameter('compiler'), 'data', urlencode($value));
 
 				$json_data = json_decode($data, true);
 				if($json_data['success'])
