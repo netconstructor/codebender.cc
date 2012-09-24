@@ -201,7 +201,7 @@ function build()
 function cloudload()
 {
 	setProgress(90);
-	$.post("{{ path('AceEditorBundle_netload') }}", { project_name:"{{project_name}}", ip: $("#ip").val()}, function(data)
+	$.post("{{ path('AceSenderBundle_tftp') }}", { project_name:"{{project_name}}", ip: $("#ip").val()}, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
