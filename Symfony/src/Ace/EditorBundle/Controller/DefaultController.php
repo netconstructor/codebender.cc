@@ -91,8 +91,8 @@ class DefaultController extends Controller
 
 				$data = "ERROR";
 
-				$utilities = new DefaultHandler();			
-				$data = $utilities->get_data("http://compiler.codebender.cc", 'data', urlencode($value));
+				$utilities = new DefaultHandler();
+				$data = $utilities->get_data($this->container->getParameter('compiler'), 'data', urlencode($value));
 
 				$json_data = json_decode($data, true);
 				if($json_data['success'])
