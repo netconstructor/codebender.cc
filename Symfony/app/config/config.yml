@@ -107,6 +107,10 @@ doctrine_mongodb:
         default:
             auto_mapping: true
 
+services:
+    utilities:
+        class:        Ace\UtilitiesBundle\Handler\DefaultHandler
+        # arguments:    [sendmail]
 # my.foo.service:
 #     class: Ace\FileBundle\Controller\ServiceController
 #     arguments:

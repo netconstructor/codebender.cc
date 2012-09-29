@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Ace\FileBundle\Document\File;
 use Ace\EditorBundle\Classes\UploadHandler;
-use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
 {	
@@ -64,7 +63,7 @@ class DefaultController extends Controller
 		if($hexTimestamp > $codeTimestamp)
 			$hex_exists = true;
 
-		$utilities = new DefaultHandler();			
+		$utilities = $this->get('utilities');
 		$examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "builtin"), true);
 		$lib_examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "included"), true);
 		$extra_lib_examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "external"), true);
@@ -91,7 +90,7 @@ class DefaultController extends Controller
 
 				$data = "ERROR";
 
-				$utilities = new DefaultHandler();
+				$utilities = $this->get('utilities');
 				$data = $utilities->get_data($this->container->getParameter('compiler'), 'data', urlencode($value));
 
 				$json_data = json_decode($data, true);
@@ -280,7 +279,7 @@ class DefaultController extends Controller
 		{
 			throw $this->createNotFoundException('No user found with id '.$name);
 		}
-		$utilities = new DefaultHandler();			
+		$utilities = $this->get('utilities');
 		$image = $utilities->get_gravatar($user->getEmail());
 
 		return $this->render('AceEditorBundle:Default:image.html.twig', array('user' => $user->getUsername(),'image' => $image));
@@ -302,7 +301,7 @@ class DefaultController extends Controller
 		} else {
 			$lastTweet=0;
 		}
-		$utilities = new DefaultHandler();			
+		$utilities = $this->get('utilities');
 		$image = $utilities->get_gravatar($user->getEmail(),120);
 		return $this->render('AceEditorBundle:Default:user.html.twig', array( 'user' => $user, 'files' => $files, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
