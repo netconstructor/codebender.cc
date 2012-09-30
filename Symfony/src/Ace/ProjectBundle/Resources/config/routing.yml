@@ -14,13 +14,13 @@ AceProjectBundle_listFiles:
     pattern:  /listfiles/{id}/
     defaults: { _controller: AceProjectBundle:Default:listFiles }
 
+AceProjectBundle_createFile:
+    pattern:  /createfile/{id}/{filename}/{code}
+    defaults: { _controller: AceProjectBundle:Default:createFile }
+
 AceProjectBundle_deleteFile:
     pattern:  /deletefile/{id}/{filename}
     defaults: { _controller: AceProjectBundle:Default:deleteFile }
-
-AceProjectBundle_setFile:
-    pattern:  /setfile/{id}/{filename}/{code}
-    defaults: { _controller: AceProjectBundle:Default:setFile }
 
 AceProjectBundle_getFile:
     pattern:  /getfile/{id}/{filename}
@@ -29,3 +29,11 @@ AceProjectBundle_getFile:
 AceProjectBundle_setFile:
     pattern:  /setfile/{id}/{filename}/{code}
     defaults: { _controller: AceProjectBundle:Default:setFile }
+
+AceProjectBundle_getBinary:
+    pattern:  /getbinary/{id}/{flags}
+    defaults: { _controller: AceProjectBundle:Default:getBinary }
+
+AceProjectBundle_setBinary:
+    pattern:  /setbinary/{id}/{flags}/{bin}
+    defaults: { _controller: AceProjectBundle:Default:setBinary }

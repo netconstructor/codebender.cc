@@ -12,11 +12,6 @@ class MongoFilesController extends Controller
 {
     protected $dm;
 
-	public function getIDAction()
-	{
-		
-	}
-
 	public function createAction()
 	{
 	    $pf = new ProjectFiles();
@@ -34,7 +29,7 @@ class MongoFilesController extends Controller
 	
 	public function deleteAction($id)
 	{
-		$pf = $this->getFilesById($id);
+		$pf = $this->getProjectById($id);
 	    $dm = $this->dm;
 		$dm->remove($pf);
 		$dm->flush();
@@ -43,7 +38,7 @@ class MongoFilesController extends Controller
 	
 	public function listFilesAction($id)
 	{
-		$pf = $this->getFilesById($id);
+		$pf = $this->getProjectById($id);
 		
 		$list = $pf->getFiles();
 		return $list;
@@ -103,8 +98,30 @@ class MongoFilesController extends Controller
 		}
 		return false;
 	}
+
+		public function getBinaryAction($id, $flags)
+		{
+			$pf = $this->getProjectById($id);
+			$binaries = $pf->getBinaries();
+			if(isset($binaries[$flags]))
+				return $binaries[$flags];
+			else
+				return false;
+		}
+
+		public function setBinaryAction($id, $flags, $bin)
+		{
+			$pf = $this->getProjectById($id);
+			$binaries = $pf->getBinaries();
+			$binaries[$flags] = array("binary"=>$bin, "timestamp"=>new \DateTime);
+			$pf->setBinaries($binaries);
+		    $dm = $this->dm;
+		    $dm->persist($pf);
+		    $dm->flush();
+			return true;
+		}
 	
-	public function getFilesById($id)
+	public function getProjectById($id)
 	{
 	    $dm = $this->dm;
 		$pf = $dm->getRepository('AceProjectBundle:ProjectFiles')->find(unserialize($id));
@@ -118,13 +135,14 @@ class MongoFilesController extends Controller
 
 	public function setFilesById($id, $files)
 	{
-		$pf = $this->getFilesById($id);
+		$pf = $this->getProjectById($id);
 		$pf->setFiles($files);
+		$pf->setFilesTimestamp(new \DateTime);
 	    $dm = $this->dm;
 	    $dm->persist($pf);
 	    $dm->flush();
 	}
-	
+
 	public function __construct(DocumentManager $documentManager)
 	{
 	    $this->dm = $documentManager;

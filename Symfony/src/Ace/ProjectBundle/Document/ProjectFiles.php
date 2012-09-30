@@ -34,14 +34,9 @@ class ProjectFiles
     protected $sketches;
 
     /**
-     * @MongoDB\Collection
+     * @MongoDB\Hash
      */
     protected $binaries;
-
-    /**
-     * @MongoDB\Date
-     */
-    protected $binariesTimestamp;
 
     /**
      * Get id
@@ -94,26 +89,6 @@ class ProjectFiles
     }
 
     /**
-     * Set binaries
-     *
-     * @param collection $binaries
-     */
-    public function setBinaries($binaries)
-    {
-        $this->binaries = $binaries;
-    }
-
-    /**
-     * Get binaries
-     *
-     * @return collection $binaries
-     */
-    public function getBinaries()
-    {
-        return $this->binaries;
-    }
-
-    /**
      * Set sketches
      *
      * @param collection $sketches
@@ -154,22 +129,22 @@ class ProjectFiles
     }
 
     /**
-     * Set binariesTimestamp
+     * Set binaries
      *
-     * @param date $binariesTimestamp
+     * @param hash $binaries
      */
-    public function setBinariesTimestamp($binariesTimestamp)
+    public function setBinaries($binaries)
     {
-        $this->binariesTimestamp = $binariesTimestamp;
+        $this->binaries = $binaries;
     }
 
     /**
-     * Get binariesTimestamp
+     * Get binaries
      *
-     * @return date $binariesTimestamp
+     * @return hash $binaries
      */
-    public function getBinariesTimestamp()
+    public function getBinaries()
     {
-        return $this->binariesTimestamp;
+        return $this->binaries;
     }
 }

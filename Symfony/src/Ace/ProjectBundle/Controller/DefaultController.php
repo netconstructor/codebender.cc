@@ -105,6 +105,22 @@ class DefaultController extends Controller
 		return new Response(json_encode($delete));
 	}
 	
+	public function getBinaryAction($id, $flags)
+	{
+		$project = $this->getProjectById($id);
+		$mongo = $this->get('mongofiles');
+		$getBinary = $mongo->getBinaryAction($project->getProjectfilesId(), $flags);
+		return new Response(json_encode($getBinary));
+	}
+
+	public function setBinaryAction($id, $flags, $bin)
+	{
+		$project = $this->getProjectById($id);
+		$mongo = $this->get('mongofiles');
+		$setBinary = $mongo->setBinaryAction($project->getProjectfilesId(), $flags, $bin);
+		return new Response(json_encode($setBinary));
+	}
+
 	public function getProjectById($id)
 	{
 		$em = $this->getDoctrine()->getEntityManager();
