@@ -1,0 +1,31 @@
+AceProjectBundle_create:
+    pattern:  /create/{owner}/{name}/{description}
+    defaults: { _controller: AceProjectBundle:Default:create }
+
+AceProjectBundle_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: AceProjectBundle:Default:delete }
+
+AceProjectBundle_list:
+    pattern:  /list/{owner}
+    defaults: { _controller: AceProjectBundle:Default:list }
+
+AceProjectBundle_listFiles:
+    pattern:  /listfiles/{id}/
+    defaults: { _controller: AceProjectBundle:Default:listFiles }
+
+AceProjectBundle_deleteFile:
+    pattern:  /deletefile/{id}/{filename}
+    defaults: { _controller: AceProjectBundle:Default:deleteFile }
+
+AceProjectBundle_setFile:
+    pattern:  /setfile/{id}/{filename}/{code}
+    defaults: { _controller: AceProjectBundle:Default:setFile }
+
+AceProjectBundle_getFile:
+    pattern:  /getfile/{id}/{filename}
+    defaults: { _controller: AceProjectBundle:Default:getFile }
+
+AceProjectBundle_setFile:
+    pattern:  /setfile/{id}/{filename}/{code}
+    defaults: { _controller: AceProjectBundle:Default:setFile }

@@ -110,6 +110,10 @@ doctrine_mongodb:
 services:
     utilities:
         class:        Ace\UtilitiesBundle\Handler\DefaultHandler
+    mongofiles:
+        class:        Ace\ProjectBundle\Controller\MongoFilesController
+        arguments: 
+            documentManager: "@doctrine.odm.mongodb.document_manager"
         # arguments:    [sendmail]
 # my.foo.service:
 #     class: Ace\FileBundle\Controller\ServiceController
