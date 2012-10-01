@@ -1,3 +1,15 @@
 AceBlogBundle_blog:
-    pattern:  /blog/{arg}
-    defaults: { _controller: AceBlogBundle:Default:blog , arg: "html" }
+    pattern:  /blog/{offset}
+    defaults: { _controller: AceBlogBundle:Default:blog, offset: "0" }
+
+AceBlogBundle_blogRss:
+    pattern:  /blogRss
+    defaults: { _controller: AceBlogBundle:Default:blogRss }
+
+AceBlogBundle_blognew:
+    pattern:  /newblogpost
+    defaults: { _controller: AceBlogBundle:Default:blog_new }
+
+AceBlogBundle_viewpost:
+    pattern:  /viewpost/{id}
+    defaults: { _controller: AceBlogBundle:Default:viewpost, id: "0" }

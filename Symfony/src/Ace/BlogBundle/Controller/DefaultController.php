@@ -3,52 +3,44 @@
 namespace Ace\BlogBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Ace\BlogBundle\Entity\BlogPost;
 
 
 class DefaultController extends Controller
 {
     
-   public function blogAction($arg)
-	{
-		// $posts = $this->getDoctrine()->getRepository('AceMiscBundle:BlogPost')->findAll();
-
+   public function blogAction($offset)
+	{				
+		//$offset =0;
+		$limit = 5;		
 		$em = $this->getDoctrine()->getEntityManager();
 		$qb = $em->createQueryBuilder();
 
 		$qb->add('select', 'u')->add('from', 'AceBlogBundle:BlogPost u')->add('orderBy', 'u.date DESC');
-		$posts = $qb->getQuery()->getResult();
+		$allPosts = count($qb->getQuery()->getResult());		
+		$q = $qb->getQuery();
+		$q->setFirstResult($offset);
+		$q->setMaxResults($limit);		
+		$posts = $q->getResult();			
+		if($allPosts % $limit == 0)
+			$pages = $allPosts/$limit;
+			else $pages = (($allPosts - ($allPosts % $limit))/$limit) + 1;
 		
-		if($arg == 'html')
-			return $this->render('AceBlogBundle:Default:blog.html.twig', array("posts" => $posts));
-		else if ($arg == 'rss' )
-		{
+		return $this->render('AceBlogBundle:Default:blog.html.twig', array("posts" => $posts, "pages" => $pages, "offset" => $offset));			
+	}
+	
+	public function blogRssAction()
+	{	
+		$em = $this->getDoctrine()->getEntityManager();
+		$qb = $em->createQueryBuilder();
+
+		$qb->add('select', 'u')->add('from', 'AceBlogBundle:BlogPost u')->add('orderBy', 'u.date DESC');		
+		$posts = $qb->getQuery()->getResult();		
+		
+		
 			$response = $this->render('AceBlogBundle:Default:blog_rss.html.twig', array("posts" => $posts));
 			$response->headers->set('Content-Type', 'application/rss+xml');
-			return $response;
-		}
-		else if($arg == 'new')
-		{
-			if (false === $this->get('security.context')->isGranted('ROLE_ADMIN'))
-			{
-				throw new AccessDeniedException();
-			}
-			else
-			{
-				$title = $this->getRequest()->query->get('title');
-				$text = $this->getRequest()->query->get('msgpost');
-				$author = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-				$em = $this->getDoctrine()->getEntityManager();
-				$post = new BlogPost();
-				$post->setTitle($title);
-				$post->setText($text);
-				$post->setAuthor($author);
-				$post->setDate(new \DateTime("now"));
-				$em->persist($post);
-				$em->flush();
-				return $this->redirect($this->generateUrl('AceBlogBundle_blog'));
-			}
-			
-		}
+			return $response;				
 	}
 
 	public function blog_newAction()
@@ -72,5 +64,16 @@ class DefaultController extends Controller
 			$em->flush();
 			return $this->redirect($this->generateUrl('AceBlogBundle_blog'));
 		}
+	}
+	
+	public function viewpostAction($id)
+	{
+	
+		$post = $this->getDoctrine()
+        ->getRepository('AceBlogBundle:BlogPost')
+        ->find($id);
+		
+		return $this->render('AceBlogBundle:Default:viewpost.html.twig', array("post" => $post));	
+	
 	}
 }

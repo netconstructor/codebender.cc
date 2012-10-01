@@ -46,7 +46,7 @@
 <div class="page-header">
   <h1>ze blog
 	<small> our latest news</small>
-	<a href={{path("AceBlogBundle_blog", {'arg': "rss"})}}>
+	<a href={{path("AceBlogBundle_blogRss")}}>
 	<img src={{asset("images/rss.jpg")}} style="
 	    float: right;
 	    height: 25px;
@@ -77,16 +77,29 @@
 {% endif %}
 
 <div id="posts">
-{% for i in posts %}
-<div class="row-fluid">
+  {% for i in posts %}
+  <div class="row-fluid">
 	<div class="span12">
-		<h3>{{ i.title }}</h3>
+	
+	<a href={{path("AceBlogBundle_viewpost", {'id': i.id})}} >
+	<h3>{{ i.title }}</h3>
+	</a>
 		<h3><small>{{ i.date|date("M jS, Y") }}</small></h3>
 		{{ i.text|raw }}
 	</div>
-</div>
+  </div>
 {% endfor %}
+
+  <div class="pagination">
+     <ul>
+       <li {% if offset == 0 %} class="disabled" {% endif %}><a {% if offset != 0 %} href={{path("AceBlogBundle_blog", {'offset': offset-5 } )}} {% endif %} >Previous</a></li>
+	   {% for i in 1..pages %}
+       <li {% if 5*loop.index0 == offset %} class="active" {% endif %}><a {% if 5*loop.index0 != offset %} href={{path("AceBlogBundle_blog", {'offset': 5*loop.index0 })}} {% endif %} >{{i}}</a></li> 
+	   {% endfor %}
+       <li {% if (pages-1)*5 == offset %} class="disabled" {% endif %} ><a {% if (pages-1)*5 != offset %} href={{path("AceBlogBundle_blog", {'offset': offset+5 } )}} {% endif %}>Next</a></li>
+     </ul>
+  </div>
+
 </div>
 
 {% endblock %}
-
