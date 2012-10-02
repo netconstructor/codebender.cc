@@ -8,7 +8,7 @@ AceSenderBundle:
 
 AceBlogBundle:
     resource: "@AceBlogBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /blog
 
 AceUtilitiesBundle:
     resource: "@AceUtilitiesBundle/Resources/config/routing.yml"
