@@ -9,7 +9,7 @@ use Ace\BlogBundle\Entity\BlogPost;
 class DefaultController extends Controller
 {
     
-   public function blogAction($offset)
+   public function blogAction($page)
 	{				
 		//$offset =0;
 		$limit = 5;		
@@ -19,14 +19,14 @@ class DefaultController extends Controller
 		$qb->add('select', 'u')->add('from', 'AceBlogBundle:BlogPost u')->add('orderBy', 'u.date DESC');
 		$allPosts = count($qb->getQuery()->getResult());		
 		$q = $qb->getQuery();
-		$q->setFirstResult($offset);
+		$q->setFirstResult(5*($page-1));
 		$q->setMaxResults($limit);		
 		$posts = $q->getResult();			
 		if($allPosts % $limit == 0)
 			$pages = $allPosts/$limit;
 			else $pages = (($allPosts - ($allPosts % $limit))/$limit) + 1;
 		
-		return $this->render('AceBlogBundle:Default:blog.html.twig', array("posts" => $posts, "pages" => $pages, "offset" => $offset));			
+		return $this->render('AceBlogBundle:Default:blog.html.twig', array("posts" => $posts, "pages" => $pages, "page" => $page));			
 	}
 	
 	public function blogRssAction()
