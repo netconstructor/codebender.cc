@@ -92,11 +92,11 @@
 
   <div class="pagination">
      <ul>
-       <li {% if offset == 0 %} class="disabled" {% endif %}><a {% if offset != 0 %} href={{path("AceBlogBundle_blog", {'offset': offset-5 } )}} {% endif %} >Previous</a></li>
+       <li {% if page == 1 %} class="disabled" {% endif %}><a {% if page != 1 %} href={{path("AceBlogBundle_blog", {'page': page - 1 } )}} {% endif %} >Previous</a></li>
 	   {% for i in 1..pages %}
-       <li {% if 5*loop.index0 == offset %} class="active" {% endif %}><a {% if 5*loop.index0 != offset %} href={{path("AceBlogBundle_blog", {'offset': 5*loop.index0 })}} {% endif %} >{{i}}</a></li> 
+       <li {% if loop.index0 == page - 1 %} class="active" {% endif %}><a {% if loop.index0 != page - 1 %} href={{path("AceBlogBundle_blog", {'page': loop.index0 + 1 })}} {% endif %} >{{i}}</a></li> 
 	   {% endfor %}
-       <li {% if (pages-1)*5 == offset %} class="disabled" {% endif %} ><a {% if (pages-1)*5 != offset %} href={{path("AceBlogBundle_blog", {'offset': offset+5 } )}} {% endif %}>Next</a></li>
+       <li {% if (pages-1) == page - 1 %} class="disabled" {% endif %} ><a {% if (pages-1) != page - 1 %} href={{path("AceBlogBundle_blog", {'page': page + 1 } )}} {% endif %}>Next</a></li>
      </ul>
   </div>
 
