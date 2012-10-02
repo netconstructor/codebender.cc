@@ -1,6 +1,6 @@
 AceBlogBundle_blog:
-    pattern:  /blog/{offset}
-    defaults: { _controller: AceBlogBundle:Default:blog, offset: "0" }
+    pattern:  /{page}
+    defaults: { _controller: AceBlogBundle:Default:blog, page: "1" }
 
 AceBlogBundle_blogRss:
     pattern:  /blogRss
