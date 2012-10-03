@@ -10,8 +10,7 @@ class DefaultController extends Controller
 {
     
    public function blogAction($page)
-	{				
-		//$offset =0;
+	{						
 		$limit = 5;		
 		$em = $this->getDoctrine()->getEntityManager();
 		$qb = $em->createQueryBuilder();
@@ -29,7 +28,7 @@ class DefaultController extends Controller
 		return $this->render('AceBlogBundle:Default:blog.html.twig', array("posts" => $posts, "pages" => $pages, "page" => $page));			
 	}
 	
-	public function blogRssAction()
+	public function rssAction()
 	{	
 		$em = $this->getDoctrine()->getEntityManager();
 		$qb = $em->createQueryBuilder();
@@ -43,7 +42,7 @@ class DefaultController extends Controller
 			return $response;				
 	}
 
-	public function blog_newAction()
+	public function newpostAction()
 	{
 		if (false === $this->get('security.context')->isGranted('ROLE_ADMIN'))
 		{

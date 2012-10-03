@@ -46,7 +46,7 @@
 <div class="page-header">
   <h1>ze blog
 	<small> our latest news</small>
-	<a href={{path("AceBlogBundle_blogRss")}}>
+	<a href={{path("AceBlogBundle_rss")}}>
 	<img src={{asset("images/rss.jpg")}} style="
 	    float: right;
 	    height: 25px;
@@ -65,7 +65,7 @@
 		</div>
 		<div id="collapseOne" class="accordion-body collapse">
 			<div class="accordion-inner yui-skin-sam">
-				<form action = "{{ path('AceBlogBundle_blognew')}}">
+				<form action = "{{ path('AceBlogBundle_newpost')}}">
 				Title: <input type="text" name="title" style="width:94.9%"/>
 				<textarea name="msgpost" id="msgpost"></textarea>
 				<button type="submit">New Post!</button>
