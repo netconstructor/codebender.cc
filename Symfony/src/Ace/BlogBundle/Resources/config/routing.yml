@@ -1,14 +1,16 @@
 AceBlogBundle_blog:
-    pattern:  /{page}
-    defaults: { _controller: AceBlogBundle:Default:blog, page: "1" }
+   pattern:  /{page}
+   defaults: { _controller: AceBlogBundle:Default:blog, page: "1" } 
+   requirements:
+       page:   \d+
 
-AceBlogBundle_blogRss:
-    pattern:  /blogRss
-    defaults: { _controller: AceBlogBundle:Default:blogRss }
+AceBlogBundle_rss:
+    pattern:  /rss
+    defaults: { _controller: AceBlogBundle:Default:rss }
 
-AceBlogBundle_blognew:
-    pattern:  /newblogpost
-    defaults: { _controller: AceBlogBundle:Default:blog_new }
+AceBlogBundle_newpost:
+    pattern:  /newpost
+    defaults: { _controller: AceBlogBundle:Default:newpost }
 
 AceBlogBundle_viewpost:
     pattern:  /viewpost/{id}
