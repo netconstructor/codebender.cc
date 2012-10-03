@@ -1,0 +1,4 @@
+AceGenericBundle_libraries:
+    pattern: /libraries
+    defaults: {_controller: AceGenericBundle:Default:libraries }
+

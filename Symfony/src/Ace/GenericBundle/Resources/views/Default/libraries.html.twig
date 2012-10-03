@@ -87,6 +87,23 @@
 		<p><a class="btn" href="https://github.com/mksense/mac" style="float:right;">More Info &raquo;</a></p>
 	  </div><!--/span-->
 	</div><!--/row-->
+
+{% for library, info in libraries %}
+	<div class="row-fluid">
+		<div class="span12">
+	    <h3>{{library}}</h3>
+	{#
+	    <p>XBeeRadio is the Arduino part of mkSense. mkSense is library containing all the files and configurations required to deploy a heterogeneous wireless sensor network consisting of 4 different hardware platforms (TelosB, SunSPOT, Arduino, iSense).</p>
+		<p><a class="btn" href="https://github.com/mksense/mac" style="float:right;">More Info &raquo;</a></p>
+	#}
+		{% if info["description"] is defined%}
+			{{info["description"]}}
+		{% endif %}
+	  </div><!--/span-->
+	</div><!--/row-->
+{% endfor %}
+
+
 	<div class="row-fluid">
 	<h2>Request Library</h2>
 	<div class="marketing">

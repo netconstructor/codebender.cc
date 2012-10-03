@@ -1,3 +1,7 @@
+AceGenericBundle:
+    resource: "@AceGenericBundle/Resources/config/routing.yml"
+    prefix:   /
+
 AceProjectBundle:
     resource: "@AceProjectBundle/Resources/config/routing.yml"
     prefix:   /project
