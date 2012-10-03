@@ -64,9 +64,9 @@ class DefaultController extends Controller
 			$hex_exists = true;
 
 		$utilities = $this->get('utilities');
-		$examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "builtin"), true);
-		$lib_examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "included"), true);
-		$extra_lib_examples = json_decode($utilities->get_data("http://libs.codebender.cc", 'data', "external"), true);
+		$examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "builtin"), true);
+		$lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "included"), true);
+		$extra_lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "external"), true);
 
 		$examples = $examples["list"];
 		$lib_examples = $lib_examples["list"];
