@@ -63,3 +63,7 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
     
+# temp rss feed fix
+rss_feed_fix:
+       pattern: /misc/blog/rss
+       defaults: { _controller: AceBlogBundle:Default:rss }
