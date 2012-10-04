@@ -97,7 +97,7 @@
 		<p><a class="btn" href="https://github.com/mksense/mac" style="float:right;">More Info &raquo;</a></p>
 	#}
 		{% if library["description"] is defined%}
-			{{library["description"]}}
+			{{library["description"]|raw}}
 		{% endif %}
 	  </div><!--/span-->
 	</div><!--/row-->
