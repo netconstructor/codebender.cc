@@ -18,6 +18,8 @@ class DefaultController extends Controller
 			$libraries[$key] = array("name" => $library);
 			$libinfo = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "fetch-description-external&name=".$library), true);
 			$libraries[$key]["description"] =  $libinfo["description"];
+			if(isset($libinfo["url"]))
+				$libraries[$key]["url"] =  $libinfo["url"];
 			// if(isset($libinfo["description"]))
 			// 	$libinfo["description"] = $utilities->get($libinfo["description"]["url"]);
 		}

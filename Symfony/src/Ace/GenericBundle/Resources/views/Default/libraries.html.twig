@@ -41,6 +41,10 @@
 		{% if library["description"] is defined%}
 			{{library["description"]|raw}}
 		{% endif %}
+		{% if library["url"] is defined%}
+		<p><a class="btn" href="{{library['url']}}" style="float:right;">More Info &raquo;</a></p>
+		{% endif %}
+
 	  </div><!--/span-->
 	</div><!--/row-->
 {% endfor %}
