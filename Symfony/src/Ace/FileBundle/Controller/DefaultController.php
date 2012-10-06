@@ -19,7 +19,7 @@ class DefaultController extends Controller
 			
 			if($project_name == '')
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 			
 			$file = $this->getMyProject($project_name, $error);
@@ -61,7 +61,7 @@ class DefaultController extends Controller
 			}
 			else if($error == 0)
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 		}
 		else
@@ -78,7 +78,7 @@ class DefaultController extends Controller
 			$dm->flush();
 		}
 		
-		return $this->redirect($this->generateUrl('AceEditorBundle_list'));	
+		return $this->redirect($this->generateUrl('AceGenericBundle_list'));	
 	}
 	
 	public function cloneAction($old_user, $old_project_name)
@@ -89,7 +89,7 @@ class DefaultController extends Controller
 			
 			if($new_project_name == '')
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 			$file = $this->getMyProject($new_project_name, $error);
 			if($error == -2)
@@ -130,7 +130,7 @@ class DefaultController extends Controller
 			}
 			else if($error == 0)
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 		}
 		else
