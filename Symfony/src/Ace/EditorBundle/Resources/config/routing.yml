@@ -1,11 +1,3 @@
-AceEditorBundle_homepage:
-    pattern:  /
-    defaults: { _controller: AceEditorBundle:Default:index }
-
-AceEditorBundle_list:
-    pattern:  /list
-    defaults: { _controller: AceEditorBundle:Default:list }
-
 AceEditorBundle_editor:
     pattern:  /edit/{project_name}
     defaults: { _controller: AceEditorBundle:Default:edit}
@@ -34,14 +26,3 @@ AceEditorBundle_checkmail:
     pattern:  /checkmail
     defaults: { _controller: AceEditorBundle:Default:checkmail }
 
-AceEditorBundle_user:
-    pattern:  /user/{user}
-    defaults: { _controller: AceEditorBundle:Default:user }
-
-AceEditorBundle_project:
-    pattern:  /project/{username}/{project_name}
-    defaults: { _controller: AceEditorBundle:Default:project }
-
-AceEditorBundle_upload:
-    pattern: /upload/
-    defaults: {_controller: AceEditorBundle:Default:upload }

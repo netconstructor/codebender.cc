@@ -10,7 +10,7 @@
  * http://www.opensource.org/licenses/MIT
  */
 
- namespace Ace\EditorBundle\Classes;
+ namespace Ace\GenericBundle\Classes;
  
 class UploadHandler
 {

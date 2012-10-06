@@ -16,7 +16,7 @@
 <div class="page-header row-fluid" >
 	<ul class="thumbnails">
 		<li class="span2">
-		<a href="{{path('AceEditorBundle_user',{'user':user.username})}}" class="thumbnail">
+		<a href="{{path('AceGenericBundle_user',{'user':user.username})}}" class="thumbnail">
 		<img id="user_avatar" src="{{image}}" alt="avatar of user"/>
 		</a>
 		</li>
@@ -47,7 +47,7 @@
 	{% if files %}
 		<tbody>
 		{% for file in files %}
-			<tr><td><a href="{{path('AceEditorBundle_project',{'project_name':file.name, 'username': user.getUsername()})}}">{{file.name}}</a></td></tr>
+			<tr><td><a href="{{path('AceGenericBundle_project',{'project_name':file.name, 'username': user.getUsername()})}}">{{file.name}}</a></td></tr>
 		{% endfor %}
 		</tbody>
 	{% endif %}
