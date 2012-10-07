@@ -3,3 +3,4 @@ Symfony/app/logs
 *~
 .DS_Store
 vendor/codebendercc/arduino-files/.git
+Symfony/app/phpunit.xml
