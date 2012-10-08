@@ -196,7 +196,7 @@ class UploadHandler
         $file->type = $type;			
 		$info = pathinfo($name);
 	    $fileName =  basename($name,'.'.$info['extension']);		
-		$file->url = 'http://dev.codebender.cc/edit/'.$fileName;
+		$file->url = 'http://codebender.cc/edit/'.$fileName;
          if ($this->validate($uploaded_file, $file, $error, $index)) {
             /* $this->handle_form_data($file, $index);
             $file_path = $this->options['upload_dir'].$file->name;
