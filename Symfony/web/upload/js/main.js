@@ -19,7 +19,7 @@ $(function () {
     $('#fileupload').fileupload();
     $('#fileupload').bind('fileuploadcompleted',  
 	function (e, data) {if(!data.result[0].error) 
-						{ $("#Links").before('<li><a href="http://dev.codebender.cc/edit/'+(data.files[0].name).slice(0,-4)+'">'+(data.files[0].name).slice(0,-4)+'</a></li>');}
+						{ $("#Links").before('<li><a href="http://codebender.cc/edit/'+(data.files[0].name).slice(0,-4)+'">'+(data.files[0].name).slice(0,-4)+'</a></li>');}
 						else{  $('#fileupload').fileupload().data('fileupload')._disableFileInputButton(); 
 							   $('.btn.btn-warning').click(function (e) { $('.template-download.fade.in').remove(); $('#fileupload').fileupload().data('fileupload')._enableFileInputButton(); }); }
 		} );
