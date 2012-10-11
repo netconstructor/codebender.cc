@@ -17,6 +17,8 @@ AceGenericBundle_project:
 AceGenericBundle_upload:
     pattern: /upload/
     defaults: {_controller: AceGenericBundle:Default:upload }
+    #requirements:
+    #    _method:  POST
 
 AceGenericBundle_libraries:
     pattern: /libraries
