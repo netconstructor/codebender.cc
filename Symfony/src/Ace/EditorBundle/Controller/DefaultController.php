@@ -45,7 +45,8 @@ class DefaultController extends Controller
 	public function compileAction()
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
 			$project_name = $this->getRequest()->request->get('project_name');
 			if($project_name)
 			{
@@ -69,7 +70,7 @@ class DefaultController extends Controller
 				$response->setStatusCode(200);
 				$response->headers->set('Content-Type', 'text/html');
 			}
-			
+		}
 		return $response;
 	}
 
@@ -109,7 +110,10 @@ class DefaultController extends Controller
 
 	public function checkpassAction()
 	{
-		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));		
+		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
+
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
 
 			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
 			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
@@ -126,13 +130,18 @@ class DefaultController extends Controller
 				$response->setContent('0');
 			$response->setStatusCode(200);
 			$response->headers->set('Content-Type', 'text/html');
-			return $response;		
+			return $response;
+		}
+		else
+			throw $this->createNotFoundException('No POST data!');
 	}
 
 	public function checkmailAction()
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		
+
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
 			$mail = $this->getRequest()->request->get('mail');
 			if($mail)
 			{
@@ -149,14 +158,18 @@ class DefaultController extends Controller
 				$response->setStatusCode(200);
 				$response->headers->set('Content-Type', 'text/html');
 			}
-			return $response;		
+			return $response;
+		}
+		else
+			throw $this->createNotFoundException('No POST data!');
 	}
 
 	//TODO:add checks for passwords
 	public function setoptionsAction()
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
 			$mydata = $this->getRequest()->request->get('data');
 			if($mydata)
 			{
@@ -218,7 +231,9 @@ class DefaultController extends Controller
 				$response->headers->set('Content-Type', 'text/html');
 			}
 			return $response;
-		
+		}
+		else
+			throw $this->createNotFoundException('No POST data!');
 	}
 
 	public function imageAction()

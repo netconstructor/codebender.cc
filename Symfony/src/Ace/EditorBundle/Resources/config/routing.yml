@@ -5,8 +5,6 @@ AceEditorBundle_editor:
 AceEditorBundle_compile:
     pattern:  /compile
     defaults: { _controller: AceEditorBundle:Default:compile }
-    requirements:
-        _method:   POST
 
 AceEditorBundle_download:
     pattern:  /download/{username}/{project_name}/{type}
@@ -19,18 +17,12 @@ AceEditorBundle_options:
 AceEditorBundle_setoptions:
     pattern:  /setoptions
     defaults: { _controller: AceEditorBundle:Default:setoptions }
-    requirements:
-        _method:   POST
 
 AceEditorBundle_checkpass:
     pattern:  /checkpass
     defaults: { _controller: AceEditorBundle:Default:checkpass }
-    requirements:
-        _method:   POST
 
 AceEditorBundle_checkmail:
     pattern:  /checkmail
     defaults: { _controller: AceEditorBundle:Default:checkmail }
-    requirements:
-        _method:   POST
 
