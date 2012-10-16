@@ -29,7 +29,7 @@ h1 small
 	<div class="row-fluid">
 		<h5>Description: {% render "AceFileBundle:Default:getDescription" with {'username': user.getUsername(),'project_name': project} %}</h5><br />
 		<div id="menu-getproject" class="btn-group">
-			<a class="btn btn-primary" href="{{path('AceEditorBundle_download',{'username':user.getUsername(),'project_name': project})}}">Download</a>
+			<a class="btn btn-primary" href="{{path('AceTempBundle_download',{'username':user.getUsername(),'project_name': project})}}">Download</a>
 			{% if is_granted('ROLE_USER') %}	
 				<a class="btn btn-primary"  data-toggle="modal" href="#cloneModal">Clone</a>
 			{% endif %}

@@ -52,7 +52,7 @@ class DefaultController extends Controller
 			    $dm->persist($file);
 			    $dm->flush();
 
-				return $this->redirect($this->generateUrl('AceEditorBundle_editor',array('project_name' => $project_name)));
+				return $this->redirect($this->generateUrl('AceGenericBundle_editor',array('project_name' => $project_name)));
 				
 			}
 			else if($error==-1)
@@ -121,7 +121,7 @@ class DefaultController extends Controller
 			    $dm->persist($file);
 			    $dm->flush();
 
-				return $this->redirect($this->generateUrl('AceEditorBundle_editor',array('project_name' => $new_project_name)));
+				return $this->redirect($this->generateUrl('AceGenericBundle_editor',array('project_name' => $new_project_name)));
 				
 			}
 			else if($error==-1)

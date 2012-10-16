@@ -1,0 +1,344 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+<style type="text/css" media="screen">
+
+html
+{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body
+{
+    overflow: hidden;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+	box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;
+}
+    
+#editor
+{ 
+	position: absolute;
+	top:  50px;
+/*	left: 280px;*/
+	bottom:10px;
+/*	height:1000px;*/
+	background: white;
+	padding: 0px;
+}
+#selection
+{
+		width: 250px;
+/*		height: 200px;*/
+}
+#container
+{
+		margin-top: 10px;		
+}
+#container_left
+{
+/*		float:left;
+		margin-right: 10px;
+*/
+}
+#container_right
+{
+}
+#compile_output
+{
+	position: absolute;
+	bottom: 0px;
+	height:0px;
+	padding: 0px;
+	overflow-y: scroll;
+/*	background: white;*/
+	backround-image: url(http://subtlepatterns.subtlepatterns.netdna-cdn.com/wp-content/themes/tweaker6/images/bgnoise.gif);
+	/*	width: 280px;*/
+	white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	white-space: pre-wrap;       /* css-3 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	/* text-shadow: #999999 1px 1px 1px; */
+	border-width: 0px;
+}
+
+.myoptions
+{
+	width:100%;
+	margin-bottom:10px;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+	<script src={{ asset("src/ace.js") }} type="text/javascript" charset="utf-8"></script>
+	<script src={{ asset("src/theme-textmate.js") }} type="text/javascript" charset="utf-8"></script>
+	<script src={{ asset("src/mode-c_cpp.js") }} type="text/javascript" charset="utf-8"></script>
+	{% include 'AceGenericBundle:Editor:editor_scripts.html.twig' %}
+{% endblock %}
+
+{% block body %}
+<div class="modal hide fade" id="deletionModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Are you sure you want to delete your sketch?</h3>
+  </div>
+  <div class="modal-body">
+    <p>Deleting your sketch is going to destroy all of its data. This action is irreversible. If you chose to delete your project, all the files associated with it are going to be destroyed and the data will be irrecoverable. You <strong>WILL BE UNABLE</strong> to back up your files.</p>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn">Cancel</a>
+    <a href="{{ path('AceFileBundle_delete', {'project_name':project_name}) }}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete!</a>
+  </div>
+</div>
+
+<div class="modal hide fade" id="warningModal">
+		<div class="modal-header">
+		<button class="close" data-dismiss="modal">&#215</button>
+		<h3>Are you sure you want to load an example?</h3>
+		</div>
+		<div class="modal-body">
+			<p>Loading an example is going to <strong>OVERWRITE</strong> the data of your current project. If you wish to maintain your current project please create a new empty project and then load your preferred example. </p>
+		</div>
+		<div class="modal-footer">
+		<a data-dismiss="modal" class="btn">Cancel</a>
+		<a data-dismiss="modal" id="loadLink" onclick="" href="javascript:void(0)" class="btn btn-warning"><i class=" icon-chevron-right icon-white"></i> Load Example</a>
+		</div>
+</div>
+
+<div class="modal hide fade" id="descriptionModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Enter your new project description.</h3>
+  </div>
+  <div class="modal-body span5">
+	<textarea id="newDescription" style="resize: none;" rows="4" class="span5">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_name} %}</textarea>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn">Cancel</a>
+    <a href="javascript:saveDescription()" class="btn btn-primary"><i class="icon-download icon-white"></i> Save Changes</a>
+  </div>
+</div>
+
+
+<div class="container">
+<div id="container" class="row-fluid">	
+	<div class="row-fluid">
+	<div id="container_left" class="span3">
+		  <ul class="nav nav-tabs">
+		    <li class="active"><a href="#tab1" data-toggle="tab">Operations</a></li>
+		    <li><a href="#tab2" data-toggle="tab">Info</a></li>
+		    <li><a href="#tab3" data-toggle="tab">Sidebar</a></li>
+		  </ul>
+		  <div class="tab-content" >
+		    <div class="tab-pane active" id="tab1">
+				<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
+				<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
+			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
+				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Build</span></button>
+				<select id="boards"  class="myoptions">
+					<option>Arduino Uno</option>
+					<option>Arduino Duemilanove</option>
+				</select>
+				<a href="{{ path('AceTempBundle_download', { 'username' : username, 'project_name': project_name }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
+				<hr>			
+				<div id="desktop-tools-1" class="visible-desktop">
+				<div id="usb-sidebar-div">
+					<h4>USB Upload</h4>					
+					<div id="prescanning">
+						<p><small>If you'd like to upload your code to your USB-connected Arduino, please run our Java applet.</small></p>
+						<div id="missingjava">
+							<p>It seems like you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
+						</div>
+						<div id="enableUSBdiv">
+							<button id = "enableUSB" class="btn span12" style="margin-bottom:10px; margin-left:0px;" onclick="enableUSB();"><i id="upload_icon" class="icon-play"></i><span id="upload_text"> Enable USB flash </span></button>
+						</div>
+						<script type="text/javascript">
+							if (!navigator.javaEnabled()){
+								$("#enableUSBdiv").toggle("blind", {}, 1000);
+							}
+							else{
+								$("#missingjava").toggle("blind", {}, 1000);
+							}
+						</script>
+					</div>
+				    <div id="scanning">
+				        <select id="ports" class="myoptions"></select>
+						<button id="connect" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
+						<button id = "uploadusb" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
+				        <!--<select id="baudrates" class="myoptions"></select>-->
+					</div>
+				</div>
+				</div>
+				<h4>Remote Upload <small>Got an Arduino with Ariadne? Flash it remotely over the cloud or your network</small></h4>
+				<input type="text" id='ip' style="width:96%;" value="Address (IP or Domain)" onclick="cleanupIPhelp();" onkeyup="cleanupIPhelp();">
+				<div id="netupload-alternative" class="hide"> 
+					<div class="btn-group">
+					  <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" style="margin-bottom:10px; margin-left:0px;"> Remote Upload <span id="netload-ip"></span> <span class="caret"></span> </a>
+					  <ul class="dropdown-menu">
+						<li><a href="#" onclick="cloudload();return false;"><i class="icon-globe"></i> Cloud Upload</a></li>
+						<li id="removeme"><a href="#" onclick="netload();return false;"><i class="icon-upload"></i> NET Upload</a></li>
+					  </ul>
+					</div>
+				</div>
+				<script type="text/javascript">
+				if (!navigator.javaEnabled()){
+					var elem = document.getElementById('removeme');
+					elem.parentNode.removeChild(elem);
+				}
+				</script>
+
+				<div id="netupload-original" class="hide"> 
+					<div id="desktop-tools-2" class="visible-desktop">
+						<div id="net-sidebar-div">															
+							<button id="netload" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i class="icon-upload"></i> NET Flash <span id="netload-ip"></span></button>					
+						</div>
+					</div>
+				</div>
+				<div id="cloud-sidebar-div" >
+					<button id="cloudload" onclick="cloudload()" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i class="icon-globe"></i> Cloud Upload <span id="cloudload-ip"></span></button>
+				</div>
+				<hr>
+				<div><p>Total Number of lines: <span id="line_count">0</span></div>
+				<div id="progress" class="progress progress-striped active">
+				    <div id="progress_val" class="bar" style="width: 40%;"></div>
+				    </div>
+				<div id="operation_output">
+				</div>
+				
+				<div id="usbappletdiv">
+				</div>
+				<script src="https://www.java.com/js/deployJava.js"></script>
+				{#
+				<applet width="1" height="1"  id="tftpapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.tftp.TftpApplet" archive="{{ asset('tftpUploader-jar-with-dependencies.jar')}}"> </applet>
+				#}
+				
+		    </div>
+		    <hr>
+		    <div class="tab-pane" id="tab2">
+				<h3>Description:</h3>
+				<p id="oldDescription">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_name} %}</p>
+				<a data-toggle="modal" href="#descriptionModal" style="float:right;">edit</a>
+		    </div>
+		    <div class="tab-pane" id="tab3">
+		      {% render "AceUtilitiesBundle:Default:sidebar" %}
+		    </div>
+		  </div>
+		
+	</div>
+	<div id="container_right" class="span9">
+		<div class="row-fluid">
+		<pre id="editor" class="span8">{% render "AceFileBundle:Default:getMyEscapedCode" with {'project_name': project_name} %}</pre>
+		</div>
+		<div class="row-fluid">
+			<pre id="compile_output" class="span8"></pre>
+		</div>
+	</div>	
+</div>
+</div>
+</div>
+
+
+<script>
+var editor = ace.edit("editor");
+var dirty = false;
+	
+window.onload = function()
+{
+    editor.setTheme("ace/theme/textmate");
+
+    var JavaScriptMode = require("ace/mode/c_cpp").Mode;
+    editor.getSession().setMode(new JavaScriptMode());
+
+	editor.getSession().setUseSoftTabs(false);
+	editor.getSession().on('change', function()
+	{
+		throwMud();
+		$("#line_count").html(editor.getSession().getValue().split("\n").length);
+	});
+	
+	addCommands();
+
+	window.enabledapplet=false;
+};
+
+
+$(document).ready(function()
+{	
+	$("#progress").hide();
+	$("#scanning").hide();
+	$("#net-tools").hide();
+
+	$("#line_count").html(editor.getSession().getValue().split("\n").length);
+	{% if hex_exists == false %}
+		disableLink($(".link_hex"));
+	{% else %}
+	$("#upload").removeClass("disabled").click(function()
+	{
+		upload();
+	})
+	$("#uploadusb").removeClass("disabled").click(function()
+	{
+		uploadusb();
+	})
+					
+	{% endif %}	
+	
+	$("#connect").click(function()
+	{
+		connect();
+	})
+
+	$("#compile").click(function() 
+	{
+		motherInLaw();
+	});
+	
+	$("#netload").click(function()
+	{
+		netload();
+	})
+	
+	{% if user_enable_usb is defined %}
+		enableUSB();	
+	{% endif %}	
+	{% if user_enable_net is defined %}
+		enableNET();
+	{% endif %}	
+	
+	if (isMobile()){
+		$("#desktop-tools-1").hide();
+		$("#desktop-tools-2").hide();
+	}
+});
+</script>
+	
+
+{% endblock %}
+
+{% block examples%}
+<ul class="nav">
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Examples<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+		{% include 'AceTempBundle:Default:examples_section.html.twig' with {'examples': examples} only %}
+		<li class="divider"></li>
+		<li class="nav-header">Libraries</li>
+		{% include 'AceTempBundle:Default:examples_section.html.twig' with {'examples': lib_examples} only %}
+    </ul>
+  </li>
+  <li class="dropdown">
+    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Load External<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+		{% include 'AceTempBundle:Default:examples_section.html.twig' with {'examples': extra_lib_examples} only %}
+	
+    </ul>
+  </li>
+</ul>
+
+{% endblock %}
+
+

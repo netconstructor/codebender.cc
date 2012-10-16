@@ -1,3 +1,7 @@
+AceTempBundle:
+    resource: "@AceTempBundle/Resources/config/routing.yml"
+    prefix:   /
+
 AceGenericBundle:
     resource: "@AceGenericBundle/Resources/config/routing.yml"
     prefix:   /
@@ -33,10 +37,6 @@ AceSearchBundle:
 # AceExperimentalUserBundle:
 #     resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"
 #     prefix:   /
-
-AceEditorBundle:
-    resource: "@AceEditorBundle/Resources/config/routing.yml"
-    prefix:   /
 
 # Internal routing configuration to handle ESI
 #_internal:

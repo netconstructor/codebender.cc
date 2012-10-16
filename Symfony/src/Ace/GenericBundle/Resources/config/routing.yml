@@ -23,3 +23,7 @@ AceGenericBundle_upload:
 AceGenericBundle_libraries:
     pattern: /libraries
     defaults: {_controller: AceGenericBundle:Default:libraries }
+
+AceGenericBundle_editor:
+    pattern:  /edit/{project_name}
+    defaults: { _controller: AceGenericBundle:Editor:edit}
