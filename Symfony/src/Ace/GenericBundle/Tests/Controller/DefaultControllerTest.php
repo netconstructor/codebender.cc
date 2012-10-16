@@ -8,10 +8,45 @@ class DefaultControllerTest extends WebTestCase
 {
     public function testIndex()
     {
-        $client = static::createClient();
-
-        $crawler = $client->request('GET', '/hello/Fabien');
-
-        $this->assertTrue($crawler->filter('html:contains("Hello Fabien")')->count() > 0);
+        $client = static::createClient();        
+		$crawler = $client->request('GET', '/');
+		
+		$this->assertFalse($client->getResponse()->isRedirect());
+		
+		$this->assertGreaterThan(0, $crawler->filter('html:contains("enter codebender.")')->count());
+		
+		$client->request('GET', '/list');
+		$this->assertTrue($client->getResponse()->isRedirect());
     }
+	
+	 
+	public function testUser()
+	{
+		$client = static::createClient();        
+		
+		$crawler = $client->request('GET', '/user/tzikis');
+		
+		$this->assertGreaterThan(0, $crawler->filter('a:contains("hello!")')->count());
+	
+	}
+	 
+	
+	public function testProject()
+	{
+		
+	
+	
+	
+	}
+	
+	public function testLibraries()
+	{
+		
+	
+	
+	
+	}
+	
+
+	
 }
