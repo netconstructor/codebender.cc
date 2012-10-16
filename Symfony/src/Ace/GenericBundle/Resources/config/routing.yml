@@ -11,7 +11,7 @@ AceGenericBundle_user:
     defaults: { _controller: AceGenericBundle:Default:user }
 
 AceGenericBundle_project:
-    pattern:  /project/{username}/{project_name}
+    pattern:  /project:{id}
     defaults: { _controller: AceGenericBundle:Default:project }
 
 AceGenericBundle_upload:
@@ -25,5 +25,5 @@ AceGenericBundle_libraries:
     defaults: {_controller: AceGenericBundle:Default:libraries }
 
 AceGenericBundle_editor:
-    pattern:  /edit/{project_name}
+    pattern:  /edit:{id}
     defaults: { _controller: AceGenericBundle:Editor:edit}
