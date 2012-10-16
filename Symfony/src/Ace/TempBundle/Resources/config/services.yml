@@ -1,0 +1,7 @@
+parameters:
+#    ace_temp.example.class: Ace\TempBundle\Example
+
+services:
+#    ace_temp.example:
+#        class: %ace_temp.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

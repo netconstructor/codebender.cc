@@ -182,7 +182,7 @@
 				{% if is_granted('ROLE_USER') %}
 				<ul class="nav pull-right">
 				    <li><a href="{{ path('fos_user_security_logout')}}" id="logout">Log Out</a></li>
-					{% render "AceEditorBundle:Default:image" %}
+					{% render "AceTempBundle:Default:image" %}
 				</ul>
 				<p class="navbar-text pull-right">
 					Logged in as <a href="{{path('AceGenericBundle_user',{'user':app.user.username})}}">{{ app.user.username }}</a>

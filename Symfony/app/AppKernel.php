@@ -18,7 +18,6 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new FOS\UserBundle\FOSUserBundle(),
-            new Ace\EditorBundle\AceEditorBundle(),
             new Ace\ExperimentalUserBundle\AceExperimentalUserBundle(),
             new Ace\SearchBundle\AceSearchBundle(),
             new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
@@ -29,6 +28,7 @@ class AppKernel extends Kernel
             new Ace\SenderBundle\AceSenderBundle(),
             new Ace\ProjectBundle\AceProjectBundle(),
             new Ace\GenericBundle\AceGenericBundle(),
+            new Ace\TempBundle\AceTempBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
