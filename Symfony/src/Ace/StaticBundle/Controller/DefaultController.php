@@ -49,30 +49,38 @@ class DefaultController extends Controller
 
 		$amaxilatis_name = "Dimitris Amaxilatis";
 		$amaxilatis_title = "teh code monkey";
-		$amaxilatis_avatar = "http://codebender.cc/images/amaxilatis.jpg";
+		$amaxilatis_avatar = $this->getRequest()->getUriForPath("/images/amaxilatis.jpg");
 		$amaxilatis_desc = "Master Student at the Computer Engineering and Informatics Department of the University of Patras, Greece. Researcher at  the Research Unit 1 of Computer Technology Institute & Press (Diophantus) in the fields of Distributed Systems and Wireless Sensor Networks.";
 		$amaxilatis = new developer($amaxilatis_name, $amaxilatis_title, $amaxilatis_avatar, $amaxilatis_desc);
 
 		$kousta_name = "Maria Kousta";
 		$kousta_title = "teh lady";
-		$kousta_avatar = "http://codebender.cc/images/kousta.png";
+		$kousta_avatar = $this->getRequest()->getUriForPath("/images/kousta.png");
 		$kousta_desc = "A CEID graduate. My task is to develop the various parts of the site besides the core 'code and compile' page that make it a truly social-building website.";
 		$kousta = new developer($kousta_name, $kousta_title, $kousta_avatar, $kousta_desc);
 
 		$orfanos_name = "Markellos Orfanos";
 		$orfanos_title = "teh fireman";
-		$orfanos_avatar = "http://codebender.cc/images/orfanos.jpg";
+		$orfanos_avatar = $this->getRequest()->getUriForPath("/images/orfanos.jpg");
 		$orfanos_desc = "I am also (not for long I hope) a student at the Computer Engineering & Informatics Department and probably the most important person in the team. My task? Make sure everyone keeps calm and the team is having fun. And yes, I'm the one who developed our wonderful options page. Apart from that, I'm trying to graduate and some time in the future to become a full blown Gentoo developer.";
 		$orfanos = new developer($orfanos_name, $orfanos_title, $orfanos_avatar, $orfanos_desc);
 
 		$dimakopoulos_name = "Dimitris Dimakopoulos";
 		$dimakopoulos_title = "teh awesome";
-		$dimakopoulos_avatar = "http://codebender.cc/images/dimakopoulos.jpg";
+		$dimakopoulos_avatar = $this->getRequest()->getUriForPath("/images/dimakopoulos.jpg");
 		$dimakopoulos_desc = "Student at the Computer Engineering and Informatics Department of the University of Patras, Greece, have worked as an intern for Philips Consumer Lifestyle in Eindhoven and for the Research Academic Computer Technology Institute in Patras. Totally excited with Codebender as it combines web development and distributed systems, them being among my favorite fields.";
 		$dimakopoulos = new developer($dimakopoulos_name, $dimakopoulos_title, $dimakopoulos_avatar, $dimakopoulos_desc);
 
-		$developers = array($tzikis, $tsampas, $amaxilatis, $kousta, $orfanos, $dimakopoulos);
-		return $this->render('AceStaticBundle:Default:team.html.twig', array("developers" => $developers));
+		$christidis_name = "Dimitrios Christidis";
+		$christidis_title = "teh bald guy";
+		$christidis_avatar = $this->getRequest()->getUriForPath("/images/christidis.jpg");
+		$christidis_desc = "Currently a student and an assistant administrator. I am responsible for the compiler backend, ensuring that it's fast and robust.  Known as a perfectionist, I often fuss over coding style and documentation.";
+		$christidis = new developer($christidis_name, $christidis_title, $christidis_avatar, $christidis_desc);
+
+		$developers = array($tzikis, $tsampas, $amaxilatis, $orfanos, $dimakopoulos);
+		$friends = array($christidis);
+		$past = array($kousta);
+		return $this->render('AceStaticBundle:Default:team.html.twig', array("developers" => $developers, "friends" => $friends, "past" => $past));
 	}
 	public function blogAction($arg)
 	{
