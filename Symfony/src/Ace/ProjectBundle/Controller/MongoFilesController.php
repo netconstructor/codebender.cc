@@ -50,11 +50,11 @@ class MongoFilesController extends Controller
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
-				return false;
+				return json_encode(array("success" => false));
 		}
 		$list[] = array("filename"=> $filename, "code" => $code);
 		$this->setFilesById($id, $list);
-		return true;
+		return json_encode(array("success" => true));
 	}
 	
 	public function getFileAction($id, $filename)
@@ -146,6 +146,6 @@ class MongoFilesController extends Controller
 	public function __construct(DocumentManager $documentManager)
 	{
 	    $this->dm = $documentManager;
-	}    
+	}
 }
 

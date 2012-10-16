@@ -110,11 +110,16 @@ doctrine_mongodb:
 services:
     utilities:
         class:        Ace\UtilitiesBundle\Handler\DefaultHandler
-    mongofiles:
+    mongofilecontroller:
         class:        Ace\ProjectBundle\Controller\MongoFilesController
         arguments: 
             documentManager: "@doctrine.odm.mongodb.document_manager"
-        # arguments:    [sendmail]
+    projectmanager:
+        class:        Ace\ProjectBundle\Controller\DefaultController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            mongofilecontroller: "@mongofilecontroller"
+
 # my.foo.service:
 #     class: Ace\FileBundle\Controller\ServiceController
 #     arguments:

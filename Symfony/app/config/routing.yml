@@ -20,7 +20,7 @@ AceBlogBundle:
 
 AceUtilitiesBundle:
     resource: "@AceUtilitiesBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /utilities
 
 AceStaticBundle:
     resource: "@AceStaticBundle/Resources/config/routing.yml"
