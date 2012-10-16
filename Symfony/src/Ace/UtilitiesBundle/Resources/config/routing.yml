@@ -1,3 +1,5 @@
-AceUtilitiesBundle_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: AceUtilitiesBundle:Default:index }
+AceUtilitiesBundle_newproject:
+    pattern:  /newproject
+    defaults: { _controller: AceUtilitiesBundle:Default:newproject }
+    requirements:
+       _method:  POST

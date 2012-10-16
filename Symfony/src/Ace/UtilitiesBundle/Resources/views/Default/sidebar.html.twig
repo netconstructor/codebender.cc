@@ -2,7 +2,7 @@
 <ul class="nav nav-list" id="nav-list">
 	<li class="nav-header">New Project</li>
 	<li>
-	<form class="form-search" method='post' action='{{ path('AceFileBundle_create')}}'>
+	<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
 		<input type="text" name='project_name' class="input-medium search-query" style="width:100%;">
 		<button type="submit" class="btn" style="width:100%; margin-top: 5px;">Create new project</button>
 	</form>
@@ -12,8 +12,8 @@
    	{% if files%}
 	    {% for file in files %}
 	        <li>
-				<a href="{{ path('AceGenericBundle_editor', { 'project_name': file.getName() }) }}">
-					{{ file.getName() }}
+				<a href="{{ path('AceGenericBundle_editor', { 'id': file['id'] }) }}">
+					{{ file['name'] }}
 				</a>
 			</li>
 	    {% endfor %}
