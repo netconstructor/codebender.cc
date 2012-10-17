@@ -84,20 +84,20 @@ class DefaultController extends Controller
 			{
 				throw $this->createNotFoundException('No user found with id '.$name);
 			}
-			
-			$projects = $projectmanager->listAction($user->getID())->getContent();
-			$projects = json_decode($projects, true);
-			$exists = false;
-			foreach($projects as $project)
-			{
-				if ($project["id"] == $id)
-					$exists = true;
-			}
-			if($exists)
+
+			$owner = $projectmanager->getOwnerAction($id)->getContent();
+			$owner = json_decode($owner, true);
+			$owner = $owner["response"];
+
+			if($owner["id"] == $user->getId())
 			{
 				return $this->forward('AceGenericBundle:Editor:edit', array("id"=> $id));
 			}
 		}
+
+		$name = $projectmanager->getNameAction($id)->getContent();
+		$name = json_decode($name, true);
+		$name = $name["response"];
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files = json_decode($files, true);
@@ -106,7 +106,7 @@ class DefaultController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 		
-			return $this->render('AceGenericBundle:Default:project.html.twig', array('project'=>"CHANGE_THIS!!", 'user' => $user, 'files' => $files));
+			return $this->render('AceGenericBundle:Default:project.html.twig', array('project'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id));
 	}
 	
 	public function uploadAction()

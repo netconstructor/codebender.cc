@@ -24,16 +24,18 @@ h1 small
 {% block body_options %} onload="prettyPrint()"{% endblock %}
 {% block mainspan %}
 	<div class="page-header row-fluid" >
-		<h1>{{ project }}<small>By <a href="{{path('AceGenericBundle_user',{'user':user.getUsername() })}}">{{ user.getUsername() }}</a> ({{user.getLastname()}} {{user.getFirstname()}})</small></h1>
+		<h1>{{ project }}<small>By <a href="{{path('AceGenericBundle_user',{'user':owner['username'] })}}">{{ owner['username'] }}</a> ({{owner['firstname']}} {{owner['lastname']}})</small></h1>
 	</div>
 	<div class="row-fluid">
-		<h5>Description: {% render "AceFileBundle:Default:getDescription" with {'username': user.getUsername(),'project_name': project} %}</h5><br />
-		<div id="menu-getproject" class="btn-group">
-			<a class="btn btn-primary" href="{{path('AceTempBundle_download',{'username':user.getUsername(),'project_name': project})}}">Download</a>
+		<h5>Description: </h5>
+		{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}
+		<hr>
+{#		<div id="menu-getproject" class="btn-group">
+			<a class="btn btn-primary" href="{{path('AceTempBundle_download',{'username':owner.getUsername(),'project_name': project})}}">Download</a>
 			{% if is_granted('ROLE_USER') %}	
 				<a class="btn btn-primary"  data-toggle="modal" href="#cloneModal">Clone</a>
 			{% endif %}
-		</div>
+		</div>#}
 	</div>
 	<div class="modal hide" id="cloneModal">
 		<div class="modal-header">
@@ -41,9 +43,10 @@ h1 small
 			<h3>Clone Project</h3>
 		</div>
 		<div class="modal-body">
-			<p>Create new project from existing with name...</p>
-			<form method='post' action='{{ path('AceFileBundle_clone',{'old_user':user.getUsername(),'old_project_name': project}) }}'>
+{#			<p>Create new project from existing with name...</p>
+			<form method='post' action='{{ path('AceFileBundle_clone',{'old_user':owner.getUsername(),'old_project_name': project}) }}'>
 			<input type="text" name='name' class="input-medium search-query" placeholder="Type the name of your new project">	
+#}
 		</div>
 		<div class="modal-footer">
 			<input type="button" class="btn" data-dismiss="modal" value="Cancel"/>
@@ -51,7 +54,10 @@ h1 small
 			</form>
 		</div>
     </div>
+	{% for file in files %}
+	<h2>{{file['filename']}}</h2>
 	<div id="code-container" class="row-fluid">
-		<pre id="editor" class="prettyprint linenums">{{files[0]['code']}}</pre>
+		<pre id="editor" class="prettyprint linenums">{{file['code']}}</pre>
 	</div>
+	{% endfor %}
 {% endblock %}
