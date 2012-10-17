@@ -10,6 +10,18 @@ AceProjectBundle_list:
     pattern:  /list/{owner}
     defaults: { _controller: projectmanager:listAction }
 
+AceProjectBundle_getowner:
+    pattern:  /getowner/{id}
+    defaults: { _controller: projectmanager:getOwnerAction }
+
+AceProjectBundle_getdescription:
+    pattern:  /getdescription/{id}
+    defaults: { _controller: projectmanager:getDescriptionAction }
+
+AceProjectBundle_setdescription:
+    pattern:  /setdescription/{id}/{description}
+    defaults: { _controller: projectmanager:setDescriptionAction }
+
 AceProjectBundle_listFiles:
     pattern:  /listfiles/{id}/
     defaults: { _controller: projectmanager:listFilesAction }

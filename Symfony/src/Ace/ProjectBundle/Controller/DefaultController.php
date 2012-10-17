@@ -64,6 +64,38 @@ class DefaultController extends Controller
 		}
 		
 	}
+
+	public function getNameAction($id)
+	{
+		$project = $this->getProjectById($id);
+		$name = $project->getName();
+		return new Response(json_encode(array("success" => true, "response" => $name)));
+	}
+
+	public function getOwnerAction($id)
+	{
+		$project = $this->getProjectById($id);
+		$user = $project->getOwner();
+		$response = array("id" => $user->getId(), "username" => $user->getUsername(), "firstname" => $user->getFirstname(), "lastname" => $user->getLastname());
+		return new Response(json_encode(array("success" => true, "response" => $response)));
+	}
+
+	public function getDescriptionAction($id)
+	{
+		$project = $this->getProjectById($id);
+		$response = $project->getDescription();
+		return new Response(json_encode(array("success" => true, "response" => $response)));
+	}
+
+	public function setDescriptionAction($id, $description)
+	{
+		$project = $this->getProjectById($id);
+		$project->setDescription($description);
+	    $em = $this->em;
+	    $em->persist($project);
+	    $em->flush();
+		return new Response(json_encode(array("success" => true)));
+	}
 	
 	public function listFilesAction($id)
 	{
