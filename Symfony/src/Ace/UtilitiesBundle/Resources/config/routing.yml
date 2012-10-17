@@ -3,3 +3,17 @@ AceUtilitiesBundle_newproject:
     defaults: { _controller: AceUtilitiesBundle:Default:newproject }
     requirements:
        _method:  POST
+
+AceUtilitiesBundle_deleteproject:
+   pattern:  /deleteproject/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
+
+AceUtilitiesBundle_getprojectdescription:
+   pattern:  /getprojectdescription/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:getDescription }
+
+AceUtilitiesBundle_setprojectdescription:
+   pattern:  /setprojectdescription/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:setDescription }
+   requirements:
+      _method:  POST

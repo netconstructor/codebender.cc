@@ -4,6 +4,7 @@ namespace Ace\UtilitiesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class DefaultController extends Controller
@@ -44,6 +45,55 @@ class DefaultController extends Controller
 		}
 
 		return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+	}
+
+	public function deleteprojectAction($id)
+	{
+
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->deleteAction($id)->getContent();
+		$response=json_decode($response, true);
+		return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+	}
+
+	public function getDescriptionAction($id)
+	{
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->getDescriptionAction($id)->getContent();
+		$response=json_decode($response, true);
+		if($response["success"])
+			return new Response($response["response"]);
+		else
+			return new Response("");
+	}
+
+	public function setDescriptionAction($id)
+	{
+
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$description = $this->getRequest()->request->get('data');
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
+		return new Response("hehe");
 	}
 
 	public function sidebarAction()
