@@ -22,18 +22,18 @@ class EditorController extends Controller
 		}
 
 		$projectmanager = $this->get('projectmanager');
-		$projects = $projectmanager->listAction($user->getID())->getContent();
-		$projects = json_decode($projects, true);
-		$exists = false;
-		foreach($projects as $project)
-		{
-			if ($project["id"] == $id)
-				$exists = true;
-		}
-		if(!$exists)
+		$owner = $projectmanager->getOwnerAction($id)->getContent();
+		$owner = json_decode($owner, true);
+		$owner = $owner["response"];
+
+		if($owner["id"] != $user->getId())
 		{
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
+
+		$name = $projectmanager->getNameAction($id)->getContent();
+		$name = json_decode($name, true);
+		$name = $name["response"];
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files = json_decode($files, true);
@@ -54,6 +54,6 @@ class EditorController extends Controller
 
 		// die(var_dump($examples)." ".var_dump($lib_examples)." ".var_dump($extra_lib_examples)." ");
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('username'=>$name, 'project_id' => $id, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('username'=>$name, 'project_id' => $id, 'project_name' => $name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files));
 	}		
 }

@@ -22,12 +22,11 @@ function warnModal(filename){
 
 function saveDescription()
 {
-	$.post("{{ path('AceFileBundle_saveDescription') }}", {data: $("#newDescription").val(), project_name:"{{project_id}}"}, function(data)
+	$.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data: $("#newDescription").val()}, function(data)
 	{
 		$("#oldDescription").html($("#newDescription").val());
 		$("#descriptionModal").modal('hide');
-	});	
-	
+	});
 }
 
 function throwMud()

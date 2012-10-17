@@ -91,7 +91,7 @@ body
   </div>
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn">Cancel</a>
-    <a href="{{ path('AceProjectBundle_delete', {'id':project_id}) }}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete!</a>
+    <a href="{{ path('AceUtilitiesBundle_deleteproject', {'id':project_id}) }}" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete!</a>
   </div>
 </div>
 
@@ -115,7 +115,7 @@ body
     <h3>Enter your new project description.</h3>
   </div>
   <div class="modal-body span5">
-	<textarea id="newDescription" style="resize: none;" rows="4" class="span5">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_id} %}</textarea>
+	<textarea id="newDescription" style="resize: none;" rows="4" class="span5">{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}</textarea>
   </div>
   <div class="modal-footer">
     <a data-dismiss="modal" class="btn">Cancel</a>
@@ -135,6 +135,7 @@ body
 		  </ul>
 		  <div class="tab-content" >
 		    <div class="tab-pane active" id="tab1">
+			<h2>{{project_name}}</h2><br />
 				<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
 				<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
 			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
@@ -144,7 +145,11 @@ body
 					<option>Arduino Duemilanove</option>
 				</select>
 				<a href="{{ path('AceTempBundle_download', { 'username' : username, 'project_name': project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
-				<hr>			
+				<hr>
+				{% for file in files %}
+					<a href="javascript:void()">{{file['filename']}}</a><br />
+				{% endfor %}
+				<hr>
 				<div id="desktop-tools-1" class="visible-desktop">
 				<div id="usb-sidebar-div">
 					<h4>USB Upload</h4>					
@@ -220,7 +225,7 @@ body
 		    <hr>
 		    <div class="tab-pane" id="tab2">
 				<h3>Description:</h3>
-				<p id="oldDescription">{% render "AceFileBundle:Default:getMyDescription" with {'project_name': project_id} %}</p>
+				<p id="oldDescription">{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}</p>
 				<a data-toggle="modal" href="#descriptionModal" style="float:right;">edit</a>
 		    </div>
 		    <div class="tab-pane" id="tab3">
@@ -231,7 +236,8 @@ body
 	</div>
 	<div id="container_right" class="span9">
 		<div class="row-fluid">
-		<pre id="editor" class="span8">{{files[0]['code']}}</pre>
+		<pre id="editor" class="span8">{% if files[0] is defined %}{{files[0]['code']}}{% endif %}
+		</pre>
 		</div>
 		<div class="row-fluid">
 			<pre id="compile_output" class="span8"></pre>
