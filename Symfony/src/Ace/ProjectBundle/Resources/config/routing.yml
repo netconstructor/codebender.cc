@@ -1,39 +1,39 @@
 AceProjectBundle_create:
     pattern:  /create/{owner}/{name}/{description}
-    defaults: { _controller: AceProjectBundle:Default:create }
+    defaults: { _controller: projectmanager:createAction }
 
 AceProjectBundle_delete:
     pattern:  /delete/{id}
-    defaults: { _controller: AceProjectBundle:Default:delete }
+    defaults: { _controller: projectmanager:deleteAction }
 
 AceProjectBundle_list:
     pattern:  /list/{owner}
-    defaults: { _controller: AceProjectBundle:Default:list }
+    defaults: { _controller: projectmanager:listAction }
 
 AceProjectBundle_listFiles:
     pattern:  /listfiles/{id}/
-    defaults: { _controller: AceProjectBundle:Default:listFiles }
+    defaults: { _controller: projectmanager:listFilesAction }
 
 AceProjectBundle_createFile:
     pattern:  /createfile/{id}/{filename}/{code}
-    defaults: { _controller: AceProjectBundle:Default:createFile }
+    defaults: { _controller: projectmanager:createFileAction }
 
 AceProjectBundle_deleteFile:
     pattern:  /deletefile/{id}/{filename}
-    defaults: { _controller: AceProjectBundle:Default:deleteFile }
+    defaults: { _controller: projectmanager:deleteFileAction }
 
 AceProjectBundle_getFile:
     pattern:  /getfile/{id}/{filename}
-    defaults: { _controller: AceProjectBundle:Default:getFile }
+    defaults: { _controller: projectmanager:getFileAction }
 
 AceProjectBundle_setFile:
     pattern:  /setfile/{id}/{filename}/{code}
-    defaults: { _controller: AceProjectBundle:Default:setFile }
+    defaults: { _controller: projectmanager:setFileAction }
 
 AceProjectBundle_getBinary:
     pattern:  /getbinary/{id}/{flags}
-    defaults: { _controller: AceProjectBundle:Default:getBinary }
+    defaults: { _controller: projectmanager:getBinaryAction }
 
 AceProjectBundle_setBinary:
     pattern:  /setbinary/{id}/{flags}/{bin}
-    defaults: { _controller: AceProjectBundle:Default:setBinary }
+    defaults: { _controller: projectmanager:setBinaryAction }
