@@ -56,11 +56,11 @@ class DefaultController extends Controller
 		    $em = $this->em;
 			$em->remove($project);
 			$em->flush();
-			return new Response(json_encode(true));
+			return new Response(json_encode(array("success" => true)));
 		}
 		else
 		{
-			return new Response(json_encode(array(false, "Could not delete mongofile with id: ".$project->getProjectfilesId())));
+			return new Response(json_encode(array("success" => false, "id" => $project->getProjectfilesId())));
 		}
 		
 	}
