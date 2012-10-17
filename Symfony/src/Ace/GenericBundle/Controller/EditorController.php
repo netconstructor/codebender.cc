@@ -6,22 +6,40 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EditorController extends Controller
 {		
-	public function editAction($project_name)
+	public function editAction($id)
 	{
+		if (!$this->get('security.context')->isGranted('ROLE_USER'))
+		{
+			return $this->redirect($this->generateUrl('AceGenericBundle_project', array("id"=> $id)));
+		}
+
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
 		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
 
-		$hex_exists = false;
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
 
-		$resp = $this->forward('AceFileBundle:Default:getTimestamp', array('project_name' => $project_name, 'type' => "code"));
-		$codeTimestamp = $resp->getContent();
+		$projectmanager = $this->get('projectmanager');
+		$projects = $projectmanager->listAction($user->getID())->getContent();
+		$projects = json_decode($projects, true);
+		$exists = false;
+		foreach($projects as $project)
+		{
+			if ($project["id"] == $id)
+				$exists = true;
+		}
 
-		$resp = $this->forward('AceFileBundle:Default:getTimestamp', array('project_name' => $project_name, 'type' => "hex"));
-		$hexTimestamp = $resp->getContent();
-		if($hexTimestamp > $codeTimestamp)
-			$hex_exists = true;
+		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = json_decode($files, true);
+		foreach($files as $key=>$file)
+		{
+			$files[$key]["code"] = htmlspecialchars($file["code"]);
+		}
 
 		$utilities = $this->get('utilities');
+
 		$examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "builtin"), true);
 		$lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "included"), true);
 		$extra_lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "external"), true);
@@ -32,6 +50,6 @@ class EditorController extends Controller
 
 		// die(var_dump($examples)." ".var_dump($lib_examples)." ".var_dump($extra_lib_examples)." ");
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('username'=>$name, 'project_name' => $project_name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'hex_exists' => $hex_exists));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('username'=>$name, 'project_id' => $id, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files));
 	}		
 }

@@ -22,7 +22,7 @@ function warnModal(filename){
 
 function saveDescription()
 {
-	$.post("{{ path('AceFileBundle_saveDescription') }}", {data: $("#newDescription").val(), project_name:"{{project_name}}"}, function(data)
+	$.post("{{ path('AceFileBundle_saveDescription') }}", {data: $("#newDescription").val(), project_name:"{{project_id}}"}, function(data)
 	{
 		$("#oldDescription").html($("#newDescription").val());
 		$("#descriptionModal").modal('hide');
@@ -101,7 +101,7 @@ function clearProgress(output)
 function save()
 {
 	setProgress(90);
-	$.post("{{ path('AceFileBundle_saveCode') }}", {data: editor.getSession().getValue(), project_name:"{{project_name}}"}, function(data)
+	$.post("{{ path('AceFileBundle_saveCode') }}", {data: editor.getSession().getValue(), project_name:"{{project_id}}"}, function(data)
 	{
 		$("#save").addClass("btn-success");
 		$("#save_icon").addClass("icon-white");
@@ -118,7 +118,7 @@ function save()
 function revert()
 {
 	setProgress(90);
-	$.get("{{ path('AceFileBundle_getMyEscapedCode',{'project_name':project_name}) }}", function(data)
+	$.get("{{ path('AceFileBundle_getMyEscapedCode',{'project_name':project_id}) }}", function(data)
 	{
 		editor.getSession().setValue(data);
 		$("#revert").addClass("btn-success");
@@ -136,7 +136,7 @@ function revert()
 function build()
 {
 	setProgress(90);
-	$.post("{{ path('AceTempBundle_compile') }}", { project_name:"{{project_name}}"}, function(data)
+	$.post("{{ path('AceTempBundle_compile') }}", { project_name:"{{project_id}}"}, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
@@ -201,7 +201,7 @@ function build()
 function cloudload()
 {
 	setProgress(90);
-	$.post("{{ path('AceSenderBundle_tftp') }}", { project_name:"{{project_name}}", ip: $("#ip").val()}, function(data)
+	$.post("{{ path('AceSenderBundle_tftp') }}", { project_name:"{{project_id}}", ip: $("#ip").val()}, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
@@ -306,7 +306,7 @@ function uploadusb()
 		setProgress(50);
 		
 		
-		$.get("{{ path('AceTempBundle_download', { 'username':username,'project_name': project_name, 'type' : 'hex'}) }}", function(data)
+		$.get("{{ path('AceTempBundle_download', { 'username':username,'project_name': project_id, 'type' : 'hex'}) }}", function(data)
 		{
 			window.hex = data;
 			$("#uploadusb").addClass("btn-success");
