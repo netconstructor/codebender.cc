@@ -69,18 +69,44 @@ class DefaultController extends Controller
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'files' => $files, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
 	
-	public function projectAction($username, $project_name)
+	public function projectAction($id)
 	{
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
-		$file = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')
-			->findOneBy(array('name' => $project_name, 'owner' => $user->getID()));
 
-		if(!$file)
+		$projectmanager = $this->get('projectmanager');
+		$projects = NULL;
+		
+		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
-			return new Response("There is no such project");
+			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+			if (!$user)
+			{
+				throw $this->createNotFoundException('No user found with id '.$name);
+			}
+			
+			$projects = $projectmanager->listAction($user->getID())->getContent();
+			$projects = json_decode($projects, true);
+			$exists = false;
+			foreach($projects as $project)
+			{
+				if ($project["id"] == $id)
+					$exists = true;
+			}
+			if($exists)
+			{
+				return $this->forward('AceGenericBundle:Editor:edit', array("id"=> $id));
+			}
 		}
-		else
-			return $this->render('AceGenericBundle:Default:project.html.twig', array('project'=>$project_name, 'user'=>$user));
+
+		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = json_decode($files, true);
+		foreach($files as $key=>$file)
+		{
+			$files[$key]["code"] = htmlspecialchars($file["code"]);
+		}
+		
+			return $this->render('AceGenericBundle:Default:project.html.twig', array('project'=>"CHANGE_THIS!!", 'user' => $user, 'files' => $files));
 	}
 	
 	public function uploadAction()

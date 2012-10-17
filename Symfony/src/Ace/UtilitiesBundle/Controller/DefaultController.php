@@ -39,7 +39,7 @@ class DefaultController extends Controller
 			$response2=json_decode($response2, true);
 			if($response2["success"])
 			{
-				return $this->redirect($this->generateUrl('AceGenericBundle_editor',array('id' => $response["id"])));
+				return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
 			}
 		}
 

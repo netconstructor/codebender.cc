@@ -52,6 +52,6 @@ h1 small
 		</div>
     </div>
 	<div id="code-container" class="row-fluid">
-		<pre id="editor" class="prettyprint linenums">{% render "AceFileBundle:Default:getEscapedCode" with {'username': user.getUsername(),'project_name': project} %}</pre>
+		<pre id="editor" class="prettyprint linenums">{{files[0]['code']}}</pre>
 	</div>
 {% endblock %}

@@ -12,7 +12,7 @@
    	{% if files%}
 	    {% for file in files %}
 	        <li>
-				<a href="{{ path('AceGenericBundle_editor', { 'id': file['id'] }) }}">
+				<a href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
 					{{ file['name'] }}
 				</a>
 			</li>

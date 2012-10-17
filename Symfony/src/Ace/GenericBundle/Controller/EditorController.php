@@ -10,7 +10,7 @@ class EditorController extends Controller
 	{
 		if (!$this->get('security.context')->isGranted('ROLE_USER'))
 		{
-			return $this->redirect($this->generateUrl('AceGenericBundle_project', array("id"=> $id)));
+			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
@@ -29,6 +29,10 @@ class EditorController extends Controller
 		{
 			if ($project["id"] == $id)
 				$exists = true;
+		}
+		if(!$exists)
+		{
+			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
