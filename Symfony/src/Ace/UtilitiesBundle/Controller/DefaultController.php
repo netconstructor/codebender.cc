@@ -37,7 +37,7 @@ class DefaultController extends Controller
 			$default_text = $utilities->default_text();
 			$response2 = $projectmanager->createFileAction($response["id"], $project_name.".ino", $default_text);
 			$response2=json_decode($response2, true);
-			if($response2["successs"])
+			if($response2["success"])
 			{
 				return $this->redirect($this->generateUrl('AceGenericBundle_editor',array('id' => $response["id"])));
 			}
