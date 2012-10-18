@@ -141,8 +141,6 @@ body
 			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
 				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Build</span></button>
 				<select id="boards"  class="myoptions">
-					<option>Arduino Uno</option>
-					<option>Arduino Duemilanove</option>
 				</select>
 				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
 				<hr>
@@ -288,6 +286,11 @@ $(document).ready(function()
 	{% if files[0] is defined %}
 		window.selectedFile = "{{files[0]['filename']}}";
 	{% endif %}
+
+	window.boardz = {{boards|raw}}
+	mySelect = $("#boards");
+	for (var i=0;i<window.boardz.length;i++)
+		mySelect.append($('<option></option>').val(window.boardz[i]["name"]).html(window.boardz[i]["name"]));
 
 	$("#progress").hide();
 	$("#scanning").hide();
