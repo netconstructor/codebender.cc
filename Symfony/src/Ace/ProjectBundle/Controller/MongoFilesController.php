@@ -50,7 +50,7 @@ class MongoFilesController extends Controller
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
-				return json_encode(array("success" => false));
+				return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
 		}
 		$list[] = array("filename"=> $filename, "code" => $code);
 		$this->setFilesById($id, $list);
