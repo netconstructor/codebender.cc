@@ -188,4 +188,27 @@ class DefaultController extends Controller
 			return new Response(json_encode($response));
 		return new Response(json_encode(array("success"=>true)));
 	}
+
+	public function deleteFileAction($id)
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$data = $this->getRequest()->request->get('data');
+		$data = json_decode($data, true);
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->deleteFileAction($id, $data["filename"]);
+		$response = json_decode($response, true);
+		if($response["success"] ==  false)
+			return new Response(json_encode($response));
+		return new Response(json_encode(array("success"=>true)));
+	}
+
 }
