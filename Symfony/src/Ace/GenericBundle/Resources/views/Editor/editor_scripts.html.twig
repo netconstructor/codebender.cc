@@ -100,7 +100,7 @@ function clearProgress(output)
 function save()
 {
 	setProgress(90);
-	$.post("{{ path('AceFileBundle_saveCode') }}", {data: editor.getSession().getValue(), project_name:"{{project_id}}"}, function(data)
+	$.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data: JSON.stringify(window.files)}, function(data)
 	{
 		$("#save").addClass("btn-success");
 		$("#save_icon").addClass("icon-white");
@@ -583,6 +583,13 @@ function isMobile(){
      || navigator.userAgent.match(/BlackBerry/i) ? true : false
      || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
      ||navigator.userAgent.match(/IEMobile/i) ? true : false;
+}
+
+function loadCode(filename)
+{
+	window.files[window.selectedFile] = editor.getSession().getValue();
+	editor.getSession().setValue(window.files[filename]);
+	window.selectedFile = filename;
 }
 
 </script>

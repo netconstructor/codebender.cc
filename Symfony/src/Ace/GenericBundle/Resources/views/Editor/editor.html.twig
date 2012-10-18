@@ -147,7 +147,7 @@ body
 				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
 				<hr>
 				{% for file in files %}
-					<a href="javascript:void()">{{file['filename']}}</a><br />
+					<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a> | <a href="{{path('AceProjectBundle_deleteFile', {"id":project_id, "filename": file["filename"]})}}">Delete</a><br />
 				{% endfor %}
 				<hr>
 				<div id="desktop-tools-1" class="visible-desktop">
@@ -274,6 +274,21 @@ window.onload = function()
 
 $(document).ready(function()
 {	
+	window.files = {
+	{% for file in files %}
+	{#
+		newfile = new Array();
+		newfile["filename"] = "{{file['filename']}}"
+		newfile["code"] = "{{file['code']}}";
+		window.files[{{key}}] = newfile;
+	#}
+	    "{{file['filename']}}": "{{file['code'] | e('js')}}",
+	{% endfor %}
+	};
+	{% if files[0] is defined %}
+		window.selectedFile = "{{files[0]['filename']}}";
+	{% endif %}
+
 	$("#progress").hide();
 	$("#scanning").hide();
 	$("#net-tools").hide();
@@ -309,7 +324,7 @@ $(document).ready(function()
 	}
 });
 </script>
-	
+
 
 {% endblock %}
 
