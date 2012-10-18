@@ -93,10 +93,10 @@ class MongoFilesController extends Controller
 			{
 				unset($list[$key]);
 				$this->setFilesById($id, $list);
-				return true;
+				return json_encode(array("success" => true));
 			}
 		}
-		return false;
+		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
 	}
 
 		public function getBinaryAction($id, $flags)
