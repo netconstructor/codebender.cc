@@ -236,8 +236,7 @@ body
 	</div>
 	<div id="container_right" class="span9">
 		<div class="row-fluid">
-		<pre id="editor" class="span8">{% if files[0] is defined %}{{files[0]['code']}}{% endif %}
-		</pre>
+		<pre id="editor" class="span8">{% if files[0] is defined %}{{files[0]['code']|raw}}{% endif %}</pre>
 		</div>
 		<div class="row-fluid">
 			<pre id="compile_output" class="span8"></pre>
