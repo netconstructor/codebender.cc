@@ -77,10 +77,10 @@ class MongoFilesController extends Controller
 			{
 				$file["code"] = $code;
 				$this->setFilesById($id, $list);
-				return true;
+				return json_encode(array("success" => true));
 			}
 		}
-		return false;
+		return json_encode(array("success" => false));
 		
 	}
 	
