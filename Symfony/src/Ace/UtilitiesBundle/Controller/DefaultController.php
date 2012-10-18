@@ -159,9 +159,11 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('projectmanager');
 		foreach($files as $key => $file)
 		{
-			$projectmanager->setFileAction($id, $key, $file);
+			$response = $projectmanager->setFileAction($id, $key, htmlspecialchars_decode($file))->getContent();
+			$response = json_decode($response, true);
+			if($response["success"] ==  false)
+				return new Response(json_encode($response));
 		}
-		// $response = $projectmanager->setDescriptionAction($id, $description)->getContent();
 		return new Response(json_encode(array("success"=>true)));
 	}
 }
