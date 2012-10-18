@@ -44,10 +44,10 @@
 <br />
 <table id="user_projects" class="table table-bordered">
 	<thead><tr><th>Projects</th></tr></thead>
-	{% if files %}
+	{% if projects %}
 		<tbody>
-		{% for file in files %}
-			<tr><td><a href="{{path('AceGenericBundle_project',{'project_name':file.name, 'username': user.getUsername()})}}">{{file.name}}</a></td></tr>
+		{% for project in projects %}
+			<tr><td><a href="{{path('AceGenericBundle_project',{'id':project['id']})}}">{{project['name']}}</a></td></tr>
 		{% endfor %}
 		</tbody>
 	{% endif %}

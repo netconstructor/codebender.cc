@@ -10,37 +10,6 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class DefaultController extends Controller
 {
-    
-	public function compileAction()
-	{
-		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		
-			$project_name = $this->getRequest()->request->get('project_name');
-			if($project_name)
-			{
-				$resp = $this->forward('AceFileBundle:Default:getMyCode', array('project_name' => $project_name));
-				$value = $resp->getContent();
-
-				$data = "ERROR";
-
-				$utilities = $this->get('utilities');
-				$data = $utilities->get_data($this->container->getParameter('compiler'), 'data', urlencode($value));
-
-				$json_data = json_decode($data, true);
-				if($json_data['success'])
-				{
-					$resp = $this->forward('AceFileBundle:Default:saveHex',
-						array('project_name' => $project_name, 'data' => $json_data['hex']));
-					unset($json_data['hex']);
-					$data = json_encode($json_data);
-				}
-				$response->setContent($data);
-				$response->setStatusCode(200);
-				$response->headers->set('Content-Type', 'text/html');
-			}
-			
-		return $response;
-	}
 
 	//TODO:email is not loaded correctly if page is refreshed
 	public function optionsAction()

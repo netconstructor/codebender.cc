@@ -166,4 +166,91 @@ class DefaultController extends Controller
 		}
 		return new Response(json_encode(array("success"=>true)));
 	}
+
+	public function createFileAction($id)
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$data = $this->getRequest()->request->get('data');
+		$data = json_decode($data, true);
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->createFileAction($id, $data["filename"], "");
+		$response = json_decode($response, true);
+		if($response["success"] ==  false)
+			return new Response(json_encode($response));
+		return new Response(json_encode(array("success"=>true)));
+	}
+
+	public function deleteFileAction($id)
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$data = $this->getRequest()->request->get('data');
+		$data = json_decode($data, true);
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->deleteFileAction($id, $data["filename"]);
+		$response = json_decode($response, true);
+		if($response["success"] ==  false)
+			return new Response(json_encode($response));
+		return new Response(json_encode(array("success"=>true)));
+	}
+
+	public function compileAction()
+	{
+		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
+
+			$id = $this->getRequest()->request->get('project_id');
+			$buildflags = array("mcu" => "atmega328p", "f_cpu" => "16000000L", "core" => "arduino", "variant" => "standard");
+
+			if($id)
+			{
+				$projectmanager = $this->get('projectmanager');
+
+				$files = $projectmanager->listFilesAction($id)->getContent();
+				$files = json_decode($files, true);
+				foreach($files as $key => $file)
+				{
+					$files[$key]["content"] = $file["code"];
+					unset($files[$key]["code"]);
+				}
+
+				$value = array("files" => $files, "format" => "binary", "build" => $buildflags);
+				$value = json_encode($value);
+				$data = "ERROR";
+
+				$utilities = $this->get('utilities');
+				$data = $utilities->json_request($this->container->getParameter('compiler'), $value);
+				$json_data = json_decode($data, true);
+
+				if($json_data['success'])
+				{
+					$files = $projectmanager->setBinaryAction($id, serialize($buildflags), $json_data['output'])->getContent();
+
+					unset($json_data['output']);
+					$data = json_encode($json_data);
+				}
+				$response->setContent($data);
+				$response->setStatusCode(200);
+				$response->headers->set('Content-Type', 'text/html');
+			}
+
+		return $response;
+	}
+
 }

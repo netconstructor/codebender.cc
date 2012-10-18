@@ -141,14 +141,13 @@ body
 			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
 				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Build</span></button>
 				<select id="boards"  class="myoptions">
-					<option>Arduino Uno</option>
-					<option>Arduino Duemilanove</option>
 				</select>
 				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
 				<hr>
 				{% for file in files %}
-					<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a> | <a href="{{path('AceProjectBundle_deleteFile', {"id":project_id, "filename": file["filename"]})}}">Delete</a><br />
+					<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a> | <a href="javascript:void(0)" onclick="deleteFile('{{file['filename']}}')">Delete</a><br />
 				{% endfor %}
+				<input type="text" id="createfield" /><button id="createbutton" class="btn" onclick="createFile();">Create File</button>
 				<hr>
 				<div id="desktop-tools-1" class="visible-desktop">
 				<div id="usb-sidebar-div">
@@ -288,6 +287,11 @@ $(document).ready(function()
 		window.selectedFile = "{{files[0]['filename']}}";
 	{% endif %}
 
+	window.boardz = {{boards|raw}}
+	mySelect = $("#boards");
+	for (var i=0;i<window.boardz.length;i++)
+		mySelect.append($('<option></option>').val(window.boardz[i]["name"]).html(window.boardz[i]["name"]));
+
 	$("#progress").hide();
 	$("#scanning").hide();
 	$("#net-tools").hide();
@@ -298,7 +302,7 @@ $(document).ready(function()
 	$("#connect").click(function()
 	{
 		connect();
-	})
+	});
 
 	$("#compile").click(function() 
 	{
@@ -308,7 +312,7 @@ $(document).ready(function()
 	$("#netload").click(function()
 	{
 		netload();
-	})
+	});
 	
 	{% if user_enable_usb is defined %}
 		enableUSB();	
