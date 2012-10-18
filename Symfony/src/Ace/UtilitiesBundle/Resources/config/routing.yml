@@ -27,3 +27,9 @@ AceUtilitiesBundle_savecode:
   defaults: { _controller: AceUtilitiesBundle:Default:saveCode }
   requirements:
      _method:  POST
+
+AceUtilitiesBundle_createfile:
+  pattern:  /createfile/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:createFile }
+  requirements:
+    _method:  POST
