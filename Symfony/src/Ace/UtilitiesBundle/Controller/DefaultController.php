@@ -141,4 +141,27 @@ class DefaultController extends Controller
 		return new Response($value, $htmlcode, $headers);
 	}
 
+	public function saveCodeAction($id)
+	{
+
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$files = $this->getRequest()->request->get('data');
+		$files = json_decode($files, true);
+
+		$projectmanager = $this->get('projectmanager');
+		foreach($files as $key => $file)
+		{
+			$projectmanager->setFileAction($id, $key, $file);
+		}
+		// $response = $projectmanager->setDescriptionAction($id, $description)->getContent();
+		return new Response(json_encode(array("success"=>true)));
+	}
 }

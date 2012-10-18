@@ -21,3 +21,9 @@ AceUtilitiesBundle_setprojectdescription:
 AceUtilitiesBundle_download:
   pattern:  /download/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:download }
+
+AceUtilitiesBundle_savecode:
+  pattern:  /savecode/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:saveCode }
+  requirements:
+     _method:  POST
