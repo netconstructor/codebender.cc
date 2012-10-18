@@ -593,4 +593,16 @@ function loadCode(filename)
 	window.selectedFile = filename;
 }
 
+function createFile()
+{
+	setProgress(90);
+	var val = { filename : $("#createfield").val() };
+	$.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
+	{
+		clearProgress("File Created successfuly.");
+		location.reload();
+	});
+
+}
+
 </script>
