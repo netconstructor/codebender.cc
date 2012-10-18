@@ -30,12 +30,12 @@ h1 small
 		<h5>Description: </h5>
 		{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}
 		<hr>
-{#		<div id="menu-getproject" class="btn-group">
-			<a class="btn btn-primary" href="{{path('AceTempBundle_download',{'username':owner.getUsername(),'project_name': project})}}">Download</a>
-			{% if is_granted('ROLE_USER') %}	
+		<div id="menu-getproject" class="btn-group">
+			<a class="btn btn-primary" href="{{path('AceUtilitiesBundle_download',{'id': project_id })}}">Download</a>
+{#			{% if is_granted('ROLE_USER') %}
 				<a class="btn btn-primary"  data-toggle="modal" href="#cloneModal">Clone</a>
-			{% endif %}
-		</div>#}
+			{% endif %}#}
+		</div>
 	</div>
 	<div class="modal hide" id="cloneModal">
 		<div class="modal-header">
