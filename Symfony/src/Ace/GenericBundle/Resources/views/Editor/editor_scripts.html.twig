@@ -136,18 +136,18 @@ function revert()
 function build()
 {
 	setProgress(90);
-	$.post("{{ path('AceTempBundle_compile') }}", { project_name:"{{project_id}}"}, function(data)
+	$.post("{{ path('AceUtilitiesBundle_compile') }}", { project_id:"{{project_id}}"}, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
 		{
 			$("#compile_output").css('color', 'black');
-			for (var i=0; i<obj.lines.length; i++)
-			{
-				$(".ace_gutter-cell").filter(function(index) {
-				  return $(this).html() == obj.lines[i];
-				}).css("text-decoration","underline").css("color","red");
-			}
+			// for (var i=0; i<obj.lines.length; i++)
+			// {
+			// 	$(".ace_gutter-cell").filter(function(index) {
+			// 	  return $(this).html() == obj.lines[i];
+			// 	}).css("text-decoration","underline").css("color","red");
+			// }
 			 
 			$("#editor").css("bottom","150px");
 			$("#compile_output").css("bottom","0px");
@@ -158,7 +158,7 @@ function build()
 			$("#compile_icon").addClass("icon-remove");
 			
 			
-			$("#compile_output").html(obj.text);
+			$("#compile_output").html(obj.message);
 			clearProgress("Compilation failed.")
 		}
 		else
@@ -173,7 +173,7 @@ function build()
 			$("#compile").addClass("btn-success");
 			$("#compile_icon").addClass("icon-ok");
 
-			var progressText = "<p>" + obj.text + "<br /> Code Size: " + obj.size + " bytes<br /><small>(out of <strong>"+ getMaxSize()+"</strong> available.)</small></p>";
+			var progressText = "<p>Compile Successful.<br /> Code Size: " + obj.size + " bytes<br /><small>(out of <strong>"+ getMaxSize()+"</strong> available.)</small></p>";
 			clearProgress(progressText)
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
