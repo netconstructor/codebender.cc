@@ -24,7 +24,7 @@ AceEditorBundle:
 
 #temp toronto link
 utoronto:
-    pattern:   /utoronto/register
+    pattern:   /cevug/register
     defaults:  { _controller: FOSUserBundle:Registration:register }
 
 #login:
