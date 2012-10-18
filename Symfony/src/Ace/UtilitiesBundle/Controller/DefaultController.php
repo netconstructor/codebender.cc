@@ -230,7 +230,7 @@ class DefaultController extends Controller
 					unset($files[$key]["code"]);
 				}
 
-				$value = array("files" => $files, "output" => "binary", "build" => $buildflags);
+				$value = array("files" => $files, "format" => "binary", "build" => $buildflags);
 				$value = json_encode($value);
 				$data = "ERROR";
 
