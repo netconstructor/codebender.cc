@@ -147,7 +147,7 @@ body
 				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
 				<hr>
 				{% for file in files %}
-					<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a> | <a href="{{path('AceProjectBundle_deleteFile', {"id":project_id, "filename": file["filename"]})}}">Delete</a><br />
+					<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a> | <a href="javascript:void(0)" onclick="deleteFile('{{file['filename']}}')">Delete</a><br />
 				{% endfor %}
 				<input type="text" id="createfield" /><button id="createbutton" class="btn" onclick="createFile();">Create File</button>
 				<hr>
