@@ -144,7 +144,7 @@ body
 					<option>Arduino Uno</option>
 					<option>Arduino Duemilanove</option>
 				</select>
-				<a href="{{ path('AceTempBundle_download', { 'username' : username, 'project_name': project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
+				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
 				<hr>
 				{% for file in files %}
 					<a href="javascript:void()">{{file['filename']}}</a><br />

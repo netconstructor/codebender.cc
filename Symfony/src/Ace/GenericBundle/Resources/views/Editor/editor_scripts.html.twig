@@ -305,7 +305,7 @@ function uploadusb()
 		setProgress(50);
 		
 		
-		$.get("{{ path('AceTempBundle_download', { 'username':username,'project_name': project_id, 'type' : 'hex'}) }}", function(data)
+		$.get("{{ path('AceUtilitiesBundle_download', { 'id':project_id}) }}", function(data)
 		{
 			window.hex = data;
 			$("#uploadusb").addClass("btn-success");
