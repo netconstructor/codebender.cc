@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\Regex;
-use Ace\FileBundle\Document\File;
 use Ace\GenericBundle\Classes\UploadHandler;
 
 
@@ -171,8 +170,9 @@ class DefaultController extends Controller
 			{
 				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
-			
-			$file = $this->getMyProject($project_name, $error);
+
+			// THIS NEEDS TO BE UPDATED!!! It was using getMyProject, which uses FileBundle
+			// $file = $this->getMyProject($project_name, $error);
 			if($error == -2)
 			{
 				$upload_handler->post(null);
@@ -247,37 +247,6 @@ class DefaultController extends Controller
 		}  
 		else
 			throw $this->createNotFoundException('No POST or GET data!');	
-	}
-	
-	private function getMyProject($project_name, &$error)
-	{
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-		$file = $this->getProject($name, $project_name, $error);
-		return $file;
-	}
-    
-	private function getProject($username, $project_name, &$error)
-	{
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
-		
-		if(!$user)
-		{
-			$error = -1;			
-		}
-		
-		$file = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')
-			->findOneBy(array('name' => $project_name, 'owner' => $user->getID()));
-		
-		if(!$file)
-		{
-			$error = -2;		
-		}
-		else
-		{
-			$error = 1;
-			return $file;
-		}		
 	}
 		
 	public function librariesAction()
