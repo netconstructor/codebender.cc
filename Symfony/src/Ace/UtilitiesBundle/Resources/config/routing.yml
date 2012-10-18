@@ -39,3 +39,9 @@ AceUtilitiesBundle_deletefile:
   defaults: { _controller: AceUtilitiesBundle:Default:deleteFile }
   requirements:
     _method:  POST
+
+AceUtilitiesBundle_compile:
+  pattern:  /compile
+  defaults: { _controller: AceUtilitiesBundle:Default:compile }
+  requirements:
+    _method:   POST
