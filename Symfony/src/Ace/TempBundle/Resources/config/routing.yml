@@ -1,9 +1,3 @@
-AceTempBundle_compile:
-    pattern:  /compile
-    defaults: { _controller: AceTempBundle:Default:compile }
-    requirements:
-        _method:   POST
-
 AceTempBundle_options:
     pattern:  /options
     defaults: { _controller: AceTempBundle:Default:options }
