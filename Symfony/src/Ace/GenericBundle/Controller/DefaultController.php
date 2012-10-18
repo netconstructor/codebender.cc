@@ -55,7 +55,10 @@ class DefaultController extends Controller
 		if (!$user) {
 			return new Response('There is no such user');
 		}
-		$files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')->findByOwner($user->getId());
+
+		$projectmanager = $this->get('projectmanager');
+		$projects = $projectmanager->listAction($user->getId())->getContent();
+		$projects = json_decode($projects, true);
 
 		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
 		if ( $result != false ) {
@@ -66,7 +69,7 @@ class DefaultController extends Controller
 		}
 		$utilities = $this->get('utilities');
 		$image = $utilities->get_gravatar($user->getEmail(),120);
-		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'files' => $files, 'lastTweet'=>$lastTweet, 'image'=>$image ));
+		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
 	
 	public function projectAction($id)
