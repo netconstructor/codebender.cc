@@ -99,6 +99,7 @@ function clearProgress(output)
 
 function save()
 {
+	loadCode(window.selectedFile);
 	setProgress(90);
 	$.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data: JSON.stringify(window.files)}, function(data)
 	{
