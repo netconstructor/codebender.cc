@@ -75,6 +75,10 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('projectmanager');
 		$projects = NULL;
 		
+		$owner = $projectmanager->getOwnerAction($id)->getContent();
+		$owner = json_decode($owner, true);
+		$owner = $owner["response"];
+
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
@@ -84,10 +88,6 @@ class DefaultController extends Controller
 			{
 				throw $this->createNotFoundException('No user found with id '.$name);
 			}
-
-			$owner = $projectmanager->getOwnerAction($id)->getContent();
-			$owner = json_decode($owner, true);
-			$owner = $owner["response"];
 
 			if($owner["id"] == $user->getId())
 			{
