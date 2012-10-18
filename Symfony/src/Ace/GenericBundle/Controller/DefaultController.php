@@ -106,7 +106,7 @@ class DefaultController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 		
-			return $this->render('AceGenericBundle:Default:project.html.twig', array('project'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id));
+			return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id));
 	}
 	
 	public function uploadAction()

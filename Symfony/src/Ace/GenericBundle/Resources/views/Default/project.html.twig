@@ -24,7 +24,7 @@ h1 small
 {% block body_options %} onload="prettyPrint()"{% endblock %}
 {% block mainspan %}
 	<div class="page-header row-fluid" >
-		<h1>{{ project }}<small>By <a href="{{path('AceGenericBundle_user',{'user':owner['username'] })}}">{{ owner['username'] }}</a> ({{owner['firstname']}} {{owner['lastname']}})</small></h1>
+		<h1>{{ project_name }}<small>By <a href="{{path('AceGenericBundle_user',{'user':owner['username'] })}}">{{ owner['username'] }}</a> ({{owner['firstname']}} {{owner['lastname']}})</small></h1>
 	</div>
 	<div class="row-fluid">
 		<h5>Description: </h5>
