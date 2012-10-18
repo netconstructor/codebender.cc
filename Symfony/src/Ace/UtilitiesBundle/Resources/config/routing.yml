@@ -17,3 +17,7 @@ AceUtilitiesBundle_setprojectdescription:
    defaults: { _controller: AceUtilitiesBundle:Default:setDescription }
    requirements:
       _method:  POST
+
+AceUtilitiesBundle_download:
+  pattern:  /download/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:download }

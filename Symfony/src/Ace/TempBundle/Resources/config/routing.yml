@@ -4,10 +4,6 @@ AceTempBundle_compile:
     requirements:
         _method:   POST
 
-AceTempBundle_download:
-    pattern:  /download/{username}/{project_name}/{type}
-    defaults: { _controller: AceTempBundle:Default:download, type: file }
-    
 AceTempBundle_options:
     pattern:  /options
     defaults: { _controller: AceTempBundle:Default:options }

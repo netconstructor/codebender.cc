@@ -42,28 +42,6 @@ class DefaultController extends Controller
 		return $response;
 	}
 
-	public function downloadAction($username, $project_name, $type)
-	{
-		$filename=$project_name;
-		$extension = ".ino";
-		$response;
-		if($type == 'hex')
-		{
-			$response = $this->forward('AceFileBundle:Default:getMyHex', array('project_name' => $project_name));
-			$extension = ".hex";
-		}
-		else
-		{
-			$response = $this->forward('AceFileBundle:Default:getCode', array('username'=>$username,'project_name' => $project_name));
-		}
-
-		$value = $response->getContent();
-		$headers = array('Content-Type'		=> 'application/octet-stream',
-			'Content-Disposition' => 'attachment;filename="'.$project_name.$extension.'"');
-
-		return new Response($value, 200, $headers);
-	}
-
 	//TODO:email is not loaded correctly if page is refreshed
 	public function optionsAction()
 	{

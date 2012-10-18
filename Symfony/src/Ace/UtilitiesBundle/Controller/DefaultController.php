@@ -111,4 +111,34 @@ class DefaultController extends Controller
 		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
 	}
 
+	public function downloadAction($id)
+	{
+		$htmlcode = 200;
+		$extension =".ino";
+		$projectmanager = $this->get('projectmanager');
+
+		$name = $projectmanager->getNameAction($id)->getContent();
+		$name = json_decode($name, true);
+		$name = $name["response"];
+
+		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = json_decode($files, true);
+
+		if(isset($files[0]))
+		{
+			//TODO: We should support multi-file downloading as well
+			$value = $files[0]["code"];
+		}
+		else
+		{
+			$value = "";
+			$htmlcode = 404;
+		}
+
+		$headers = array('Content-Type'		=> 'application/octet-stream',
+			'Content-Disposition' => 'attachment;filename="'.$name.$extension.'"');
+
+		return new Response($value, $htmlcode, $headers);
+	}
+
 }
