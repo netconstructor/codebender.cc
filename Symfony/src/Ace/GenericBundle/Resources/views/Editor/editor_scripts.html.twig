@@ -294,15 +294,6 @@ function uploadusb()
 			return;
 		}
 
-		// window.startup_value = 10;
-		// window.stop_value = 50;
-		// setProgress(window.startup_value++);
-		// window.progressInterval = setInterval(function()
-		// {
-		// 	if(window.startup_value < window.stop_value)
-		// 		setProgress(window.startup_value);
-		// 	window.startup_value+5;
-		// }, 50);
 		setProgress(50);
 		
 		
@@ -316,8 +307,7 @@ function uploadusb()
 			    $("#uploadusb").removeClass("btn-success");
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
-				
-			// window.stop_value=80;
+
 			setProgress(80);
 			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
 			// clearInterval(window.progressInterval);
