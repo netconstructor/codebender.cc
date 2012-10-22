@@ -141,6 +141,32 @@ class DefaultController extends Controller
 		return new Response($value, $htmlcode, $headers);
 	}
 
+	public function getBinaryAction($id)
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$flags = $this->getRequest()->request->get('data');
+		$flags = serialize(json_decode($flags, true));
+
+		$projectmanager = $this->get('projectmanager');
+		$bin = $projectmanager->getBinaryAction($id, $flags)->getContent();
+
+		//TODO: This is stupid and needs to be changed, but it's ok for now
+		$bin = json_decode($bin, true);
+		$bin = json_decode($bin, true);
+		$bin["binary"] = $bin["binary"]["binary"];
+		$bin = json_encode($bin);
+
+		return new Response($bin);
+	}
+
 	public function saveCodeAction($id)
 	{
 

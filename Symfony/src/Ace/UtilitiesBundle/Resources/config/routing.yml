@@ -22,6 +22,12 @@ AceUtilitiesBundle_download:
   pattern:  /download/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:download }
 
+AceUtilitiesBundle_getbinary:
+  pattern:  /getbinary/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:getBinary }
+  requirements:
+     _method:  POST
+
 AceUtilitiesBundle_savecode:
   pattern:  /savecode/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:saveCode }
