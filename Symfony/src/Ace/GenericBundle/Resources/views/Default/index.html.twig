@@ -1,0 +1,21 @@
+{% extends '::container.html.twig' %}
+{% block fluidcontainer %}
+	  <div class="row-fluid">        	
+	    <div class="span12">
+        {% include 'AceGenericBundle:Default:hero.html.twig' %}
+	    </div><!--/span-->
+	
+	  </div><!--/row-->
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function()
+{
+	$("#homepage").addClass("active");
+	$('a[rel="tooltip"]').tooltip();
+	$('a[rel="popover"]').popover();	
+});
+</script>
+{% endblock %}

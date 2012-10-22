@@ -1,0 +1,56 @@
+{% extends '::container.html.twig' %}
+{% block title "User Info" %}
+{% block mainspan %}
+<script src="http://platform.twitter.com/anywhere.js?id=YOUR_API_KEY&v=1" type="text/javascript"></script>
+<script type="text/javascript">
+    twttr.anywhere(function (T) {
+		T.linkifyUsers();
+	});
+</script>
+<style type="text/css" media="screen">
+.page-header
+{
+	margin-top: 0;	
+}
+</style>
+<div class="page-header row-fluid" >
+	<ul class="thumbnails">
+		<li class="span2">
+		<a href="{{path('AceGenericBundle_user',{'user':user.username})}}" class="thumbnail">
+		<img id="user_avatar" src="{{image}}" alt="avatar of user"/>
+		</a>
+		</li>
+	</ul>
+<h1>{{ user.getUsername() }} ({{user.getLastname()}} {{user.getFirstname()}})</h1>
+</div>
+
+<div id="user_info" class="row-fluid">
+	<div class="span6">		
+		{% if user.getTwitter() %}
+		<div><img src="https://si0.twimg.com/images/dev/cms/intents/bird/bird_blue/bird_16_blue.png"/>
+			@{{user.getTwitter()}}
+		</div>
+		{% endif %}
+	</div>
+	{% if lastTweet %}
+	<div class="span6 offset6">
+		<em style="font-weight:bold;text-align:center">latest tweet from {{user.getTwitter()}}</em>
+		<div class="well">
+			{{lastTweet}}
+		</div>
+	</div>
+	{% endif %}
+</div>
+<br />
+<table id="user_projects" class="table table-bordered">
+	<thead><tr><th>Projects</th></tr></thead>
+	{% if projects %}
+		<tbody>
+		{% for project in projects %}
+			<tr><td><a href="{{path('AceGenericBundle_project',{'id':project['id']})}}">{{project['name']}}</a></td></tr>
+		{% endfor %}
+		</tbody>
+	{% endif %}
+</table>
+
+{% endblock %}

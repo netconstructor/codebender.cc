@@ -1,0 +1,21 @@
+AceTempBundle_options:
+    pattern:  /options
+    defaults: { _controller: AceTempBundle:Default:options }
+    
+AceTempBundle_setoptions:
+    pattern:  /setoptions
+    defaults: { _controller: AceTempBundle:Default:setoptions }
+    requirements:
+        _method:   POST
+
+AceTempBundle_checkpass:
+    pattern:  /checkpass
+    defaults: { _controller: AceTempBundle:Default:checkpass }
+    requirements:
+        _method:   POST
+
+AceTempBundle_checkmail:
+    pattern:  /checkmail
+    defaults: { _controller: AceTempBundle:Default:checkmail }
+    requirements:
+        _method:   POST

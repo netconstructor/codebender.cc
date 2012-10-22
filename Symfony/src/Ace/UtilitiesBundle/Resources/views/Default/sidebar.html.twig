@@ -1,0 +1,26 @@
+<div class="well sidebar-nav">
+<ul class="nav nav-list" id="nav-list">
+	<li class="nav-header">New Project</li>
+	<li>
+	<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
+		<input type="text" name='project_name' class="input-medium search-query" style="width:100%;">
+		<button type="submit" class="btn" style="width:100%; margin-top: 5px;">Create new project</button>
+	</form>
+	</li>
+	<li><a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a></li>
+     <li class="nav-header">Projects</li>
+   	{% if files%}
+	    {% for file in files %}
+	        <li>
+				<a href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
+					{{ file['name'] }}
+				</a>
+			</li>
+	    {% endfor %}
+	{% endif %}	
+     <!-- <li class="active"><a href="#">Link</a></li> -->
+	<li class="nav-header" id="Links">Links</li>
+	<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>External Libraries</a></li>
+	<li><a href="{{ path('AceTempBundle_options') }}"><i class="icon-cog"></i>Options</a></li>		
+</ul>
+</div>

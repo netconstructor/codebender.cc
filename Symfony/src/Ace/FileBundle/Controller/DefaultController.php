@@ -7,12 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Ace\FileBundle\Document\File;
+use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
 {
-	const default_file = "default_text.txt";
-	const directory = "../../vendor/codebendercc/arduino-files/";
-
 	public function createAction()
 	{
 	    if ($this->getRequest()->getMethod() === 'POST')
@@ -21,22 +19,22 @@ class DefaultController extends Controller
 			
 			if($project_name == '')
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 			
 			$file = $this->getMyProject($project_name, $error);
 			if($error == -2)
 			{
-				$file = fopen($this::directory.$this::default_file, 'r');
-				$value = fread($file, filesize($this::directory.$this::default_file));
-				fclose($file);
+
+				$utilities = new DefaultHandler();
+				$default_text = $utilities->default_text();
 
 				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
 				$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
 				
 				$file = new File();
 			    $file->setName($project_name);
-			    $file->setCode($value);
+			    $file->setCode($default_text);
 				$timestamp = new \DateTime;
 				$file->setCodeTimestamp($timestamp);
 				$file->setHex("");
@@ -54,7 +52,7 @@ class DefaultController extends Controller
 			    $dm->persist($file);
 			    $dm->flush();
 
-				return $this->redirect($this->generateUrl('AceEditorBundle_editor',array('project_name' => $project_name)));
+				return $this->redirect($this->generateUrl('AceGenericBundle_editor',array('project_name' => $project_name)));
 				
 			}
 			else if($error==-1)
@@ -63,7 +61,7 @@ class DefaultController extends Controller
 			}
 			else if($error == 0)
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 		}
 		else
@@ -80,7 +78,7 @@ class DefaultController extends Controller
 			$dm->flush();
 		}
 		
-		return $this->redirect($this->generateUrl('AceEditorBundle_list'));	
+		return $this->redirect($this->generateUrl('AceGenericBundle_list'));	
 	}
 	
 	public function cloneAction($old_user, $old_project_name)
@@ -91,7 +89,7 @@ class DefaultController extends Controller
 			
 			if($new_project_name == '')
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 			$file = $this->getMyProject($new_project_name, $error);
 			if($error == -2)
@@ -123,7 +121,7 @@ class DefaultController extends Controller
 			    $dm->persist($file);
 			    $dm->flush();
 
-				return $this->redirect($this->generateUrl('AceEditorBundle_editor',array('project_name' => $new_project_name)));
+				return $this->redirect($this->generateUrl('AceGenericBundle_editor',array('project_name' => $new_project_name)));
 				
 			}
 			else if($error==-1)
@@ -132,7 +130,7 @@ class DefaultController extends Controller
 			}
 			else if($error == 0)
 			{
-				return $this->redirect($this->generateUrl('AceEditorBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
 			}
 		}
 		else

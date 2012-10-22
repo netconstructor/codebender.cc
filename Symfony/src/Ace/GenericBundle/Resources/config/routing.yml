@@ -1,0 +1,25 @@
+AceGenericBundle_homepage:
+    pattern:  /
+    defaults: { _controller: AceGenericBundle:Default:index }
+
+AceGenericBundle_list:
+    pattern:  /list
+    defaults: { _controller: AceGenericBundle:Default:list }
+
+AceGenericBundle_user:
+    pattern:  /user/{user}
+    defaults: { _controller: AceGenericBundle:Default:user }
+
+AceGenericBundle_project:
+    pattern:  /sketch:{id}
+    defaults: { _controller: AceGenericBundle:Default:project }
+
+AceGenericBundle_upload:
+    pattern: /upload/
+    defaults: {_controller: AceGenericBundle:Default:upload }
+    #requirements:
+    #    _method:  POST
+
+AceGenericBundle_libraries:
+    pattern: /libraries
+    defaults: {_controller: AceGenericBundle:Default:libraries }

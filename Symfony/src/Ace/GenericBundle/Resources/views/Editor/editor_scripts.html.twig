@@ -1,0 +1,618 @@
+<script type="text/javascript">
+function getExample(filename){
+	// alert('editting file');
+	$.get(filename, function(data)
+	{
+		// $('.result').html(data);
+		editor.getSession().setValue(data);
+		// alert('Load was performed.');
+	});
+}
+</script>
+
+<script type="text/javascript">
+function warnModal(filename){
+	 //alert(filename);
+	 $('#loadLink').attr('onclick','getExample("'+filename+'")');
+	 $('#warningModal').modal('show');	
+}
+</script>
+
+<script type="text/javascript">
+
+function saveDescription()
+{
+	$.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data: $("#newDescription").val()}, function(data)
+	{
+		$("#oldDescription").html($("#newDescription").val());
+		$("#descriptionModal").modal('hide');
+	});
+}
+
+function throwMud()
+{
+	dirty=true;
+	$("#compile_text").html(" Save & Build");
+	$("#revert").removeClass("disabled").off('click').click(function()
+	{
+	    revert();
+	});
+	$("#save").removeClass("disabled").off('click').click(function()
+	{
+		save();
+	})
+	disableLink($(".download_link"));
+	$("#netload").addClass("disabled").off('click');
+	$("#uploadusb").addClass("disabled").off('click');
+}
+function cleanUp()
+{
+	dirty= false;
+	$("#compile_text").html(" Build");
+	enableLink($(".link_ino"));
+	disableLink($(".link_hex"));
+	$("#revert").addClass("disabled").off('click');
+	$("#save").addClass("disabled").off('click');
+}
+
+function motherInLaw()
+{
+	if(dirty)
+	{
+		save_and_build();
+	}
+	else
+	{
+		build();
+	}	
+}
+
+function setProgress(newprogress)
+{
+	$("#progress").show('fast');
+	$("#progress_val").width(newprogress+'%');
+	$("#operation_output").hide('fast');
+	// $("#progress").show('fast');
+	// if(newprogress < 10)
+	// 	window.currentProgress = 0.5*newprogress;
+	// else
+	// 	window.currentProgress = 0;
+	// $("#progress_val").width(window.currentProgress+'%');
+	// 
+	// window.maxProgress = newprogress;
+	// window.interval = setInterval(function()
+	// {
+	// 	$("#progress_val").width(window.currentProgress+'%');
+	// 	if(window.currentProgress < window.maxProgress)
+	// 		window.currentProgress++;
+	// },10);
+	// $("#operation_output").hide('fast');
+}
+
+function clearProgress(output)
+{
+	$("#progress").hide('fast');
+	$("#progress_val").width('0%');	
+	$("#operation_output").html(output).show('fast');
+	//clear the interval here
+}
+
+function save()
+{
+	loadCode(window.selectedFile);
+	setProgress(90);
+	$.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data: JSON.stringify(window.files)}, function(data)
+	{
+		$("#save").addClass("btn-success");
+		$("#save_icon").addClass("icon-white");
+		clearProgress("Saved successfuly.");
+		cleanUp();
+		window.setTimeout(function () {
+		    $("#save").removeClass("btn-success");
+			$("#save_icon").removeClass("icon-white");
+		}, 500);
+		// alert("Data received: " + data);
+	});	
+}
+
+function revert()
+{
+	setProgress(90);
+	$.get("{{ path('AceFileBundle_getMyEscapedCode',{'project_name':project_id}) }}", function(data)
+	{
+		editor.getSession().setValue(data);
+		$("#revert").addClass("btn-success");
+		$("#revert_icon").addClass("icon-white");
+		clearProgress("Reverted successfuly.");
+		cleanUp();
+		window.setTimeout(function () {
+		    $("#revert").removeClass("btn-success");
+			$("#revert_icon").removeClass("icon-white");
+		}, 500);
+		// alert("Data received: " + data);
+	});	
+}
+
+function build()
+{
+	setProgress(90);
+	$.post("{{ path('AceUtilitiesBundle_compile') }}", { project_id:"{{project_id}}"}, function(data)
+	{
+		var obj = jQuery.parseJSON(data);
+		if(obj.success == 0)
+		{
+			$("#compile_output").css('color', 'black');
+			// for (var i=0; i<obj.lines.length; i++)
+			// {
+			// 	$(".ace_gutter-cell").filter(function(index) {
+			// 	  return $(this).html() == obj.lines[i];
+			// 	}).css("text-decoration","underline").css("color","red");
+			// }
+			 
+			$("#editor").css("bottom","150px");
+			$("#compile_output").css("bottom","0px");
+			$("#compile_output").css("padding-top","10px");
+			$("#compile_output").css("height","120px");
+			$("#compile_output").addClass("well");
+			$("#compile").addClass("btn-warning");
+			$("#compile_icon").addClass("icon-remove");
+			
+			
+			$("#compile_output").html(obj.message);
+			clearProgress("Compilation failed.")
+		}
+		else
+		{
+			$("#compile_output").css('color', '');
+			$(".ace_gutter-cell").css("text-decoration", "").css("color","");
+			$("#editor").css("bottom","");
+			$("#compile_output").css("bottom","");
+			$("#compile_output").css("height","");
+			$("#compile_output").css("padding-top","");
+			$("#compile_output").removeClass("well");
+			$("#compile").addClass("btn-success");
+			$("#compile_icon").addClass("icon-ok");
+
+			var progressText = "<p>Compile Successful.<br /> Code Size: " + obj.size + " bytes<br /><small>(out of <strong>"+ getMaxSize()+"</strong> available.)</small></p>";
+			clearProgress(progressText)
+			window.sketch_size = obj.size;
+			$("#compile_output").html("");
+			enableLink($(".link_hex"));
+			$("#netload").removeClass("disabled").click(function()
+			{
+				netload();
+			});
+			$("#uploadusb").removeClass("disabled").click(function()
+			{
+				uploadusb();
+			});
+			
+		}
+		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
+
+		window.setTimeout(function () {
+		    $("#compile").removeClass("btn-success").removeClass("btn-warning");
+				$("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
+		}, 500);
+		// alert("Data received: " + data);
+	});	
+}
+
+function cloudload()
+{
+	setProgress(90);
+	$.post("{{ path('AceSenderBundle_tftp') }}", { project_name:"{{project_id}}", ip: $("#ip").val()}, function(data)
+	{
+		var obj = jQuery.parseJSON(data);
+		if(obj.success == 0)
+		{
+			$("#compile_output").css('color', 'black');
+			for (var i=0; i<obj.lines.length; i++)
+			{
+				$(".ace_gutter-cell").filter(function(index) {
+				  return $(this).html() == obj.lines[i];
+				}).css("text-decoration","underline").css("color","red");
+			}
+			 
+			$("#editor").css("bottom","150px");
+			$("#compile_output").css("bottom","0px");
+			$("#compile_output").css("padding-top","10px");
+			$("#compile_output").css("height","120px");
+			$("#compile_output").addClass("well");			
+			
+			$("#compile_output").html(obj.text);
+			clearProgress("Upload failed.")
+		}
+		else
+		{
+			$("#compile_output").css('color', '');
+			$(".ace_gutter-cell").css("text-decoration", "").css("color","");
+			$("#editor").css("bottom","");
+			$("#compile_output").css("bottom","");
+			$("#compile_output").css("height","");
+			$("#compile_output").css("padding-top","");
+			$("#compile_output").removeClass("well");
+
+			var progressText = "<p>" + obj.text + "</p>";
+			clearProgress(progressText)
+			window.sketch_size = obj.size;
+			$("#compile_output").html("");			
+		}
+
+		window.setTimeout(function () {
+		    $("#compile").removeClass("btn-success").removeClass("btn-warning");
+				$("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
+		}, 500);
+		// alert("Data received: " + data);
+	});	
+	if (!window.enabledapplet){
+	setTimeout(function(){
+				getIds();
+			}, 500);
+	window.enabledapplet=true;
+	}
+}
+
+
+function getMaxSize()
+{
+	var max_size;
+	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
+	{
+		max_size = 32256;
+	}
+	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
+	{
+		max_size = 30720;
+	}
+	return max_size;
+}
+
+function getBaudrate()
+{
+	var baudrate;
+	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
+	{
+		baudrate = "115200";
+	}
+	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
+	{
+		baudrate = "57600";
+	}
+	return baudrate;
+}
+
+function uploadusb()
+{
+	if($("#ports").val() != null && $("#ports").val() != "")
+	{
+		var baudrate = getBaudrate();
+		var max_size = getMaxSize();
+		if(window.size > max_size)
+		{
+			clearProgress("There is not enough space!");
+			return;
+		}
+
+		// window.startup_value = 10;
+		// window.stop_value = 50;
+		// setProgress(window.startup_value++);
+		// window.progressInterval = setInterval(function()
+		// {
+		// 	if(window.startup_value < window.stop_value)
+		// 		setProgress(window.startup_value);
+		// 	window.startup_value+5;
+		// }, 50);
+		setProgress(50);
+		
+		
+		$.get("{{ path('AceUtilitiesBundle_download', { 'id':project_id}) }}", function(data)
+		{
+			window.hex = data;
+			$("#uploadusb").addClass("btn-success");
+			$("#upload_icon").addClass("icon-white");
+			// cleanUp();
+			window.setTimeout(function () {
+			    $("#uploadusb").removeClass("btn-success");
+				$("#upload_icon").removeClass("icon-white");
+			}, 500);
+				
+			// window.stop_value=80;
+			setProgress(80);
+			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
+			// clearInterval(window.progressInterval);
+			if(progress)
+				clearProgress("There was an error uploading. Error #" + progress);			
+			else
+				clearProgress("Upload successful.");
+			// alert("Data received: " + data);
+		});		
+	}
+	else
+	{
+		clearProgress("Please select a valid port or enable the Java Applet!!");		
+	}
+}
+
+
+function save_and_build()
+{
+	save();
+	$(document).ajaxStop(function()
+	{
+		build();
+		$(this).unbind('ajaxStop');
+	});
+	// build();
+}
+
+function disableLink(link)
+{
+	link.css("text-decoration","line-through").click(function(e)
+	{
+	    e.preventDefault();
+	});
+}
+function enableLink(link)
+{
+	link.css("text-decoration","").off('click');
+}
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+function addCommands()
+{
+	editor.commands.addCommand({
+	    name: 'saveFile',
+	    bindKey: {
+	        win: 'Ctrl-S',
+	        mac: 'Command-S',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request) {
+	        save();
+	    }
+	});
+		
+	editor.commands.addCommand({
+	    name: 'buildFile',
+	    bindKey: {
+	        win: 'Ctrl-R',
+	        mac: 'Command-R',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request) {
+	        motherInLaw();
+	    }
+	});
+	
+	editor.commands.addCommand({
+	    name: 'uploadFile',
+	    bindKey: {
+	        win: 'Ctrl-U',
+	        mac: 'Command-U',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request) {
+			uploadusb();
+	    }
+	});
+	
+	editor.commands.addCommand({
+	    name: 'CheckWord',
+	    bindKey: {
+	        win: 'Ctrl-Space',
+	        mac: 'Ctrl-Space',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request) {
+			var selection = editor.getSession().doc.getTextRange(editor.getSelectionRange());
+			if (selection == "")
+			{
+				var row = editor.getSession().getSelection().getCursor().row;
+				var column = editor.getSession().getSelection().getCursor().column
+				var string = editor.getSession().getLine(editor.getSession().getSelection().getCursor().row);
+				var first_half = string.substring(0,column).match(/\w+$/);
+				var second_half = string.substring(column, string.length).match(/^\w+/);
+				if (first_half == null) first_half = "";
+				if (second_half == null) second_half = "";
+				selection = first_half + second_half;
+			}
+			window.open('http://www.google.com/search?q='+selection+'+inurl:arduino.cc/en/Reference&btnI');
+	    }
+	});
+	
+	editor.commands.addCommand({
+	    name: 'MyComments',
+	    bindKey: {
+	        win: 'Ctrl-/',
+	        mac: 'Command-/',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request)
+		{
+			editor.toggleCommentLines();
+	    }
+	});
+	
+	editor.commands.addCommand({
+	    name: 'serialMonitor',
+	    bindKey: {
+	        win: 'Ctrl-Shift-M',
+	        mac: 'Command-Shift-M',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request)
+		{
+	        connect();
+	    }
+	});
+	
+	
+}
+</script>
+
+<script type="text/javascript">
+
+    function scan()
+	{ 
+		if (!window.enabledapplet) return;
+
+		if(typeof myapplet.isActive === "function")
+		{
+
+		    getFire();
+			setInterval(function(){
+				getFire();
+			}, 3000);
+		}
+		else
+		{
+			setTimeout(function(){
+				scan();
+			}, 3000);
+		}
+    }
+    
+    function getIds()
+	{
+		window.applet = $("#myapplet")[0];
+		window.tftpapplet = $("#tftpapplet")[0];
+	    window.portslist= $("#ports")[0];
+	    window.rateslist= $("#baudrates")[0];
+		window.oldPorts = "";
+		setTimeout(function(){
+			scan();	
+		}, 200);
+}
+	
+	
+    function connect()
+	{
+		if($("#ports").val() != null && $("#ports").val() != "")
+		{
+
+		    //alert('called connect ');
+		    var port= portslist.options[portslist.selectedIndex].value;
+		    //alert("overrideConnect('"+portslist.selectedIndex+"','"+rateslist.selectedIndex+"')");
+
+		    applet.overrideConnect(portslist.selectedIndex);
+		}
+		else
+		{
+			clearProgress("Please select a valid port or enable the Java Applet!!");		
+		}
+    }
+    function getFire()
+	{
+		var ports="";
+		try{
+			ports = applet.probeUsb();
+			if(ports != oldPorts){
+				$('#ports').find('option').remove();
+				portsAvail=ports.split(",");
+				for (var i =0 ;i< portsAvail.length ; i++){
+					portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
+				}
+				oldPorts = ports;
+			}
+		}
+		catch(err){
+			$('#ports').find('option').remove();
+			oldPorts = ports;
+		}
+    }
+    
+    
+function enableUSB(){
+   if (!window.enabledapplet){
+		appletsource='<applet width="1" height="1"  id="myapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.CodeBenderApplet" archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}"> </applet>';
+		$("#usbappletdiv").html(appletsource);
+		window.enabledapplet=true;
+	}
+	
+	setTimeout(function(){
+				checkRunningApplet();
+			}, 2000);
+			
+}
+
+function checkRunningApplet(){
+	applet = $("#myapplet")[0];
+	
+	if(applet.isActive()){
+		$("#prescanning").toggle("blind", {}, 1000);
+		$("#scanning").toggle("blind", {}, 1000);
+		
+			setTimeout(function(){
+				getIds();
+			}, 200);
+	}
+	else{
+		setTimeout(function(){checkRunningApplet();}, 400);
+	}
+}
+
+function enableNET(){
+			$("#net-info").toggle("blind", {}, 1000);
+			$("#net-tools").toggle("blind", {}, 1000);
+}
+
+function cleanupIPhelp(){
+	if ($("#ip").val()=="Address (IP or Domain)"){
+		$("#ip").val("")
+		$("#netload-ip").text("")
+		$("#cloudload-ip").text("")
+	}else{
+		if ($("#ip").val()==""){
+			$("#ip").val("Address (IP or Domain)")
+			$("#netload-ip").text("")
+			$("#cloudload-ip").text("")
+		}
+		else{
+			$("#netload-ip").text($("#ip").val())
+			$("#cloudload-ip").text($("#ip").val())
+		}
+		$("#ip").val();
+	}	
+}
+
+function isMobile(){
+
+     return navigator.userAgent.match(/Android/i) ? true : false 
+     || navigator.userAgent.match(/BlackBerry/i) ? true : false
+     || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
+     ||navigator.userAgent.match(/IEMobile/i) ? true : false;
+}
+
+function loadCode(filename)
+{
+	window.files[window.selectedFile] = editor.getSession().getValue();
+	editor.getSession().setValue(window.files[filename]);
+	window.selectedFile = filename;
+}
+
+function createFile()
+{
+	setProgress(90);
+	var val = { filename : $("#createfield").val() };
+	$.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
+	{
+		clearProgress("File Created successfuly.");
+		location.reload();
+	});
+}
+
+function deleteFile(filename)
+{
+	setProgress(90);
+	var val = { "filename" : filename };
+	$.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
+	{
+		clearProgress("File Deleted successfuly.");
+		location.reload();
+	});
+}
+
+</script>

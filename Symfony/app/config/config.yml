@@ -107,6 +107,19 @@ doctrine_mongodb:
         default:
             auto_mapping: true
 
+services:
+    utilities:
+        class:        Ace\UtilitiesBundle\Handler\DefaultHandler
+    mongofilecontroller:
+        class:        Ace\ProjectBundle\Controller\MongoFilesController
+        arguments: 
+            documentManager: "@doctrine.odm.mongodb.document_manager"
+    projectmanager:
+        class:        Ace\ProjectBundle\Controller\DefaultController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            mongofilecontroller: "@mongofilecontroller"
+
 # my.foo.service:
 #     class: Ace\FileBundle\Controller\ServiceController
 #     arguments:

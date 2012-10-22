@@ -1,4 +1,4 @@
-{% extends 'AceEditorBundle:Default:container.html.twig' %}
+{% extends '::container.html.twig' %}
 {% block title "Search Results" %}
 {% block mainspan %}
 <h3>Search results for: {{ query }}</h3>
@@ -15,8 +15,8 @@
 	<tbody>
 	{% for file in files %}
 		<tr>
-		<td><a href="{{path('AceEditorBundle_project',{'project_name':file.name, 'username': owners[file.owner]})}}">{{file.name}}</a></td>
-		<td><a href="{{path('AceEditorBundle_user',{'user':owners[file.owner]})}}">{{owners[file.owner]}}</a></td>
+		<td><a href="{{path('AceGenericBundle_project',{'project_name':file.name, 'username': owners[file.owner]})}}">{{file.name}}</a></td>
+		<td><a href="{{path('AceGenericBundle_user',{'user':owners[file.owner]})}}">{{owners[file.owner]}}</a></td>
 		</tr>
 	{% endfor %}
 	</tbody>
@@ -34,7 +34,7 @@
 	<tbody>
 	{% for user in users %}
 		<tr>
-		<td><a href="{{path('AceEditorBundle_user',{'user':user.username})}}">{{user.username}}</a></td>
+		<td><a href="{{path('AceGenericBundle_user',{'user':user.username})}}">{{user.username}}</a></td>
 		<td>{{user.firstname}} {{user.lastname}}</td>
 		</tr>
 	{% endfor %}

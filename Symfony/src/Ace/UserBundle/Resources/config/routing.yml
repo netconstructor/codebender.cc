@@ -1,3 +1,0 @@
-AceUserBundle_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: AceUserBundle:Default:index }
