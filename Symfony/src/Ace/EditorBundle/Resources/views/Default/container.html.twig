@@ -27,7 +27,7 @@ button.btn
 
 <div id="mycontainer" class="container">
 		<br />
-
+	    <div class="alert alert-error flash-notice"><h2>Notice: We are having issue with our hosting provider. Until the issues are resolved, you will be unable to log in. We apologize for the inconvenience.</h2></div>
 		{% if app.session.hasFlash('notice') %}
 		    <div class="alert alert-success flash-notice">
 		        <h2>{{ app.session.flash('notice') }}</h2>
