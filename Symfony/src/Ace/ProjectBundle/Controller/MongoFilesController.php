@@ -104,9 +104,9 @@ class MongoFilesController extends Controller
 			$pf = $this->getProjectById($id);
 			$binaries = $pf->getBinaries();
 			if(isset($binaries[$flags]))
-				return $binaries[$flags];
+				return json_encode(array("success" => true, "binary" => $binaries[$flags]));
 			else
-				return false;
+				return json_encode(array("success" => false));
 		}
 
 		public function setBinaryAction($id, $flags, $bin)
