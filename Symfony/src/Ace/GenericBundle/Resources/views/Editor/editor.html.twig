@@ -139,7 +139,7 @@ body
 				<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
 				<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
 			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
-				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Build</span></button>
+				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Verify</span></button>
 				<select id="boards"  class="myoptions">
 				</select>
 				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
@@ -306,7 +306,7 @@ $(document).ready(function()
 
 	$("#compile").click(function() 
 	{
-		motherInLaw();
+		verify();
 	});
 	
 	$("#netload").click(function()

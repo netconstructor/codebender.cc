@@ -31,8 +31,6 @@ function saveDescription()
 
 function throwMud()
 {
-	dirty=true;
-	$("#compile_text").html(" Save & Build");
 	$("#revert").removeClass("disabled").off('click').click(function()
 	{
 	    revert();
@@ -47,24 +45,9 @@ function throwMud()
 }
 function cleanUp()
 {
-	dirty= false;
-	$("#compile_text").html(" Build");
 	enableLink($(".link_ino"));
-	disableLink($(".link_hex"));
 	$("#revert").addClass("disabled").off('click');
 	$("#save").addClass("disabled").off('click');
-}
-
-function motherInLaw()
-{
-	if(dirty)
-	{
-		save_and_build();
-	}
-	else
-	{
-		build();
-	}	
 }
 
 function setProgress(newprogress)
@@ -133,22 +116,31 @@ function revert()
 	});	
 }
 
-function build()
+function generate_payload(format)
 {
+	loadCode(window.selectedFile);
+
+	var count=0;
+	var files_array = Array();
+	jQuery.each(window.files, function(i, val) {
+	  files_array[count++] = {"filename":i, "content":$("<div/>").html(val).text()};
+	});
+
+	var payload = {"files":files_array, "format":format, "build":window.boardz[window.boards.selectedIndex]["build"]};
+	return JSON.stringify(payload)
+}
+
+function verify()
+{
+	var payload = generate_payload("syntax");
+
 	setProgress(90);
-	$.post("{{ path('AceUtilitiesBundle_compile') }}", { project_id:"{{project_id}}"}, function(data)
+	$.post("{{compiler}}", payload, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
 		{
 			$("#compile_output").css('color', 'black');
-			// for (var i=0; i<obj.lines.length; i++)
-			// {
-			// 	$(".ace_gutter-cell").filter(function(index) {
-			// 	  return $(this).html() == obj.lines[i];
-			// 	}).css("text-decoration","underline").css("color","red");
-			// }
-			 
 			$("#editor").css("bottom","150px");
 			$("#compile_output").css("bottom","0px");
 			$("#compile_output").css("padding-top","10px");
@@ -156,8 +148,6 @@ function build()
 			$("#compile_output").addClass("well");
 			$("#compile").addClass("btn-warning");
 			$("#compile_icon").addClass("icon-remove");
-			
-			
 			$("#compile_output").html(obj.message);
 			clearProgress("Compilation failed.")
 		}
@@ -177,15 +167,6 @@ function build()
 			clearProgress(progressText)
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
-			enableLink($(".link_hex"));
-			$("#netload").removeClass("disabled").click(function()
-			{
-				netload();
-			});
-			$("#uploadusb").removeClass("disabled").click(function()
-			{
-				uploadusb();
-			});
 			
 		}
 		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
@@ -197,6 +178,26 @@ function build()
 		// alert("Data received: " + data);
 	});	
 }
+
+
+function getbin()
+{
+	setProgress(90);
+	var payload = generate_payload("binary");
+	$.post("{{compiler}}", payload, function(data)
+	{
+		var obj = jQuery.parseJSON(data);
+		if(obj.success == 0)
+		{
+			window.binary = null;
+		}
+		else
+		{
+			window.binary = obj["output"];
+		}
+	});
+}
+
 
 function cloudload()
 {
@@ -295,11 +296,10 @@ function uploadusb()
 		}
 
 		setProgress(50);
-		
-		
-		$.get("{{ path('AceUtilitiesBundle_download', { 'id':project_id}) }}", function(data)
+
+		getbinary();
+		if(binary != null)
 		{
-			window.hex = data;
 			$("#uploadusb").addClass("btn-success");
 			$("#upload_icon").addClass("icon-white");
 			// cleanUp();
@@ -307,7 +307,6 @@ function uploadusb()
 			    $("#uploadusb").removeClass("btn-success");
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
-
 			setProgress(80);
 			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
 			// clearInterval(window.progressInterval);
@@ -315,25 +314,16 @@ function uploadusb()
 				clearProgress("There was an error uploading. Error #" + progress);			
 			else
 				clearProgress("Upload successful.");
-			// alert("Data received: " + data);
-		});		
+		}
+		else
+		{
+			clearProgress("There was an error compiling.");
+		}
 	}
 	else
 	{
 		clearProgress("Please select a valid port or enable the Java Applet!!");		
 	}
-}
-
-
-function save_and_build()
-{
-	save();
-	$(document).ajaxStop(function()
-	{
-		build();
-		$(this).unbind('ajaxStop');
-	});
-	// build();
 }
 
 function disableLink(link)
@@ -366,14 +356,14 @@ function addCommands()
 	});
 		
 	editor.commands.addCommand({
-	    name: 'buildFile',
+	    name: 'verifyFile',
 	    bindKey: {
 	        win: 'Ctrl-R',
 	        mac: 'Command-R',
 	        sender: 'editor|cli'
 	    },
 	    exec: function(env, args, request) {
-	        motherInLaw();
+	        verify();
 	    }
 	});
 	
