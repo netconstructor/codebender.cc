@@ -287,7 +287,8 @@ $(document).ready(function()
 		window.selectedFile = "{{files[0]['filename']}}";
 	{% endif %}
 
-	window.boardz = {{boards|raw}}
+	window.boardz = {{boards|raw}};
+	window.binary = null;
 	mySelect = $("#boards");
 	for (var i=0;i<window.boardz.length;i++)
 		mySelect.append($('<option></option>').val(window.boardz[i]["name"]).html(window.boardz[i]["name"]));
