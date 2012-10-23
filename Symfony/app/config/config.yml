@@ -26,6 +26,9 @@ twig:
     globals:
         site_name: "codebender"
         email_addr: %email.addr%
+        compiler: %compiler%
+        sender: %sender%
+        library: %library%
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
