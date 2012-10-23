@@ -22,12 +22,6 @@ AceUtilitiesBundle_download:
   pattern:  /download/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:download }
 
-AceUtilitiesBundle_getbinary:
-  pattern:  /getbinary/{id}
-  defaults: { _controller: AceUtilitiesBundle:Default:getBinary }
-  requirements:
-     _method:  POST
-
 AceUtilitiesBundle_savecode:
   pattern:  /savecode/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:saveCode }
@@ -45,9 +39,3 @@ AceUtilitiesBundle_deletefile:
   defaults: { _controller: AceUtilitiesBundle:Default:deleteFile }
   requirements:
     _method:  POST
-
-AceUtilitiesBundle_compile:
-  pattern:  /compile
-  defaults: { _controller: AceUtilitiesBundle:Default:compile }
-  requirements:
-    _method:   POST
