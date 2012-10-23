@@ -65,6 +65,30 @@ class DefaultController extends Controller
 		
 	}
 
+	public function cloneAction($owner, $id)
+	{
+		$project = $this->getProjectById($id);
+		$new_project = new Project();
+		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->find($owner);
+		$new_project->setOwner($user);
+	    $new_project->setName($project->getName());
+	    $new_project->setDescription($project->getDescription());
+	    $new_project->setIsPublic(TRUE);
+
+		$new_project->setType("mongo");
+		$mongo = $this->mfc;
+		$id = $mongo->cloneAction($project->getProjectfilesId());
+
+		$new_project->setProjectfilesId($id);
+
+	    $em = $this->em;
+	    $em->persist($new_project);
+	    $em->flush();
+
+	    return new Response(json_encode(array("success" => true, "id" => $new_project->getId())));
+	}
+
+
 	public function getNameAction($id)
 	{
 		$project = $this->getProjectById($id);

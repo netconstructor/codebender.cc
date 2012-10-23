@@ -35,6 +35,22 @@ class MongoFilesController extends Controller
 		$dm->flush();
 		return 0;
 	}
+
+	public function cloneAction($id)
+	{
+		$pf = $this->getProjectById($id);
+		$new_id = $this->createAction();
+		$new_pf = $this->getProjectById($new_id);
+		$new_pf->setFiles($pf->getFiles());
+		$new_pf->setFilesTimestamp($pf->getFilesTimestamp());
+		$new_pf->setBinaries($pf->getBinaries());
+		$new_pf->setImages($pf->getImages());
+		$new_pf->setSketches($pf->getSketches());
+		$dm = $this->dm;
+		$dm->persist($new_pf);
+		$dm->flush();
+		return $new_id;
+	}
 	
 	public function listFilesAction($id)
 	{
