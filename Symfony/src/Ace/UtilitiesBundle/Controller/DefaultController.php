@@ -167,6 +167,26 @@ class DefaultController extends Controller
 		return new Response(json_encode(array("success"=>true)));
 	}
 
+	public function cloneAction($id)
+	{
+
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$name = $this->getRequest()->request->get('name');
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->cloneAction($user, $id)->getContent();
+		$response = json_decode($response, true);
+		return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+	}
+
 	public function createFileAction($id)
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();

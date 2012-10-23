@@ -18,6 +18,10 @@ AceUtilitiesBundle_setprojectdescription:
    requirements:
       _method:  POST
 
+AceUtilitiesBundle_clone:
+  pattern:  /clone/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:clone }
+
 AceUtilitiesBundle_download:
   pattern:  /download/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:download }
