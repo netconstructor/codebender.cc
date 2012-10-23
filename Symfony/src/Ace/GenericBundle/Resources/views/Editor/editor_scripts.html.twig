@@ -100,20 +100,7 @@ function save()
 
 function revert()
 {
-	setProgress(90);
-	$.get("{{ path('AceFileBundle_getMyEscapedCode',{'project_name':project_id}) }}", function(data)
-	{
-		editor.getSession().setValue(data);
-		$("#revert").addClass("btn-success");
-		$("#revert_icon").addClass("icon-white");
-		clearProgress("Reverted successfuly.");
-		cleanUp();
-		window.setTimeout(function () {
-		    $("#revert").removeClass("btn-success");
-			$("#revert_icon").removeClass("icon-white");
-		}, 500);
-		// alert("Data received: " + data);
-	});	
+	location.reload();
 }
 
 function generate_payload(format)
