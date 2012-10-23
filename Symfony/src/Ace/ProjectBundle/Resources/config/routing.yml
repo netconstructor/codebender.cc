@@ -6,6 +6,10 @@ AceProjectBundle_delete:
     pattern:  /delete/{id}
     defaults: { _controller: projectmanager:deleteAction }
 
+AceProjectBundle_clone:
+    pattern:  /clone/{owner}/{id}
+    defaults: { _controller: projectmanager:cloneAction }
+
 AceProjectBundle_list:
     pattern:  /list/{owner}
     defaults: { _controller: projectmanager:listAction }
