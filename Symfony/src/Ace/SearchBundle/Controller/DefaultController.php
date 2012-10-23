@@ -19,7 +19,7 @@ class DefaultController extends Controller
 			    ->where('u.username = :name OR u.firstname = :name OR u.lastname = :name OR u.twitter = :name')
 				->setParameter('name', $query)->getQuery()->getResult();
 
-			$files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')->findByName($query)->toArray();
+			// $files = $this->get('doctrine.odm.mongodb.document_manager')->getRepository('AceFileBundle:File')->findByName($query)->toArray();
 
             $owners = '';
 
