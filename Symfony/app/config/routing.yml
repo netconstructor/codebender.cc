@@ -26,10 +26,6 @@ AceStaticBundle:
     resource: "@AceStaticBundle/Resources/config/routing.yml"
     prefix:   /static
 
-AceFileBundle:
-    resource: "@AceFileBundle/Resources/config/routing.yml"
-    prefix:   /
-
 AceSearchBundle:
     resource: "@AceSearchBundle/Resources/config/routing.yml"
     prefix:   /
