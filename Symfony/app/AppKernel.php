@@ -21,7 +21,6 @@ class AppKernel extends Kernel
             new Ace\ExperimentalUserBundle\AceExperimentalUserBundle(),
             new Ace\SearchBundle\AceSearchBundle(),
             new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
-            new Ace\FileBundle\AceFileBundle(),
             new Ace\StaticBundle\AceStaticBundle(),
             new Ace\UtilitiesBundle\AceUtilitiesBundle(),
             new Ace\BlogBundle\AceBlogBundle(),

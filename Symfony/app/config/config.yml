@@ -122,10 +122,3 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@mongofilecontroller"
-
-# my.foo.service:
-#     class: Ace\FileBundle\Controller\ServiceController
-#     arguments:
-#         container: "@service_container"
-
-
