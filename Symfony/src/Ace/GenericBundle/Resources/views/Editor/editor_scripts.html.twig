@@ -563,8 +563,8 @@ function isMobile(){
 
 function loadCode(filename)
 {
-	window.files[window.selectedFile] = editor.getSession().getValue();
-	editor.getSession().setValue(window.files[filename]);
+	window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
+	editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
 	window.selectedFile = filename;
 }
 
