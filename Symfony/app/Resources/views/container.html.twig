@@ -1,6 +1,7 @@
 {% extends '::base.html.twig' %}
-{% block body %}
 
+
+{% block javascripts_base %}
 <script>
 $(document).ready(function()
 {	
@@ -11,7 +12,10 @@ $(document).ready(function()
 	});
 });
 </script>
+{% endblock %}
+{% block javascripts %}{% endblock %}
 
+{% block stylesheets_base %}
 <style type="text/css" media="screen">
 .input-medium.search-query
 {
@@ -24,6 +28,10 @@ button.btn
 	margin-top: 5px;
 }
 </style>
+{% endblock %}
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
 
 <div id="mycontainer" class="container">
 		<br />
