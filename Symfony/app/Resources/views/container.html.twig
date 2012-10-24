@@ -30,6 +30,7 @@ button.btn
 
 hr.soften
 {
+margin-top: 0px;
 height: 1px;
 background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
 background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
@@ -74,12 +75,11 @@ border: 0;
 	
 		  </div><!--/row-->
 		{% endblock %}
-
-		  <footer style="position:fixed; bottom:0px;">
-			{% include '::footer.html.twig' %}
-		  </footer>
 		</div><!--/.fluid-container-->	
-</div>
+</div><!--/container-->
+<footer style="width:100%; position:fixed; bottom:0px; background:url('{{ asset("blizzard.png")}}')">
+	{% include '::footer.html.twig' %}
+</footer>
 
 
 {% endblock %}
