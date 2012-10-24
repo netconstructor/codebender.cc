@@ -16,8 +16,8 @@ class DefaultController extends Controller
 
 			$repository = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser');
 			$users = $repository->createQueryBuilder('u')
-			    ->where('u.username = :name OR u.firstname = :name OR u.lastname = :name OR u.twitter = :name')
-				->setParameter('name', $query)->getQuery()->getResult();
+			    ->where('u.username LIKE :name OR u.firstname LIKE :name OR u.lastname LIKE :name OR u.twitter LIKE :name')
+				->setParameter('name', "%".$query."%")->getQuery()->getResult();
 
 			$projectmanager = $this->get('projectmanager');
 			$files = json_decode($projectmanager->searchAction($query)->getContent(), true);
