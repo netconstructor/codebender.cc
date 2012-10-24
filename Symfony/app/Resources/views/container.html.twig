@@ -1,6 +1,7 @@
 {% extends '::base.html.twig' %}
-{% block body %}
 
+
+{% block javascripts_base %}
 <script>
 $(document).ready(function()
 {	
@@ -11,7 +12,10 @@ $(document).ready(function()
 	});
 });
 </script>
+{% endblock %}
+{% block javascripts %}{% endblock %}
 
+{% block stylesheets_base %}
 <style type="text/css" media="screen">
 .input-medium.search-query
 {
@@ -23,7 +27,22 @@ button.btn
 	width:100%;
 	margin-top: 5px;
 }
+
+hr.soften
+{
+margin-top: 0px;
+height: 1px;
+background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
+background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
+background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
+background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
+border: 0;
+}
 </style>
+{% endblock %}
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
 
 <div id="mycontainer" class="container">
 		<br />
@@ -56,13 +75,11 @@ button.btn
 	
 		  </div><!--/row-->
 		{% endblock %}
-		  <hr>
-
-		  <footer>
-			{% include '::footer.html.twig' %}
-		  </footer>
 		</div><!--/.fluid-container-->	
-</div>
+</div><!--/container-->
+<footer style="width:100%; position:fixed; bottom:0px; background:url('{{ asset("blizzard.png")}}')">
+	{% include '::footer.html.twig' %}
+</footer>
 
 
 {% endblock %}

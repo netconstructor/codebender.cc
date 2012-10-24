@@ -21,7 +21,7 @@ body
 #editor
 { 
 	position: absolute;
-	top:  50px;
+	top:  70px;
 /*	left: 280px;*/
 	bottom:10px;
 /*	height:1000px;*/
@@ -137,9 +137,11 @@ body
 		    <div class="tab-pane active" id="tab1">
 			<h2>{{project_name}}</h2><br />
 				<button id = "delete" class="btn span12 btn-danger" data-toggle="modal" href="#deletionModal" style="margin-bottom:10px; margin-left:0px;"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
-				<button id = "revert" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
-			    <button id = "save" class="btn span12 disabled" style="margin-bottom:10px; margin-left:0px;"><i id="save_icon" class="icon-download"></i> Save Changes</button>
-				<button id = "compile" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Verify</span></button>
+				<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
+					<button id = "revert" class="btn disabled"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
+				    <button id = "save" class="btn disabled"><i id="save_icon" class="icon-download"></i> Save</button>
+					<button id = "compile" class="btn"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Verify</span></button>
+				</div>
 				<select id="boards"  class="myoptions">
 				</select>
 				<a href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}" class="link_ino"><i class="icon-file"></i> Download .ino</a><br />
@@ -358,5 +360,4 @@ $(document).ready(function()
 </ul>
 
 {% endblock %}
-
 
