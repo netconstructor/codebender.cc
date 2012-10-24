@@ -471,10 +471,7 @@ function addCommands()
 		if($("#ports").val() != null && $("#ports").val() != "")
 		{
 
-		    //alert('called connect ');
 		    var port= portslist.options[portslist.selectedIndex].value;
-		    //alert("overrideConnect('"+portslist.selectedIndex+"','"+rateslist.selectedIndex+"')");
-
 		    applet.overrideConnect(portslist.selectedIndex);
 		}
 		else
