@@ -183,7 +183,7 @@ class DefaultController extends Controller
 	{
 		$results_name = json_decode($this->searchNameAction($token)->getContent(), true);
 		$results_desc = json_decode($this->searchDescriptionAction($token)->getContent(), true);
-		$results = array_merge($results_name, $results_desc);
+		$results = $results_name + $results_desc;
 		return new Response(json_encode($results));
 	}
 
