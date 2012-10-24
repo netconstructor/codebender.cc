@@ -40,8 +40,6 @@ function throwMud()
 		save();
 	})
 	disableLink($(".download_link"));
-	$("#netload").addClass("disabled").off('click');
-	$("#uploadusb").addClass("disabled").off('click');
 }
 function cleanUp()
 {
@@ -113,7 +111,7 @@ function generate_payload(format)
 	  files_array[count++] = {"filename":i, "content":$("<div/>").html(val).text()};
 	});
 
-	var payload = {"files":files_array, "format":format, "build":window.boardz[window.boards.selectedIndex]["build"]};
+	var payload = {"files":files_array, "format":format, "build":window.boardz[$("#boards").prop("selectedIndex")]["build"]};
 	return JSON.stringify(payload)
 }
 
@@ -269,25 +267,10 @@ function getMaxSize()
 	return max_size;
 }
 
-function getBaudrate()
-{
-	var baudrate;
-	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
-	{
-		baudrate = "115200";
-	}
-	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
-	{
-		baudrate = "57600";
-	}
-	return baudrate;
-}
-
 function uploadusb()
 {
 	if($("#ports").val() != null && $("#ports").val() != "")
 	{
-		var baudrate = getBaudrate();
 		var max_size = getMaxSize();
 		if(window.size > max_size)
 		{
@@ -308,8 +291,7 @@ function uploadusb()
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
 			setProgress(80);
-			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
-			// clearInterval(window.progressInterval);
+			var progress = applet.uploadUSB(portslist.selectedIndex, binary+'\0', window.boardz[boards.selectedIndex]["upload"]["maximum_size"]+'\0', window.boardz[boards.selectedIndex]["upload"]["protocol"]+'\0', window.boardz[boards.selectedIndex]["upload"]["speed"]+'\0', window.boardz[boards.selectedIndex]["build"]["mcu"]+'\0');
 			if(progress)
 				clearProgress("There was an error uploading. Error #" + progress);			
 			else
@@ -473,10 +455,7 @@ function addCommands()
 		if($("#ports").val() != null && $("#ports").val() != "")
 		{
 
-		    //alert('called connect ');
 		    var port= portslist.options[portslist.selectedIndex].value;
-		    //alert("overrideConnect('"+portslist.selectedIndex+"','"+rateslist.selectedIndex+"')");
-
 		    applet.overrideConnect(portslist.selectedIndex);
 		}
 		else
@@ -568,8 +547,8 @@ function isMobile(){
 
 function loadCode(filename)
 {
-	window.files[window.selectedFile] = editor.getSession().getValue();
-	editor.getSession().setValue(window.files[filename]);
+	window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
+	editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
 	window.selectedFile = filename;
 }
 

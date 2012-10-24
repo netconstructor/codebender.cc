@@ -172,7 +172,7 @@ body
 				    <div id="scanning">
 				        <select id="ports" class="myoptions"></select>
 						<button id="connect" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
-						<button id = "uploadusb" class="btn disabled span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
+						<button id = "uploadusb" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
 				        <!--<select id="baudrates" class="myoptions"></select>-->
 					</div>
 				</div>
@@ -310,6 +310,11 @@ $(document).ready(function()
 		verify();
 	});
 	
+	$("#uploadusb").click(function()
+	{
+		uploadusb();
+	});
+
 	$("#netload").click(function()
 	{
 		netload();
