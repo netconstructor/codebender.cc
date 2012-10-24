@@ -179,6 +179,48 @@ class DefaultController extends Controller
 		return new Response(json_encode($setBinary));
 	}
 
+	public function searchAction($token)
+	{
+		$results_name = json_decode($this->searchNameAction($token)->getContent(), true);
+		$results_desc = json_decode($this->searchDescriptionAction($token)->getContent(), true);
+		$results = array_merge($results_name, $results_desc);
+		return new Response(json_encode($results));
+	}
+
+	public function searchNameAction($token)
+	{
+		$em = $this->em;
+		$repository = $this->em->getRepository('AceProjectBundle:Project');
+		$qb = $em->createQueryBuilder();
+		$projects = $repository->createQueryBuilder('p')->where('p.name LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
+		$result = array();
+		foreach($projects as $project)
+		{
+			$owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
+			$owner = $owner["response"];
+			$proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
+			$result[] = array($project->getId() => $proj);
+		}
+		return new Response(json_encode($result));
+	}
+
+	public function searchDescriptionAction($token)
+	{
+		$em = $this->em;
+		$repository = $this->em->getRepository('AceProjectBundle:Project');
+		$qb = $em->createQueryBuilder();
+		$projects = $repository->createQueryBuilder('p')->where('p.description LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
+		$result = array();
+		foreach($projects as $project)
+		{
+			$owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
+			$owner = $owner["response"];
+			$proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
+			$result[] = array($project->getId() => $proj);
+		}
+		return new Response(json_encode($result));
+	}
+
 	public function getProjectById($id)
 	{
 		$em = $this->em;

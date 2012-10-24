@@ -53,3 +53,15 @@ AceProjectBundle_getBinary:
 AceProjectBundle_setBinary:
     pattern:  /setbinary/{id}/{flags}/{bin}
     defaults: { _controller: projectmanager:setBinaryAction }
+
+AceProjectBundle_search:
+    pattern: /search/project/{token}
+    defaults: { _controller: projectmanager:searchAction }
+
+AceProjectBundle_searchName:
+    pattern: /search/name/{token}
+    defaults: { _controller: projectmanager:searchNameAction }
+
+AceProjectBundle_searchDescription:
+    pattern: /search/description/{token}
+    defaults: { _controller: projectmanager:searchDescriptionAction }
