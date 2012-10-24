@@ -111,7 +111,7 @@ function generate_payload(format)
 	  files_array[count++] = {"filename":i, "content":$("<div/>").html(val).text()};
 	});
 
-	var payload = {"files":files_array, "format":format, "build":window.boardz[window.boards.selectedIndex]["build"]};
+	var payload = {"files":files_array, "format":format, "build":window.boardz[$("#boards").prop("selectedIndex")]["build"]};
 	return JSON.stringify(payload)
 }
 
