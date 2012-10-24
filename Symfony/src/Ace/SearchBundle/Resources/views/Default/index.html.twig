@@ -14,10 +14,12 @@
 	</thead>
 	<tbody>
 	{% for file in files %}
+		{% for id, info in file %}
 		<tr>
-		<td><a href="{{path('AceGenericBundle_project',{'project_name':file.name, 'username': owners[file.owner]})}}">{{file.name}}</a></td>
-		<td><a href="{{path('AceGenericBundle_user',{'user':owners[file.owner]})}}">{{owners[file.owner]}}</a></td>
+		<td><a href="{{path('AceGenericBundle_project',{'id': id})}}">{{info['name']}}</a></td>
+		<td><a href="{{path('AceGenericBundle_user',{'user': info['owner']['username']})}}">{{info['owner']['username']}}</a></td>
 		</tr>
+		{% endfor %}
 	{% endfor %}
 	</tbody>
 	</table>
