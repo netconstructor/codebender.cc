@@ -267,25 +267,10 @@ function getMaxSize()
 	return max_size;
 }
 
-function getBaudrate()
-{
-	var baudrate;
-	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
-	{
-		baudrate = "115200";
-	}
-	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
-	{
-		baudrate = "57600";
-	}
-	return baudrate;
-}
-
 function uploadusb()
 {
 	if($("#ports").val() != null && $("#ports").val() != "")
 	{
-		var baudrate = getBaudrate();
 		var max_size = getMaxSize();
 		if(window.size > max_size)
 		{
@@ -306,8 +291,7 @@ function uploadusb()
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
 			setProgress(80);
-			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
-			// clearInterval(window.progressInterval);
+			var progress = applet.uploadUSB(portslist.selectedIndex, binary+'\0', window.boardz[boards.selectedIndex]["upload"]["maximum_size"]+'\0', window.boardz[boards.selectedIndex]["upload"]["protocol"]+'\0', window.boardz[boards.selectedIndex]["upload"]["speed"]+'\0', window.boardz[boards.selectedIndex]["build"]["mcu"]+'\0');
 			if(progress)
 				clearProgress("There was an error uploading. Error #" + progress);			
 			else
