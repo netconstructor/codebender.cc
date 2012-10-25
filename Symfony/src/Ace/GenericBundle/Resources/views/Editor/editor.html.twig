@@ -21,7 +21,7 @@ body
 #editor
 { 
 	position: absolute;
-	top:  70px;
+	top:  60px;
 /*	left: 280px;*/
 	bottom:10px;
 /*	height:1000px;*/
@@ -121,6 +121,21 @@ body
   </div>
 </div>
 
+<div class="modal hide fade" id="creationModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>New File</h3>
+  </div>
+  <div class="modal-body span5">
+	<p>Enter the name of the new file you'd like to create.</p>
+	<input type="text" id="createfield" />
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn">Cancel</a>
+	<button id="createbutton" class="btn btn-primary" onclick="createFile();">Create File</button>
+  </div>
+</div>
+
 
 <div class="container">
 <div id="container" class="row-fluid">	
@@ -136,6 +151,33 @@ body
 		  </ul>
 		  <div class="tab-content" >
 		    <div class="tab-pane active" id="tab1">
+				<ul class="nav nav-pills">
+					<li class="dropdown">
+					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Delete File<b class="caret"></b></a>
+					    <ul class="dropdown-menu">
+						{% for file in files %}
+							<li>
+								<a href="javascript:void(0)" onclick="deleteFile('{{file['filename']}}')">Delete {{file['filename']}}</a>
+							</li>
+						{% endfor %}
+					      <!-- links -->
+					    </ul>
+					</li>
+					<li class="dropdown">
+					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Load File<b class="caret"></b></a>
+					    <ul class="dropdown-menu">
+							{% for file in files %}
+								<li>
+									<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a>
+								</li>
+							{% endfor %}
+					      <!-- links -->
+					    </ul>
+					</li>
+					<li>
+						<a data-toggle="modal" href="#creationModal"><i class="icon-plus-sign"></i> New File</a>
+					</li>
+				</ul>
 				<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
 					<button id = "delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal"><i id="delete_icon" class="icon-trash  icon-white"></i> Delete</span></button>
 					<button id = "revert" class="btn disabled"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
@@ -144,10 +186,6 @@ body
 				</div>
 				<select id="boards"  class="myoptions">
 				</select>
-				{% for file in files %}
-					<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a> | <a href="javascript:void(0)" onclick="deleteFile('{{file['filename']}}')">Delete</a><br />
-				{% endfor %}
-				<input type="text" id="createfield" /><button id="createbutton" class="btn" onclick="createFile();">Create File</button>
 				<hr>
 				<div id="desktop-tools-1" class="visible-desktop">
 				<div id="usb-sidebar-div">
