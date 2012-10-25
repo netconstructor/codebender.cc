@@ -1,13 +1,7 @@
 {% extends '::container.html.twig' %}
 
-{% block alert %}
-<div class="alert alert-info">
-	<h2 id="">Hello {{ name }}!<br /></h2>
-</div>
-{% endblock %}
-
-
 {% block mainspan %}
+	<h2>Hello {{ name }}!<br /></h2>
 	{% include 'AceGenericBundle:Index:features.html.twig' %}		
 {% endblock %}
 
