@@ -76,10 +76,11 @@ body
 {% block javascripts %}
 	<script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-	window.onload = function()
+	var dirty = false;
+	var editor;
+	$(document).ready(function()
 	{
-		window.editor = ace.edit("editor");
-		window.dirty = false;
+		editor = ace.edit("editor");
 	    editor.setTheme("ace/theme/textmate");
 	    editor.getSession().setMode("ace/mode/c_cpp");
 
@@ -93,11 +94,7 @@ body
 		addCommands();
 
 		window.enabledapplet=false;
-	};
 
-
-	$(document).ready(function()
-	{
 		window.files = {
 		{% for file in files %}
 		{#
