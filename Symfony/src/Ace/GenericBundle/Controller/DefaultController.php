@@ -253,5 +253,11 @@ class DefaultController extends Controller
 		return $this->render('AceGenericBundle:Default:libraries.html.twig', array('libraries' => $libraries));
 	}
 	
+	public function boardsAction()
+	{
+		$utilities = $this->get('utilities');
+		$boards = json_decode($utilities->get_boards(), true);
+		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
+	}
     
 }

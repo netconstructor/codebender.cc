@@ -19,3 +19,7 @@ AceGenericBundle_upload:
 AceGenericBundle_libraries:
     pattern: /libraries
     defaults: {_controller: AceGenericBundle:Default:libraries }
+
+AceGenericBundle_boards:
+    pattern: /boards
+    defaults: {_controller: AceGenericBundle:Default:boards }
