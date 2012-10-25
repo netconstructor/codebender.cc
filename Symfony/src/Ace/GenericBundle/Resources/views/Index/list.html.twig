@@ -1,14 +1,8 @@
 {% extends '::container.html.twig' %}
 
-{% block alert %}
-<div class="alert alert-info">
-	<h2 id="">Hello {{ name }}!<br /></h2>
-</div>
-{% endblock %}
-
-
 {% block mainspan %}
-	{% include 'AceGenericBundle:Default:hero.html.twig' %}		
+	<h2>Hello {{ name }}!<br /></h2>
+	{% include 'AceGenericBundle:Index:features.html.twig' %}		
 {% endblock %}
 
 {% block javascripts %}
