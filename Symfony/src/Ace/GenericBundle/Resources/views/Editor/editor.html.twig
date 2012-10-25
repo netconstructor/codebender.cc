@@ -189,9 +189,8 @@ body
 				<hr>
 				<div id="desktop-tools-1" class="visible-desktop">
 				<div id="usb-sidebar-div">
-					<h4>USB Upload</h4>					
+					<h4>Flashing</h4>
 					<div id="prescanning">
-						<p><small>If you'd like to upload your code to your USB-connected Arduino, please run our Java applet.</small></p>
 						<div id="missingjava">
 							<p>It seems like you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
 						</div>
@@ -215,13 +214,12 @@ body
 					</div>
 				</div>
 				</div>
-				<h4>Remote Upload <small>Got an Arduino with Ariadne? Flash it remotely over the cloud or your network</small></h4>
 				<input type="text" id='ip' style="width:96%;" value="Address (IP or Domain)" onclick="cleanupIPhelp();" onkeyup="cleanupIPhelp();">
 				<div id="netupload-alternative" class="hide"> 
 					<div class="btn-group">
 					  <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" style="margin-bottom:10px; margin-left:0px;"> Remote Upload <span id="netload-ip"></span> <span class="caret"></span> </a>
 					  <ul class="dropdown-menu">
-						<li><a href="#" onclick="cloudload();return false;"><i class="icon-globe"></i> Cloud Upload</a></li>
+						<li><a href="#" onclick="cloudload();return false;"><i class="icon-globe"></i> Cloud Flashing</a></li>
 						<li id="removeme"><a href="#" onclick="netload();return false;"><i class="icon-upload"></i> NET Upload</a></li>
 					  </ul>
 					</div>
