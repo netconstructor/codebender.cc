@@ -130,7 +130,7 @@ function verify()
 			$("#compile").addClass("btn-success");
 			$("#compile_icon").addClass("icon-ok");
 
-			var progressText = "<p>Compile Successful.<br /> Code Size: " + obj.size + " bytes<br /><small>(out of <strong>"+ getMaxSize()+"</strong> available.)</small></p>";
+			var progressText = "<p>Compile Successful!</p>";
 			clearProgress(progressText)
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
