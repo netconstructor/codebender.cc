@@ -233,13 +233,16 @@ body
 		  <div class="tab-content" >
 		    <div class="tab-pane active" id="tab1">
 				<ul class="nav nav-pills">
+					{% if files|length > 1 %}
 					<li class="dropdown">
 					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Delete File<b class="caret"></b></a>
 					    <ul class="dropdown-menu">
 						{% for file in files %}
+							{% if file['filename'] != project_name ~ ".ino" %}
 							<li>
 								<a href="javascript:void(0)" onclick="deleteFile('{{file['filename']}}')">Delete {{file['filename']}}</a>
 							</li>
+							{% endif %}
 						{% endfor %}
 					      <!-- links -->
 					    </ul>
@@ -255,6 +258,7 @@ body
 					      <!-- links -->
 					    </ul>
 					</li>
+					{% endif %}
 					<li>
 						<a data-toggle="modal" href="#creationModal"><i class="icon-plus-sign"></i> New File</a>
 					</li>
