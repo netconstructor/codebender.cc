@@ -35,6 +35,32 @@
 		<link rel="stylesheet" href='{{ asset("upload/css/jquery.fileupload-ui.css")}}'>
 		<!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
 		<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->	
+		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script> -->
+		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+		<script src='{{ asset("upload/js/vendor/jquery.ui.widget.js")}}'></script>
+		<!-- The Templates plugin is included to render the upload/download listings -->
+		<script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
+		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+		<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+		<script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
+		<!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
+		<!-- <script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script> -->
+		<script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script>
+		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+		<script src='{{ asset("upload/js/jquery.iframe-transport.js")}}'></script>
+		<!-- The basic File Upload plugin -->
+		<script src='{{ asset("upload/js/jquery.fileupload.js")}}'></script>
+		<!-- The File Upload file processing plugin -->
+		<script src='{{ asset("upload/js/jquery.fileupload-fp.js")}}'></script>
+		<!-- The File Upload user interface plugin -->
+		<script src='{{ asset("upload/js/jquery.fileupload-ui.js")}}'></script>
+		<!-- The localization script -->
+		<script src='{{ asset("upload/js/locale.js")}}'></script>
+		<!-- The main application script -->
+		<script src='{{ asset("upload/js/main.js")}}'></script>
+		<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
+		<!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
 		#}
 
 		<style type="text/css">
@@ -163,30 +189,6 @@
 		  </div>
 		</div>		
         {% block body %}{% endblock %}
-		<!-- Le javascript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		
-		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
-
-
-		<!-- begin uservoice code -->
-		<script type="text/javascript">
-		  var uvOptions = {};
-		  (function() {
-		    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
-		    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/F9K3sHlqWGCRaHScnjWJ9g.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
-		  })();
-		</script>
-		
-		
-		
-		
-		<!-- begin olark code --><script data-cfasync="false" type='text/javascript'>/*{literal}<![CDATA[*/
-		window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,' onl' + 'oad="var d=',g,";d.getElementsByTagName('head')[0].",j,"(d.",h,"('script')).",k,"='",l,"//",a.l,"'",'"',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain='"+d.domain+"';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+'d.write("'+p().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});
-		/* custom configuration goes here (www.olark.com/documentation) */
-		olark.identify('7078-297-10-7791');/*]]>{/literal}*/</script><noscript><a href="https://www.olark.com/site/7078-297-10-7791/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript><!-- end olark code -->
 	
 	<div class="modal hide fade" id="upModal">
   <div class="modal-header">
@@ -237,6 +239,29 @@
     </form>
   </div> 
 </div> 	  
+</body>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+
+
+<!-- begin uservoice code -->
+<script type="text/javascript">
+  var uvOptions = {};
+  (function() {
+    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/F9K3sHlqWGCRaHScnjWJ9g.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+  })();
+</script>
+
+<!-- begin olark code --><script data-cfasync="false" type='text/javascript'>/*{literal}<![CDATA[*/
+window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,' onl' + 'oad="var d=',g,";d.getElementsByTagName('head')[0].",j,"(d.",h,"('script')).",k,"='",l,"//",a.l,"'",'"',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain='"+d.domain+"';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+'d.write("'+p().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});
+/* custom configuration goes here (www.olark.com/documentation) */
+olark.identify('7078-297-10-7791');/*]]>{/literal}*/</script><noscript><a href="https://www.olark.com/site/7078-297-10-7791/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript><!-- end olark code -->
 
 
 {% raw %}
@@ -324,39 +349,6 @@
 });
 
 $('#upBody').css({'width':'570px'});})();
-
-		</script>  
-
-
-
-<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script> -->
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src='{{ asset("upload/js/vendor/jquery.ui.widget.js")}}'></script> 
-<!-- The Templates plugin is included to render the upload/download listings -->
-<script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script>
-<!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
-<!-- <script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script> -->
-<script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script>
-<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src='{{ asset("upload/js/jquery.iframe-transport.js")}}'></script>
-<!-- The basic File Upload plugin -->
-<script src='{{ asset("upload/js/jquery.fileupload.js")}}'></script>
-<!-- The File Upload file processing plugin -->
-<script src='{{ asset("upload/js/jquery.fileupload-fp.js")}}'></script>
-<!-- The File Upload user interface plugin -->
-<script src='{{ asset("upload/js/jquery.fileupload-ui.js")}}'></script>
-<!-- The localization script -->
-<script src='{{ asset("upload/js/locale.js")}}'></script>
-<!-- The main application script -->
-<script src='{{ asset("upload/js/main.js")}}'></script>
-<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
-<!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
-
-
-</body>
+</script>
 
 </html>
