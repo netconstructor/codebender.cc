@@ -115,7 +115,7 @@ function verify()
 			$("#compile_icon").addClass("icon-remove");
 			$("#compile_output").html(obj.message);
 			$("#compile_output").css("visibility", "visible");
-			clearProgress("Compilation failed.")
+			clearProgress("Verification failed.")
 		}
 		else
 		{
@@ -130,7 +130,7 @@ function verify()
 			$("#compile").addClass("btn-success");
 			$("#compile_icon").addClass("icon-ok");
 
-			var progressText = "<p>Compile Successful!</p>";
+			var progressText = "<p>Verification Successful!</p>";
 			clearProgress(progressText)
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
