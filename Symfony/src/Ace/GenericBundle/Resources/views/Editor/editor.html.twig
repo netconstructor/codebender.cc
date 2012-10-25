@@ -75,6 +75,90 @@ body
 
 {% block javascripts %}
 	<script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	window.onload = function()
+	{
+		window.editor = ace.edit("editor");
+		window.dirty = false;
+	    editor.setTheme("ace/theme/textmate");
+	    editor.getSession().setMode("ace/mode/c_cpp");
+
+		editor.getSession().setUseSoftTabs(false);
+		editor.getSession().on('change', function()
+		{
+			throwMud();
+			$("#line_count").html(editor.getSession().getValue().split("\n").length);
+		});
+
+		addCommands();
+
+		window.enabledapplet=false;
+	};
+
+
+	$(document).ready(function()
+	{
+		window.files = {
+		{% for file in files %}
+		{#
+			newfile = new Array();
+			newfile["filename"] = "{{file['filename']}}"
+			newfile["code"] = "{{file['code']}}";
+			window.files[{{key}}] = newfile;
+		#}
+		    "{{file['filename']}}": "{{file['code'] | e('js')}}",
+		{% endfor %}
+		};
+		{% if files[0] is defined %}
+			window.selectedFile = "{{files[0]['filename']}}";
+		{% endif %}
+
+		window.boardz = {{boards|raw}};
+		window.binary = null;
+		mySelect = $("#boards");
+		for (var i=0;i<window.boardz.length;i++)
+			mySelect.append($('<option></option>').val(window.boardz[i]["name"]).html(window.boardz[i]["name"]));
+
+		$("#progress").hide();
+		$("#scanning").hide();
+		$("#net-tools").hide();
+
+		$("#line_count").html(editor.getSession().getValue().split("\n").length);
+		disableLink($(".link_hex"));
+
+		$("#connect").click(function()
+		{
+			connect();
+		});
+
+		$("#compile").click(function()
+		{
+			verify();
+		});
+
+		$("#uploadusb").click(function()
+		{
+			uploadusb();
+		});
+
+		$("#netload").click(function()
+		{
+			netload();
+		});
+
+		{% if user_enable_usb is defined %}
+			enableUSB();
+		{% endif %}
+		{% if user_enable_net is defined %}
+			enableNET();
+		{% endif %}
+
+		if (isMobile()){
+			$("#desktop-tools-1").hide();
+			$("#desktop-tools-2").hide();
+		}
+	});
+	</script>
 	{% include 'AceGenericBundle:Editor:editor_scripts.html.twig' %}
 {% endblock %}
 
@@ -279,94 +363,6 @@ body
 </div>
 </div>
 </div>
-
-
-<script>
-var editor = ace.edit("editor");
-var dirty = false;
-	
-window.onload = function()
-{
-    editor.setTheme("ace/theme/textmate");
-    editor.getSession().setMode("ace/mode/c_cpp");
-
-	editor.getSession().setUseSoftTabs(false);
-	editor.getSession().on('change', function()
-	{
-		throwMud();
-		$("#line_count").html(editor.getSession().getValue().split("\n").length);
-	});
-	
-	addCommands();
-
-	window.enabledapplet=false;
-};
-
-
-$(document).ready(function()
-{	
-	window.files = {
-	{% for file in files %}
-	{#
-		newfile = new Array();
-		newfile["filename"] = "{{file['filename']}}"
-		newfile["code"] = "{{file['code']}}";
-		window.files[{{key}}] = newfile;
-	#}
-	    "{{file['filename']}}": "{{file['code'] | e('js')}}",
-	{% endfor %}
-	};
-	{% if files[0] is defined %}
-		window.selectedFile = "{{files[0]['filename']}}";
-	{% endif %}
-
-	window.boardz = {{boards|raw}};
-	window.binary = null;
-	mySelect = $("#boards");
-	for (var i=0;i<window.boardz.length;i++)
-		mySelect.append($('<option></option>').val(window.boardz[i]["name"]).html(window.boardz[i]["name"]));
-
-	$("#progress").hide();
-	$("#scanning").hide();
-	$("#net-tools").hide();
-
-	$("#line_count").html(editor.getSession().getValue().split("\n").length);
-	disableLink($(".link_hex"));
-	
-	$("#connect").click(function()
-	{
-		connect();
-	});
-
-	$("#compile").click(function() 
-	{
-		verify();
-	});
-	
-	$("#uploadusb").click(function()
-	{
-		uploadusb();
-	});
-
-	$("#netload").click(function()
-	{
-		netload();
-	});
-	
-	{% if user_enable_usb is defined %}
-		enableUSB();	
-	{% endif %}	
-	{% if user_enable_net is defined %}
-		enableNET();
-	{% endif %}	
-	
-	if (isMobile()){
-		$("#desktop-tools-1").hide();
-		$("#desktop-tools-2").hide();
-	}
-});
-</script>
-
 
 {% endblock %}
 
