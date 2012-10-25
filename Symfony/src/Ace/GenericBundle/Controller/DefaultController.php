@@ -14,38 +14,23 @@ class DefaultController extends Controller
 	
 	public function indexAction()
 	{
-		// if($name == "tzikis")
-		//	return $this->redirect($this->generateUrl('AceGenericBundle_list', array('name' => $name)));
-		//
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			// Load user content here
-			return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+			if (!$user)
+			{
+				throw $this->createNotFoundException('No user found with id '.$name);
+			}
+			$fullname= $user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().") ";
+
+			return $this->render('AceGenericBundle:Index:list.html.twig', array('name' =>$fullname));
 		}
 
-		return $this->render('AceGenericBundle:Default:index.html.twig');
+		return $this->render('AceGenericBundle:Index:index.html.twig');
 	}
-
-	public function listAction()
-	{
-		if (!$this->get('security.context')->isGranted('ROLE_USER'))
-		{
-			// Load user content here
-			return $this->redirect($this->generateUrl('AceGenericBundle_homepage'));
-		}
-
-
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-
-		if (!$user)
-		{
-			throw $this->createNotFoundException('No user found with id '.$name);
-		}
-		$fullname= $user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().") ";
-
-		return $this->render('AceGenericBundle:Default:list.html.twig', array('name' =>$fullname));
-	}	
 	
 	public function userAction($user)
 	{
@@ -168,7 +153,7 @@ class DefaultController extends Controller
 			
 			if($project_name == '')
 			{
-				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 			}
 
 			// THIS NEEDS TO BE UPDATED!!! It was using getMyProject, which uses FileBundle
@@ -224,7 +209,7 @@ class DefaultController extends Controller
 			}
 			else if($error == 0)
 			{
-				return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+				return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 			}
 			else if($error == 1)
 			{

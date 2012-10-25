@@ -26,7 +26,7 @@ class DefaultController extends Controller
 
 		if($project_name == '')
 		{
-			return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+			return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 		}
 
 		$projectmanager = $this->get('projectmanager');
@@ -44,7 +44,7 @@ class DefaultController extends Controller
 			}
 		}
 
-		return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
 	public function deleteprojectAction($id)
@@ -63,7 +63,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('projectmanager');
 		$response = $projectmanager->deleteAction($id)->getContent();
 		$response=json_decode($response, true);
-		return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
 	public function getDescriptionAction($id)

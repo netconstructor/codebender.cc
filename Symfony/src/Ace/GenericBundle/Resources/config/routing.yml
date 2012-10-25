@@ -1,10 +1,6 @@
-AceGenericBundle_homepage:
+AceGenericBundle_index:
     pattern:  /
     defaults: { _controller: AceGenericBundle:Default:index }
-
-AceGenericBundle_list:
-    pattern:  /list
-    defaults: { _controller: AceGenericBundle:Default:list }
 
 AceGenericBundle_user:
     pattern:  /user/{user}
