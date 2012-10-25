@@ -88,7 +88,6 @@ body
 		editor.getSession().setUseSoftTabs(false);
 		editor.getSession().on('change', function()
 		{
-			throwMud();
 			$("#line_count").html(editor.getSession().getValue().split("\n").length);
 		});
 
@@ -262,8 +261,8 @@ body
 				</ul>
 				<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
 					<button id = "delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal"><i id="delete_icon" class="icon-trash  icon-white"></i>{# Delete#}</button>
-					<button id = "revert" class="btn disabled"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
-				    <button id = "save" class="btn disabled"><i id="save_icon" class="icon-download"></i> Save</button>
+					<button id = "revert" class="btn" onclick="revert();"><i id="revert_icon" class="icon-arrow-left"></i> Revert</span></button>
+				    <button id = "save" class="btn" onclick="save();"><i id="save_icon" class="icon-download"></i> Save</button>
 					<button id = "compile" class="btn"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Verify</span></button>
 				</div>
 				<select id="boards"  class="myoptions">

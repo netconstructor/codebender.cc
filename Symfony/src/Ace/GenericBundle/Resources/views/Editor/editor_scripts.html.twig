@@ -29,25 +29,6 @@ function saveDescription()
 	});
 }
 
-function throwMud()
-{
-	$("#revert").removeClass("disabled").off('click').click(function()
-	{
-	    revert();
-	});
-	$("#save").removeClass("disabled").off('click').click(function()
-	{
-		save();
-	})
-	disableLink($(".download_link"));
-}
-function cleanUp()
-{
-	enableLink($(".link_ino"));
-	$("#revert").addClass("disabled").off('click');
-	$("#save").addClass("disabled").off('click');
-}
-
 function setProgress(newprogress)
 {
 	$("#progress").show('fast');
@@ -87,7 +68,6 @@ function save()
 		$("#save").addClass("btn-success");
 		$("#save_icon").addClass("icon-white");
 		clearProgress("Saved successfuly.");
-		cleanUp();
 		window.setTimeout(function () {
 		    $("#save").removeClass("btn-success");
 			$("#save_icon").removeClass("icon-white");
@@ -194,7 +174,6 @@ function cloudload()
 	{
 		$("#uploadusb").addClass("btn-success");
 		$("#upload_icon").addClass("icon-white");
-		// cleanUp();
 		window.setTimeout(function () {
 		    $("#uploadusb").removeClass("btn-success");
 			$("#upload_icon").removeClass("icon-white");
@@ -287,7 +266,6 @@ function uploadusb()
 		{
 			$("#uploadusb").addClass("btn-success");
 			$("#upload_icon").addClass("icon-white");
-			// cleanUp();
 			window.setTimeout(function () {
 			    $("#uploadusb").removeClass("btn-success");
 				$("#upload_icon").removeClass("icon-white");
