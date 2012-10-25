@@ -1,19 +1,4 @@
-{% extends '::base.html.twig' %}
-
-
-{% block javascripts_base %}
-<script>
-$(document).ready(function()
-{	
-	$(".new-repo").click(function() 
-	{
-		$('[name=project_name]').val($("#your-repos-filter").val());
-		$("#create").submit();
-	});
-});
-</script>
-{% endblock %}
-{% block javascripts %}{% endblock %}
+{% extends '::template.html.twig' %}
 
 {% block stylesheets_base %}
 <style type="text/css" media="screen">
@@ -27,59 +12,42 @@ button.btn
 	width:100%;
 	margin-top: 5px;
 }
-
-hr.soften
-{
-margin-top: 0px;
-height: 1px;
-background-image: -webkit-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
-background-image: -moz-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
-background-image: -ms-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
-background-image: -o-linear-gradient(left, transparent, rgba(0, 0, 0, .1), transparent);
-border: 0;
-}
 </style>
+{{ parent() }}
 {% endblock %}
-{% block stylesheets %}{% endblock %}
 
-{% block body %}
+{% block content %}
+	<div id="mycontainer" class="container">
+			<br />
 
-<div id="mycontainer" class="container">
-		<br />
+			{% if app.session.hasFlash('notice') %}
+			    <div class="alert alert-success flash-notice">
+			        <h2>{{ app.session.flash('notice') }}</h2>
+			    </div>
+			{% endif %}
 
-		{% if app.session.hasFlash('notice') %}
-		    <div class="alert alert-success flash-notice">
-		        <h2>{{ app.session.flash('notice') }}</h2>
-		    </div>
-		{% endif %}
-
-		<div class="container-fluid">
-		{% block fluidcontainer %}
-			<div class="row-fluid">
-				{% if is_granted('ROLE_USER') %}		      
-				{% block sidebar %}
-				<div class="span3">
-				    {% render "AceUtilitiesBundle:Default:sidebar" %}    
-				</div>    	
-				{% endblock %}
-				<div class="span9">
-				{% else %}
-				<div class="span12">
-				{% endif %}
-				{% block alert %}
-				{% endblock %}
-				{% block mainspan %}
+			<div class="container-fluid">
+			{% block fluidcontainer %}
+				<div class="row-fluid">
+					{% if is_granted('ROLE_USER') %}		      
+					{% block sidebar %}
+					<div class="span3">
+					    {% render "AceUtilitiesBundle:Default:sidebar" %}    
+					</div>    	
+					{% endblock %}
+					<div class="span9">
+					{% else %}
+					<div class="span12">
+					{% endif %}
+					{% block alert %}
+					{% endblock %}
+					{% block mainspan %}
 		
-				{% endblock %}
-			    </div><!--/span-->
+					{% endblock %}
+				    </div><!--/span-->
 	
-		  </div><!--/row-->
-		{% endblock %}
-		</div><!--/.fluid-container-->	
-</div><!--/container-->
-<footer style="width:100%; position:fixed; bottom:0px; background:#121212;">
-	{% include '::footer.html.twig' %}
-</footer>
-
-
+			  </div><!--/row-->
+			{% endblock %}
+			</div><!--/.fluid-container-->	
+	</div><!--/container-->
 {% endblock %}
