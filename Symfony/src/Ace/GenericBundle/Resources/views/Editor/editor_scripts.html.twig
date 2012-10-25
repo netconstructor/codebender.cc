@@ -126,14 +126,15 @@ function verify()
 		if(obj.success == 0)
 		{
 			$("#compile_output").css('color', 'black');
-			$("#editor").css("bottom","150px");
-			$("#compile_output").css("bottom","0px");
+			$("#editor").css("bottom","170px");
+			$("#compile_output").css("bottom","30px");
 			$("#compile_output").css("padding-top","10px");
 			$("#compile_output").css("height","120px");
 			$("#compile_output").addClass("well");
 			$("#compile").addClass("btn-warning");
 			$("#compile_icon").addClass("icon-remove");
 			$("#compile_output").html(obj.message);
+			$("#compile_output").css("visibility", "visible");
 			clearProgress("Compilation failed.")
 		}
 		else
@@ -144,6 +145,7 @@ function verify()
 			$("#compile_output").css("bottom","");
 			$("#compile_output").css("height","");
 			$("#compile_output").css("padding-top","");
+			$("#compile_output").css("visibility", "");
 			$("#compile_output").removeClass("well");
 			$("#compile").addClass("btn-success");
 			$("#compile_icon").addClass("icon-ok");
