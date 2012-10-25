@@ -198,54 +198,6 @@ class DefaultController extends Controller
         ));
 	}
 	
-	public function preregAction(Request $request)
-	{	    
-        // create a task and give it some dummy data for this example
-        $task = new Prereg();
-		if ($this->get('security.context')->isGranted('ROLE_USER') === true)
-		{
-			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-	        $task->setName($user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().")");
-	        $task->setEmail($user->getEmail());
-		}
-
-        $form = $this->createFormBuilder($task)
-            ->add('name', 'text')
-            ->add('username', 'text')
-            ->add('email', 'email')
-            ->add('site', 'text')
-            ->add('description', 'textarea')
-            ->add('reason', 'textarea')
-            ->getForm();
-
-		if ($request->getMethod() == 'POST') 
-		{
-			$form->bindRequest($request);
-
-			if ($form->isValid())
-			{
-				$email_addr = $this->container->getParameter('email.addr');
-				
-				// perform some action, such as saving the task to the database
-			    $message = \Swift_Message::newInstance()
-			        ->setSubject('[codebender][preregistration] Preregistration Request')
-			        ->setFrom($task->getEmail())
-			        ->setTo($email_addr)
-			        ->setBody($this->renderView('AceStaticBundle:Default:prereg_email_form.txt.twig', array('task' => $task)))
-			    ;
-			    $this->get('mailer')->send($message);
-				$this->get('session')->setFlash('notice', 'Your registration request was sent!');
-
-				return $this->redirect($this->generateUrl('AceStaticBundle_prereg'));
-			}
-		}
-
-        return $this->render('AceStaticBundle:Default:prereg.html.twig', array(
-            'form' => $form->createView(),
-        ));
-	}
-	
 	public function notifyAction()
 	{
 		$msg = $this->getRequest()->query->get('message');
