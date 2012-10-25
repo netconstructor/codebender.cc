@@ -8,7 +8,7 @@
 		<style type="text/css">
 		body
 		{
-		padding-top: 60px;
+		padding-top: 40px;
 		padding-bottom: 50px;
 		background: url({{ asset("blizzard.png")}});
 		}
@@ -129,14 +129,7 @@
     <body {% block body_options %}{% endblock %}>
 		<div class="navbar navbar-fixed-top">
 		  <div class="navbar-inner">
-		    <div class="container">
-		      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		      </a>
-		      <a class="brand" href="{{ path('AceGenericBundle_homepage')}}">{{ site_name }} (beta)</a>
-		      <div class="nav-collapse">
+		      <a class="brand" style="margin-left: 3px;" href="{{ path('AceGenericBundle_homepage')}}">{{ site_name }} (beta)</a>
 		        <ul class="nav">		
 					<li><form class="navbar-search pull-left" action="{{ path('AceSearchBundle_search')}}" method="get">
 							<input type="text" name="query" class="search-query" placeholder="Search">
@@ -145,7 +138,7 @@
 		        </ul>
 				{% block examples %}
 				{% endblock %}
-				
+
 				{% if not is_granted('ROLE_USER') %}
 		        <ul class="nav pull-right">
 				
@@ -167,8 +160,6 @@
 					Logged in as <a href="{{path('AceGenericBundle_user',{'user':app.user.username})}}">{{ app.user.username }}</a>
 				</p>
 				{% endif %}
-		      </div><!--/.nav-collapse -->
-		    </div>
 		  </div>
 		</div>		
         {% block body %}{% endblock %}
