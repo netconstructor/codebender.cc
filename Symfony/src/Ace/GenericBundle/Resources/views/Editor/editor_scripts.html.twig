@@ -391,6 +391,18 @@ function addCommands()
 	    }
 	});
 	
+	editor.commands.addCommand({
+	    name: 'autoFormat',
+	    bindKey: {
+	        win: 'Ctrl-Alt-[',
+	        mac: 'Command-Alt-[',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request)
+		{
+			autoFormat();
+	    }
+	});
 	
 }
 </script>
@@ -552,6 +564,11 @@ function deleteFile(filename)
 		clearProgress("File Deleted successfuly.");
 		location.reload();
 	});
+}
+
+function autoFormat()
+{
+    editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size': 1, 'indent_char':'\t', 'brace_style':'expand'}))
 }
 
 </script>
