@@ -147,21 +147,13 @@ function verify()
 }
 
 
-function getbin()
+function getbin(callback)
 {
-	setProgress(90);
 	var payload = generate_payload("binary");
 	$.post("{{compiler}}", payload, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
-		if(obj.success == 0)
-		{
-			window.binary = null;
-		}
-		else
-		{
-			window.binary = obj["output"];
-		}
+		callback(obj);
 	});
 }
 
@@ -169,68 +161,72 @@ function getbin()
 function cloudload()
 {
 	setProgress(30);
-	getbin();
-	if(binary != null)
+	getbin(function(obj)
 	{
-		$("#uploadusb").addClass("btn-success");
-		$("#upload_icon").addClass("icon-white");
-		window.setTimeout(function () {
-		    $("#uploadusb").removeClass("btn-success");
-			$("#upload_icon").removeClass("icon-white");
-		}, 500);
-
-
-		setProgress(70);
-		var payload = {"ip": $("#ip").val(), "bin":binary}
-		$.post("{{ path('AceSenderBundle_tftp') }}", {"data": JSON.stringify(payload)}, function(data)
+		if(obj.success == 0)
 		{
-			var obj = jQuery.parseJSON(data);
-			if(obj.success == 0)
-			{
-				$("#compile_output").css('color', 'black');
-				for (var i=0; i<obj.lines.length; i++)
-				{
-					$(".ace_gutter-cell").filter(function(index) {
-					  return $(this).html() == obj.lines[i];
-					}).css("text-decoration","underline").css("color","red");
-				}
-
-				$("#editor").css("bottom","150px");
-				$("#compile_output").css("bottom","0px");
-				$("#compile_output").css("padding-top","10px");
-				$("#compile_output").css("height","120px");
-				$("#compile_output").addClass("well");
-				$("#compile_output").html(obj.text);
-				clearProgress("Upload failed.")
-			}
-			else
-			{
-				$("#compile_output").css('color', '');
-				$(".ace_gutter-cell").css("text-decoration", "").css("color","");
-				$("#editor").css("bottom","");
-				$("#compile_output").css("bottom","");
-				$("#compile_output").css("height","");
-				$("#compile_output").css("padding-top","");
-				$("#compile_output").removeClass("well");
-
-				var progressText = "<p>" + obj.text + "</p>";
-				clearProgress(progressText)
-				window.sketch_size = obj.size;
-				$("#compile_output").html("");
-			}
-		});
-	}
-	else
-	{
-		clearProgress("There was an error compiling.");
-	}
-
-	if (!window.enabledapplet){
-	setTimeout(function(){
-				getIds();
+			clearProgress("There was an error compiling.");
+		}
+		else
+		{
+			binary = obj["output"];
+			$("#uploadusb").addClass("btn-success");
+			$("#upload_icon").addClass("icon-white");
+			window.setTimeout(function () {
+			    $("#uploadusb").removeClass("btn-success");
+				$("#upload_icon").removeClass("icon-white");
 			}, 500);
-	window.enabledapplet=true;
-	}
+
+
+			setProgress(70);
+			var payload = {"ip": $("#ip").val(), "bin":binary}
+			$.post("{{ path('AceSenderBundle_tftp') }}", {"data": JSON.stringify(payload)}, function(data)
+			{
+				var obj = jQuery.parseJSON(data);
+				if(obj.success == 0)
+				{
+					$("#compile_output").css('color', 'black');
+					for (var i=0; i<obj.lines.length; i++)
+					{
+						$(".ace_gutter-cell").filter(function(index) {
+						  return $(this).html() == obj.lines[i];
+						}).css("text-decoration","underline").css("color","red");
+					}
+
+					$("#editor").css("bottom","150px");
+					$("#compile_output").css("bottom","0px");
+					$("#compile_output").css("padding-top","10px");
+					$("#compile_output").css("height","120px");
+					$("#compile_output").addClass("well");
+					$("#compile_output").html(obj.text);
+					clearProgress("Upload failed.")
+				}
+				else
+				{
+					$("#compile_output").css('color', '');
+					$(".ace_gutter-cell").css("text-decoration", "").css("color","");
+					$("#editor").css("bottom","");
+					$("#compile_output").css("bottom","");
+					$("#compile_output").css("height","");
+					$("#compile_output").css("padding-top","");
+					$("#compile_output").removeClass("well");
+
+					var progressText = "<p>" + obj.text + "</p>";
+					clearProgress(progressText)
+					window.sketch_size = obj.size;
+					$("#compile_output").html("");
+				}
+			});
+		}
+
+		if (!window.enabledapplet){
+		setTimeout(function(){
+					getIds();
+				}, 500);
+		window.enabledapplet=true;
+		}
+
+	});
 }
 
 
@@ -261,26 +257,29 @@ function uploadusb()
 
 		setProgress(50);
 
-		getbin();
-		if(binary != null)
+		getbin(function(obj)
 		{
-			$("#uploadusb").addClass("btn-success");
-			$("#upload_icon").addClass("icon-white");
-			window.setTimeout(function () {
-			    $("#uploadusb").removeClass("btn-success");
-				$("#upload_icon").removeClass("icon-white");
-			}, 500);
-			setProgress(80);
-			var progress = applet.uploadUSB(portslist.selectedIndex, binary+'\0', window.boardz[boards.selectedIndex]["upload"]["maximum_size"]+'\0', window.boardz[boards.selectedIndex]["upload"]["protocol"]+'\0', window.boardz[boards.selectedIndex]["upload"]["speed"]+'\0', window.boardz[boards.selectedIndex]["build"]["mcu"]+'\0');
-			if(progress)
-				clearProgress("There was an error uploading. Error #" + progress);			
-			else
-				clearProgress("Upload successful.");
-		}
-		else
-		{
-			clearProgress("There was an error compiling.");
-		}
+				if(obj.success == 0)
+				{
+					clearProgress("There was an error compiling.");
+				}
+				else
+				{
+					binary = obj["output"];
+					$("#uploadusb").addClass("btn-success");
+					$("#upload_icon").addClass("icon-white");
+					window.setTimeout(function () {
+					    $("#uploadusb").removeClass("btn-success");
+						$("#upload_icon").removeClass("icon-white");
+					}, 500);
+					setProgress(80);
+					var progress = applet.uploadUSB(portslist.selectedIndex, binary+'\0', window.boardz[boards.selectedIndex]["upload"]["maximum_size"]+'\0', window.boardz[boards.selectedIndex]["upload"]["protocol"]+'\0', window.boardz[boards.selectedIndex]["upload"]["speed"]+'\0', window.boardz[boards.selectedIndex]["build"]["mcu"]+'\0');
+					if(progress)
+						clearProgress("There was an error uploading. Error #" + progress);
+					else
+						clearProgress("Upload successful.");
+				}
+		});
 	}
 	else
 	{
