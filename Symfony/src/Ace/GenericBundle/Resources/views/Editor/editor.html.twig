@@ -76,6 +76,7 @@ body
 
 {% block javascripts %}
 	<script src="{{asset("beautify.js")}}" type="text/javascript"></script>
+	<script src="{{asset("lawnchair-0.6.1.min.js")}}" type="text/javascript"></script>
 	<script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 	var dirty = false;
@@ -155,6 +156,8 @@ body
 			$("#desktop-tools-1").hide();
 			$("#desktop-tools-2").hide();
 		}
+
+		loadSettings();
 	});
 	</script>
 	{% include 'AceGenericBundle:Editor:editor_scripts.html.twig' %}
@@ -269,7 +272,7 @@ body
 				    <button id = "save" class="btn" onclick="save();"><i id="save_icon" class="icon-download"></i> Save</button>
 					<button id = "compile" class="btn"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Verify</span></button>
 				</div>
-				<select id="boards"  class="myoptions">
+				<select id="boards"  class="myoptions" onChange="saveBoard()">
 				</select>
 				<hr>
 				<div id="desktop-tools-1" class="visible-desktop">
@@ -292,7 +295,7 @@ body
 						</script>
 					</div>
 				    <div id="scanning">
-				        <select id="ports" class="myoptions"></select>
+				        <select id="ports" class="myoptions" onChange="savePort()"></select>
 						<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
 							<button id="connect" class="btn"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
 							<button id = "uploadusb" class="btn"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>

@@ -498,6 +498,9 @@ function checkRunningApplet(){
 			setTimeout(function(){
 				getIds();
 			}, 200);
+			setTimeout(function(){
+				loadSettings();
+			}, 500);
 	}
 	else{
 		setTimeout(function(){checkRunningApplet();}, 400);
@@ -568,6 +571,45 @@ function deleteFile(filename)
 function autoFormat()
 {
     editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size': 1, 'indent_char':'\t', 'brace_style':'expand'}))
+}
+
+function saveBoard()
+{
+	new Lawnchair(function() {
+	    this.save({key:'board', name:$("#boards option:selected").text()});
+	});
+}
+
+function savePort()
+{
+	new Lawnchair(function() {
+	    this.save({key:'port', name:$("#ports option:selected").text()});
+	});
+}
+
+function loadSettings()
+{
+	Lawnchair(function(){
+		this.exists('board', function(exists){
+			if(exists)
+			{
+				this.get('board', function(config){
+					$("#boards").val(config.name)
+				})
+			}
+		});
+	});
+
+	Lawnchair(function(){
+		this.exists('port', function(exists){
+			if(exists)
+			{
+				this.get('port', function(config){
+					$("#ports").val(config.name)
+				})
+			}
+		});
+	});
 }
 
 </script>
