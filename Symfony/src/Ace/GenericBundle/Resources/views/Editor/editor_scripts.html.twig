@@ -136,6 +136,7 @@ function verify()
 			$("#compile_output").html("");
 			
 		}
+		editor.resize();
 		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
 
 		window.setTimeout(function () {
@@ -216,6 +217,7 @@ function cloudload()
 					window.sketch_size = obj.size;
 					$("#compile_output").html("");
 				}
+				editor.resize();
 			});
 		}
 
