@@ -83,7 +83,9 @@ function revert()
 
 function generate_payload(format)
 {
+	var pos = editor.getCursorPosition();
 	loadCode(window.selectedFile);
+	editor.moveCursorTo(pos.row, pos.column, true);
 
 	var count=0;
 	var files_array = Array();
