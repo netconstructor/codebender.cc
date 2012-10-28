@@ -18,7 +18,12 @@ $(document).ready(function()
    	{% if files%}
 	    {% for file in files %}
 	        <li>
-				<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true" data-placement="right" data-content="<p>Hello!</p><p><a class='btn btn-danger' href='{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}'>Delete Project (Permanently)</a></p>" data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
+				<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true" data-placement="right" data-content="
+<h6>Description:</h6>
+<p>{% render "AceUtilitiesBundle:Default:getDescription" with {'id':file['id']} %}</p>
+<hr>
+<p><a class='btn btn-danger' href='{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}'>Delete Project (Permanently)</a></p>"
+				data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
 					{{ file['name'] }}
 				</a>
 			</li>
