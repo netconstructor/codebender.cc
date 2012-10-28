@@ -8,6 +8,10 @@ AceUtilitiesBundle_deleteproject:
    pattern:  /deleteproject/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
 
+AceUtilitiesBundle_listfilenames:
+   pattern:  /listfilenames/{id}/{show_ino}
+   defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
+
 AceUtilitiesBundle_getprojectdescription:
    pattern:  /getprojectdescription/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:getDescription }

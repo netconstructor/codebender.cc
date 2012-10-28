@@ -66,6 +66,24 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
+	public function listFilenamesAction($id, $show_ino)
+	{
+		$projectmanager = $this->get('projectmanager');
+		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files=json_decode($files, true);
+
+		if($show_ino == 0)
+		{
+			foreach($files as $key=>$file)
+			if(strpos($file['filename'], ".ino") !== FALSE)
+			{
+				unset($files[$key]);
+			}
+		}
+
+		return $this->render('AceUtilitiesBundle:Default:list_filenames.html.twig', array('files' => $files));
+	}
+
 	public function getDescriptionAction($id)
 	{
 		$projectmanager = $this->get('projectmanager');
