@@ -22,6 +22,12 @@ AceUtilitiesBundle_setprojectdescription:
    requirements:
       _method:  POST
 
+AceUtilitiesBundle_setprojectname:
+  pattern:  /setprojectname/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:setName }
+  requirements:
+     _method:  POST
+
 AceUtilitiesBundle_clone:
   pattern:  /clone/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:clone }
