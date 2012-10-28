@@ -251,7 +251,7 @@ body
 				<ul class="nav nav-pills">
 					{% if files|length > 1 %}
 					<li class="dropdown">
-					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Delete File<b class="caret"></b></a>
+					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Delete<b class="caret"></b></a>
 					    <ul class="dropdown-menu">
 						{% for file in files %}
 							{% if file['filename'] != project_name ~ ".ino" %}
@@ -264,11 +264,11 @@ body
 					    </ul>
 					</li>
 					<li class="dropdown">
-					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Load File<b class="caret"></b></a>
+					    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Load<b class="caret"></b></a>
 					    <ul class="dropdown-menu">
 							{% for file in files %}
 								<li>
-									<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">{{file['filename']}}</a>
+									<a href="javascript:void(0)" onclick="loadCode('{{file['filename']}}');">Load {{file['filename']}}</a>
 								</li>
 							{% endfor %}
 					      <!-- links -->
@@ -276,7 +276,7 @@ body
 					</li>
 					{% endif %}
 					<li>
-						<a data-toggle="modal" href="#creationModal"><i class="icon-plus-sign"></i> New File</a>
+						<a data-toggle="modal" href="#creationModal"><i class="icon-plus-sign"></i> New</a>
 					</li>
 				</ul>
 				<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
