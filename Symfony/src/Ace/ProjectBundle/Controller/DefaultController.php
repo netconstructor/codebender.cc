@@ -88,6 +88,34 @@ class DefaultController extends Controller
 	    return new Response(json_encode(array("success" => true, "id" => $new_project->getId())));
 	}
 
+	public function renameAction($id, $new_name)
+	{
+		$output = array("success" => true);
+
+		$project = $this->getProjectById($id);
+		$name = $project->getName();
+
+		$mongo = $this->mfc;
+		$filename = $name.".ino";
+		$code = $mongo->getFileAction($project->getProjectfilesId(), $filename);
+		$response = json_decode($mongo->createFileAction($project->getProjectfilesId(), $new_name.".ino", $code), true);
+		if($response["success"] == true)
+		{
+			$response = json_decode($mongo->deleteFileAction($project->getProjectfilesId(), $filename), true);
+			if($response["success"])
+			{
+				$project->setName($new_name);
+			    $em = $this->em;
+			    $em->persist($project);
+			    $em->flush();
+			}
+			else
+				$output = array("success" => false, "id" => $id, "new name" => $new_name, "error" => "could not delete previous file");
+		}
+		else
+			$output = array("success" => false, "id" => $id, "new name" => $new_name, "error" => "could not create new file");
+		return new Response(json_encode($output));
+	}
 
 	public function getNameAction($id)
 	{

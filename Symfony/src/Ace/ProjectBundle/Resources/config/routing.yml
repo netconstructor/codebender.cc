@@ -10,6 +10,10 @@ AceProjectBundle_clone:
     pattern:  /clone/{owner}/{id}
     defaults: { _controller: projectmanager:cloneAction }
 
+AceProjectBundle_rename:
+    pattern:  /rename/{id}/{new_name}
+    defaults: { _controller: projectmanager:renameAction }
+
 AceProjectBundle_list:
     pattern:  /list/{owner}
     defaults: { _controller: projectmanager:listAction }
