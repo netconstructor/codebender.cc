@@ -206,6 +206,20 @@ body
   </div>
 </div>
 
+<div class="modal hide fade" id="nameModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Enter your new project name.</h3>
+  </div>
+  <div class="modal-body span5">
+	<textarea id="newName" style="resize: none;" rows="4" class="span5">{{project_name}}</textarea>
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn">Cancel</a>
+    <a href="javascript:saveName()" class="btn btn-primary"><i class="icon-download icon-white"></i> Save Changes</a>
+  </div>
+</div>
+
 <div class="modal hide fade" id="creationModal">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">×</button>
@@ -348,6 +362,10 @@ body
 				
 		    </div>
 		    <div class="tab-pane" id="tab2">
+				<h3>Name:</h3>
+				<p id="oldName">{{project_name}}</p>
+				<a data-toggle="modal" href="#nameModal" style="float:right;">edit</a>
+				<br>
 				<h3>Description:</h3>
 				<p id="oldDescription">{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}</p>
 				<a data-toggle="modal" href="#descriptionModal" style="float:right;">edit</a>
