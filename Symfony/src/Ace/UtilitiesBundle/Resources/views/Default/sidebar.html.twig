@@ -1,3 +1,9 @@
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('.project_link').popover();
+});
+</script>
 <div class="well sidebar-nav">
 <ul class="nav nav-list" id="nav-list">
 	<li class="nav-header">New Project</li>
@@ -12,7 +18,7 @@
    	{% if files%}
 	    {% for file in files %}
 	        <li>
-				<a href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
+				<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true" data-placement="right" data-content="<p>Hello!</p><p><a class='btn btn-danger' href='{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}'>Delete Project (Permanently)</a></p>" data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
 					{{ file['name'] }}
 				</a>
 			</li>
