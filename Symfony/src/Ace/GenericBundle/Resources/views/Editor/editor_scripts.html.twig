@@ -574,6 +574,7 @@ function loadCode(filename)
 	window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
 	editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
 	window.selectedFile = filename;
+	$("#selectedFile").text(filename);
 }
 
 function createFile()
