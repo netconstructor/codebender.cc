@@ -15,7 +15,13 @@ class RegistrationFormType extends BaseType
 		$builder
 			->add('firstname', 'text', array('label' => 'experimental_user_registration_form_firstname'))
 			->add('lastname', 'text', array('label' => 'experimental_user_registration_form_lastname'))
-			->add('twitter', 'text', array('label' => 'experimental_user_registration_form_twitter'));
+			->add('twitter', 'text', array('label' => 'experimental_user_registration_form_twitter'))
+			->add('newsletter', 'checkbox', array(
+												'label' => 'experimental_user_registration_form_newsletter',
+												'attr' => array('checked' => 'checked'),
+												'property_path' => false,
+												'required' => false,
+												));
     }
 
     public function getName()
