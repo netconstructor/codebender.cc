@@ -42,6 +42,10 @@ AceProjectBundle_deleteFile:
     pattern:  /deletefile/{id}/{filename}
     defaults: { _controller: projectmanager:deleteFileAction }
 
+AceProjectBundle_renameFile:
+    pattern:  /renamefile/{id}/{filename}/{new_filename}
+    defaults: { _controller: projectmanager:renameFileAction }
+
 AceProjectBundle_getFile:
     pattern:  /getfile/{id}/{filename}
     defaults: { _controller: projectmanager:getFileAction }

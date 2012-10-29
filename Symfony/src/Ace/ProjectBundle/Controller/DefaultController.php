@@ -190,6 +190,14 @@ class DefaultController extends Controller
 		$delete = $mongo->deleteFileAction($project->getProjectfilesId(), $filename);
 		return new Response(json_encode($delete));
 	}
+
+	public function renameFileAction($id, $filename, $new_filename)
+	{
+		$project = $this->getProjectById($id);
+		$mongo = $this->mfc;
+		$delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
+		return new Response(json_encode($delete));
+	}
 	
 	public function getBinaryAction($id, $flags)
 	{
