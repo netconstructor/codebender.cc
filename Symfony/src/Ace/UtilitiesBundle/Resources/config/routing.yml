@@ -28,6 +28,12 @@ AceUtilitiesBundle_setprojectname:
   requirements:
      _method:  POST
 
+AceUtilitiesBundle_renamefile:
+  pattern:  /renamefile/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:renameFile }
+  requirements:
+    _method:  POST
+
 AceUtilitiesBundle_clone:
   pattern:  /clone/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:clone }

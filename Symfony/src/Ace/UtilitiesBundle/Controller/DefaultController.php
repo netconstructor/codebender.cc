@@ -133,6 +133,26 @@ class DefaultController extends Controller
 		return new Response($response);
 	}
 
+	public function renameFileAction($id)
+	{
+
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+		$old_filename = $this->getRequest()->request->get('oldFilename');
+		$new_filename = $this->getRequest()->request->get('newFilename');
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->renameFileAction($id, $old_filename, $new_filename)->getContent();
+		return new Response($response);
+	}
+
 	public function sidebarAction()
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
