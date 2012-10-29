@@ -115,6 +115,21 @@ class MongoFilesController extends Controller
 		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
 	}
 
+	public function renameFileAction($id, $filename, $new_filename)
+	{
+		$list = $this->listFilesAction($id);
+		foreach($list as $key=>$file)
+		{
+			if($file["filename"] == $filename)
+			{
+				$list[$key]["filename"] = $new_filename;
+				$this->setFilesById($id, $list);
+				return json_encode(array("success" => true));
+			}
+		}
+		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
+	}
+
 		public function getBinaryAction($id, $flags)
 		{
 			$pf = $this->getProjectById($id);
