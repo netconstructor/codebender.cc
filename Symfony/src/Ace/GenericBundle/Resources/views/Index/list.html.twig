@@ -1,6 +1,16 @@
 {% extends '::container.html.twig' %}
 
 {% block mainspan %}
-	<h2>Hello {{ name }}!</h2>
-	{% include 'AceGenericBundle:Index:features.html.twig' %}		
+<div class="row-fluid">
+	<div class="span12">
+		<h2>Hello {{ name }}!</h2>
+		<h4>New Project</h4>
+		<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
+			<input type="text" name='project_name' class="search-query">
+			<button type="submit" class="btn">Create new project</button>
+		</form>
+		<a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a>
+	</div>
+</div>
+{% include 'AceGenericBundle:Index:features.html.twig' %}
 {% endblock %}
