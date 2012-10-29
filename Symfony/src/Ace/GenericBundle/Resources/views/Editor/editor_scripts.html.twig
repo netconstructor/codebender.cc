@@ -39,6 +39,21 @@ function saveName()
 	});
 }
 
+function renameFilenameModal(filename)
+{
+	$("#oldFilename").val(filename);
+	$("#newFilename").val(filename);
+	$("#filenameModal").modal('show');
+}
+
+function renameFilename()
+{
+	$.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename: $("#oldFilename").val(), newFilename: $("#newFilename").val()}, function(data)
+	{
+		$("#filenameModal").modal('hide');
+		location.reload();
+	});
+}
 
 function setProgress(newprogress)
 {

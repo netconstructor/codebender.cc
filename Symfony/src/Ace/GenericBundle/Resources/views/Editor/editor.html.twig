@@ -235,6 +235,20 @@ body
   </div>
 </div>
 
+<div class="modal hide fade" id="filenameModal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Enter the new filename.</h3>
+  </div>
+  <div class="modal-body span5">
+	<input type="hidden" id="oldFilename">
+	<input type="text" id="newFilename">
+  </div>
+  <div class="modal-footer">
+    <a data-dismiss="modal" class="btn">Cancel</a>
+    <a href="javascript:renameFilename()" class="btn btn-primary"><i class="icon-download icon-white"></i> Save Changes</a>
+  </div>
+</div>
 
 <div class="container">
 <div id="container" class="row-fluid">	
@@ -262,6 +276,18 @@ body
 							{% endif %}
 						{% endfor %}
 					      <!-- links -->
+					    </ul>
+					</li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void()">Rename<b class="caret"></b></a>
+					    <ul class="dropdown-menu">
+							{% for file in files %}
+								{% if file['filename'] != project_name ~ ".ino" %}
+								<li>
+									<a href="javascript:void(0)" onclick="renameFilenameModal('{{file['filename']}}')">Rename {{file['filename']}}</a>
+								</li>
+								{% endif %}
+							{% endfor %}
 					    </ul>
 					</li>
 					<li class="dropdown">
