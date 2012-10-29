@@ -36,7 +36,7 @@ class DefaultController extends Controller
 		{
 			$utilities = new DefaultHandler();
 			$default_text = $utilities->default_text();
-			$response2 = $projectmanager->createFileAction($response["id"], $project_name.".ino", $default_text);
+			$response2 = $projectmanager->createFileAction($response["id"], $project_name.".ino", $default_text)->getContent();
 			$response2=json_decode($response2, true);
 			if($response2["success"])
 			{
