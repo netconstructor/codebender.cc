@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\Regex;
 use Ace\GenericBundle\Classes\UploadHandler;
-
+use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
 class DefaultController extends Controller
 {
@@ -98,131 +98,134 @@ class DefaultController extends Controller
 	
 	public function uploadAction()
 	{
-						
+
 		if ($this->getRequest()->getMethod() === 'POST')
-		{	
-			
-			$upload_handler = new UploadHandler();			
-			
-			if (!preg_match('/(\.|\/)(pde|ino)$/i', $_FILES["files"]["name"][0])) 
-            {
-				$upload_handler->post(null);
-				$response = new Response();
-				$response->headers->set('Pragma', 'no-cache');
-				$response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
-				$response->headers->set('Content-Disposition', 'inline; filename="files.json"');
-				$response->headers->set('Access-Control-Allow-Origin', '*');
-				$response->headers->set('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-				$response->headers->set('Access-Control-Allow-Headers', 'X-File-Name, X-File-Type, X-File-Size');
-				return $response;	
-				
-			
-			}
-			if (!preg_match('/^[a-z0-9\p{P}]*$/i', $_FILES["files"]["name"][0])) 
-            {
-				$upload_handler->post("Please use only English characters.");
-				$response = new Response();
-				$response->headers->set('Pragma', 'no-cache');
-				$response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
-				$response->headers->set('Content-Disposition', 'inline; filename="files.json"');
-				$response->headers->set('Access-Control-Allow-Origin', '*');
-				$response->headers->set('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-				$response->headers->set('Access-Control-Allow-Headers', 'X-File-Name, X-File-Type, X-File-Size');
-				return $response;	
-				
-			
-			}
-			if (substr(exec("file -bi -- ".escapeshellarg($_FILES["files"]["tmp_name"][0])), 0, 4) !== 'text') 
-            {
-				$upload_handler->post("Filetype not allowed");
-				$response = new Response();
-				$response->headers->set('Pragma', 'no-cache');
-				$response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
-				$response->headers->set('Content-Disposition', 'inline; filename="files.json"');
-				$response->headers->set('Access-Control-Allow-Origin', '*');
-				$response->headers->set('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-				$response->headers->set('Access-Control-Allow-Headers', 'X-File-Name, X-File-Type, X-File-Size');
-				return $response;	
-				
-			
-			}							
-			
-			$info = pathinfo($_FILES["files"]["name"][0]);
-			$file_name =  basename($_FILES["files"]["name"][0],'.'.$info['extension']);			
-			$project_name = $file_name;
-			
-			if($project_name == '')
-			{
-				return $this->redirect($this->generateUrl('AceGenericBundle_index'));
-			}
+		{
 
-			// THIS NEEDS TO BE UPDATED!!! It was using getMyProject, which uses FileBundle
-			// $file = $this->getMyProject($project_name, $error);
-			if($error == -2)
-			{
-				$upload_handler->post(null);
-				
-				$file = fopen($_FILES["files"]["tmp_name"][0], 'r');
-				$value = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
-				fclose($file);
-				
-							
+			$upload_handler = new UploadHandler();
 
-				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-				$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			if (!preg_match('/^[a-z0-9\p{P}]*$/i', $_FILES["files"]["name"][0])){
+
+					$info = $upload_handler->post("Invalid filename.");
+					return $this->writeResponse($info);
+				}
+			
+			
+			$file_name = $_FILES["files"]["name"][0];
+			$pinfo = pathinfo($_FILES["files"]["name"][0]);
+			$project_name =  basename($_FILES["files"]["name"][0],'.'.$pinfo['extension']);
+			$ext = $pinfo['extension'];
 				
-				$file = new File();
-			    $file->setName($project_name);
-			    $file->setCode($value);
-				$timestamp = new \DateTime;
-				$file->setCodeTimestamp($timestamp);
-				$file->setHex("");
-				$timestamp2 = new \DateTime;
-				$interval = new \DateInterval('PT5M');
-				$timestamp2->sub($interval);
-				$file->setHexTimestamp($timestamp2);
-			    $file->setOwner($user->getId());
-				$file->setIsPublic(1);
-				$file->setSchematic("");
-				$file->setImage("");
-				$file->setDescription("");
+			if($ext == "ino" || $ext == "pde"){
 				
-				
-			    $dm = $this->get('doctrine.odm.mongodb.document_manager');
-			    $dm->persist($file);
-			    $dm->flush();
-				
-				
-				$response = new Response();
-				$response->headers->set('Pragma', 'no-cache');
-				$response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
-				$response->headers->set('Content-Disposition', 'inline; filename="files.json"');
-				$response->headers->set('Access-Control-Allow-Origin', '*');
-				$response->headers->set('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-				$response->headers->set('Access-Control-Allow-Headers', 'X-File-Name, X-File-Type, X-File-Size');				
-										
-				return $response;   								
+				if (substr(exec("file -bi -- ".escapeshellarg($_FILES["files"]["tmp_name"][0])), 0, 4) !== 'text'){
+
+					$info = $upload_handler->post("Filetype not allowed.");
+					return $this->writeResponse($info);
+				}
+
+				 $info = $upload_handler->post(null);
+				 $file = fopen($_FILES["files"]["tmp_name"][0], 'r');
+				 $code = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
+				 fclose($file);
+
+			    $this->createUploadedProject($project_name, $code, $sketch_id);
+
+				$updated_info = array();
+				$updated_info[] = $this->fixFile($info, $sketch_id, $project_name, $ext);
+
+				return $this->writeResponse($updated_info);
 			}
-			else if($error==-1)
-			{
-		        throw $this->createNotFoundException('No user found with username '.$name);				
-			}
-			else if($error == 0)
-			{
-				return $this->redirect($this->generateUrl('AceGenericBundle_index'));
-			}
-			else if($error == 1)
-			{
-				$erroR = 'File already uploaded.';				
-				$upload_handler->post($erroR);
-				$response = new Response();
-				$response->headers->set('Pragma', 'no-cache');
-				$response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate');
-				$response->headers->set('Content-Disposition', 'inline; filename="files.json"');
-				$response->headers->set('Access-Control-Allow-Origin', '*');
-				$response->headers->set('Access-Control-Allow-Methods', 'OPTIONS, HEAD, GET, POST, PUT, DELETE');
-				$response->headers->set('Access-Control-Allow-Headers', 'X-File-Name, X-File-Type, X-File-Size');
-				return $response;				
+			else if($ext == "zip"){
+
+				$info = $upload_handler->post(null);
+
+				$code = '';
+			     $z = new \ZipArchive();
+				 $headers = array();
+				 $cpps = array();
+				 $mainFile = FALSE;
+				 $count = 0;
+
+				 if ($z->open($_FILES["files"]["tmp_name"][0])) {
+
+					 for ($i = 0; $i < $z->numFiles; $i++) {
+
+						$nameIndex = $z->getNameIndex($i);
+
+						if (!preg_match('/^[a-z0-9\p{P}]*$/i', $nameIndex)){
+				
+					     $info = $upload_handler->post("Invalid filename.");
+						 return $this->writeResponse($info);
+						}
+
+						$exp = explode('.', $nameIndex);
+						$exp2 = explode('/', $nameIndex);
+						$ext2 = end($exp);
+						$end = end($exp2);
+						// $folderName = prev($exp2);
+						// $fileName = basename($end,".pde");
+
+						 if( $ext2 == "pde"){
+							 //if( $folderName == $fileName || count($exp) == 2)
+						     if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== FALSE){
+								$count++;
+								$code = $z->getFromIndex($i);
+								$project_name = $end;
+							 }
+						 } else if($ext2 == "ino" /*&& count($exp) == 2*/){
+
+								if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== FALSE){
+								$count++;
+								$code = $z->getFromIndex($i);
+								$project_name = $end;
+							 }
+						 } else if($ext2 == "h"){
+								$headers[$end] = $z->getFromIndex($i);
+						 }
+						 else if($ext2 == "cpp"){
+								$cpps[$end] = $z->getFromIndex($i);
+						 }
+						 // $mainFile= TRUE;
+						 // $code .= $z->getNameIndex($i)."\r\n";
+					}
+
+				} else {$code = 'ERROR opening file';}
+				
+				if($count == 1){
+				
+				if(mb_detect_encoding($code, 'UTF-8', true) !== FALSE){
+					$this->createUploadedProject($project_name, $code, $sketch_id);
+				} else {
+						$info = $upload_handler->post("Filetype not allowed.");
+						return $this->writeResponse($info);
+				}
+				
+				foreach($headers as $key => $value){
+					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
+					$this->createUploadedFile($sketch_id, $key, $value);
+					}
+				}
+
+				foreach($cpps as $key => $value){
+					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
+					$this->createUploadedFile($sketch_id, $key, $value);
+					}
+				}
+				
+				} else {
+					$sketch_id = null;
+
+				}
+
+				$updated_info = array();
+				$updated_info[] = $this->fixFile($info, $sketch_id, $project_name, $ext);
+
+				return $this->writeResponse($updated_info);
+
+			}else {
+				$info = $upload_handler->post(null);
+				return $this->writeResponse($info);
 			}
 			
 		}
@@ -233,6 +236,108 @@ class DefaultController extends Controller
 		else
 			throw $this->createNotFoundException('No POST or GET data!');	
 	}
+
+
+	public function fixFile($info, $sketch_id, $project_name, $ext)
+	{
+		$File = new \stdClass();
+
+		$vars = get_object_vars($info[0]);
+
+		if(isset($sketch_id)){
+
+		foreach($vars as $name => $value) {
+			if($name == 'url'){
+				$File->$name = $value.$sketch_id;
+			}else if ($name == 'name' && $ext == "zip"){
+				$File->$name = $project_name;
+			}else{
+				$File->$name = $value;
+			}
+		}
+		}else {$File->error = "Failed to create Project.";}
+
+		return $File;
+	}
+
+	public function writeResponse($info)
+	{
+		header('Vary: Accept');
+		$json = json_encode($info);
+		$redirect = isset($_REQUEST['redirect']) ?
+		stripslashes($_REQUEST['redirect']) : null;
+		if ($redirect) {
+               header('Location: '.sprintf($redirect, rawurlencode($json)));
+			return;
+		}
+		if (isset($_SERVER['HTTP_ACCEPT']) &&
+		(strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+		header('Content-type: application/json');
+		} else {
+			header('Content-type: text/plain');
+		}
+
+		return new Response($json);
+	}
+
+	public function createUploadedFile($id, $filename, $code)
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->createFileAction($id, $filename, $code);
+		//$response = json_decode($response, true);
+		//if($response["success"] ==  false)
+			// return new Response(json_encode($response));
+		// return new Response(json_encode(array("success"=>true)));
+
+	}
+
+
+	public function createUploadedProject($file_name, $code, &$sketch_id)
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+
+		$exp = explode(".", $file_name);
+		$project_name =  $exp[0];
+
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+
+		$user = $user->getID();
+
+		 if($project_name == '')
+		 {
+                     return $this->redirect($this->generateUrl('AceGenericBundle_list'));
+		 }
+
+			$projectmanager = $this->get('projectmanager');
+			$response1 = $projectmanager->createAction($user, $project_name, "")->getContent();
+			$response1=json_decode($response1, true);
+			if($response1["success"])
+			{
+				$sketch_id = $response1["id"];
+				$utilities = new DefaultHandler();
+				$response2 = $projectmanager->createFileAction($response1["id"], $file_name, $code);
+				$response2=json_decode($response2, true);
+				if($response2["success"])
+				{
+				}
+			}
+			//return new Response(json_encode(array("success" => true)));
+	}
+
 		
 	public function librariesAction()
 	{

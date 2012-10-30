@@ -12,14 +12,7 @@ function warnDeleteProject(deletion_path)
 </script>
 <div class="well sidebar-nav">
 <ul class="nav nav-list" id="nav-list">
-	<li class="nav-header">New Project</li>
-	<li>
-	<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
-		<input type="text" name='project_name' class="input-medium search-query">
-		<button type="submit" class="btn" style="width:100%; margin-top: 5px;">Create new project</button>
-	</form>
-	</li>
-	<li><a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a></li>
+    <li><a href="{{ path('AceGenericBundle_index') }}"><i class="icon-home"></i>Home</a></li>
      <li class="nav-header">Projects</li>
    	{% if files%}
 	    {% for file in files %}

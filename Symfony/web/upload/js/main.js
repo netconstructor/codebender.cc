@@ -19,7 +19,7 @@ $(function () {
     $('#fileupload').fileupload();
     $('#fileupload').bind('fileuploadcompleted',  
 	function (e, data) {if(!data.result[0].error) 
-						{ $("#Links").before('<li><a href="http://codebender.cc/edit/'+(data.files[0].name).slice(0,-4)+'">'+(data.files[0].name).slice(0,-4)+'</a></li>');}
+						{ $("#Links").before('<li><a href="'+data.result[0].url+'">'+(data.result[0].name).slice(0,-4)+'</a></li>');}
 						else{  $('#fileupload').fileupload().data('fileupload')._disableFileInputButton(); 
 							   $('.btn.btn-warning').click(function (e) { $('.template-download.fade.in').remove(); $('#fileupload').fileupload().data('fileupload')._enableFileInputButton(); }); }
 		} );
@@ -28,8 +28,9 @@ $(function () {
 							   $('.btn.btn-warning').click(function (e) { $('.template-download.fade.in').remove(); /*$('#fileupload').fileupload().data('fileupload')._enableFileInputButton();*/ }); 
 		} );
 	
-	
-	
+	//$('#fileupload').bind('fileuploadalways', function (e, data) {alert(data.jqXHR.responseText)});
+	//$('#fileupload').bind('fileuploadalways', function (e, data) {alert(data.result[0].url)});
+	/////
 		
     // Enable iframe cross-domain access via redirect option: 
     $('#fileupload').fileupload(
@@ -46,7 +47,7 @@ $(function () {
         $('#fileupload').fileupload('option', {
             url: '//jquery-file-upload.appspot.com/',
             maxFileSize: 5000000,
-            acceptFileTypes: /(\.|\/)(pde|ino)$/i,  /*/.+$/i,*/
+            acceptFileTypes: /(\.|\/)(pde|ino|zip)$/i,  /*/(\.|\/)(pde|ino|zip)$/i,*/  
             process: [
                 {
                     action: 'load',

@@ -20,7 +20,7 @@ class UploadHandler
         $this->options = array(
           //  'script_url' => $this->getFullUrl().'/',
            // 'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
-           // 'upload_url' => $this->getFullUrl().'/files/',
+            'upload_url' => $this->getFullUrl().'/sketch:',
             'param_name' => 'files',
             // Set the following option to 'POST', if your server does not support
             // DELETE requests. This is a parameter sent to the client:
@@ -29,7 +29,7 @@ class UploadHandler
             // take precedence over the following max_file_size setting:
             'max_file_size' => null,
             'min_file_size' => 1,
-            'accept_file_types' => '/(\.|\/)(pde|ino)$/i', //'/.+$/i',
+            'accept_file_types' => '/(\.|\/)(pde|ino|zip)$/i', //'/.+$/i',
             // The maximum number of files for the upload directory:
             'max_number_of_files' => null,
             // Image resolution restrictions:
@@ -195,8 +195,8 @@ class UploadHandler
         $file->size = intval($size);
         $file->type = $type;			
 		$info = pathinfo($name);
-	    $fileName =  basename($name,'.'.$info['extension']);		
-		$file->url = 'http://dev.codebender.cc/edit/'.$fileName;
+	    $fileName =  basename($name,'.'.$info['extension']);				
+		$file->url = $this->options['upload_url'];
          if ($this->validate($uploaded_file, $file, $error, $index)) {
             /* $this->handle_form_data($file, $index);
             $file_path = $this->options['upload_dir'].$file->name;
@@ -314,21 +314,8 @@ class UploadHandler
                         $upload['type'] : null),
                 isset($upload['error']) ? $upload['error'] : null ); 
         }
-        header('Vary: Accept');
-        $json = json_encode($info);
-        $redirect = isset($_REQUEST['redirect']) ?
-            stripslashes($_REQUEST['redirect']) : null;
-        if ($redirect) {
-            header('Location: '.sprintf($redirect, rawurlencode($json)));
-            return;
-        }
-        if (isset($_SERVER['HTTP_ACCEPT']) &&
-            (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
-            header('Content-type: application/json');
-        } else {
-            header('Content-type: text/plain');
-        }
-        echo $json;
+        
+        return $info;
     }
 
     /* public function delete() {
