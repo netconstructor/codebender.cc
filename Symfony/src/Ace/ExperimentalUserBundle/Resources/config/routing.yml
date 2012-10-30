@@ -1,3 +1,25 @@
 AceExperimentalUserBundle_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: AceExperimentalUserBundle:Default:index }
+    
+AceExperimentalUserBundle_options:
+    pattern:  /options
+    defaults: { _controller: AceExperimentalUserBundle:Default:options }
+    
+AceExperimentalUserBundle_setoptions:
+    pattern:  /setoptions
+    defaults: { _controller: AceExperimentalUserBundle:Default:setoptions }
+    requirements:
+        _method:   POST
+
+AceExperimentalUserBundle_checkpass:
+    pattern:  /checkpass
+    defaults: { _controller: AceExperimentalUserBundle:Default:checkpass }
+    requirements:
+        _method:   POST
+
+AceExperimentalUserBundle_checkmail:
+    pattern:  /checkmail
+    defaults: { _controller: AceExperimentalUserBundle:Default:checkmail }
+    requirements:
+        _method:   POST
