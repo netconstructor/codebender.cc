@@ -34,9 +34,9 @@ AceSearchBundle:
     resource: "@AceSearchBundle/Resources/config/routing.yml"
     prefix:   /
 
-# AceExperimentalUserBundle:
-#     resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"
-#     prefix:   /
+AceExperimentalUserBundle:
+    resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"
+    prefix:   /users
 
 # Internal routing configuration to handle ESI
 #_internal:

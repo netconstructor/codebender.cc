@@ -122,3 +122,8 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@mongofilecontroller"
+    usercontroller:
+        class:        Ace\ExperimentalUserBundle\Controller\DefaultController
+        arguments:
+            securityContext: "@security.context"
+            entityManager: "@doctrine.orm.entity_manager"

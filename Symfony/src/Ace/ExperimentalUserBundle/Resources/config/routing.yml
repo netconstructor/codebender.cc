@@ -1,3 +1,7 @@
 AceExperimentalUserBundle_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: AceExperimentalUserBundle:Default:index }
+
+AceExperimentalUserBundle_getcurrentuser:
+    pattern:  /getcurrentuser
+    defaults: { _controller: usercontroller:getCurrentUserAction }
