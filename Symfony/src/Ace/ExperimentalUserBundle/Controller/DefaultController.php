@@ -161,11 +161,11 @@ class DefaultController extends Controller
 		
 	}    
 
-	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $endoderFactory, SecurityContext $securityContext, EntityManager $entityManager)
+	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager)
 	{
 		$this->templating = $templating;
 		$this->request = $request;
-		$this->ef = $endoderFactory;
+		$this->ef = $encoderFactory;
 		$this->sc = $securityContext;
 	    $this->em = $entityManager;
 	}
