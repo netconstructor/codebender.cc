@@ -7,17 +7,31 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
+use Doctrine\ORM\EntityManager;
 
 class DefaultController extends Controller
 {
-    
-    public function indexAction($name)
-    {
-        return $this->render('AceExperimentalUserBundle:Default:index.html.twig', array('name' => $name));
-    }
+	protected $sc;
+	protected $em;
 
+	public function getCurrentUserAction()
+	{
+		$response = array("success" => false);
+		$current_user = $this->sc->getToken()->getUser();
+		if($current_user !== "anon.")
+		{
+			$name = $current_user->getUsername();
+			$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			if (!$user)
+			{
+				throw $this->createNotFoundException('No user found with id '.$name);
+			}
+			$response = array("success" => true, "id" => $user->getId());
+		}
+		return new Response(json_encode($response));
 
-	//TODO:email is not loaded correctly if page is refreshed
+	}
+
 	public function optionsAction()
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
@@ -142,5 +156,11 @@ class DefaultController extends Controller
 			return $response;
 		
 	}    
+
+	public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+	{
+		$this->sc = $securityContext;
+	    $this->em = $entityManager;
+	}
 
 }
