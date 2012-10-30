@@ -288,4 +288,18 @@ class DefaultController extends Controller
 		return new Response(json_encode(array("success"=>true)));
 	}
 
+	public function imageAction()
+	{
+		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
+		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		if (!$user)
+		{
+			throw $this->createNotFoundException('No user found with id '.$name);
+		}
+		$utilities = $this->get('utilities');
+		$image = $utilities->get_gravatar($user->getEmail());
+
+		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user->getUsername(),'image' => $image));
+	}
+
 }
