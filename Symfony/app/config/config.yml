@@ -124,6 +124,10 @@ services:
             mongofilecontroller: "@mongofilecontroller"
     usercontroller:
         class:        Ace\ExperimentalUserBundle\Controller\DefaultController
+        scope: request
         arguments:
+            templating:  "@templating"
+            request: "@request"
+            encoderFactory: "@security.encoder_factory"
             securityContext: "@security.context"
             entityManager: "@doctrine.orm.entity_manager"

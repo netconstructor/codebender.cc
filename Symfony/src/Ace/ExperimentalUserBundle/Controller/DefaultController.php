@@ -7,10 +7,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Doctrine\ORM\EntityManager;
 
 class DefaultController extends Controller
 {
+	protected $templating;
+	protected $request;
+	protected $ef;
 	protected $sc;
 	protected $em;
 
@@ -34,25 +40,25 @@ class DefaultController extends Controller
 
 	public function optionsAction()
 	{
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$name = $this->sc->getToken()->getUser()->getUsername();
+		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
 
 		if (!$user) {
 			throw $this->createNotFoundException('No user found with username '.$name);
 		}
-		return $this->render('AceExperimentalUserBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user));
+		return new Response($this->templating->render('AceExperimentalUserBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user)));
 	}
 
 	public function checkpassAction()
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));		
 
-			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-			$oldpass = $this->getRequest()->request->get('oldpass');
+			$name = $this->sc->getToken()->getUser()->getUsername();
+			$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			$oldpass = $this->request->get('oldpass');
 
 			//hash password
-			$encoder_service = $this->get('security.encoder_factory');
+			$encoder_service = $this->ef;
 			$encoder = $encoder_service->getEncoder($user);
 			$encoded_pass = $encoder->encodePassword($oldpass, $user->getSalt());
 
@@ -69,13 +75,12 @@ class DefaultController extends Controller
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
 		
-			$mail = $this->getRequest()->request->get('mail');
+			$mail = $this->request->get('mail');
 			if($mail)
 			{
-				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-				$em = $this->getDoctrine()->getEntityManager();
-				$user = $em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByEmail($mail);
-				$current_user = $em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+				$name = $this->sc->getToken()->getUser()->getUsername();
+				$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByEmail($mail);
+				$current_user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
 				if(!$user)
 					$response->setContent('1'); //email doesn't exist in database - success
 				else if($user->getUsername() === $current_user->getUsername())
@@ -93,7 +98,7 @@ class DefaultController extends Controller
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
 		
-			$mydata = $this->getRequest()->request->get('data');
+			$mydata = $this->request->get('data');
 			if($mydata)
 			{
 				$fname = $mydata['firstname'];
@@ -104,9 +109,8 @@ class DefaultController extends Controller
 				$newpass = $mydata['new_pass'];
 				$confirm_pass = $mydata['confirm_pass'];
 
-				$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-				$em = $this->getDoctrine()->getEntityManager();
-				$user = $em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+				$name = $this->sc->getToken()->getUser()->getUsername();
+				$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
 
 				//update object - no checks atm
 				$user->setFirstname($fname);
@@ -136,7 +140,7 @@ class DefaultController extends Controller
 				//TODO:hash the password
 
 				if($oldpass){
-					$encoder_service = $this->get('security.encoder_factory');
+					$encoder_service = $this->ef;
 					$encoder = $encoder_service->getEncoder($user);
 					$encoded_oldpass = $encoder->encodePassword($oldpass, $user->getSalt());
 					if ($user->getPassword()===$encoded_oldpass){
@@ -148,7 +152,7 @@ class DefaultController extends Controller
 				}
 
 				//$response->setContent('OK');
-				$em->flush();
+				$this->em->flush();
 
 				$response->setStatusCode(200);
 				$response->headers->set('Content-Type', 'text/html');
@@ -157,8 +161,11 @@ class DefaultController extends Controller
 		
 	}    
 
-	public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $endoderFactory, SecurityContext $securityContext, EntityManager $entityManager)
 	{
+		$this->templating = $templating;
+		$this->request = $request;
+		$this->ef = $endoderFactory;
 		$this->sc = $securityContext;
 	    $this->em = $entityManager;
 	}

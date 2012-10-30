@@ -4,22 +4,22 @@ AceExperimentalUserBundle_getcurrentuser:
 
 AceExperimentalUserBundle_options:
     pattern:  /options
-    defaults: { _controller: AceExperimentalUserBundle:Default:options }
+    defaults: { _controller: usercontroller:optionsAction }
     
 AceExperimentalUserBundle_setoptions:
     pattern:  /setoptions
-    defaults: { _controller: AceExperimentalUserBundle:Default:setoptions }
+    defaults: { _controller: usercontroller:setoptionsAction }
     requirements:
         _method:   POST
 
 AceExperimentalUserBundle_checkpass:
     pattern:  /checkpass
-    defaults: { _controller: AceExperimentalUserBundle:Default:checkpass }
+    defaults: { _controller: usercontroller:checkpassAction }
     requirements:
         _method:   POST
 
 AceExperimentalUserBundle_checkmail:
     pattern:  /checkmail
-    defaults: { _controller: AceExperimentalUserBundle:Default:checkmail }
+    defaults: { _controller: usercontroller:checkmailAction }
     requirements:
         _method:   POST
