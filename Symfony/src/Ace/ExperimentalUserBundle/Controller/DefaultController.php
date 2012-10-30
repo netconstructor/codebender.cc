@@ -12,11 +12,6 @@ class DefaultController extends Controller
 {
 	protected $sc;
 	protected $em;
-    
-    public function indexAction($name)
-    {
-        return $this->render('AceExperimentalUserBundle:Default:index.html.twig', array('name' => $name));
-    }
 
 	public function getCurrentUserAction()
 	{
