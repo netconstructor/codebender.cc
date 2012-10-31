@@ -20,6 +20,17 @@ class DefaultController extends Controller
 	protected $sc;
 	protected $em;
 
+	public function getIdAction($username)
+	{
+		$response = array("success" => false);
+		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
+		if ($user)
+		{
+			$response = array("success" => true, "id" => $user->getId());
+		}
+		return new Response(json_encode($response));
+	}
+
 	public function getCurrentUserAction()
 	{
 		$response = array("success" => false);
@@ -27,12 +38,12 @@ class DefaultController extends Controller
 		if($current_user !== "anon.")
 		{
 			$name = $current_user->getUsername();
-			$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-			if (!$user)
+			$data = json_decode($this->getIdAction($name)->getContent(), true);
+			if ($data["success"] === false)
 			{
 				throw $this->createNotFoundException('No user found with id '.$name);
 			}
-			$response = array("success" => true, "id" => $user->getId());
+			$response = array("success" => true, "id" => $data["id"]);
 		}
 		return new Response(json_encode($response));
 

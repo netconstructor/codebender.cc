@@ -28,7 +28,7 @@ AceStaticBundle:
 
 AceSearchBundle:
     resource: "@AceSearchBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /search
 
 AceExperimentalUserBundle:
     resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"

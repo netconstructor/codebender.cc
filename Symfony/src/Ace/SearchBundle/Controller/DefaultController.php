@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
-    public function indexAction()
+    public function findAction()
     {
         if ($this->getRequest()->getMethod() === 'GET') {
             
@@ -22,7 +22,7 @@ class DefaultController extends Controller
 			$projectmanager = $this->get('projectmanager');
 			$files = json_decode($projectmanager->searchAction($query)->getContent(), true);
 
-	        return $this->render('AceSearchBundle:Default:index.html.twig', array('query'=>$query, 'users'=>$users, 'files'=>$files));
+	        return $this->render('AceSearchBundle:Default:find.html.twig', array('query'=>$query, 'users'=>$users, 'files'=>$files));
         }
     }
 }
