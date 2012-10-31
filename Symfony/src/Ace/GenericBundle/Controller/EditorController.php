@@ -56,6 +56,6 @@ class EditorController extends Controller
 
 		// die(var_dump($examples)." ".var_dump($lib_examples)." ".var_dump($extra_lib_examples)." ");
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('username'=>$name, 'project_id' => $id, 'project_name' => $name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files, 'boards' => $boards));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files, 'boards' => $boards));
 	}		
 }
