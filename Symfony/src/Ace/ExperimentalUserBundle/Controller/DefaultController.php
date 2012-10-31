@@ -20,6 +20,17 @@ class DefaultController extends Controller
 	protected $sc;
 	protected $em;
 
+	public function getIdAction($username)
+	{
+		$response = array("success" => false);
+		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
+		if ($user)
+		{
+			$response = array("success" => true, "id" => $user->getId());
+		}
+		return new Response(json_encode($response));
+	}
+
 	public function getCurrentUserAction()
 	{
 		$response = array("success" => false);

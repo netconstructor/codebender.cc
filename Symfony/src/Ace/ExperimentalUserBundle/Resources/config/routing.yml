@@ -1,3 +1,7 @@
+AceExperimentalUserBundle_getid:
+    pattern:  /getid/{username}
+    defaults: { _controller: usercontroller:getIdAction }
+
 AceExperimentalUserBundle_getcurrentuser:
     pattern:  /getcurrentuser
     defaults: { _controller: usercontroller:getCurrentUserAction }
