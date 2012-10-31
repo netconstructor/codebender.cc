@@ -122,6 +122,10 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@mongofilecontroller"
+    ownercontroller:
+        class:        Ace\OwnerBundle\Controller\DefaultController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
     usercontroller:
         class:        Ace\ExperimentalUserBundle\Controller\DefaultController
         scope: request
