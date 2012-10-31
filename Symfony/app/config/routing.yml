@@ -2,10 +2,6 @@ AceOwnerBundle:
     resource: "@AceOwnerBundle/Resources/config/routing.yml"
     prefix:   /owner
 
-#AceTempBundle:
-#    resource: "@AceTempBundle/Resources/config/routing.yml"
-#    prefix:   /
-
 AceGenericBundle:
     resource: "@AceGenericBundle/Resources/config/routing.yml"
     prefix:   /

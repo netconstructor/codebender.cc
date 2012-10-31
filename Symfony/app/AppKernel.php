@@ -27,7 +27,6 @@ class AppKernel extends Kernel
             new Ace\SenderBundle\AceSenderBundle(),
             new Ace\ProjectBundle\AceProjectBundle(),
             new Ace\GenericBundle\AceGenericBundle(),
-            new Ace\TempBundle\AceTempBundle(),
             new Ace\OwnerBundle\AceOwnerBundle(),
         );
 
