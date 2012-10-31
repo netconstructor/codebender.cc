@@ -28,9 +28,11 @@ class DefaultController extends Controller
 		{
 			$response = array("success" => true,
 			"id" => $user->getId(),
+			"email" => $user->getEmail(),
 			"username" => $user->getUsername(),
 			"firstname" => $user->getFirstname(),
-			"lastname" => $user->getLastname()
+			"lastname" => $user->getLastname(),
+			"twitter" => $user->getTwitter()
 			);
 		}
 		return new Response(json_encode($response));
