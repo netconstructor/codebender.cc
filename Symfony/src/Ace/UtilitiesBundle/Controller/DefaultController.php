@@ -13,7 +13,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -51,7 +51,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -99,7 +99,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -118,7 +118,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -137,7 +137,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -156,7 +156,7 @@ class DefaultController extends Controller
 	public function sidebarAction()
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user) {
 			throw $this->createNotFoundException('No user found with id '.$name);
@@ -202,7 +202,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -228,7 +228,7 @@ class DefaultController extends Controller
 	{
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -247,7 +247,7 @@ class DefaultController extends Controller
 	public function createFileAction($id)
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -269,7 +269,7 @@ class DefaultController extends Controller
 	public function deleteFileAction($id)
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -291,7 +291,7 @@ class DefaultController extends Controller
 	public function imageAction()
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 		if (!$user)
 		{
 			throw $this->createNotFoundException('No user found with id '.$name);

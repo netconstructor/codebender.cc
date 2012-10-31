@@ -1,6 +1,6 @@
 <?php
 
-namespace Ace\ExperimentalUserBundle\Controller;
+namespace Ace\UserBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ class DefaultController extends Controller
 	public function getIdAction($username)
 	{
 		$response = array("success" => false);
-		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($username);
+		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
 		if ($user)
 		{
 			$response = array("success" => true, "id" => $user->getId());
@@ -52,12 +52,12 @@ class DefaultController extends Controller
 	public function optionsAction()
 	{
 		$name = $this->sc->getToken()->getUser()->getUsername();
-		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user) {
 			throw $this->createNotFoundException('No user found with username '.$name);
 		}
-		return new Response($this->templating->render('AceExperimentalUserBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user)));
+		return new Response($this->templating->render('AceUserBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user)));
 	}
 
 	public function checkpassAction()
@@ -65,7 +65,7 @@ class DefaultController extends Controller
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));		
 
 			$name = $this->sc->getToken()->getUser()->getUsername();
-			$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($name);
 			$oldpass = $this->request->get('oldpass');
 
 			//hash password
@@ -90,8 +90,8 @@ class DefaultController extends Controller
 			if($mail)
 			{
 				$name = $this->sc->getToken()->getUser()->getUsername();
-				$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByEmail($mail);
-				$current_user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+				$user = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($mail);
+				$current_user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($name);
 				if(!$user)
 					$response->setContent('1'); //email doesn't exist in database - success
 				else if($user->getUsername() === $current_user->getUsername())
@@ -121,7 +121,7 @@ class DefaultController extends Controller
 				$confirm_pass = $mydata['confirm_pass'];
 
 				$name = $this->sc->getToken()->getUser()->getUsername();
-				$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+				$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 				//update object - no checks atm
 				$user->setFirstname($fname);

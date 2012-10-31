@@ -96,7 +96,7 @@ class DefaultController extends Controller
 		if ($this->get('security.context')->isGranted('ROLE_USER') === true)
 		{
 			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 	        $task->setName($user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().")");
 	        $task->setEmail($user->getEmail());
 		}

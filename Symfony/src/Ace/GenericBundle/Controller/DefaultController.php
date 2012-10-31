@@ -18,7 +18,7 @@ class DefaultController extends Controller
 		{
 			// Load user content here
 			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 			if (!$user)
 			{
@@ -34,7 +34,7 @@ class DefaultController extends Controller
 	
 	public function userAction($user)
 	{
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($user);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($user);
 
 		if (!$user) {
 			return new Response('There is no such user');
@@ -69,7 +69,7 @@ class DefaultController extends Controller
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+			$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 			if (!$user)
 			{
@@ -283,7 +283,7 @@ class DefaultController extends Controller
 	public function createUploadedFile($id, $filename, $code)
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{
@@ -305,7 +305,7 @@ class DefaultController extends Controller
 	public function createUploadedProject($file_name, $code, &$sketch_id)
 	{
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		$exp = explode(".", $file_name);
 		$project_name =  $exp[0];

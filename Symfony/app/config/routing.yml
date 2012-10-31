@@ -30,8 +30,8 @@ AceSearchBundle:
     resource: "@AceSearchBundle/Resources/config/routing.yml"
     prefix:   /search
 
-AceExperimentalUserBundle:
-    resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"
+AceUserBundle:
+    resource: "@AceUserBundle/Resources/config/routing.yml"
     prefix:   /users
 
 # Internal routing configuration to handle ESI

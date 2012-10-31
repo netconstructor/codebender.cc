@@ -1,10 +1,10 @@
 <?php
 
-namespace Ace\ExperimentalUserBundle;
+namespace Ace\UserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AceExperimentalUserBundle extends Bundle
+class AceUserBundle extends Bundle
 {
 	public function getParent()
 	{

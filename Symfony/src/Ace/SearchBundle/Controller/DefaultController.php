@@ -14,7 +14,7 @@ class DefaultController extends Controller
             
             $query = $this->getRequest()->query->get('query');
 
-			$repository = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser');
+			$repository = $this->getDoctrine()->getRepository('AceUserBundle:User');
 			$users = $repository->createQueryBuilder('u')
 			    ->where('u.username LIKE :name OR u.firstname LIKE :name OR u.lastname LIKE :name OR u.twitter LIKE :name')
 				->setParameter('name', "%".$query."%")->getQuery()->getResult();

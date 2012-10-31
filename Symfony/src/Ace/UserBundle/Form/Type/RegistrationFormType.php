@@ -1,6 +1,6 @@
 <?php
 
-namespace Ace\ExperimentalUserBundle\Form\Type;
+namespace Ace\UserBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
@@ -13,11 +13,11 @@ class RegistrationFormType extends BaseType
 
         // add your custom field
 		$builder
-			->add('firstname', 'text', array('label' => 'experimental_user_registration_form_firstname'))
-			->add('lastname', 'text', array('label' => 'experimental_user_registration_form_lastname'))
-			->add('twitter', 'text', array('label' => 'experimental_user_registration_form_twitter'))
+			->add('firstname', 'text', array('label' => 'user_registration_form_firstname'))
+			->add('lastname', 'text', array('label' => 'user_registration_form_lastname'))
+			->add('twitter', 'text', array('label' => 'user_registration_form_twitter'))
 			->add('newsletter', 'checkbox', array(
-												'label' => 'experimental_user_registration_form_newsletter',
+												'label' => 'user_registration_form_newsletter',
 												'attr' => array('checked' => 'checked'),
 												'property_path' => false,
 												'required' => false,
@@ -26,7 +26,7 @@ class RegistrationFormType extends BaseType
 
     public function getName()
     {
-        return 'ace_experimental_user_registration';
+        return 'ace_user_registration';
     }
 }
 

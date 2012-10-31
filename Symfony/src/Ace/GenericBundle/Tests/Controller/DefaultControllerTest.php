@@ -32,7 +32,7 @@ class DefaultControllerTest extends WebTestCase
 		$matcher = array('id'   => 'user_projects');
 		$this->assertTag($matcher, $client->getResponse()->getContent()); 
 		
-		/* $user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername('tzikis');
+		/* $user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername('tzikis');
 		
 		$result=file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
 		if ( $result != false ) {

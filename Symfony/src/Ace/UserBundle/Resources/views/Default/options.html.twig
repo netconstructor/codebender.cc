@@ -148,7 +148,7 @@ function validation(id)
 			$(".oldpass").removeClass("error").removeClass("success").addClass("warning");
 			$(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
 			$(".oldpass-info").html('<i>Checking Password</i>');
-			$.post("{{ path('AceExperimentalUserBundle_checkpass') }}", {oldpass: $("#"+id).val() },
+			$.post("{{ path('AceUserBundle_checkpass') }}", {oldpass: $("#"+id).val() },
 			function(info)
 			{
 				if(info==1)
@@ -175,7 +175,7 @@ function validation(id)
 			var regmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 			if(regmail.test($("#"+id).val()))
 			{
-				$.post("{{ path('AceExperimentalUserBundle_checkmail') }}", { mail: $("#"+id).val() },
+				$.post("{{ path('AceUserBundle_checkmail') }}", { mail: $("#"+id).val() },
 				function(info)
 				{
 					if(info==1)
@@ -335,7 +335,7 @@ $(document).ready(function()
     			items[field.name] = field.value;
 			});
 
-			$.post("{{ path('AceExperimentalUserBundle_setoptions') }}", {data: items },
+			$.post("{{ path('AceUserBundle_setoptions') }}", {data: items },
 			function(data)
 			{
 				alert("Profile Updated: " + data);

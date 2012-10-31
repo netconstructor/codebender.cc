@@ -27,7 +27,7 @@ class DefaultController extends Controller
 	public function createAction($owner, $name, $description)
 	{
 		$project = new Project();
-		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->find($owner);
+		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
 		$project->setOwner($user);
 	    $project->setName($name);
 	    $project->setDescription($description);
@@ -69,7 +69,7 @@ class DefaultController extends Controller
 	{
 		$project = $this->getProjectById($id);
 		$new_project = new Project();
-		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->find($owner);
+		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
 		$new_project->setOwner($user);
 	    $new_project->setName($project->getName());
 	    $new_project->setDescription($project->getDescription());

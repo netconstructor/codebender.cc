@@ -1,6 +1,6 @@
 <?php
 
-namespace Ace\ExperimentalUserBundle\Security\Provider;
+namespace Ace\UserBundle\Security\Provider;
 
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;

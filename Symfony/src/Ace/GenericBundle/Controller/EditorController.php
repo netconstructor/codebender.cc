@@ -14,7 +14,7 @@ class EditorController extends Controller
 		}
 
 		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
+		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
 
 		if (!$user)
 		{

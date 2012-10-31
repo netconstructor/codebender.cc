@@ -1,7 +1,7 @@
 <?php
-// src/Ace/ExperimentalUserBundle/Entity/ExperimentalUser.php
+// src/Ace/UserBundle/Entity/User.php
 
-namespace Ace\ExperimentalUserBundle\Entity;
+namespace Ace\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
  */
-class ExperimentalUser extends BaseUser
+class User extends BaseUser
 {
     /**
      * @ORM\Id
