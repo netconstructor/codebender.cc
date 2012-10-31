@@ -1,6 +1,6 @@
-AceUserBundle_getid:
-    pattern:  /getid/{username}
-    defaults: { _controller: usercontroller:getIdAction }
+AceUserBundle_getuser:
+    pattern:  /getuser/{username}
+    defaults: { _controller: usercontroller:getUserAction }
 
 AceUserBundle_getcurrentuser:
     pattern:  /getcurrentuser
