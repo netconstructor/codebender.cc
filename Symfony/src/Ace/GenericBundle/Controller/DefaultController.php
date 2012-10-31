@@ -33,7 +33,7 @@ class DefaultController extends Controller
 
 		if ($user["success"] === false)
 		{
-			return new Response('There is no such user');
+			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error'=> "There is no such user."));
 		}
 
 		$projectmanager = $this->get('projectmanager');
