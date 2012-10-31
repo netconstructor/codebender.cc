@@ -38,12 +38,12 @@ class DefaultController extends Controller
 		if($current_user !== "anon.")
 		{
 			$name = $current_user->getUsername();
-			$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-			if (!$user)
+			$data = json_decode($this->getIdAction($name)->getContent(), true);
+			if ($data["success"] === false)
 			{
 				throw $this->createNotFoundException('No user found with id '.$name);
 			}
-			$response = array("success" => true, "id" => $user->getId());
+			$response = array("success" => true, "id" => $data["id"]);
 		}
 		return new Response(json_encode($response));
 
