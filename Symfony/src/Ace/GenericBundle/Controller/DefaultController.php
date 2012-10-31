@@ -58,6 +58,12 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('projectmanager');
 		$projects = NULL;
 		
+		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
+		if($project["success"] === false)
+		{
+			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error'=> "There is no such project!"));
+		}
+
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
