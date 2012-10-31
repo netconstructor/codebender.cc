@@ -13,20 +13,14 @@ class EditorController extends Controller
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
 
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
-
-		if (!$user)
-		{
-			throw $this->createNotFoundException('No user found with id '.$name);
-		}
+		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$projectmanager = $this->get('projectmanager');
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
 
-		if($owner["id"] != $user->getId())
+		if($owner["id"] != $user["id"])
 		{
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}

@@ -95,10 +95,9 @@ class DefaultController extends Controller
         $task = new Contact();
 		if ($this->get('security.context')->isGranted('ROLE_USER') === true)
 		{
-			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
-	        $task->setName($user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().")");
-	        $task->setEmail($user->getEmail());
+			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+	        $task->setName($user["firstname"]." ".$user["lastname"]." (".$user["username"].")");
+	        $task->setEmail($user["email"]);
 		}
 
         $form = $this->createFormBuilder($task)

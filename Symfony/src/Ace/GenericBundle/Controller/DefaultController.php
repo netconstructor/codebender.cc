@@ -17,14 +17,9 @@ class DefaultController extends Controller
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			// Load user content here
-			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
+			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
-			if (!$user)
-			{
-				throw $this->createNotFoundException('No user found with id '.$name);
-			}
-			$fullname= $user->getFirstname()." ".$user->getLastname()." (".$user->getUsername().") ";
+			$fullname= $user["firstname"]." ".$user["lastname"]." (".$user["username"].") ";
 
 			return $this->render('AceGenericBundle:Index:list.html.twig', array('name' =>$fullname));
 		}
@@ -34,17 +29,18 @@ class DefaultController extends Controller
 	
 	public function userAction($user)
 	{
-		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($user);
+		$user = json_decode($this->get('usercontroller')->getUserAction($user)->getContent(), true);
 
-		if (!$user) {
+		if ($user["success"] === false)
+		{
 			return new Response('There is no such user');
 		}
 
 		$projectmanager = $this->get('projectmanager');
-		$projects = $projectmanager->listAction($user->getId())->getContent();
+		$projects = $projectmanager->listAction($user["id"])->getContent();
 		$projects = json_decode($projects, true);
 
-		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
+		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{".$user["twitter"]."}.json");
 		if ( $result != false ) {
 			$tweet=json_decode($result); // get tweets and decode them into a variable
 			$lastTweet = $tweet[0]->text; // show latest tweet
@@ -52,7 +48,7 @@ class DefaultController extends Controller
 			$lastTweet=0;
 		}
 		$utilities = $this->get('utilities');
-		$image = $utilities->get_gravatar($user->getEmail(),120);
+		$image = $utilities->get_gravatar($user["email"],120);
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
 	
@@ -68,15 +64,9 @@ class DefaultController extends Controller
 
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
-			$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-			$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
+			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
-			if (!$user)
-			{
-				throw $this->createNotFoundException('No user found with id '.$name);
-			}
-
-			if($owner["id"] == $user->getId())
+			if($owner["id"] == $user["id"])
 			{
 				return $this->forward('AceGenericBundle:Editor:edit', array("id"=> $id));
 			}
@@ -282,15 +272,7 @@ class DefaultController extends Controller
 
 	public function createUploadedFile($id, $filename, $code)
 	{
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
-
-		if (!$user)
-		{
-			throw $this->createNotFoundException('No user found with id '.$name);
-		}
-
-		$user = $user->getID();
+		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$projectmanager = $this->get('projectmanager');
 		$response = $projectmanager->createFileAction($id, $filename, $code);
@@ -304,18 +286,10 @@ class DefaultController extends Controller
 
 	public function createUploadedProject($file_name, $code, &$sketch_id)
 	{
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceUserBundle:User')->findOneByUsername($name);
+		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$exp = explode(".", $file_name);
 		$project_name =  $exp[0];
-
-		if (!$user)
-		{
-			throw $this->createNotFoundException('No user found with id '.$name);
-		}
-
-		$user = $user->getID();
 
 		 if($project_name == '')
 		 {
@@ -323,7 +297,7 @@ class DefaultController extends Controller
 		 }
 
 			$projectmanager = $this->get('projectmanager');
-			$response1 = $projectmanager->createAction($user, $project_name, "")->getContent();
+			$response1 = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
 			$response1=json_decode($response1, true);
 			if($response1["success"])
 			{
