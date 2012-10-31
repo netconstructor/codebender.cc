@@ -257,6 +257,15 @@ class DefaultController extends Controller
 		return new Response(json_encode($result));
 	}
 
+	public function checkExistsAction($id)
+	{
+		$em = $this->em;
+		$project = $this->em->getRepository('AceProjectBundle:Project')->find($id);
+	    if (!$project)
+			return new Response(json_encode(array("success" => false)));
+		return new Response(json_encode(array("success" => true)));
+	}
+
 	public function getProjectById($id)
 	{
 		$em = $this->em;

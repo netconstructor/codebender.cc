@@ -73,3 +73,7 @@ AceProjectBundle_searchName:
 AceProjectBundle_searchDescription:
     pattern: /search/description/{token}
     defaults: { _controller: projectmanager:searchDescriptionAction }
+
+AceProjectBundle_checkexists:
+    pattern: /exists/{token}
+    defaults: { _controller: projectmanager:checkExistsAction }
