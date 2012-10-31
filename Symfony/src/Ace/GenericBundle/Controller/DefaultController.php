@@ -40,7 +40,7 @@ class DefaultController extends Controller
 		$projects = $projectmanager->listAction($user["id"])->getContent();
 		$projects = json_decode($projects, true);
 
-		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{".$user["twitter"]."}.json");
+		$result=@file_get_contents("http://api.twitter.com/1/statuses/user_timeline/".$user["twitter"].".json");
 		if ( $result != false ) {
 			$tweet=json_decode($result); // get tweets and decode them into a variable
 			$lastTweet = $tweet[0]->text; // show latest tweet
