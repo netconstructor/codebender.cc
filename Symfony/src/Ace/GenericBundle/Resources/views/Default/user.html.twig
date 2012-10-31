@@ -8,26 +8,28 @@
 	});
 </script>
 <div class="row-fluid" >
+	<div class="span2">
 	<ul class="thumbnails">
-		<li class="span2">
+		<li>
 		<a href="{{path('AceGenericBundle_user',{'user':user['username']})}}" class="thumbnail">
 		<img id="user_avatar" src="{{image}}" alt="avatar of user"/>
 		</a>
 		</li>
 	</ul>
-<h1>{{ user["username"] }} ({{user["lastname"]}} {{user["firstname"]}})</h1>
-</div>
-
-<div id="user_info" class="row-fluid">
-	<div class="span6">		
+	</div>
+	<div class="span10">
+		<h1>{{ user["username"] }} ({{user["lastname"]}} {{user["firstname"]}})</h1>
 		{% if user["twitter"] %}
 		<div><img src="https://si0.twimg.com/images/dev/cms/intents/bird/bird_blue/bird_16_blue.png"/>
 			@{{user["twitter"]}}
 		</div>
 		{% endif %}
 	</div>
+</div>
+
+<div id="user_info" class="row-fluid">
 	{% if lastTweet %}
-	<div class="span6 offset6">
+	<div class="span12">
 		<em style="font-weight:bold;text-align:center">latest tweet from {{user["twitter"]}}</em>
 		<div class="well">
 			{{lastTweet}}
