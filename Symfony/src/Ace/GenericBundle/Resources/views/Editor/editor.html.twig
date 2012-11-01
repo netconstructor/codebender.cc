@@ -178,6 +178,10 @@ body
   </div>
 </div>
 
+<object id="plugin0" type="application/x-codebendercc" width="0" height="0">
+    <param name="onload" value="enableUSB" />
+</object><br />
+
 <div class="modal hide fade" id="warningModal">
 		<div class="modal-header">
 		<button class="close" data-dismiss="modal">&#215;</button>
@@ -320,12 +324,18 @@ body
 				<div id="usb-sidebar-div">
 					<!-- <h4>Flashing</h4> -->
 					<div id="prescanning">
-						<div id="missingjava">
+						<div id="missingjava" class="hidden">
 							<p>It seems like you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
 						</div>
+						<div id="missingplugin">
+							<!--<p>It seems like you need to enable or install the Codebender.cc Browser Plugin. You can download the plugin from <a href="https://addons.mozilla.org/en-US/firefox/addon/codebendercc-plugin/" >here</a>.</p>-->
+							<p>It seems like you need to enable or install the Codebender.cc Browser Plugin. You can download the plugin from <a href="http://exp.dev.codebender.cc/amaxilatis/Symfony/web/codebender.xpi" >here</a>.</p>
+						</div>
+						<!--
 						<div id="enableUSBdiv">
 							<button id = "enableUSB" class="btn span12" style="margin-bottom:10px; margin-left:0px;" onclick="enableUSB();"><i id="upload_icon" class="icon-play"></i><span id="upload_text"> Enable USB flash </span></button>
 						</div>
+
 						<script type="text/javascript">
 							if (!navigator.javaEnabled()){
 								$("#enableUSBdiv").toggle("blind", {}, 1000);
@@ -334,11 +344,12 @@ body
 								$("#missingjava").toggle("blind", {}, 1000);
 							}
 						</script>
+						-->
 					</div>
 				    <div id="scanning">
 				        <select id="ports" class="myoptions" onChange="savePort()"></select>
 						<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
-							<button id="connect" class="btn"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
+							<button id="connect" class="btn disabled"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
 							<button id = "uploadusb" class="btn"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
 						</div>
 				        <!--<select id="baudrates" class="myoptions"></select>-->
