@@ -273,7 +273,7 @@ function uploadusb()
 						$("#upload_icon").removeClass("icon-white");
 					}, 500);
 					setProgress(80);
-					var progress = applet.uploadUSB(portslist.selectedIndex, binary+'\0', window.boardz[boards.selectedIndex]["upload"]["maximum_size"]+'\0', window.boardz[boards.selectedIndex]["upload"]["protocol"]+'\0', window.boardz[boards.selectedIndex]["upload"]["speed"]+'\0', window.boardz[boards.selectedIndex]["build"]["mcu"]+'\0');
+					var progress = plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"]);
 					if(progress)
 						clearProgress("There was an error uploading. Error #" + progress);
 					else
@@ -407,39 +407,20 @@ function addCommands()
 </script>
 
 <script type="text/javascript">
-
     function scan()
 	{ 
-		if (!window.enabledapplet) return;
-
-		if(typeof myapplet.isActive === "function")
-		{
-
-		    getFire();
-			setInterval(function(){
-				getFire();
-			}, 3000);
-		}
-		else
-		{
-			setTimeout(function(){
-				scan();
-			}, 3000);
-		}
+		getFire();
+		setInterval(function(){	getFire(); }, 1000);
     }
     
     function getIds()
 	{
-		window.applet = $("#myapplet")[0];
-		window.tftpapplet = $("#tftpapplet")[0];
-	    window.portslist= $("#ports")[0];
-	    window.rateslist= $("#baudrates")[0];
+		window.portslist= $("#ports")[0];
 		window.oldPorts = "";
-		setTimeout(function(){
-			scan();	
-		}, 200);
-}
-	
+		window.plugin = document.getElementById('plugin0');
+		document.getElementById('plugin0').download();
+		setTimeout(function(){ scan(); }, 200);
+	}
 	
     function connect()
 	{
@@ -454,16 +435,19 @@ function addCommands()
 			clearProgress("Please select a valid port or enable the Java Applet!!");		
 		}
     }
+
     function getFire()
 	{
 		var ports="";
 		try{
-			ports = applet.probeUsb();
+			ports = plugin.probeUSB();
 			if(ports != oldPorts){
 				$('#ports').find('option').remove();
 				portsAvail=ports.split(",");
 				for (var i =0 ;i< portsAvail.length ; i++){
-					portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
+					if (portsAvail[i]!=""){
+						portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
+					}
 				}
 				oldPorts = ports;
 			}
@@ -476,32 +460,9 @@ function addCommands()
     
     
 function enableUSB(){
-   if (!window.enabledapplet){
-		appletsource='<applet width="1" height="1"  id="myapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.CodeBenderApplet" archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}"> </applet>';
-		$("#usbappletdiv").html(appletsource);
-		window.enabledapplet=true;
-	}
-	
-	setTimeout(function(){
-				checkRunningApplet();
-			}, 2000);
-			
-}
-
-function checkRunningApplet(){
-	applet = $("#myapplet")[0];
-	
-	if(applet.isActive()){
 		$("#prescanning").toggle("blind", {}, 1000);
 		$("#scanning").toggle("blind", {}, 1000);
-		
-			setTimeout(function(){
-				getIds();
-			}, 200);
-	}
-	else{
-		setTimeout(function(){checkRunningApplet();}, 400);
-	}
+		setTimeout(function(){ getIds(); }, 200);
 }
 
 function enableNET(){
