@@ -35,10 +35,12 @@
 	</thead>
 	<tbody>
 	{% for user in users %}
+		{% for info in user %}
 		<tr>
-		<td><a href="{{path('AceGenericBundle_user',{'user':user.username})}}">{{user.username}}</a></td>
-		<td>{{user.firstname}} {{user.lastname}}</td>
+		<td><a href="{{path('AceGenericBundle_user',{'user':info['username']})}}">{{info['username']}}</a></td>
+		<td>{{info["firstname"]}} {{info["lastname"]}}</td>
 		</tr>
+		{% endfor %}
 	{% endfor %}
 	</tbody>
 	</table>
