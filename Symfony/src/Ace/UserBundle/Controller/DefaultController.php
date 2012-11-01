@@ -56,6 +56,60 @@ class DefaultController extends Controller
 
 	}
 
+	public function searchAction($token)
+	{
+		$results_name = json_decode($this->searchNameAction($token)->getContent(), true);
+		$results_uname = json_decode($this->searchUsernameAction($token)->getContent(), true);
+		$results_twit = json_decode($this->searchTwitterAction($token)->getContent(), true);
+		$results = $results_name + $results_uname + $results_twit;
+		return new Response(json_encode($results));
+	}
+
+	public function searchNameAction($token)
+	{
+		$repository = $this->em->getRepository('AceUserBundle:User');
+		$users = $repository->createQueryBuilder('u')
+		    ->where('u.firstname LIKE :name OR u.lastname LIKE :name')
+			->setParameter('name', "%".$token."%")->getQuery()->getResult();
+
+		$result = array();
+		foreach($users as $user)
+		{
+			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername()));
+		}
+		return new Response(json_encode($result));
+	}
+
+	public function searchUsernameAction($token)
+	{
+		$repository = $this->em->getRepository('AceUserBundle:User');
+		$users = $repository->createQueryBuilder('u')
+		    ->where('u.username LIKE :name')
+			->setParameter('name', "%".$token."%")->getQuery()->getResult();
+
+		$result = array();
+		foreach($users as $user)
+		{
+			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername()));
+		}
+		return new Response(json_encode($result));
+	}
+
+	public function searchTwitterAction($token)
+	{
+		$repository = $this->em->getRepository('AceUserBundle:User');
+		$users = $repository->createQueryBuilder('u')
+		    ->where('u.twitter LIKE :name')
+			->setParameter('name', "%".$token."%")->getQuery()->getResult();
+
+		$result = array();
+		foreach($users as $user)
+		{
+			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername()));
+		}
+		return new Response(json_encode($result));
+	}
+
 	public function optionsAction()
 	{
 		$name = $this->sc->getToken()->getUser()->getUsername();

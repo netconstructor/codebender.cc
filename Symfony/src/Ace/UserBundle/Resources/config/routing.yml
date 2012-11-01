@@ -27,3 +27,19 @@ AceUserBundle_checkmail:
     defaults: { _controller: usercontroller:checkmailAction }
     requirements:
         _method:   POST
+
+AceUserBundle_search:
+    pattern: /search/user/{token}
+    defaults: { _controller: usercontroller:searchAction }
+
+AceUserBundle_searchName:
+    pattern: /search/name/{token}
+    defaults: { _controller: usercontroller:searchNameAction }
+
+AceUserBundle_searchUsername:
+    pattern: /search/username/{token}
+    defaults: { _controller: usercontroller:searchUsernameAction }
+
+AceUserBundle_searchTwitter:
+    pattern: /search/twitter/{token}
+    defaults: { _controller: usercontroller:searchTwitterAction }
