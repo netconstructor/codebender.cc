@@ -3,7 +3,7 @@
 {% block mainspan %}
 <h3>Search results for: {{ query }}</h3>
 <br />
-{% if files %}
+{% if projects %}
 	<h2>Projects</h2>
 	<table class="table table-bordered table-striped">
 	<thead>
@@ -13,8 +13,8 @@
 	</tr>
 	</thead>
 	<tbody>
-	{% for file in files %}
-		{% for id, info in file %}
+	{% for project in projects %}
+		{% for id, info in project %}
 		<tr>
 		<td><a href="{{path('AceGenericBundle_project',{'id': id})}}">{{info['name']}}</a></td>
 		<td><a href="{{path('AceGenericBundle_user',{'user': info['owner']['username']})}}">{{info['owner']['username']}}</a></td>
@@ -46,7 +46,7 @@
 	</table>
 {% endif %}
 
-{% if users == null and files == null %}
+{% if users == null and projects == null %}
 <h2>No results found :(</h2>
 {% endif %}
 
