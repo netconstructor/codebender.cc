@@ -186,6 +186,11 @@
 					Logged in as <a href="{{path('AceGenericBundle_user',{'user':app.user.username})}}">{{ app.user.username }}</a>
 				</p>
 				{% endif %}
+		        <ul class="nav pull-right">
+					<li id="blog">
+						<a href="{{ path('AceBlogBundle_blog')}}">Blog</a>
+					</li>
+				</ul>
 		  </div>
 		</div>		
         {% block body %}{% endblock %}
