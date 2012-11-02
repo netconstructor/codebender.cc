@@ -59,3 +59,7 @@ AceUtilitiesBundle_deletefile:
   defaults: { _controller: AceUtilitiesBundle:Default:deleteFile }
   requirements:
     _method:  POST
+
+AceUtilitiesBundle_listboards:
+  pattern:  /listboards
+  defaults: { _controller: boardcontroller:listAction }

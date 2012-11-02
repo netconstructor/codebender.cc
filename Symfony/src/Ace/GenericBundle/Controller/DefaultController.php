@@ -340,8 +340,8 @@ class DefaultController extends Controller
 	
 	public function boardsAction()
 	{
-		$utilities = $this->get('utilities');
-		$boards = json_decode($utilities->get_boards(), true);
+		$boardcontroller = $this->get('boardcontroller');
+		$boards = json_decode($boardcontroller->listAction()->getContent(), true);
 		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
 	}
     

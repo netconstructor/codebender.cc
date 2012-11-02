@@ -135,3 +135,7 @@ services:
             encoderFactory: "@security.encoder_factory"
             securityContext: "@security.context"
             entityManager: "@doctrine.orm.entity_manager"
+    boardcontroller:
+        class:        Ace\UtilitiesBundle\Controller\BoardController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"

@@ -36,10 +36,10 @@ class EditorController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
+		$boardcontroller = $this->get('boardcontroller');
+		$boards = $boardcontroller->listAction()->getContent();
+
 		$utilities = $this->get('utilities');
-
-		$boards = $utilities->get_boards();
-
 		$examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "builtin"), true);
 		$lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "included"), true);
 		$extra_lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "external"), true);
