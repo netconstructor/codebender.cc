@@ -15,7 +15,8 @@ class RegistrationFormType extends BaseType
 		$builder
 			->add('firstname', 'text', array('label' => 'user_registration_form_firstname'))
 			->add('lastname', 'text', array('label' => 'user_registration_form_lastname'))
-			->add('twitter', 'text', array('label' => 'user_registration_form_twitter'))
+			->add('twitter', 'text', array('label' => 'user_registration_form_twitter',
+											'required' => false))
 			->add('newsletter', 'checkbox', array(
 												'label' => 'user_registration_form_newsletter',
 												'attr' => array('checked' => 'checked'),
