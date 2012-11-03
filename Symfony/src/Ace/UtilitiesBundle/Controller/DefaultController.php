@@ -56,6 +56,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('projectmanager');
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files=json_decode($files, true);
+		$files=$files["list"];
 
 		if($show_ino == 0)
 		{
@@ -139,6 +140,7 @@ class DefaultController extends Controller
 		$name = $name["response"];
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = $files["list"];
 		$files = json_decode($files, true);
 
 		if(isset($files[0]))
@@ -392,6 +394,19 @@ class DefaultController extends Controller
 		}
 		else
 			throw $this->createNotFoundException('No POST or GET data!');
+	}
+
+	public function filecreateAction($id, $name)
+	{
+		$data = $this->getRequest()->request->get('data');
+		$data = urldecode($data);
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->createFileAction($id, $name, $data)->getContent();
+		$response = json_decode($response, true);
+		if($response["success"] ==  false)
+			return new Response(json_encode($response));
+		return new Response(json_encode(array("success"=>true)));
 	}
 
 }

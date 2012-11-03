@@ -35,23 +35,28 @@ class DefaultController extends Controller
 	
 		$project->setType("mongo");
 		$mongo = $this->mfc;
-		$id = $mongo->createAction();
-		
-		$project->setProjectfilesId($id);
+		$response = json_decode($mongo->createAction(), true);
+		if($response["success"])
+		{
+			$id = $response["id"];
+			$project->setProjectfilesId($id);
 
-	    $em = $this->em;
-	    $em->persist($project);
-	    $em->flush();
+		    $em = $this->em;
+		    $em->persist($project);
+		    $em->flush();
 
-	    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+		    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+		}
+		else
+			return new Response(json_encode(array("success" => false, "owner_id" => $user->getId(), "name" => $name)));
 	}
 	
 	public function deleteAction($id)
 	{
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
-		$deletion = $mongo->deleteAction($project->getProjectfilesId());
-		if($deletion === 0)
+		$deletion = json_decode($mongo->deleteAction($project->getProjectfilesId()), true);
+		if($deletion["success"] == true)
 		{
 		    $em = $this->em;
 			$em->remove($project);
@@ -154,7 +159,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$list = $mongo->listFilesAction($project->getProjectfilesId());
-		return new Response(json_encode($list));
+		return new Response($list);
 	}
 
 	public function createFileAction($id, $filename, $code)
@@ -170,7 +175,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$get = $mongo->getFileAction($project->getProjectfilesId(), $filename);
-		return new Response(json_encode($get));
+		return new Response($get);
 		
 	}
 	
@@ -179,7 +184,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$set = $mongo->setFileAction($project->getProjectfilesId(), $filename, $code);
-		return new Response(json_encode($set));
+		return new Response($set);
 		
 	}
 		
@@ -188,7 +193,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$delete = $mongo->deleteFileAction($project->getProjectfilesId(), $filename);
-		return new Response(json_encode($delete));
+		return new Response($delete);
 	}
 
 	public function renameFileAction($id, $filename, $new_filename)
@@ -196,23 +201,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
-		return new Response(json_encode($delete));
-	}
-	
-	public function getBinaryAction($id, $flags)
-	{
-		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$getBinary = $mongo->getBinaryAction($project->getProjectfilesId(), $flags);
-		return new Response(json_encode($getBinary));
-	}
-
-	public function setBinaryAction($id, $flags, $bin)
-	{
-		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$setBinary = $mongo->setBinaryAction($project->getProjectfilesId(), $flags, $bin);
-		return new Response(json_encode($setBinary));
+		return new Response($delete);
 	}
 
 	public function searchAction($token)

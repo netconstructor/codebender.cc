@@ -18,13 +18,12 @@ class MongoFilesController extends Controller
 	    $pf->setFiles(array());
 		$pf->setImages(array());
 		$pf->setSketches(array());
-		$pf->setBinaries(array());
 		
 	    $dm = $this->dm;
 	    $dm->persist($pf);
 	    $dm->flush();
 
-	    return serialize($pf->getId());
+	    return json_encode(array("success" => true, "id" => serialize($pf->getId())));
 	}
 	
 	public function deleteAction($id)
@@ -33,7 +32,7 @@ class MongoFilesController extends Controller
 	    $dm = $this->dm;
 		$dm->remove($pf);
 		$dm->flush();
-		return 0;
+		return json_encode(array("success" => true));
 	}
 
 	public function cloneAction($id)
@@ -43,7 +42,6 @@ class MongoFilesController extends Controller
 		$new_pf = $this->getProjectById($new_id);
 		$new_pf->setFiles($pf->getFiles());
 		$new_pf->setFilesTimestamp($pf->getFilesTimestamp());
-		$new_pf->setBinaries($pf->getBinaries());
 		$new_pf->setImages($pf->getImages());
 		$new_pf->setSketches($pf->getSketches());
 		$dm = $this->dm;
@@ -54,15 +52,14 @@ class MongoFilesController extends Controller
 	
 	public function listFilesAction($id)
 	{
-		$pf = $this->getProjectById($id);
-		
-		$list = $pf->getFiles();
-		return $list;
+		$list = $this->listFiles($id);
+		return json_encode(array("success" => true, "list" => $list));
 	}
-	
+
 	public function createFileAction($id, $filename, $code)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
+
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
@@ -75,18 +72,19 @@ class MongoFilesController extends Controller
 	
 	public function getFileAction($id, $filename)
 	{
-		$list = $this->listFilesAction($id);
+		$response = array("success" => false);
+		$list = $this->listFiles($id);
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
-				return $file["code"];
+				$response=array("success" => true, "code" => $file["code"]);
 		}
-		return false;
+		return json_encode($response);
 	}
 	
 	public function setFileAction($id, $filename, $code)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as &$file)
 		{
 			if($file["filename"] == $filename)
@@ -102,7 +100,7 @@ class MongoFilesController extends Controller
 	
 	public function deleteFileAction($id, $filename)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as $key=>$file)
 		{
 			if($file["filename"] == $filename)
@@ -117,7 +115,7 @@ class MongoFilesController extends Controller
 
 	public function renameFileAction($id, $filename, $new_filename)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as $key=>$file)
 		{
 			if($file["filename"] == $filename)
@@ -130,28 +128,6 @@ class MongoFilesController extends Controller
 		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
 	}
 
-		public function getBinaryAction($id, $flags)
-		{
-			$pf = $this->getProjectById($id);
-			$binaries = $pf->getBinaries();
-			if(isset($binaries[$flags]))
-				return json_encode(array("success" => true, "binary" => $binaries[$flags]));
-			else
-				return json_encode(array("success" => false));
-		}
-
-		public function setBinaryAction($id, $flags, $bin)
-		{
-			$pf = $this->getProjectById($id);
-			$binaries = $pf->getBinaries();
-			$binaries[$flags] = array("binary"=>$bin, "timestamp"=>new \DateTime);
-			$pf->setBinaries($binaries);
-		    $dm = $this->dm;
-		    $dm->persist($pf);
-		    $dm->flush();
-			return true;
-		}
-	
 	public function getProjectById($id)
 	{
 	    $dm = $this->dm;
@@ -172,6 +148,14 @@ class MongoFilesController extends Controller
 	    $dm = $this->dm;
 	    $dm->persist($pf);
 	    $dm->flush();
+	}
+
+	private function listFiles($id)
+	{
+		$pf = $this->getProjectById($id);
+
+		$list = $pf->getFiles();
+		return $list;
 	}
 
 	public function __construct(DocumentManager $documentManager)
