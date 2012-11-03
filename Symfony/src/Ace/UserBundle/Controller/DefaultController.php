@@ -5,6 +5,7 @@ namespace Ace\UserBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Validator\Validator;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Templating\EngineInterface;
@@ -19,6 +20,7 @@ class DefaultController extends Controller
 	protected $ef;
 	protected $sc;
 	protected $em;
+	protected $vd;
 
 	public function getUserAction($username)
 	{
@@ -199,7 +201,7 @@ class DefaultController extends Controller
 					'message' => 'Email address is invalid or already in use'
 					));
 
-				$errorList = $this->get('validator')->validateValue($mail, $emailConstraint);
+				$errorList = $this->vd->validateValue($mail, $emailConstraint);
 
 				if(count($errorList)==0)
 				{
@@ -233,13 +235,14 @@ class DefaultController extends Controller
 		
 	}    
 
-	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager)
+	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator)
 	{
 		$this->templating = $templating;
 		$this->request = $request;
 		$this->ef = $encoderFactory;
 		$this->sc = $securityContext;
 	    $this->em = $entityManager;
+	    $this->vd = $validator;
 	}
 
 }
