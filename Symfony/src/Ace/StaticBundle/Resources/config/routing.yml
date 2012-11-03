@@ -1,0 +1,23 @@
+AceStaticBundle_about:
+    pattern:  /about
+    defaults: { _controller: AceStaticBundle:Default:about }
+
+AceStaticBundle_team:
+    pattern:  /team
+    defaults: { _controller: AceStaticBundle:Default:team }
+
+AceStaticBundle_tutorials:
+    pattern:  /tutorials
+    defaults: { _controller: AceStaticBundle:Default:tutorials }
+
+AceStaticBundle_contact:
+    pattern:  /contact
+    defaults: { _controller: AceStaticBundle:Default:contact }
+
+AceStaticBundle_contact_new:
+    pattern:  /contact_new
+    defaults: { _controller: AceStaticBundle:Default:contact }
+
+AceStaticBundle_notify:
+    pattern:  /notify
+    defaults: { _controller: AceStaticBundle:Default:notify }

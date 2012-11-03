@@ -13,13 +13,13 @@
 /*global $, window, document */
 
 $(function () {
-    'use strict';
-   
+    'use strict';   
+   //<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true" data-placement="right" data-content="<h6>Description:</h6><p>{% render "AceUtilitiesBundle:Default:getDescription" with {'id':file['id']} %}</p><h6>Files:</h6><p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p><hr><p><a class='btn btn-danger' href='javascript:void()' onClick='warnDeleteProject(&quot;{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}&quot;);'>Delete Project</a></p>"data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">{{ file['name'] }}</a>
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload();
     $('#fileupload').bind('fileuploadcompleted',  
 	function (e, data) {if(!data.result[0].error) 
-						{ $("#Links").before('<li><a href="http://codebender.cc/edit/'+(data.files[0].name).slice(0,-4)+'">'+(data.files[0].name).slice(0,-4)+'</a></li>');}
+						{ $("#Links").before('<li><a href="'+data.result[0].url+'">'+(data.result[0].name).slice(0,-4)+'</a></li>');}
 						else{  $('#fileupload').fileupload().data('fileupload')._disableFileInputButton(); 
 							   $('.btn.btn-warning').click(function (e) { $('.template-download.fade.in').remove(); $('#fileupload').fileupload().data('fileupload')._enableFileInputButton(); }); }
 		} );
@@ -28,8 +28,9 @@ $(function () {
 							   $('.btn.btn-warning').click(function (e) { $('.template-download.fade.in').remove(); /*$('#fileupload').fileupload().data('fileupload')._enableFileInputButton();*/ }); 
 		} );
 	
-	
-	
+	//$('#fileupload').bind('fileuploadalways', function (e, data) {alert(data.jqXHR.responseText)});
+	//$('#fileupload').bind('fileuploadalways', function (e, data) {alert(data.result[0].url)});
+	/////
 		
     // Enable iframe cross-domain access via redirect option: 
     $('#fileupload').fileupload(
@@ -46,7 +47,7 @@ $(function () {
         $('#fileupload').fileupload('option', {
             url: '//jquery-file-upload.appspot.com/',
             maxFileSize: 5000000,
-            acceptFileTypes: /(\.|\/)(pde|ino)$/i,  /*/.+$/i,*/
+            acceptFileTypes: /(\.|\/)(pde|ino|zip)$/i,  /*/(\.|\/)(pde|ino|zip)$/i,*/  
             process: [
                 {
                     action: 'load',

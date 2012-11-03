@@ -1,3 +1,0 @@
-AceSecurityBundle_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: AceSecurityBundle:Default:index }
