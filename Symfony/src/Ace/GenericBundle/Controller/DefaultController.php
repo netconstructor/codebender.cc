@@ -9,6 +9,8 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Ace\GenericBundle\Classes\UploadHandler;
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
+
+
 class DefaultController extends Controller
 {
 	
@@ -18,10 +20,7 @@ class DefaultController extends Controller
 		{
 			// Load user content here
 			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
-
-			$fullname= $user["firstname"]." ".$user["lastname"]." (".$user["username"].") ";
-
-			return $this->render('AceGenericBundle:Index:list.html.twig', array('name' =>$fullname));
+			return $this->render('AceGenericBundle:Index:list.html.twig', array('name' =>$user["username"]));
 		}
 
 		return $this->render('AceGenericBundle:Index:index.html.twig');
@@ -125,7 +124,16 @@ class DefaultController extends Controller
 				 $code = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
 				 fclose($file);
 
-			    $this->createUploadedProject($project_name, $code, $sketch_id);
+			     $sketch_id = $this->createUploadedProject($project_name/*, $code , $sketch_id */);
+					if(isset($sketch_id)){
+						if(!$this->createUploadedFile($sketch_id, $project_name, $code)){
+							$info = $upload_handler->post("Error creating file.");
+							return $this->writeResponse($info);
+						}
+					}else {
+							$info = $upload_handler->post("Error creating Project.");
+							return $this->writeResponse($info);
+					}
 
 				$updated_info = array();
 				$updated_info[] = $this->fixFile($info, $sketch_id, $project_name, $ext);
@@ -140,7 +148,6 @@ class DefaultController extends Controller
 			     $z = new \ZipArchive();
 				 $headers = array();
 				 $cpps = array();
-				 $mainFile = FALSE;
 				 $count = 0;
 
 				 if ($z->open($_FILES["files"]["tmp_name"][0])) {
@@ -181,37 +188,52 @@ class DefaultController extends Controller
 						 }
 						 else if($ext2 == "cpp"){
 								$cpps[$end] = $z->getFromIndex($i);
-						 }
-						 // $mainFile= TRUE;
+						 }						 
 						 // $code .= $z->getNameIndex($i)."\r\n";
 					}
 
 				} else {$code = 'ERROR opening file';}
 				
-				if($count == 1){
+			if($count == 1){
 				
 				if(mb_detect_encoding($code, 'UTF-8', true) !== FALSE){
-					$this->createUploadedProject($project_name, $code, $sketch_id);
+					$sketch_id = $this->createUploadedProject($project_name);
+					if(isset($sketch_id)){
+						if(!$this->createUploadedFile($sketch_id, $project_name, $code)){
+							$info = $upload_handler->post("Error creating file.");
+							return $this->writeResponse($info);
+						}
+					}else {
+							$info = $upload_handler->post("Error creating Project.");
+							return $this->writeResponse($info);
+					}
 				} else {
 						$info = $upload_handler->post("Filetype not allowed.");
 						return $this->writeResponse($info);
 				}
 				
 				foreach($headers as $key => $value){
+
 					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
-					$this->createUploadedFile($sketch_id, $key, $value);
+						if(!$this->createUploadedFile($sketch_id, $key, $value)){
+							$info = $upload_handler->post("Error creating file.");
+							return $this->writeResponse($info);
+						}
 					}
 				}
 
 				foreach($cpps as $key => $value){
+
 					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
-					$this->createUploadedFile($sketch_id, $key, $value);
+						if(!$this->createUploadedFile($sketch_id, $key, $value)){
+							$info = $upload_handler->post("Error creating file.");
+							return $this->writeResponse($info);
+						}
 					}
 				}
 				
-				} else {
+			} else {
 					$sketch_id = null;
-
 				}
 
 				$updated_info = array();
@@ -277,45 +299,31 @@ class DefaultController extends Controller
 	}
 
 	public function createUploadedFile($id, $filename, $code)
-	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
-
+	{		
 		$projectmanager = $this->get('projectmanager');
-		$response = $projectmanager->createFileAction($id, $filename, $code);
-		//$response = json_decode($response, true);
-		//if($response["success"] ==  false)
-			// return new Response(json_encode($response));
-		// return new Response(json_encode(array("success"=>true)));
-
+		$response = $projectmanager->createFileAction($id, $filename, $code)->getContent();
+		$response = json_decode($response, true);						
+		
+		return $response["success"];
 	}
 
 
-	public function createUploadedProject($file_name, $code, &$sketch_id)
+	public function createUploadedProject($file_name)
 	{
 		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$exp = explode(".", $file_name);
 		$project_name =  $exp[0];
 
-		 if($project_name == '')
-		 {
-                     return $this->redirect($this->generateUrl('AceGenericBundle_list'));
-		 }
-
 			$projectmanager = $this->get('projectmanager');
 			$response1 = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
 			$response1=json_decode($response1, true);
-			if($response1["success"])
-			{
+			if($response1["success"]){
 				$sketch_id = $response1["id"];
-				$utilities = new DefaultHandler();
-				$response2 = $projectmanager->createFileAction($response1["id"], $file_name, $code);
-				$response2=json_decode($response2, true);
-				if($response2["success"])
-				{
-				}
+			} else {
+				$sketch_id = null;
 			}
-			//return new Response(json_encode(array("success" => true)));
+		return $sketch_id;
 	}
 
 		

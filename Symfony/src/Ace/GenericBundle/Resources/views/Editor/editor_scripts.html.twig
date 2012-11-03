@@ -248,14 +248,6 @@ function cloudload()
 				editor.resize();
 			});
 		}
-
-		if (!window.enabledapplet){
-		setTimeout(function(){
-					getIds();
-				}, 500);
-		window.enabledapplet=true;
-		}
-
 	});
 }
 
@@ -313,7 +305,7 @@ function uploadusb()
 	}
 	else
 	{
-		clearProgress("Please select a valid port or enable the Java Applet!!");		
+		clearProgress("Please select a valid port or enable the plugin!!");
 	}
 }
 
@@ -456,13 +448,10 @@ function addCommands()
 	{
 		if($("#ports").val() != null && $("#ports").val() != "")
 		{
-
-		    var port= portslist.options[portslist.selectedIndex].value;
-		    applet.overrideConnect(portslist.selectedIndex);
 		}
 		else
 		{
-			clearProgress("Please select a valid port or enable the Java Applet!!");		
+			clearProgress("Please select a valid port or enable the plugin!!");
 		}
     }
 
@@ -490,8 +479,9 @@ function addCommands()
     
     
 function enableUSB(){
-		$("#prescanning").toggle("blind", {}, 1000);
-		$("#scanning").toggle("blind", {}, 1000);
+		window.usb_enabled=true;
+		$("#prescanning").hide("blind", {}, 1000);
+		$("#scanning").show("blind", {}, 1000);
 		
 		setTimeout(function(){
 			getIds();
@@ -499,30 +489,6 @@ function enableUSB(){
 		setTimeout(function(){
 			loadSettings();
 		}, 500);
-}
-
-function enableNET(){
-			$("#net-info").toggle("blind", {}, 1000);
-			$("#net-tools").toggle("blind", {}, 1000);
-}
-
-function cleanupIPhelp(){
-	if ($("#ip").val()=="Address (IP or Domain)"){
-		$("#ip").val("")
-		$("#netload-ip").text("")
-		$("#cloudload-ip").text("")
-	}else{
-		if ($("#ip").val()==""){
-			$("#ip").val("Address (IP or Domain)")
-			$("#netload-ip").text("")
-			$("#cloudload-ip").text("")
-		}
-		else{
-			$("#netload-ip").text($("#ip").val())
-			$("#cloudload-ip").text($("#ip").val())
-		}
-		$("#ip").val();
-	}	
 }
 
 function isMobile(){
