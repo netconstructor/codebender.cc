@@ -38,7 +38,8 @@ class MongoFilesController extends Controller
 	public function cloneAction($id)
 	{
 		$pf = $this->getProjectById($id);
-		$new_id = $this->createAction();
+		$new_id = json_decode($this->createAction(), true);
+		$new_id = $new_id["id"];
 		$new_pf = $this->getProjectById($new_id);
 		$new_pf->setFiles($pf->getFiles());
 		$new_pf->setFilesTimestamp($pf->getFilesTimestamp());
