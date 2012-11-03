@@ -52,7 +52,7 @@
             minFileSize: undefined,
             // The regular expression for allowed file types, matches
             // against either file type or file name:
-            acceptFileTypes:  '/(\.|\/)(pde|ino)$/i', //'/(\.|\/)(pde|ino)$/i',   //'.+$/i',
+            acceptFileTypes: '/(\.|\/)(pde|ino|zip)$/i' , //'/(\.|\/)(pde|ino|zip)$/i',   //'.+$/i',
             // The regular expression to define for which files a preview
             // image is shown, matched against the file type:
             previewSourceFileTypes: /^image\/(gif|jpeg|png)$/,

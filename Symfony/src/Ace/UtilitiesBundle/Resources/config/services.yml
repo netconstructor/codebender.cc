@@ -1,0 +1,7 @@
+parameters:
+#    ace_utilities.example.class: Ace\UtilitiesBundle\Example
+
+services:
+#    ace_utilities.example:
+#        class: %ace_utilities.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

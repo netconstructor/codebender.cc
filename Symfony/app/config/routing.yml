@@ -1,41 +1,38 @@
-AceMiscBundle:
-    resource: "@AceMiscBundle/Resources/config/routing.yml"
-    prefix:   /misc
+AceOwnerBundle:
+    resource: "@AceOwnerBundle/Resources/config/routing.yml"
+    prefix:   /owner
 
-AceFileBundle:
-    resource: "@AceFileBundle/Resources/config/routing.yml"
+AceGenericBundle:
+    resource: "@AceGenericBundle/Resources/config/routing.yml"
     prefix:   /
+
+AceProjectBundle:
+    resource: "@AceProjectBundle/Resources/config/routing.yml"
+    prefix:   /project
+
+AceSenderBundle:
+    resource: "@AceSenderBundle/Resources/config/routing.yml"
+    prefix:   /send
+
+AceBlogBundle:
+    resource: "@AceBlogBundle/Resources/config/routing.yml"
+    prefix:   /blog
+
+AceUtilitiesBundle:
+    resource: "@AceUtilitiesBundle/Resources/config/routing.yml"
+    prefix:   /utilities
+
+AceStaticBundle:
+    resource: "@AceStaticBundle/Resources/config/routing.yml"
+    prefix:   /static
 
 AceSearchBundle:
     resource: "@AceSearchBundle/Resources/config/routing.yml"
-    prefix:   /
-
-# AceExperimentalUserBundle:
-#     resource: "@AceExperimentalUserBundle/Resources/config/routing.yml"
-#     prefix:   /
+    prefix:   /search
 
 AceUserBundle:
     resource: "@AceUserBundle/Resources/config/routing.yml"
-    prefix:   /
-
-AceEditorBundle:
-    resource: "@AceEditorBundle/Resources/config/routing.yml"
-    prefix:   /
-
-#temp toronto link
-utoronto:
-    pattern:   /cevug/register
-    defaults:  { _controller: FOSUserBundle:Registration:register }
-
-#login:
-#    pattern:   /login
-#    defaults:  { _controller: AceSecurityBundle:Security:login }
-#
-#login_check:
-#    pattern:   /login_check
-
-#_security_logout:
-#    pattern:  /logout
+    prefix:   /users
 
 # Internal routing configuration to handle ESI
 #_internal:
@@ -62,3 +59,7 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
     
+# temp rss feed fix
+rss_feed_fix:
+       pattern: /misc/blog/rss
+       defaults: { _controller: AceBlogBundle:Default:rss }

@@ -1,0 +1,21 @@
+<div class="row-fluid">
+<div class="span6">
+	<div class="row-fluid">
+		<div class="span3"><img src="{{asset('images/codebender-transparent.png')}}" /></div>
+		<div class="span9">
+			<h1>enter the cloud.</h1><h1>enter codebender.</h1>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+	<p>Time to revolutionize the way you develop and hack on your projects. {{site_name}} is a platform that helps your next idea come to life. Whether you are a maker, a hardware hacker or an artist, {{ site_name }} allows you to code on the web, faster and easier, using our awesome web editor.</p>
+	<p>Create a new sketch, upload your existing code or just clone an existing project and modify it to your needs. Host your code on the cloud and stop worrying about data loss. Code faster and easier thanks to our advanced tools. No installations required. Give it a try, join the cloud today.</p>
+	<p><a class="btn btn-primary btn-large" href="{{ path('AceStaticBundle_about') }}" style="float:right;">Learn more &raquo;</a></p>
+	</div>
+	</div>
+</div>
+
+<div class="span6">
+	{% include 'AceGenericBundle:Index:carousel.html.twig' %}
+</div>
+</div><!--/row-->

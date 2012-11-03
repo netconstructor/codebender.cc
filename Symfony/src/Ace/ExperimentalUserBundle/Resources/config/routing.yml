@@ -1,3 +1,0 @@
-AceExperimentalUserBundle_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: AceExperimentalUserBundle:Default:index }
