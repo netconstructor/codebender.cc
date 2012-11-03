@@ -35,15 +35,20 @@ class DefaultController extends Controller
 	
 		$project->setType("mongo");
 		$mongo = $this->mfc;
-		$id = $mongo->createAction();
-		
-		$project->setProjectfilesId($id);
+		$response = json_decode($mongo->createAction(), true);
+		if($response["success"])
+		{
+			$id = $response["id"];
+			$project->setProjectfilesId($id);
 
-	    $em = $this->em;
-	    $em->persist($project);
-	    $em->flush();
+		    $em = $this->em;
+		    $em->persist($project);
+		    $em->flush();
 
-	    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+		    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+		}
+		else
+			return new Response(json_encode(array("success" => false, "owner_id" => $user->getId(), "name" => $name)));
 	}
 	
 	public function deleteAction($id)

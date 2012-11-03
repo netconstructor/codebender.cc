@@ -23,7 +23,7 @@ class MongoFilesController extends Controller
 	    $dm->persist($pf);
 	    $dm->flush();
 
-	    return serialize($pf->getId());
+	    return json_encode(array("success" => true, "id" => serialize($pf->getId())));
 	}
 	
 	public function deleteAction($id)
