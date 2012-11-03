@@ -1,6 +1,6 @@
-# AceProjectBundle_create:
-#     pattern:  /create/{owner}/{name}/{description}
-#     defaults: { _controller: projectmanager:createAction }
+AceProjectBundle_create:
+    pattern:  /create/{owner}/{name}/{description}
+    defaults: { _controller: projectmanager:createAction }
 # 
 # AceProjectBundle_delete:
 #     pattern:  /delete/{id}
@@ -46,9 +46,9 @@
 #     pattern:  /renamefile/{id}/{filename}/{new_filename}
 #     defaults: { _controller: projectmanager:renameFileAction }
 # 
-# AceProjectBundle_getFile:
-#     pattern:  /getfile/{id}/{filename}
-#     defaults: { _controller: projectmanager:getFileAction }
+AceProjectBundle_getFile:
+    pattern:  /getfile/{id}/{filename}
+    defaults: { _controller: projectmanager:getFileAction }
 # 
 # AceProjectBundle_setFile:
 #     pattern:  /setfile/{id}/{filename}/{code}

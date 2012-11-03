@@ -231,4 +231,17 @@ class DefaultController extends Controller
 		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["email"],'image' => $image));
 	}
 
+	public function filecreateAction($id, $name)
+	{
+		$data = $this->getRequest()->request->get('data');
+		$data = urldecode($data);
+
+		$projectmanager = $this->get('projectmanager');
+		$response = $projectmanager->createFileAction($id, $name, $data)->getContent();
+		$response = json_decode($response, true);
+		if($response["success"] ==  false)
+			return new Response(json_encode($response));
+		return new Response(json_encode(array("success"=>true)));
+	}
+
 }

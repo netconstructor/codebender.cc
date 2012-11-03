@@ -63,3 +63,9 @@ AceUtilitiesBundle_deletefile:
 AceUtilitiesBundle_listboards:
   pattern:  /listboards
   defaults: { _controller: boardcontroller:listAction }
+
+AceUtilitiesBundle_filecreate:
+  pattern:  /filecreate/{id}/{name}
+  defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
+  requirements:
+    _method:  POST
