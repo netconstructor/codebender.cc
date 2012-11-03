@@ -21,8 +21,8 @@ class BoardController extends Controller
 			$boards[] = array(
 				"name" => $board->getName(),
 				"upload" => json_decode($board->getUpload(), true),
-				"bootloader" => json_decode($board->getUpload(), true),
-				"build" => json_decode($board->getUpload(), true),
+				"bootloader" => json_decode($board->getBootloader(), true),
+				"build" => json_decode($board->getBuild(), true),
 				"description" => $board->getDescription()
 				);
 		}
