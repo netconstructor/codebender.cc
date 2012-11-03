@@ -23,7 +23,7 @@
 {% block mainspan %}
 
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span6">
 		<h2>Hello {{ name }}!</h2>
 		<h4>Create New Project</h4>
 		<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
@@ -33,7 +33,9 @@
 				<button type="submit" class="btn">Create</button>
 			</div>
 		</form>
-		<a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a>
+		<p>Or upload your existing projects: <a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a></p>
+	</div>
+	<div class="span6">
 	</div>
 </div>
 
