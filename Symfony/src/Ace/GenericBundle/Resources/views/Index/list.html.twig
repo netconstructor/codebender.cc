@@ -2,22 +2,14 @@
 
 {% block javascripts_upload_head %}
 <!-- Force latest IE rendering engine or ChromeFrame if installed -->
-		<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width">
-		<!-- Bootstrap CSS Toolkit styles -->
-		<!-- <link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css"> -->
 		<!-- Generic page styles -->
 		<link rel="stylesheet" href='{{ asset("upload/css/style.css")}}'>
-		<!-- Bootstrap styles for responsive website layout, supporting different screen sizes -->
-		<!-- <link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css"> -->
 		<!-- Bootstrap CSS fixes for IE6 -->
 		<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
-		<!-- Bootstrap Image Gallery styles -->
-		<link rel="stylesheet" href="http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css">
 		<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 		<link rel="stylesheet" href='{{ asset("upload/css/jquery.fileupload-ui.css")}}'>
-		<!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
-
 {% endblock %}
 
 {% block mainspan %}
@@ -48,7 +40,7 @@
   </div>
   <div class="modal-body span6" id="upBody" style="margin-left:10px;">
 	<!-- The file upload form used as target for the file upload widget -->
-    <form id="fileupload" action="{{ path('AceGenericBundle_upload') }}" method="POST" enctype="multipart/form-data">
+    <form id="fileupload" action="{{ path('AceUtilitiesBundle_upload') }}" method="POST" enctype="multipart/form-data">
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar" style="margin-left:0px;">
             <div class="span5">
@@ -58,19 +50,6 @@
                     <span>Add files...</span>
                     <input type="file" name="files[]" multiple>
                 </span>
-                <!-- <span type="submit" class="btn btn-primary start">
-                    <i class="icon-upload icon-white"></i>
-                    <span>Start upload</span>
-                </span>
-                <span type="reset" class="btn btn-warning cancel">
-                    <i class="icon-ban-circle icon-white"></i>
-                    <span>Cancel upload</span>
-                </span> -->
-                <!-- <span type="button" class="btn btn-danger delete">
-                    <i class="icon-trash icon-white"></i>
-                    <span>Delete</span>
-                </span>
-                <input type="checkbox" class="toggle"> -->
             </div>
             <!-- The global progress information -->
             <div class="span7 fileupload-progress fade">
@@ -187,20 +166,10 @@
 $('#upBody').css({'width':'680px'});})();   //570px
 </script>
 
-
-<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" ></script> -->
-		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-		<!-- <script src='{{ asset("upload/js/vendor/jquery.ui.widget.js")}}'></script> -->
+<!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 		<!-- The Templates plugin is included to render the upload/download listings -->
 		<script src="http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"></script>
-		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<!-- <script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script> -->
-		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<!-- <script src="http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"></script> -->
-		<!-- Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo -->
-		<!-- <script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script> -->
-		<!-- <script src="http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"></script> -->
 		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 		<script src='{{ asset("upload/js/jquery.iframe-transport.js")}}'></script>
 		<!-- The basic File Upload plugin -->
@@ -215,5 +184,4 @@ $('#upBody').css({'width':'680px'});})();   //570px
 		<script src='{{ asset("upload/js/main.js")}}'></script>
 		<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE8+ -->
 		<!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
-
 {% endblock %}

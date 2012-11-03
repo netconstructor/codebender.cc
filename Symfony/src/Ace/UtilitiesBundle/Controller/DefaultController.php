@@ -5,6 +5,7 @@ namespace Ace\UtilitiesBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
 use Symfony\Component\HttpFoundation\Response;
+use Ace\UtilitiesBundle\Handler\UploadHandler;
 
 
 class DefaultController extends Controller
@@ -227,6 +228,170 @@ class DefaultController extends Controller
 		$image = $utilities->get_gravatar($user["email"]);
 
 		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["email"],'image' => $image));
+	}
+
+
+	public function uploadAction()
+	{
+
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
+
+			$upload_handler = new UploadHandler(null, null, $this);
+
+			if (!preg_match('/^[a-z0-9\p{P}]*$/i', $_FILES["files"]["name"][0])){
+
+					$info = $upload_handler->post("Invalid filename.");
+					return $upload_handler->writeResponse($info);
+				}
+
+			$file_name = $_FILES["files"]["name"][0];
+			$pinfo = pathinfo($_FILES["files"]["name"][0]);
+			$project_name =  basename($_FILES["files"]["name"][0],'.'.$pinfo['extension']);
+			$ext = $pinfo['extension'];
+
+			if($ext == "ino" || $ext == "pde"){
+
+				if (substr(exec("file -bi -- ".escapeshellarg($_FILES["files"]["tmp_name"][0])), 0, 4) !== 'text'){
+
+					$info = $upload_handler->post("Filetype not allowed.");
+					return $upload_handler->writeResponse($info);
+				}
+
+				 $info = $upload_handler->post(null);
+				 $file = fopen($_FILES["files"]["tmp_name"][0], 'r');
+				 $code = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
+				 fclose($file);
+
+			     $sketch_id = $upload_handler->createUploadedProject($project_name);
+					if(isset($sketch_id)){
+						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
+							$info = $upload_handler->post("Error creating file.");
+							return $upload_handler->writeResponse($info);
+						}
+					}else {
+							$info = $upload_handler->post("Error creating Project.");
+							return $upload_handler->writeResponse($info);
+					}
+
+				$updated_info = array();
+				$updated_info[] = $upload_handler->fixFile($info, $sketch_id, $project_name, $ext);
+
+				return $upload_handler->writeResponse($updated_info);
+			}
+			else if($ext == "zip"){
+
+				$info = $upload_handler->post(null);
+
+				$code = '';
+			     $z = new \ZipArchive();
+				 $headers = array();
+				 $cpps = array();
+				 $count = 0;
+
+				 if ($z->open($_FILES["files"]["tmp_name"][0])) {
+
+					 for ($i = 0; $i < $z->numFiles; $i++) {
+
+						$nameIndex = $z->getNameIndex($i);
+
+				 if (!preg_match('/^[a-z0-9\p{P}]*$/i', $nameIndex)){
+
+					     $info = $upload_handler->post("Invalid filename.");
+						 return $upload_handler->writeResponse($info);
+						}
+
+						$exp = explode('.', $nameIndex);
+						$exp2 = explode('/', $nameIndex);
+						$ext2 = end($exp);
+						$end = end($exp2);
+						// $folderName = prev($exp2);
+						// $fileName = basename($end,".pde");
+
+						 if( $ext2 == "pde"){
+							 //if( $folderName == $fileName || count($exp) == 2)
+						     if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== FALSE){
+								$count++;
+								$code = $z->getFromIndex($i);
+								$project_name = $end;
+							 }
+						 } else if($ext2 == "ino" /*&& count($exp) == 2*/){
+
+								if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== FALSE){
+								$count++;
+								$code = $z->getFromIndex($i);
+								$project_name = $end;
+							 }
+						 } else if($ext2 == "h"){
+								$headers[$end] = $z->getFromIndex($i);
+						 }
+						 else if($ext2 == "cpp"){
+								$cpps[$end] = $z->getFromIndex($i);
+						 }
+						 // $code .= $z->getNameIndex($i)."\r\n";
+					}
+
+				} else {$code = 'ERROR opening file';}
+
+			if($count == 1){
+
+				if(mb_detect_encoding($code, 'UTF-8', true) !== FALSE){
+					$sketch_id = $upload_handler->createUploadedProject($project_name);
+					if(isset($sketch_id)){
+						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
+							$info = $upload_handler->post("Error creating file.");
+							return $upload_handler->writeResponse($info);
+						}
+					}else {
+							$info = $upload_handler->post("Error creating Project.");
+							return $upload_handler->writeResponse($info);
+					}
+				} else {
+						$info = $upload_handler->post("Filetype not allowed.");
+						return $upload_handler->writeResponse($info);
+				}
+
+				foreach($headers as $key => $value){
+
+					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
+						if(!$upload_handler->createUploadedFile($sketch_id, $key, $value)){
+							$info = $upload_handler->post("Error creating file.");
+							return $upload_handler->writeResponse($info);
+						}
+					}
+				}
+
+				foreach($cpps as $key => $value){
+
+					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
+						if(!$upload_handler->createUploadedFile($sketch_id, $key, $value)){
+							$info = $upload_handler->post("Error creating file.");
+							return $upload_handler->writeResponse($info);
+						}
+					}
+				}
+
+			} else {
+					$sketch_id = null;
+				}
+
+				$updated_info = array();
+				$updated_info[] = $upload_handler->fixFile($info, $sketch_id, $project_name, $ext);
+
+				return $upload_handler->writeResponse($updated_info);
+
+			}else {
+				$info = $upload_handler->post(null);
+				return $upload_handler->writeResponse($info);
+			}
+
+		}
+		 else if($this->getRequest()->getMethod() === 'GET')
+		{
+				return new Response('200');  // temp until i find where the fucking get is..
+		}
+		else
+			throw $this->createNotFoundException('No POST or GET data!');
 	}
 
 }

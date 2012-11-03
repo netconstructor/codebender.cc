@@ -10,12 +10,6 @@ AceGenericBundle_project:
     pattern:  /sketch:{id}
     defaults: { _controller: AceGenericBundle:Default:project }
 
-AceGenericBundle_upload:
-    pattern: /upload/
-    defaults: {_controller: AceGenericBundle:Default:upload }
-    #requirements:
-    #    _method:  POST
-
 AceGenericBundle_libraries:
     pattern: /libraries
     defaults: {_controller: AceGenericBundle:Default:libraries }
