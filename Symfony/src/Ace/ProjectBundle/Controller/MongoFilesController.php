@@ -75,13 +75,14 @@ class MongoFilesController extends Controller
 	
 	public function getFileAction($id, $filename)
 	{
+		$response = array("success" => false);
 		$list = $this->listFilesAction($id);
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
-				return $file["code"];
+				$response=array("success" => true, "code" => $file["code"]);
 		}
-		return false;
+		return json_encode($response);
 	}
 	
 	public function setFileAction($id, $filename, $code)

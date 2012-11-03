@@ -170,7 +170,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$get = $mongo->getFileAction($project->getProjectfilesId(), $filename);
-		return new Response(json_encode($get));
+		return new Response($get);
 		
 	}
 	
@@ -179,7 +179,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$set = $mongo->setFileAction($project->getProjectfilesId(), $filename, $code);
-		return new Response(json_encode($set));
+		return new Response($set);
 		
 	}
 		
@@ -188,7 +188,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$delete = $mongo->deleteFileAction($project->getProjectfilesId(), $filename);
-		return new Response(json_encode($delete));
+		return new Response($delete);
 	}
 
 	public function renameFileAction($id, $filename, $new_filename)
@@ -196,7 +196,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
-		return new Response(json_encode($delete));
+		return new Response($delete);
 	}
 
 	public function searchAction($token)
