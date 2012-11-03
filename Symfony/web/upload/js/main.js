@@ -13,8 +13,8 @@
 /*global $, window, document */
 
 $(function () {
-    'use strict';
-   
+    'use strict';   
+   //<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true" data-placement="right" data-content="<h6>Description:</h6><p>{% render "AceUtilitiesBundle:Default:getDescription" with {'id':file['id']} %}</p><h6>Files:</h6><p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p><hr><p><a class='btn btn-danger' href='javascript:void()' onClick='warnDeleteProject(&quot;{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}&quot;);'>Delete Project</a></p>"data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">{{ file['name'] }}</a>
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload();
     $('#fileupload').bind('fileuploadcompleted',  

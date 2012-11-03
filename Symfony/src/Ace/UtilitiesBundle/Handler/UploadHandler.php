@@ -10,13 +10,20 @@
  * http://www.opensource.org/licenses/MIT
  */
 
- namespace Ace\GenericBundle\Classes;
+ namespace Ace\UtilitiesBundle\Handler;
+ 
+ use Symfony\Component\HttpFoundation\Response;
+ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  
 class UploadHandler
 {
-    protected $options;
-
-    function __construct($options=null, $script = null) {
+    protected $options;	
+	protected $up;
+	
+    function __construct($options=null, $script = null, Controller $up) {
+		
+		$this->up = $up;
+		
         $this->options = array(
           //  'script_url' => $this->getFullUrl().'/',
            // 'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
@@ -139,12 +146,6 @@ class UploadHandler
             $file->error = 'minFileSize';
             return false;
         } 
-       /* if (is_int($this->options['max_number_of_files']) && (
-                count($this->get_file_objects()) >= $this->options['max_number_of_files'])
-            ) {
-            $file->error = 'maxNumberOfFiles';
-            return false;
-        } */
         
         return true;
     } 
@@ -168,26 +169,11 @@ class UploadHandler
         // Remove path information and dots around the filename, to prevent uploading
         // into different directories or replacing hidden system files.
         // Also remove control characters and spaces (\x00..\x20) around the filename:
-        $file_name = trim(basename(stripslashes($name)), ".\x00..\x20");
-        // Add missing file extension for known image types:
-        /* if (strpos($file_name, '.') === false &&
-            preg_match('/^image\/(gif|jpe?g|png)/', $type, $matches)) {
-            $file_name .= '.'.$matches[1];
-        } 
-         if ($this->options['discard_aborted_uploads']) {
-            while(is_file($this->options['upload_dir'].$file_name)) {
-                $file_name = $this->upcount_name($file_name);
-            }
-        } */
+        $file_name = trim(basename(stripslashes($name)), ".\x00..\x20");     
         return $file_name;
     }  
 
-    /*
-	protected function handle_form_data($file, $index) {
-        // Handle form data, e.g. $_REQUEST['description'][$index]
-    } 
-
-     */
+  
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null) {
         $file = new \stdClass();
@@ -317,22 +303,75 @@ class UploadHandler
         
         return $info;
     }
+	
+	
+	public function fixFile($info, $sketch_id, $project_name, $ext)
+	{
+		$File = new \stdClass();
 
-    /* public function delete() {
-        $file_name = isset($_REQUEST['file']) ?
-            basename(stripslashes($_REQUEST['file'])) : null;
-        $file_path = $this->options['upload_dir'].$file_name;
-        $success = is_file($file_path) && $file_name[0] !== '.' && unlink($file_path);
-        if ($success) {
-            foreach($this->options['image_versions'] as $version => $options) {
-                $file = $options['upload_dir'].$file_name;
-                if (is_file($file)) {
-                    unlink($file);
-                }
-            }
-        }
-        header('Content-type: application/json');
-        echo json_encode($success);
-    } */
+		$vars = get_object_vars($info[0]);
 
+		if(isset($sketch_id)){
+
+		foreach($vars as $name => $value) {
+			if($name == 'url'){
+				$File->$name = $value.$sketch_id;
+			}else if ($name == 'name' && $ext == "zip"){
+				$File->$name = $project_name;
+			}else{
+				$File->$name = $value;
+			}
+		}
+		}else {$File->error = "Failed to create Project.";}
+
+		return $File;
+	}
+	
+	public function writeResponse($info)
+	{
+		header('Vary: Accept');
+		$json = json_encode($info);
+		$redirect = isset($_REQUEST['redirect']) ?
+		stripslashes($_REQUEST['redirect']) : null;
+		if ($redirect) {
+               header('Location: '.sprintf($redirect, rawurlencode($json)));
+			return;
+		}
+		if (isset($_SERVER['HTTP_ACCEPT']) &&
+		(strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
+		header('Content-type: application/json');
+		} else {
+			header('Content-type: text/plain');
+		}
+
+		return new Response($json);
+	}
+	
+	public function createUploadedFile($id, $filename, $code)
+	{		
+		$projectmanager = $this->up->get('projectmanager');
+		$response = $projectmanager->createFileAction($id, $filename, $code)->getContent();
+		$response = json_decode($response, true);						
+		
+		return $response["success"];
+	}
+	
+	public function createUploadedProject($file_name)
+	{
+		$user = json_decode($this->up->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+
+		$exp = explode(".", $file_name);
+		$project_name =  $exp[0];
+
+			$projectmanager = $this->up->get('projectmanager');
+			$response1 = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
+			$response1=json_decode($response1, true);
+			if($response1["success"]){
+				$sketch_id = $response1["id"];
+			} else {
+				$sketch_id = null;
+			}
+		return $sketch_id;
+	}
+		
 }
