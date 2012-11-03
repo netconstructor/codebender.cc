@@ -8,6 +8,10 @@ AceUtilitiesBundle_deleteproject:
    pattern:  /deleteproject/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
 
+AceUtilitiesBundle_listfilenames:
+   pattern:  /listfilenames/{id}/{show_ino}
+   defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
+
 AceUtilitiesBundle_getprojectdescription:
    pattern:  /getprojectdescription/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:getDescription }
@@ -17,6 +21,22 @@ AceUtilitiesBundle_setprojectdescription:
    defaults: { _controller: AceUtilitiesBundle:Default:setDescription }
    requirements:
       _method:  POST
+
+AceUtilitiesBundle_setprojectname:
+  pattern:  /setprojectname/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:setName }
+  requirements:
+     _method:  POST
+
+AceUtilitiesBundle_renamefile:
+  pattern:  /renamefile/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:renameFile }
+  requirements:
+    _method:  POST
+
+AceUtilitiesBundle_clone:
+  pattern:  /clone/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:clone }
 
 AceUtilitiesBundle_download:
   pattern:  /download/{id}
@@ -40,8 +60,18 @@ AceUtilitiesBundle_deletefile:
   requirements:
     _method:  POST
 
-AceUtilitiesBundle_compile:
-  pattern:  /compile
-  defaults: { _controller: AceUtilitiesBundle:Default:compile }
+AceUtilitiesBundle_listboards:
+  pattern:  /listboards
+  defaults: { _controller: boardcontroller:listAction }
+ 
+AceUtilitiesBundle_upload:
+    pattern: /upload/
+    defaults: {_controller: AceUtilitiesBundle:Default:upload }
+    #requirements:
+    #    _method:  POST
+
+AceUtilitiesBundle_filecreate:
+  pattern:  /filecreate/{id}/{name}
+  defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
   requirements:
-    _method:   POST
+    _method:  POST

@@ -29,42 +29,30 @@ function saveDescription()
 	});
 }
 
-function throwMud()
+function saveName()
 {
-	dirty=true;
-	$("#compile_text").html(" Save & Build");
-	$("#revert").removeClass("disabled").off('click').click(function()
+	$.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data: $("#newName").val()}, function(data)
 	{
-	    revert();
+		$("#oldName").html($("#newName").val());
+		$("#nameModal").modal('hide');
+		location.reload();
 	});
-	$("#save").removeClass("disabled").off('click').click(function()
-	{
-		save();
-	})
-	disableLink($(".download_link"));
-	$("#netload").addClass("disabled").off('click');
-	$("#uploadusb").addClass("disabled").off('click');
-}
-function cleanUp()
-{
-	dirty= false;
-	$("#compile_text").html(" Build");
-	enableLink($(".link_ino"));
-	disableLink($(".link_hex"));
-	$("#revert").addClass("disabled").off('click');
-	$("#save").addClass("disabled").off('click');
 }
 
-function motherInLaw()
+function renameFilenameModal(filename)
 {
-	if(dirty)
+	$("#oldFilename").val(filename);
+	$("#newFilename").val(filename);
+	$("#filenameModal").modal('show');
+}
+
+function renameFilename()
+{
+	$.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename: $("#oldFilename").val(), newFilename: $("#newFilename").val()}, function(data)
 	{
-		save_and_build();
-	}
-	else
-	{
-		build();
-	}	
+		$("#filenameModal").modal('hide');
+		location.reload();
+	});
 }
 
 function setProgress(newprogress)
@@ -106,7 +94,6 @@ function save()
 		$("#save").addClass("btn-success");
 		$("#save_icon").addClass("icon-white");
 		clearProgress("Saved successfuly.");
-		cleanUp();
 		window.setTimeout(function () {
 		    $("#save").removeClass("btn-success");
 			$("#save_icon").removeClass("icon-white");
@@ -117,49 +104,46 @@ function save()
 
 function revert()
 {
-	setProgress(90);
-	$.get("{{ path('AceFileBundle_getMyEscapedCode',{'project_name':project_id}) }}", function(data)
-	{
-		editor.getSession().setValue(data);
-		$("#revert").addClass("btn-success");
-		$("#revert_icon").addClass("icon-white");
-		clearProgress("Reverted successfuly.");
-		cleanUp();
-		window.setTimeout(function () {
-		    $("#revert").removeClass("btn-success");
-			$("#revert_icon").removeClass("icon-white");
-		}, 500);
-		// alert("Data received: " + data);
-	});	
+	location.reload();
 }
 
-function build()
+function generate_payload(format)
 {
+	var pos = editor.getCursorPosition();
+	loadCode(window.selectedFile);
+	editor.moveCursorTo(pos.row, pos.column, true);
+
+	var count=0;
+	var files_array = Array();
+	jQuery.each(window.files, function(i, val) {
+	  files_array[count++] = {"filename":i, "content":$("<div/>").html(val).text()};
+	});
+
+	var payload = {"files":files_array, "format":format, "build":window.boardz[$("#boards").prop("selectedIndex")]["build"]};
+	return JSON.stringify(payload)
+}
+
+function verify()
+{
+	var payload = generate_payload("syntax");
+
 	setProgress(90);
-	$.post("{{ path('AceUtilitiesBundle_compile') }}", { project_id:"{{project_id}}"}, function(data)
+	$.post("{{compiler}}", payload, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
 		if(obj.success == 0)
 		{
 			$("#compile_output").css('color', 'black');
-			// for (var i=0; i<obj.lines.length; i++)
-			// {
-			// 	$(".ace_gutter-cell").filter(function(index) {
-			// 	  return $(this).html() == obj.lines[i];
-			// 	}).css("text-decoration","underline").css("color","red");
-			// }
-			 
-			$("#editor").css("bottom","150px");
-			$("#compile_output").css("bottom","0px");
+			$("#editor").css("bottom","170px");
+			$("#compile_output").css("bottom","30px");
 			$("#compile_output").css("padding-top","10px");
 			$("#compile_output").css("height","120px");
 			$("#compile_output").addClass("well");
 			$("#compile").addClass("btn-warning");
 			$("#compile_icon").addClass("icon-remove");
-			
-			
 			$("#compile_output").html(obj.message);
-			clearProgress("Compilation failed.")
+			$("#compile_output").css("visibility", "visible");
+			clearProgress("Verification failed.")
 		}
 		else
 		{
@@ -169,25 +153,18 @@ function build()
 			$("#compile_output").css("bottom","");
 			$("#compile_output").css("height","");
 			$("#compile_output").css("padding-top","");
+			$("#compile_output").css("visibility", "");
 			$("#compile_output").removeClass("well");
 			$("#compile").addClass("btn-success");
 			$("#compile_icon").addClass("icon-ok");
 
-			var progressText = "<p>Compile Successful.<br /> Code Size: " + obj.size + " bytes<br /><small>(out of <strong>"+ getMaxSize()+"</strong> available.)</small></p>";
+			var progressText = "<p>Verification Successful!</p>";
 			clearProgress(progressText)
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
-			enableLink($(".link_hex"));
-			$("#netload").removeClass("disabled").click(function()
-			{
-				netload();
-			});
-			$("#uploadusb").removeClass("disabled").click(function()
-			{
-				uploadusb();
-			});
 			
 		}
+		editor.resize();
 		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
 
 		window.setTimeout(function () {
@@ -198,59 +175,80 @@ function build()
 	});	
 }
 
-function cloudload()
+
+function getbin(callback)
 {
-	setProgress(90);
-	$.post("{{ path('AceSenderBundle_tftp') }}", { project_name:"{{project_id}}", ip: $("#ip").val()}, function(data)
+	var payload = generate_payload("binary");
+	$.post("{{compiler}}", payload, function(data)
 	{
 		var obj = jQuery.parseJSON(data);
+		callback(obj);
+	});
+}
+
+
+function cloudload()
+{
+	setProgress(30);
+	getbin(function(obj)
+	{
 		if(obj.success == 0)
 		{
-			$("#compile_output").css('color', 'black');
-			for (var i=0; i<obj.lines.length; i++)
-			{
-				$(".ace_gutter-cell").filter(function(index) {
-				  return $(this).html() == obj.lines[i];
-				}).css("text-decoration","underline").css("color","red");
-			}
-			 
-			$("#editor").css("bottom","150px");
-			$("#compile_output").css("bottom","0px");
-			$("#compile_output").css("padding-top","10px");
-			$("#compile_output").css("height","120px");
-			$("#compile_output").addClass("well");			
-			
-			$("#compile_output").html(obj.text);
-			clearProgress("Upload failed.")
+			clearProgress("There was an error compiling.");
 		}
 		else
 		{
-			$("#compile_output").css('color', '');
-			$(".ace_gutter-cell").css("text-decoration", "").css("color","");
-			$("#editor").css("bottom","");
-			$("#compile_output").css("bottom","");
-			$("#compile_output").css("height","");
-			$("#compile_output").css("padding-top","");
-			$("#compile_output").removeClass("well");
-
-			var progressText = "<p>" + obj.text + "</p>";
-			clearProgress(progressText)
-			window.sketch_size = obj.size;
-			$("#compile_output").html("");			
-		}
-
-		window.setTimeout(function () {
-		    $("#compile").removeClass("btn-success").removeClass("btn-warning");
-				$("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
-		}, 500);
-		// alert("Data received: " + data);
-	});	
-	if (!window.enabledapplet){
-	setTimeout(function(){
-				getIds();
+			binary = obj["output"];
+			$("#uploadusb").addClass("btn-success");
+			$("#upload_icon").addClass("icon-white");
+			window.setTimeout(function () {
+			    $("#uploadusb").removeClass("btn-success");
+				$("#upload_icon").removeClass("icon-white");
 			}, 500);
-	window.enabledapplet=true;
-	}
+
+
+			setProgress(70);
+			var payload = {"ip": $("#ip").val(), "bin":binary}
+			$.post("{{ path('AceSenderBundle_tftp') }}", {"data": JSON.stringify(payload)}, function(data)
+			{
+				var obj = jQuery.parseJSON(data);
+				if(obj.success == 0)
+				{
+					$("#compile_output").css('color', 'black');
+					for (var i=0; i<obj.lines.length; i++)
+					{
+						$(".ace_gutter-cell").filter(function(index) {
+						  return $(this).html() == obj.lines[i];
+						}).css("text-decoration","underline").css("color","red");
+					}
+
+					$("#editor").css("bottom","150px");
+					$("#compile_output").css("bottom","0px");
+					$("#compile_output").css("padding-top","10px");
+					$("#compile_output").css("height","120px");
+					$("#compile_output").addClass("well");
+					$("#compile_output").html(obj.text);
+					clearProgress("Upload failed.")
+				}
+				else
+				{
+					$("#compile_output").css('color', '');
+					$(".ace_gutter-cell").css("text-decoration", "").css("color","");
+					$("#editor").css("bottom","");
+					$("#compile_output").css("bottom","");
+					$("#compile_output").css("height","");
+					$("#compile_output").css("padding-top","");
+					$("#compile_output").removeClass("well");
+
+					var progressText = "<p>" + obj.text + "</p>";
+					clearProgress(progressText)
+					window.sketch_size = obj.size;
+					$("#compile_output").html("");
+				}
+				editor.resize();
+			});
+		}
+	});
 }
 
 
@@ -268,25 +266,10 @@ function getMaxSize()
 	return max_size;
 }
 
-function getBaudrate()
-{
-	var baudrate;
-	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
-	{
-		baudrate = "115200";
-	}
-	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
-	{
-		baudrate = "57600";
-	}
-	return baudrate;
-}
-
 function uploadusb()
 {
 	if($("#ports").val() != null && $("#ports").val() != "")
 	{
-		var baudrate = getBaudrate();
 		var max_size = getMaxSize();
 		if(window.size > max_size)
 		{
@@ -294,56 +277,36 @@ function uploadusb()
 			return;
 		}
 
-		// window.startup_value = 10;
-		// window.stop_value = 50;
-		// setProgress(window.startup_value++);
-		// window.progressInterval = setInterval(function()
-		// {
-		// 	if(window.startup_value < window.stop_value)
-		// 		setProgress(window.startup_value);
-		// 	window.startup_value+5;
-		// }, 50);
 		setProgress(50);
-		
-		
-		$.get("{{ path('AceUtilitiesBundle_download', { 'id':project_id}) }}", function(data)
+
+		getbin(function(obj)
 		{
-			window.hex = data;
-			$("#uploadusb").addClass("btn-success");
-			$("#upload_icon").addClass("icon-white");
-			// cleanUp();
-			window.setTimeout(function () {
-			    $("#uploadusb").removeClass("btn-success");
-				$("#upload_icon").removeClass("icon-white");
-			}, 500);
-				
-			// window.stop_value=80;
-			setProgress(80);
-			var progress = applet.flash(portslist.selectedIndex, hex+'\0', baudrate+'\0');
-			// clearInterval(window.progressInterval);
-			if(progress)
-				clearProgress("There was an error uploading. Error #" + progress);			
-			else
-				clearProgress("Upload successful.");
-			// alert("Data received: " + data);
-		});		
+				if(obj.success == 0)
+				{
+					clearProgress("There was an error compiling.");
+				}
+				else
+				{
+					binary = obj["output"];
+					$("#uploadusb").addClass("btn-success");
+					$("#upload_icon").addClass("icon-white");
+					window.setTimeout(function () {
+					    $("#uploadusb").removeClass("btn-success");
+						$("#upload_icon").removeClass("icon-white");
+					}, 500);
+					setProgress(80);
+					var progress = plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"]);
+					if(progress)
+						clearProgress("There was an error uploading. Error #" + progress);
+					else
+						clearProgress("Upload successful.");
+				}
+		});
 	}
 	else
 	{
-		clearProgress("Please select a valid port or enable the Java Applet!!");		
+		clearProgress("Please select a valid port or enable the plugin!!");
 	}
-}
-
-
-function save_and_build()
-{
-	save();
-	$(document).ajaxStop(function()
-	{
-		build();
-		$(this).unbind('ajaxStop');
-	});
-	// build();
 }
 
 function disableLink(link)
@@ -376,14 +339,14 @@ function addCommands()
 	});
 		
 	editor.commands.addCommand({
-	    name: 'buildFile',
+	    name: 'verifyFile',
 	    bindKey: {
 	        win: 'Ctrl-R',
 	        mac: 'Command-R',
 	        sender: 'editor|cli'
 	    },
 	    exec: function(env, args, request) {
-	        motherInLaw();
+	        verify();
 	    }
 	});
 	
@@ -449,71 +412,61 @@ function addCommands()
 	    }
 	});
 	
+	editor.commands.addCommand({
+	    name: 'autoFormat',
+	    bindKey: {
+	        win: 'Ctrl-Alt-[',
+	        mac: 'Command-Alt-[',
+	        sender: 'editor|cli'
+	    },
+	    exec: function(env, args, request)
+		{
+			autoFormat();
+	    }
+	});
 	
 }
 </script>
 
 <script type="text/javascript">
-
     function scan()
 	{ 
-		if (!window.enabledapplet) return;
-
-		if(typeof myapplet.isActive === "function")
-		{
-
-		    getFire();
-			setInterval(function(){
-				getFire();
-			}, 3000);
-		}
-		else
-		{
-			setTimeout(function(){
-				scan();
-			}, 3000);
-		}
+		getFire();
+		setInterval(function(){	getFire(); }, 1000);
     }
     
     function getIds()
 	{
-		window.applet = $("#myapplet")[0];
-		window.tftpapplet = $("#tftpapplet")[0];
-	    window.portslist= $("#ports")[0];
-	    window.rateslist= $("#baudrates")[0];
+		window.portslist= $("#ports")[0];
 		window.oldPorts = "";
-		setTimeout(function(){
-			scan();	
-		}, 200);
-}
-	
+		window.plugin = document.getElementById('plugin0');
+		document.getElementById('plugin0').download();
+		setTimeout(function(){ scan(); }, 200);
+	}
 	
     function connect()
 	{
 		if($("#ports").val() != null && $("#ports").val() != "")
 		{
-
-		    //alert('called connect ');
-		    var port= portslist.options[portslist.selectedIndex].value;
-		    //alert("overrideConnect('"+portslist.selectedIndex+"','"+rateslist.selectedIndex+"')");
-
-		    applet.overrideConnect(portslist.selectedIndex);
 		}
 		else
 		{
-			clearProgress("Please select a valid port or enable the Java Applet!!");		
+			clearProgress("Please select a valid port or enable the plugin!!");
 		}
     }
+
     function getFire()
 	{
 		var ports="";
 		try{
-			ports = applet.probeUsb();
+			ports = plugin.probeUSB();
 			if(ports != oldPorts){
 				$('#ports').find('option').remove();
 				portsAvail=ports.split(",");
 				for (var i =0 ;i< portsAvail.length ; i++){
-					portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
+					if (portsAvail[i]!=""){
+						portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
+					}
 				}
 				oldPorts = ports;
 			}
@@ -526,56 +479,16 @@ function addCommands()
     
     
 function enableUSB(){
-   if (!window.enabledapplet){
-		appletsource='<applet width="1" height="1"  id="myapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.CodeBenderApplet" archive="{{ asset('ardoSerial-0.1-jar-with-dependencies.jar')}}"> </applet>';
-		$("#usbappletdiv").html(appletsource);
-		window.enabledapplet=true;
-	}
-	
-	setTimeout(function(){
-				checkRunningApplet();
-			}, 2000);
-			
-}
-
-function checkRunningApplet(){
-	applet = $("#myapplet")[0];
-	
-	if(applet.isActive()){
-		$("#prescanning").toggle("blind", {}, 1000);
-		$("#scanning").toggle("blind", {}, 1000);
+		window.usb_enabled=true;
+		$("#prescanning").hide("blind", {}, 1000);
+		$("#scanning").show("blind", {}, 1000);
 		
-			setTimeout(function(){
-				getIds();
-			}, 200);
-	}
-	else{
-		setTimeout(function(){checkRunningApplet();}, 400);
-	}
-}
-
-function enableNET(){
-			$("#net-info").toggle("blind", {}, 1000);
-			$("#net-tools").toggle("blind", {}, 1000);
-}
-
-function cleanupIPhelp(){
-	if ($("#ip").val()=="Address (IP or Domain)"){
-		$("#ip").val("")
-		$("#netload-ip").text("")
-		$("#cloudload-ip").text("")
-	}else{
-		if ($("#ip").val()==""){
-			$("#ip").val("Address (IP or Domain)")
-			$("#netload-ip").text("")
-			$("#cloudload-ip").text("")
-		}
-		else{
-			$("#netload-ip").text($("#ip").val())
-			$("#cloudload-ip").text($("#ip").val())
-		}
-		$("#ip").val();
-	}	
+		setTimeout(function(){
+			getIds();
+		}, 200);
+		setTimeout(function(){
+			loadSettings();
+		}, 500);
 }
 
 function isMobile(){
@@ -588,9 +501,10 @@ function isMobile(){
 
 function loadCode(filename)
 {
-	window.files[window.selectedFile] = editor.getSession().getValue();
-	editor.getSession().setValue(window.files[filename]);
+	window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
+	editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
 	window.selectedFile = filename;
+	$("#selectedFile").text(filename);
 }
 
 function createFile()
@@ -612,6 +526,50 @@ function deleteFile(filename)
 	{
 		clearProgress("File Deleted successfuly.");
 		location.reload();
+	});
+}
+
+function autoFormat()
+{
+    editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size': 1, 'indent_char':'\t', 'brace_style':'expand'}))
+}
+
+function saveBoard()
+{
+	new Lawnchair(function() {
+	    this.save({key:'board', name:$("#boards option:selected").text()});
+	});
+}
+
+function savePort()
+{
+	new Lawnchair(function() {
+	    this.save({key:'port', name:$("#ports option:selected").text()});
+	});
+}
+
+function loadSettings()
+{
+	Lawnchair(function(){
+		this.exists('board', function(exists){
+			if(exists)
+			{
+				this.get('board', function(config){
+					$("#boards").val(config.name)
+				})
+			}
+		});
+	});
+
+	Lawnchair(function(){
+		this.exists('port', function(exists){
+			if(exists)
+			{
+				this.get('port', function(config){
+					$("#ports").val(config.name)
+				})
+			}
+		});
 	});
 }
 

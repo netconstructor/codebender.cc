@@ -31,18 +31,6 @@ class DefaultControllerTest extends WebTestCase
 		
 		$matcher = array('id'   => 'user_projects');
 		$this->assertTag($matcher, $client->getResponse()->getContent()); 
-		
-		/* $user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername('tzikis');
-		
-		$result=file_get_contents("http://api.twitter.com/1/statuses/user_timeline/{$user->getTwitter()}.json");
-		if ( $result != false ) {
-			$tweet=json_decode($result); // get tweets and decode them into a variable
-			$lastTweet = $tweet[0]->text; // show latest tweet
-		} else {
-			$lastTweet=0;
-		}
-		
-		echo $lastTweet; */
 	
 	}
 	 

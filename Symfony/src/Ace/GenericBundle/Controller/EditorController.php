@@ -13,20 +13,14 @@ class EditorController extends Controller
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
 
-		$name = $this->container->get('security.context')->getToken()->getUser()->getUsername();
-		$user = $this->getDoctrine()->getRepository('AceExperimentalUserBundle:ExperimentalUser')->findOneByUsername($name);
-
-		if (!$user)
-		{
-			throw $this->createNotFoundException('No user found with id '.$name);
-		}
+		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$projectmanager = $this->get('projectmanager');
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
 
-		if($owner["id"] != $user->getId())
+		if($owner["id"] != $user["id"])
 		{
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
@@ -37,15 +31,17 @@ class EditorController extends Controller
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files = json_decode($files, true);
+		$files = $files["list"];
+
 		foreach($files as $key=>$file)
 		{
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
+		$boardcontroller = $this->get('boardcontroller');
+		$boards = $boardcontroller->listAction()->getContent();
+
 		$utilities = $this->get('utilities');
-
-		$boards = $utilities->get_boards();
-
 		$examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "builtin"), true);
 		$lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "included"), true);
 		$extra_lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "external"), true);
@@ -56,6 +52,6 @@ class EditorController extends Controller
 
 		// die(var_dump($examples)." ".var_dump($lib_examples)." ".var_dump($extra_lib_examples)." ");
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('username'=>$name, 'project_id' => $id, 'project_name' => $name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files, 'boards' => $boards));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files, 'boards' => $boards));
 	}		
 }

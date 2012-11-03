@@ -12,22 +12,25 @@ class DefaultController extends Controller
 	public function tftpAction()
 	{
 		$response = new Response('404 Not Found!', 404, array('content-type' => 'text/plain'));
-		$project_name = $this->getRequest()->request->get('project_name');
-		$ip = $this->getRequest()->request->get('ip');
-		if($project_name && $ip)
+		$data = $this->getRequest()->request->get('data');
+		$data = json_decode($data, true);
+		if(isset($data["ip"]) && isset($data["bin"]))
 		{
-			$resp = $this->forward('AceFileBundle:Default:getMyHex', array('project_name' => $project_name));
-			$value = $resp->getContent();
+			$ip = $data["ip"];
+			$bin = $data["bin"];
+			if($ip && $bin)
+			{
+				$data = "ERROR";
 
-			$data = "ERROR";
-
-			$utilities = new DefaultHandler();			
-			$data = $utilities->get_data("http://sender.dev.codebender.cc", 'hex', urlencode($value)."&ip=".$ip);
-			$response->setContent($data);
-			$response->setStatusCode(200);
-			$response->headers->set('Content-Type', 'text/html');
+				$utilities = new DefaultHandler();
+				$data = $utilities->get_data($this->container->getParameter('sender'), 'bin', $bin."&ip=".$ip);
+				$response->setContent($data);
+				$response->setStatusCode(200);
+				$response->headers->set('Content-Type', 'text/html');
+			}
+			return $response;
 		}
-		return $response;
+		else return new Response(json_encode(array("success" => false)));
 	}
 
 }

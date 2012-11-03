@@ -1,68 +1,43 @@
-{% extends '::base.html.twig' %}
-{% block body %}
+{% extends '::template.html.twig' %}
 
-<script>
-$(document).ready(function()
-{	
-	$(".new-repo").click(function() 
-	{
-		$('[name=project_name]').val($("#your-repos-filter").val());
-		$("#create").submit();
-	});
-});
-</script>
+{#
+{% block stylesheets_base %}
+{{ parent() }}
+{% endblock %}
+#}
 
-<style type="text/css" media="screen">
-.input-medium.search-query
-{
-	width: 85%;
-	margin-right: 10px;	
-}
-button.btn
-{
-	width:100%;
-	margin-top: 5px;
-}
-</style>
+{% block content %}
+	<div id="mycontainer" class="container">
+			<br />
 
-<div id="mycontainer" class="container">
-		<br />
+			{% if app.session.hasFlash('notice') %}
+			    <div class="alert alert-success flash-notice">
+			        <h2>{{ app.session.flash('notice') }}</h2>
+			    </div>
+			{% endif %}
 
-		{% if app.session.hasFlash('notice') %}
-		    <div class="alert alert-success flash-notice">
-		        <h2>{{ app.session.flash('notice') }}</h2>
-		    </div>
-		{% endif %}
-
-		<div class="container-fluid">
-		{% block fluidcontainer %}
-			<div class="row-fluid">
-				{% if is_granted('ROLE_USER') %}		      
-				{% block sidebar %}
-				<div class="span3">
-				    {% render "AceUtilitiesBundle:Default:sidebar" %}    
-				</div>    	
-				{% endblock %}
-				<div class="span9">
-				{% else %}
-				<div class="span12">
-				{% endif %}
-				{% block alert %}
-				{% endblock %}
-				{% block mainspan %}
+			<div class="container-fluid">
+			{% block fluidcontainer %}
+				<div class="row-fluid">
+					{% if is_granted('ROLE_USER') %}		      
+					{% block sidebar %}
+					<div class="span3">
+					    {% render "AceUtilitiesBundle:Default:sidebar" %}    
+					</div>    	
+					{% endblock %}
+					<div class="span9">
+					{% else %}
+					<div class="span12">
+					{% endif %}
+					{% block alert %}
+					{% endblock %}
+					{% block mainspan %}
 		
-				{% endblock %}
-			    </div><!--/span-->
+					{% endblock %}
+				    </div><!--/span-->
 	
-		  </div><!--/row-->
-		{% endblock %}
-		  <hr>
-
-		  <footer>
-			{% include '::footer.html.twig' %}
-		  </footer>
-		</div><!--/.fluid-container-->	
-</div>
-
-
+			  </div><!--/row-->
+			{% endblock %}
+			</div><!--/.fluid-container-->	
+	</div><!--/container-->
 {% endblock %}

@@ -5,7 +5,7 @@ namespace Ace\ProjectBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Ace\ExperimentalUserBundle\Entity\ExperimentalUser;
+use Ace\UserBundle\Entity\User;
 
 /**
  * @ORM\Entity
@@ -45,7 +45,7 @@ class Project
     private $projectfiles_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Ace\ExperimentalUserBundle\Entity\ExperimentalUser")
+     * @ORM\ManyToOne(targetEntity="Ace\UserBundle\Entity\User")
      **/
 	protected $owner;
 
@@ -162,9 +162,9 @@ class Project
     /**
      * Set owner
      *
-     * @param Ace\ExperimentalUserBundle\Entity\ExperimentalUser $owner
+     * @param Ace\UserBundle\Entity\User $owner
      */
-    public function setOwner(\Ace\ExperimentalUserBundle\Entity\ExperimentalUser $owner)
+    public function setOwner(\Ace\UserBundle\Entity\User $owner)
     {
         $this->owner = $owner;
     }
@@ -172,7 +172,7 @@ class Project
     /**
      * Get owner
      *
-     * @return Ace\ExperimentalUserBundle\Entity\ExperimentalUser 
+     * @return Ace\UserBundle\Entity\User 
      */
     public function getOwner()
     {

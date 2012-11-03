@@ -17,7 +17,7 @@ framework:
     session:
         default_locale: en 
         auto_start:     true
-        lifetime:       3600
+        lifetime:       2592000
         
 # Twig Configuration
 twig:
@@ -26,6 +26,9 @@ twig:
     globals:
         site_name: "codebender"
         email_addr: %email.addr%
+        compiler: %compiler%
+        sender: %sender%
+        library: %library%
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -79,7 +82,7 @@ jms_security_extra:
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
-    user_class: Ace\ExperimentalUserBundle\Entity\ExperimentalUser
+    user_class: Ace\UserBundle\Entity\User
     service:
        # mailer: fos_user.mailer.default
        mailer: fos_user.mailer.twig_swift
@@ -89,12 +92,12 @@ fos_user:
     registration:
        confirmation:
             enabled: true
-            template: AceExperimentalUserBundle:User:confirmation.email.twig
+            template: AceUserBundle:User:confirmation.email.twig
        form:
-            type: ace_experimental_user_registration
+            type: ace_user_registration
     resetting:
        email:
-           template: AceExperimentalUserBundle:User:resetting.email.twig
+           template: AceUserBundle:User:resetting.email.twig
 
 doctrine_mongodb:
     connections:
@@ -119,10 +122,21 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@mongofilecontroller"
-
-# my.foo.service:
-#     class: Ace\FileBundle\Controller\ServiceController
-#     arguments:
-#         container: "@service_container"
-
-
+    ownercontroller:
+        class:        Ace\OwnerBundle\Controller\DefaultController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+    usercontroller:
+        class:        Ace\UserBundle\Controller\DefaultController
+        scope: request
+        arguments:
+            templating:  "@templating"
+            request: "@request"
+            encoderFactory: "@security.encoder_factory"
+            securityContext: "@security.context"
+            entityManager: "@doctrine.orm.entity_manager"
+            validator: "@validator"
+    boardcontroller:
+        class:        Ace\UtilitiesBundle\Controller\BoardController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"

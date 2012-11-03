@@ -18,10 +18,6 @@ AceStaticBundle_contact_new:
     pattern:  /contact_new
     defaults: { _controller: AceStaticBundle:Default:contact }
 
-AceStaticBundle_prereg:
-    pattern:  /prereg
-    defaults: { _controller: AceStaticBundle:Default:prereg }
-
 AceStaticBundle_notify:
     pattern:  /notify
     defaults: { _controller: AceStaticBundle:Default:notify }

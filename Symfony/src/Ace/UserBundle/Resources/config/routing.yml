@@ -1,0 +1,45 @@
+AceUserBundle_getuser:
+    pattern:  /getuser/{username}
+    defaults: { _controller: usercontroller:getUserAction }
+
+AceUserBundle_getcurrentuser:
+    pattern:  /getcurrentuser
+    defaults: { _controller: usercontroller:getCurrentUserAction }
+
+AceUserBundle_options:
+    pattern:  /options
+    defaults: { _controller: usercontroller:optionsAction }
+    
+AceUserBundle_setoptions:
+    pattern:  /setoptions
+    defaults: { _controller: usercontroller:setoptionsAction }
+    requirements:
+        _method:   POST
+
+AceUserBundle_checkpass:
+    pattern:  /checkpass
+    defaults: { _controller: usercontroller:checkpassAction }
+    requirements:
+        _method:   POST
+
+AceUserBundle_checkmail:
+    pattern:  /checkmail
+    defaults: { _controller: usercontroller:checkmailAction }
+    requirements:
+        _method:   POST
+
+AceUserBundle_search:
+    pattern: /search/user/{token}
+    defaults: { _controller: usercontroller:searchAction }
+
+AceUserBundle_searchName:
+    pattern: /search/name/{token}
+    defaults: { _controller: usercontroller:searchNameAction }
+
+AceUserBundle_searchUsername:
+    pattern: /search/username/{token}
+    defaults: { _controller: usercontroller:searchUsernameAction }
+
+AceUserBundle_searchTwitter:
+    pattern: /search/twitter/{token}
+    defaults: { _controller: usercontroller:searchTwitterAction }

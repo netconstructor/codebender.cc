@@ -27,7 +27,7 @@ class DefaultController extends Controller
 	public function createAction($owner, $name, $description)
 	{
 		$project = new Project();
-		$user = $this->em->getRepository('AceExperimentalUserBundle:ExperimentalUser')->find($owner);
+		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
 		$project->setOwner($user);
 	    $project->setName($name);
 	    $project->setDescription($description);
@@ -35,23 +35,28 @@ class DefaultController extends Controller
 	
 		$project->setType("mongo");
 		$mongo = $this->mfc;
-		$id = $mongo->createAction();
-		
-		$project->setProjectfilesId($id);
+		$response = json_decode($mongo->createAction(), true);
+		if($response["success"])
+		{
+			$id = $response["id"];
+			$project->setProjectfilesId($id);
 
-	    $em = $this->em;
-	    $em->persist($project);
-	    $em->flush();
+		    $em = $this->em;
+		    $em->persist($project);
+		    $em->flush();
 
-	    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+		    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+		}
+		else
+			return new Response(json_encode(array("success" => false, "owner_id" => $user->getId(), "name" => $name)));
 	}
 	
 	public function deleteAction($id)
 	{
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
-		$deletion = $mongo->deleteAction($project->getProjectfilesId());
-		if($deletion === 0)
+		$deletion = json_decode($mongo->deleteAction($project->getProjectfilesId()), true);
+		if($deletion["success"] == true)
 		{
 		    $em = $this->em;
 			$em->remove($project);
@@ -63,6 +68,67 @@ class DefaultController extends Controller
 			return new Response(json_encode(array("success" => false, "id" => $project->getProjectfilesId())));
 		}
 		
+	}
+
+	public function cloneAction($owner, $id)
+	{
+		$project = $this->getProjectById($id);
+		$new_project = new Project();
+		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
+		$new_project->setOwner($user);
+	    $new_project->setName($project->getName());
+	    $new_project->setDescription($project->getDescription());
+	    $new_project->setIsPublic(TRUE);
+
+		$new_project->setType("mongo");
+		$mongo = $this->mfc;
+		// die(var_dump($project->getProjectfilesId()));
+		$response = $mongo->cloneAction($project->getProjectfilesId());
+		$response = json_decode($response, true);
+		if($response["success"] == true)
+		{
+			$new_project->setProjectfilesId($response["id"]);
+
+		    $em = $this->em;
+		    $em->persist($new_project);
+		    $em->flush();
+
+		    return new Response(json_encode(array("success" => true, "id" => $new_project->getId())));
+		}
+		else
+		{
+			return new Response(json_encode(array("success" => false, "id" => $id)));
+		}
+
+	}
+
+	public function renameAction($id, $new_name)
+	{
+		$output = array("success" => true);
+
+		$project = $this->getProjectById($id);
+		$name = $project->getName();
+
+		$mongo = $this->mfc;
+		$filename = $name.".ino";
+		$code = $mongo->getFileAction($project->getProjectfilesId(), $filename);
+		$response = json_decode($mongo->createFileAction($project->getProjectfilesId(), $new_name.".ino", $code), true);
+		if($response["success"] == true)
+		{
+			$response = json_decode($mongo->deleteFileAction($project->getProjectfilesId(), $filename), true);
+			if($response["success"])
+			{
+				$project->setName($new_name);
+			    $em = $this->em;
+			    $em->persist($project);
+			    $em->flush();
+			}
+			else
+				$output = array("success" => false, "id" => $id, "new name" => $new_name, "error" => "could not delete previous file");
+		}
+		else
+			$output = array("success" => false, "id" => $id, "new name" => $new_name, "error" => "could not create new file");
+		return new Response(json_encode($output));
 	}
 
 	public function getNameAction($id)
@@ -102,7 +168,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$list = $mongo->listFilesAction($project->getProjectfilesId());
-		return new Response(json_encode($list));
+		return new Response($list);
 	}
 
 	public function createFileAction($id, $filename, $code)
@@ -110,7 +176,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$create = $mongo->createFileAction($project->getProjectfilesId(), $filename, $code);
-		return new Response(json_encode($create));
+		return new Response($create);
 	}
 	
 	public function getFileAction($id, $filename)
@@ -118,7 +184,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$get = $mongo->getFileAction($project->getProjectfilesId(), $filename);
-		return new Response(json_encode($get));
+		return new Response($get);
 		
 	}
 	
@@ -127,7 +193,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$set = $mongo->setFileAction($project->getProjectfilesId(), $filename, $code);
-		return new Response(json_encode($set));
+		return new Response($set);
 		
 	}
 		
@@ -136,23 +202,66 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$delete = $mongo->deleteFileAction($project->getProjectfilesId(), $filename);
-		return new Response(json_encode($delete));
-	}
-	
-	public function getBinaryAction($id, $flags)
-	{
-		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$getBinary = $mongo->getBinaryAction($project->getProjectfilesId(), $flags);
-		return new Response(json_encode($getBinary));
+		return new Response($delete);
 	}
 
-	public function setBinaryAction($id, $flags, $bin)
+	public function renameFileAction($id, $filename, $new_filename)
 	{
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
-		$setBinary = $mongo->setBinaryAction($project->getProjectfilesId(), $flags, $bin);
-		return new Response(json_encode($setBinary));
+		$delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
+		return new Response($delete);
+	}
+
+	public function searchAction($token)
+	{
+		$results_name = json_decode($this->searchNameAction($token)->getContent(), true);
+		$results_desc = json_decode($this->searchDescriptionAction($token)->getContent(), true);
+		$results = $results_name + $results_desc;
+		return new Response(json_encode($results));
+	}
+
+	public function searchNameAction($token)
+	{
+		$em = $this->em;
+		$repository = $this->em->getRepository('AceProjectBundle:Project');
+		$qb = $em->createQueryBuilder();
+		$projects = $repository->createQueryBuilder('p')->where('p.name LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
+		$result = array();
+		foreach($projects as $project)
+		{
+			$owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
+			$owner = $owner["response"];
+			$proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
+			$result[] = array($project->getId() => $proj);
+		}
+		return new Response(json_encode($result));
+	}
+
+	public function searchDescriptionAction($token)
+	{
+		$em = $this->em;
+		$repository = $this->em->getRepository('AceProjectBundle:Project');
+		$qb = $em->createQueryBuilder();
+		$projects = $repository->createQueryBuilder('p')->where('p.description LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
+		$result = array();
+		foreach($projects as $project)
+		{
+			$owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
+			$owner = $owner["response"];
+			$proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
+			$result[] = array($project->getId() => $proj);
+		}
+		return new Response(json_encode($result));
+	}
+
+	public function checkExistsAction($id)
+	{
+		$em = $this->em;
+		$project = $this->em->getRepository('AceProjectBundle:Project')->find($id);
+	    if (!$project)
+			return new Response(json_encode(array("success" => false)));
+		return new Response(json_encode(array("success" => true)));
 	}
 
 	public function getProjectById($id)

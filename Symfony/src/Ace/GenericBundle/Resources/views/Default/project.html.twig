@@ -32,32 +32,15 @@ h1 small
 		<hr>
 		<div id="menu-getproject" class="btn-group">
 			<a class="btn btn-primary" href="{{path('AceUtilitiesBundle_download',{'id': project_id })}}">Download</a>
-{#			{% if is_granted('ROLE_USER') %}
-				<a class="btn btn-primary"  data-toggle="modal" href="#cloneModal">Clone</a>
-			{% endif %}#}
+			{% if is_granted('ROLE_USER') %}
+				<a class="btn btn-primary" href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}">Clone</a>
+			{% endif %}
 		</div>
 	</div>
-	<div class="modal hide" id="cloneModal">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h3>Clone Project</h3>
-		</div>
-		<div class="modal-body">
-{#			<p>Create new project from existing with name...</p>
-			<form method='post' action='{{ path('AceFileBundle_clone',{'old_user':owner.getUsername(),'old_project_name': project}) }}'>
-			<input type="text" name='name' class="input-medium search-query" placeholder="Type the name of your new project">	
-#}
-		</div>
-		<div class="modal-footer">
-			<input type="button" class="btn" data-dismiss="modal" value="Cancel"/>
-			<input type="submit" class="btn btn-primary" value="Create"/>
-			</form>
-		</div>
-    </div>
 	{% for file in files %}
 	<h2>{{file['filename']}}</h2>
 	<div id="code-container" class="row-fluid">
-		<pre id="editor" class="prettyprint linenums">{{file['code']}}</pre>
+		<pre id="editor" class="prettyprint linenums">{{file['code'] | raw}}</pre>
 	</div>
 	{% endfor %}
 {% endblock %}
