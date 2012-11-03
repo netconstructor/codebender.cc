@@ -136,3 +136,7 @@ services:
             securityContext: "@security.context"
             entityManager: "@doctrine.orm.entity_manager"
             validator: "@validator"
+    boardcontroller:
+        class:        Ace\UtilitiesBundle\Controller\BoardController
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
