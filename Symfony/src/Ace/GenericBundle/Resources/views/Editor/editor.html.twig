@@ -65,12 +65,6 @@ body
 	/* text-shadow: #999999 1px 1px 1px; */
 	border-width: 0px;
 }
-
-.myoptions
-{
-	width:100%;
-	margin-bottom:10px;
-}
 </style>
 {% endblock %}
 
@@ -95,8 +89,6 @@ body
 
 		addCommands();
 
-		window.enabledapplet=false;
-
 		window.files = {
 		{% for file in files %}
 		{#
@@ -120,7 +112,6 @@ body
 
 		$("#progress").hide();
 		$("#scanning").hide();
-		$("#net-tools").hide();
 
 		$("#line_count").html(editor.getSession().getValue().split("\n").length);
 		disableLink($(".link_hex"));
@@ -317,71 +308,34 @@ body
 				    <button id = "save" class="btn" onclick="save();"><i id="save_icon" class="icon-download"></i> Save</button>
 					<button id = "compile" class="btn"><i id="compile_icon" class="icon-check"></i><span id="compile_text"> Verify</span></button>
 				</div>
-				<select id="boards"  class="myoptions" onChange="saveBoard()">
+				<select id="boards" style="width:100%;" onChange="saveBoard()">
 				</select>
 				<!-- <hr> -->
 				<div id="desktop-tools-1" class="visible-desktop">
 				<div id="usb-sidebar-div">
 					<!-- <h4>Flashing</h4> -->
 					<div id="prescanning">
-						<div id="missingjava" class="hidden">
-							<p>It seems like you need to enable or install Java for your browser. Please check our FAQ on the bottom of the page.</p>
-						</div>
 						<div id="missingplugin">
 							<!--<p>It seems like you need to enable or install the Codebender.cc Browser Plugin. You can download the plugin from <a href="https://addons.mozilla.org/en-US/firefox/addon/codebendercc-plugin/" >here</a>.</p>-->
-							<p>It seems like you need to enable or install the Codebender.cc Browser Plugin. You can download the plugin from <a href="http://exp.dev.codebender.cc/amaxilatis/Symfony/web/codebender.xpi" >here</a>.</p>
+							<p>It seems like you need to enable or install the Codebender.cc Browser Plugin. You can download the plugin from <a href="{{asset("codebender.xpi")}}" >here</a>.</p>
 						</div>
-						<!--
-						<div id="enableUSBdiv">
-							<button id = "enableUSB" class="btn span12" style="margin-bottom:10px; margin-left:0px;" onclick="enableUSB();"><i id="upload_icon" class="icon-play"></i><span id="upload_text"> Enable USB flash </span></button>
-						</div>
-
-						<script type="text/javascript">
-							if (!navigator.javaEnabled()){
-								$("#enableUSBdiv").toggle("blind", {}, 1000);
-							}
-							else{
-								$("#missingjava").toggle("blind", {}, 1000);
-							}
-						</script>
-						-->
 					</div>
 				    <div id="scanning">
-				        <select id="ports" class="myoptions" onChange="savePort()"></select>
-						<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
-							<button id="connect" class="btn disabled"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button>
+						<div class="input-append">
+					        <select id="ports" onChange="savePort()"></select>
 							<button id = "uploadusb" class="btn"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
 						</div>
-				        <!--<select id="baudrates" class="myoptions"></select>-->
+						<!-- <div class="btn-group" style="margin-bottom:10px; margin-left:0px;"> -->
+							<!-- <button id="connect" class="btn"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button> -->
+						<!-- </div> -->
 					</div>
 				</div>
 				</div>
-				<input type="text" id='ip' style="width:96%;" value="Address (IP or Domain)" onclick="cleanupIPhelp();" onkeyup="cleanupIPhelp();">
-				<div id="netupload-alternative" class="hide"> 
-					<div class="btn-group">
-					  <a class="btn dropdown-toggle span12" data-toggle="dropdown" href="#" style="margin-bottom:10px; margin-left:0px;"> Remote Upload <span id="netload-ip"></span> <span class="caret"></span> </a>
-					  <ul class="dropdown-menu">
-						<li><a href="#" onclick="cloudload();return false;"><i class="icon-globe"></i> Cloud Flashing</a></li>
-						<li id="removeme"><a href="#" onclick="netload();return false;"><i class="icon-upload"></i> NET Upload</a></li>
-					  </ul>
-					</div>
-				</div>
-				<script type="text/javascript">
-				if (!navigator.javaEnabled()){
-					var elem = document.getElementById('removeme');
-					elem.parentNode.removeChild(elem);
-				}
-				</script>
-
-				<div id="netupload-original" class="hide"> 
-					<div id="desktop-tools-2" class="visible-desktop">
-						<div id="net-sidebar-div">															
-							<button id="netload" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i class="icon-upload"></i> NET Flash <span id="netload-ip"></span></button>					
-						</div>
-					</div>
-				</div>
-				<div id="cloud-sidebar-div" >
-					<button id="cloudload" onclick="cloudload()" class="btn span12" style="margin-bottom:10px; margin-left:0px;"><i class="icon-globe"></i> Cloud Upload <span id="cloudload-ip"></span></button>
+				<div class="input-append">
+					<input type="text" id='ip'>
+					<button id="cloudload" onclick="cloudload()" class="btn">
+						<i class="icon-globe"></i> Cloud Flash<span id="cloudload-ip"></span>
+					</button>
 				</div>
 				<hr>
 				<div><p>Total Number of lines: <span id="line_count">0</span></div>
@@ -390,14 +344,6 @@ body
 				    </div>
 				<div id="operation_output">
 				</div>
-				
-				<div id="usbappletdiv">
-				</div>
-				<script src="https://www.java.com/js/deployJava.js"></script>
-				{#
-				<applet width="1" height="1"  id="tftpapplet" style="visibility:hidden;" code="eu.amaxilatis.codebender.tftp.TftpApplet" archive="{{ asset('tftpUploader-jar-with-dependencies.jar')}}"> </applet>
-				#}
-				
 		    </div>
 		    <div class="tab-pane" id="tab2">
 				<h3>Name:</h3>
