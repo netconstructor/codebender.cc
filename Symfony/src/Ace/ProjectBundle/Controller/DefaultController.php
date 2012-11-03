@@ -111,7 +111,8 @@ class DefaultController extends Controller
 
 		$mongo = $this->mfc;
 		$filename = $name.".ino";
-		$code = $mongo->getFileAction($project->getProjectfilesId(), $filename);
+		$code = json_decode($mongo->getFileAction($project->getProjectfilesId(), $filename), true);
+		$code = $code["code"];
 		$response = json_decode($mongo->createFileAction($project->getProjectfilesId(), $new_name.".ino", $code), true);
 		if($response["success"] == true)
 		{
