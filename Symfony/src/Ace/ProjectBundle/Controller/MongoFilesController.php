@@ -18,7 +18,6 @@ class MongoFilesController extends Controller
 	    $pf->setFiles(array());
 		$pf->setImages(array());
 		$pf->setSketches(array());
-		$pf->setBinaries(array());
 		
 	    $dm = $this->dm;
 	    $dm->persist($pf);
@@ -43,7 +42,6 @@ class MongoFilesController extends Controller
 		$new_pf = $this->getProjectById($new_id);
 		$new_pf->setFiles($pf->getFiles());
 		$new_pf->setFilesTimestamp($pf->getFilesTimestamp());
-		$new_pf->setBinaries($pf->getBinaries());
 		$new_pf->setImages($pf->getImages());
 		$new_pf->setSketches($pf->getSketches());
 		$dm = $this->dm;
