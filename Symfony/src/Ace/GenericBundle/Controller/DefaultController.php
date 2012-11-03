@@ -83,6 +83,7 @@ class DefaultController extends Controller
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files = json_decode($files, true);
+		$files = $files["list"];
 		foreach($files as $key=>$file)
 		{
 			$files[$key]["code"] = htmlspecialchars($file["code"]);

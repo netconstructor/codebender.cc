@@ -154,7 +154,7 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
 		$list = $mongo->listFilesAction($project->getProjectfilesId());
-		return new Response(json_encode($list));
+		return new Response($list);
 	}
 
 	public function createFileAction($id, $filename, $code)

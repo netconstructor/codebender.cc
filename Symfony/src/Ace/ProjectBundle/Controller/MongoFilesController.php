@@ -52,15 +52,14 @@ class MongoFilesController extends Controller
 	
 	public function listFilesAction($id)
 	{
-		$pf = $this->getProjectById($id);
-		
-		$list = $pf->getFiles();
-		return $list;
+		$list = $this->listFiles($id);
+		return json_encode(array("success" => true, "list" => $list));
 	}
-	
+
 	public function createFileAction($id, $filename, $code)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
+
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
@@ -74,7 +73,7 @@ class MongoFilesController extends Controller
 	public function getFileAction($id, $filename)
 	{
 		$response = array("success" => false);
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
@@ -85,7 +84,7 @@ class MongoFilesController extends Controller
 	
 	public function setFileAction($id, $filename, $code)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as &$file)
 		{
 			if($file["filename"] == $filename)
@@ -101,7 +100,7 @@ class MongoFilesController extends Controller
 	
 	public function deleteFileAction($id, $filename)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as $key=>$file)
 		{
 			if($file["filename"] == $filename)
@@ -116,7 +115,7 @@ class MongoFilesController extends Controller
 
 	public function renameFileAction($id, $filename, $new_filename)
 	{
-		$list = $this->listFilesAction($id);
+		$list = $this->listFiles($id);
 		foreach($list as $key=>$file)
 		{
 			if($file["filename"] == $filename)
@@ -149,6 +148,14 @@ class MongoFilesController extends Controller
 	    $dm = $this->dm;
 	    $dm->persist($pf);
 	    $dm->flush();
+	}
+
+	private function listFiles($id)
+	{
+		$pf = $this->getProjectById($id);
+
+		$list = $pf->getFiles();
+		return $list;
 	}
 
 	public function __construct(DocumentManager $documentManager)

@@ -55,6 +55,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('projectmanager');
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files=json_decode($files, true);
+		$files=$files["list"];
 
 		if($show_ino == 0)
 		{
@@ -138,6 +139,7 @@ class DefaultController extends Controller
 		$name = $name["response"];
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = $files["list"];
 		$files = json_decode($files, true);
 
 		if(isset($files[0]))
