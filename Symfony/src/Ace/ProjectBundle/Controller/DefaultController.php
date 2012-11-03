@@ -50,8 +50,8 @@ class DefaultController extends Controller
 	{
 		$project = $this->getProjectById($id);
 		$mongo = $this->mfc;
-		$deletion = $mongo->deleteAction($project->getProjectfilesId());
-		if($deletion === 0)
+		$deletion = json_decode($mongo->deleteAction($project->getProjectfilesId()), true);
+		if($deletion["success"] == true)
 		{
 		    $em = $this->em;
 			$em->remove($project);

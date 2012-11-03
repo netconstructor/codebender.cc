@@ -32,7 +32,7 @@ class MongoFilesController extends Controller
 	    $dm = $this->dm;
 		$dm->remove($pf);
 		$dm->flush();
-		return 0;
+		return json_encode(array("success" => true));
 	}
 
 	public function cloneAction($id)
