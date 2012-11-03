@@ -198,22 +198,6 @@ class DefaultController extends Controller
 		$delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
 		return new Response(json_encode($delete));
 	}
-	
-	public function getBinaryAction($id, $flags)
-	{
-		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$getBinary = $mongo->getBinaryAction($project->getProjectfilesId(), $flags);
-		return new Response(json_encode($getBinary));
-	}
-
-	public function setBinaryAction($id, $flags, $bin)
-	{
-		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$setBinary = $mongo->setBinaryAction($project->getProjectfilesId(), $flags, $bin);
-		return new Response(json_encode($setBinary));
-	}
 
 	public function searchAction($token)
 	{

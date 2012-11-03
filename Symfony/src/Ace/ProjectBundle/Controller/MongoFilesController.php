@@ -130,28 +130,6 @@ class MongoFilesController extends Controller
 		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
 	}
 
-		public function getBinaryAction($id, $flags)
-		{
-			$pf = $this->getProjectById($id);
-			$binaries = $pf->getBinaries();
-			if(isset($binaries[$flags]))
-				return json_encode(array("success" => true, "binary" => $binaries[$flags]));
-			else
-				return json_encode(array("success" => false));
-		}
-
-		public function setBinaryAction($id, $flags, $bin)
-		{
-			$pf = $this->getProjectById($id);
-			$binaries = $pf->getBinaries();
-			$binaries[$flags] = array("binary"=>$bin, "timestamp"=>new \DateTime);
-			$pf->setBinaries($binaries);
-		    $dm = $this->dm;
-		    $dm->persist($pf);
-		    $dm->flush();
-			return true;
-		}
-	
 	public function getProjectById($id)
 	{
 	    $dm = $this->dm;

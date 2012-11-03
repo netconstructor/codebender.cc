@@ -54,14 +54,6 @@ AceProjectBundle_setFile:
     pattern:  /setfile/{id}/{filename}/{code}
     defaults: { _controller: projectmanager:setFileAction }
 
-AceProjectBundle_getBinary:
-    pattern:  /getbinary/{id}/{flags}
-    defaults: { _controller: projectmanager:getBinaryAction }
-
-AceProjectBundle_setBinary:
-    pattern:  /setbinary/{id}/{flags}/{bin}
-    defaults: { _controller: projectmanager:setBinaryAction }
-
 AceProjectBundle_search:
     pattern: /search/project/{token}
     defaults: { _controller: projectmanager:searchAction }
