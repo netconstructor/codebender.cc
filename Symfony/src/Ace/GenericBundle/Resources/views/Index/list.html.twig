@@ -25,10 +25,13 @@
 <div class="row-fluid">
 	<div class="span12">
 		<h2>Hello {{ name }}!</h2>
-		<h4>New Project</h4>
+		<h4>Create New Project</h4>
 		<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
-			<input type="text" name='project_name' class="search-query">
-			<button type="submit" class="btn">Create new project</button>
+			<div class="input-prepend input-append">
+				<span class="add-on">Name:</span>
+				 <input type="text" name='project_name'>
+				<button type="submit" class="btn">Create</button>
+			</div>
 		</form>
 		<a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a>
 	</div>
