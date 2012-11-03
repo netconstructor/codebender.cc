@@ -47,7 +47,7 @@ class MongoFilesController extends Controller
 		$dm = $this->dm;
 		$dm->persist($new_pf);
 		$dm->flush();
-		return $new_id;
+		return json_encode(array("success" => true, "id" => $new_id));
 	}
 	
 	public function listFilesAction($id)
