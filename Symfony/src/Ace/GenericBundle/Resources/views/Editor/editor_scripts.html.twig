@@ -479,8 +479,9 @@ function addCommands()
     
     
 function enableUSB(){
-		$("#prescanning").toggle("blind", {}, 1000);
-		$("#scanning").toggle("blind", {}, 1000);
+		window.usb_enabled=true;
+		$("#prescanning").hide("blind", {}, 1000);
+		$("#scanning").show("blind", {}, 1000);
 		
 		setTimeout(function(){
 			getIds();

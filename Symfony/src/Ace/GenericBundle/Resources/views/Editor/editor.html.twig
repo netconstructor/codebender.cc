@@ -111,7 +111,8 @@ body
 			mySelect.append($('<option></option>').val(window.boardz[i]["name"]).html(window.boardz[i]["name"]));
 
 		$("#progress").hide();
-		$("#scanning").hide();
+		if(window.usb_enabled == null);
+			$("#scanning").hide();
 
 		$("#line_count").html(editor.getSession().getValue().split("\n").length);
 		disableLink($(".link_hex"));
