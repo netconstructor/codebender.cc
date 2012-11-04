@@ -69,9 +69,3 @@ AceUtilitiesBundle_upload:
     defaults: {_controller: AceUtilitiesBundle:Default:upload }
     #requirements:
     #    _method:  POST
-
-AceUtilitiesBundle_filecreate:
-  pattern:  /filecreate/{id}/{name}
-  defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
-  requirements:
-    _method:  POST

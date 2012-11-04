@@ -396,17 +396,4 @@ class DefaultController extends Controller
 			throw $this->createNotFoundException('No POST or GET data!');
 	}
 
-	public function filecreateAction($id, $name)
-	{
-		$data = $this->getRequest()->request->get('data');
-		$data = urldecode($data);
-
-		$projectmanager = $this->get('projectmanager');
-		$response = $projectmanager->createFileAction($id, $name, $data)->getContent();
-		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
-	}
-
 }
