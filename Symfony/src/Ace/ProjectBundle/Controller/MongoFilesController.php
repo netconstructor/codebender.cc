@@ -100,6 +100,10 @@ class MongoFilesController extends Controller
 	
 	public function deleteFileAction($id, $filename)
 	{
+		$fileExists = json_decode($this->fileExists($id, $filename), true);
+		if(!$fileExists["success"])
+			return json_encode($fileExists);
+
 		$list = $this->listFiles($id);
 		foreach($list as $key=>$file)
 		{
@@ -115,6 +119,10 @@ class MongoFilesController extends Controller
 
 	public function renameFileAction($id, $filename, $new_filename)
 	{
+		$fileExists = json_decode($this->fileExists($id, $filename), true);
+		if(!$fileExists["success"])
+			return json_encode($fileExists);
+
 		$canCreateFile = json_decode($this->canCreateFile($id, $new_filename), true);
 		if($canCreateFile["success"])
 		{
@@ -161,6 +169,17 @@ class MongoFilesController extends Controller
 
 		$list = $pf->getFiles();
 		return $list;
+	}
+
+	private function fileExists($id, $filename)
+	{
+		$list = $this->listFiles($id);
+		foreach($list as $file)
+		{
+			if($file["filename"] == $filename)
+				return json_encode(array("success" => true));
+		}
+		return json_encode(array("success" => false, "filename" => $filename, "error" => "File ".$filename." does not exist."));
 	}
 
 	private function canCreateFile($id, $filename)
