@@ -185,7 +185,11 @@ class MongoFilesController extends Controller
 	private function canCreateFile($id, $filename)
 	{
 		$list = $this->listFiles($id);
-		$is_ino = strlen($filename) - strrpos($filename, ".ino") == 4;
+		$is_ino = false;
+		if(strrpos($filename, ".ino") !== false)
+		{
+			$is_ino = strlen($filename) - strrpos($filename, ".ino") == 4;
+		}
 		foreach($list as $file)
 		{
 			if($file["filename"] == $filename)
