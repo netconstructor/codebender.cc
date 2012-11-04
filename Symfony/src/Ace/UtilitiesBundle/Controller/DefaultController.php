@@ -229,7 +229,7 @@ class DefaultController extends Controller
 		$utilities = $this->get('utilities');
 		$image = $utilities->get_gravatar($user["email"]);
 
-		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["email"],'image' => $image));
+		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["username"],'image' => $image));
 	}
 
 
