@@ -215,7 +215,7 @@ class DefaultController extends Controller
 		$data = json_decode($data, true);
 
 		$projectmanager = $this->get('projectmanager');
-		$response = $projectmanager->deleteFileAction($id, $data["filename"]);
+		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
 		if($response["success"] ==  false)
 			return new Response(json_encode($response));
