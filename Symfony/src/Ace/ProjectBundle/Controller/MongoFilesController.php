@@ -61,11 +61,10 @@ class MongoFilesController extends Controller
 	{
 		$list = $this->listFiles($id);
 
-		foreach($list as $file)
-		{
-			if($file["filename"] == $filename)
-				return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
-		}
+		$canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
+		if(!$canCreateFile["success"])
+			return json_encode($canCreateFile);
+
 		$list[] = array("filename"=> $filename, "code" => $code);
 		$this->setFilesById($id, $list);
 		return json_encode(array("success" => true));
@@ -116,17 +115,22 @@ class MongoFilesController extends Controller
 
 	public function renameFileAction($id, $filename, $new_filename)
 	{
-		$list = $this->listFiles($id);
-		foreach($list as $key=>$file)
+		$canCreateFile = json_decode($this->canCreateFile($id, $new_filename), true);
+		if($canCreateFile["success"])
 		{
-			if($file["filename"] == $filename)
+			$list = $this->listFiles($id);
+			foreach($list as $key=>$file)
 			{
-				$list[$key]["filename"] = $new_filename;
-				$this->setFilesById($id, $list);
-				return json_encode(array("success" => true));
+				if($file["filename"] == $filename)
+				{
+					$list[$key]["filename"] = $new_filename;
+					$this->setFilesById($id, $list);
+					return json_encode(array("success" => true));
+				}
 			}
 		}
-		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
+		$canCreateFile["old_filename"] = $filename;
+		return json_encode($canCreateFile);
 	}
 
 	public function getProjectById($id)
@@ -157,6 +161,20 @@ class MongoFilesController extends Controller
 
 		$list = $pf->getFiles();
 		return $list;
+	}
+
+	private function canCreateFile($id, $filename)
+	{
+		$list = $this->listFiles($id);
+		$is_ino = strlen($filename) - strrpos($filename, ".ino") == 4;
+		foreach($list as $file)
+		{
+			if($file["filename"] == $filename)
+				return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "This file already exists"));
+			if($is_ino && (strlen($file["filename"]) - strrpos($file["filename"], ".ino") == 4))
+				return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "Cannot create second .ino file in the same project"));
+		}
+		return json_encode(array("success" => true));
 	}
 
 	public function __construct(DocumentManager $documentManager)
