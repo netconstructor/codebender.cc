@@ -51,8 +51,17 @@ function renameFilename()
 	$.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename: $("#oldFilename").val(), newFilename: $("#newFilename").val()}, function(data)
 	{
 		$("#filenameModal").modal('hide');
-		location.reload();
+		handleResponse(data);
 	});
+}
+
+function handleResponse(response)
+{
+		var response = JSON.parse(response);
+		if(response["success"])
+			location.reload();
+		else
+			clearProgress(response["error"])
 }
 
 function setProgress(newprogress)
@@ -513,8 +522,8 @@ function createFile()
 	var val = { filename : $("#createfield").val() };
 	$.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
 	{
-		clearProgress("File Created successfuly.");
-		location.reload();
+		$("#creationModal").modal('hide');
+		handleResponse(data);
 	});
 }
 
@@ -524,8 +533,7 @@ function deleteFile(filename)
 	var val = { "filename" : filename };
 	$.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
 	{
-		clearProgress("File Deleted successfuly.");
-		location.reload();
+		handleResponse(data);
 	});
 }
 
