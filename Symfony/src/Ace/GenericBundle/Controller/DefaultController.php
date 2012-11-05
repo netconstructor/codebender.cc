@@ -114,7 +114,7 @@ class DefaultController extends Controller
 	public function exampleAction($library, $example, $url)
 	{
 		$utilities = $this->get('utilities');
-		$data = $utilities->get($url);
+		$data = htmlspecialchars($utilities->get($url));
 		$file = array("filename" => $example.".ino", "code" => $data);
 		$files = array($file);
 		return $this->render('AceGenericBundle:Default:example.html.twig', array('library' => $library, 'example' => $example, 'files' => $files));
