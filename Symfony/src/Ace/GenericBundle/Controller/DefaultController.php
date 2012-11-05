@@ -99,7 +99,7 @@ class DefaultController extends Controller
 		foreach($libraries as $key=>$library)
 		{
 			$libraries[$key] = array("name" => $library);
-			$libinfo = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "fetch-description-external&name=".$library), true);
+			$libinfo = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "fetch-info-external&name=".$library), true);
 			$libraries[$key]["description"] =  $libinfo["description"];
 			if(isset($libinfo["url"]))
 				$libraries[$key]["url"] =  $libinfo["url"];
