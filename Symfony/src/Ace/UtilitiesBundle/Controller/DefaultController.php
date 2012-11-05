@@ -15,12 +15,7 @@ class DefaultController extends Controller
 
 		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$project_name = trim(basename(stripslashes($this->getRequest()->request->get('project_name'))), ".\x00..\x20");
-
-		if($project_name == '')
-		{
-			return $this->redirect($this->generateUrl('AceGenericBundle_index'));
-		}
+		$project_name = $this->getRequest()->request->get('project_name');
 
 		$projectmanager = $this->get('projectmanager');
 		$response = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
@@ -35,7 +30,11 @@ class DefaultController extends Controller
 			{
 				return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
 			}
+			else
+				$this->get('session')->setFlash('error', "Error: ".$response2["error"]);
 		}
+		else
+			$this->get('session')->setFlash('error', "Error: ".$response["error"]);
 
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
