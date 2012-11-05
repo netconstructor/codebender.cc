@@ -103,6 +103,8 @@ class DefaultController extends Controller
 			$libraries[$key]["description"] =  $libinfo["description"];
 			if(isset($libinfo["url"]))
 				$libraries[$key]["url"] =  $libinfo["url"];
+			if(isset($libinfo["examples"]))
+				$libraries[$key]["examples"] =  $libinfo["examples"];
 		}
 		
 		

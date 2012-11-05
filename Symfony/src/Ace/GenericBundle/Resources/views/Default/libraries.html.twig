@@ -18,6 +18,14 @@
 			{{library["description"]|raw}}
 		{% endif %}
 		#}
+		{% if library["examples"] is defined%}
+		<p>Examples:</p>
+		<ul>
+		{% for example in library["examples"] %}
+			<li>{{example["name"]}}</li>
+		{% endfor %}
+		</ul>
+		{% endif %}
 		{% if library["url"] is defined%}
 		<p><a class="btn" href="{{library['url']}}" style="float:right;">More Info &raquo;</a></p>
 		{% endif %}
