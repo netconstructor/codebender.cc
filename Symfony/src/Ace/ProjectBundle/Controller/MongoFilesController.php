@@ -184,6 +184,10 @@ class MongoFilesController extends Controller
 
 	private function canCreateFile($id, $filename)
 	{
+		$validName = json_decode($this->nameIsValid($filename), true);
+		if(!$validName["success"])
+			return json_encode($validName);
+
 		$list = $this->listFiles($id);
 		$is_ino = false;
 		if(strrpos($filename, ".ino") !== false)
@@ -198,6 +202,15 @@ class MongoFilesController extends Controller
 				return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "Cannot create second .ino file in the same project"));
 		}
 		return json_encode(array("success" => true));
+	}
+
+	private function nameIsValid($name)
+	{
+		$project_name = trim(basename(stripslashes($name)), ".\x00..\x20");
+		if($project_name == $name)
+			return json_encode(array("success" => true));
+		else
+			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
 	public function __construct(DocumentManager $documentManager)
