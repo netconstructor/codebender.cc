@@ -33,9 +33,8 @@ function saveName()
 {
 	$.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data: $("#newName").val()}, function(data)
 	{
-		$("#oldName").html($("#newName").val());
 		$("#nameModal").modal('hide');
-		location.reload();
+		handleResponse(data);
 	});
 }
 
