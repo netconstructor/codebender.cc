@@ -119,13 +119,11 @@ class DefaultController extends Controller
 
 		$mongo = $this->mfc;
 		$filename = $name.".ino";
-		$code = json_decode($mongo->getFileAction($project->getProjectfilesId(), $filename), true);
-		$code = $code["code"];
-		$response = json_decode($mongo->createFileAction($project->getProjectfilesId(), $new_name.".ino", $code), true);
-		if($response["success"] == true)
+		$response1 = json_decode($mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_name.".ino.bkp"), true);
+		if($response1["success"])
 		{
-			$response = json_decode($mongo->deleteFileAction($project->getProjectfilesId(), $filename), true);
-			if($response["success"])
+			$response2 = json_decode($mongo->renameFileAction($project->getProjectfilesId(), $new_name.".ino.bkp", $new_name.".ino"), true);
+			if($response2["success"])
 			{
 				$project->setName($new_name);
 			    $em = $this->em;
@@ -133,10 +131,17 @@ class DefaultController extends Controller
 			    $em->flush();
 			}
 			else
-				$output = array("success" => false, "id" => $id, "new name" => $new_name, "error" => "could not delete previous file");
+			{
+				$output = $response2;
+				$output["error"] = "backup file ".$new_name.".ino.bkp"." could not be renamed. ".$output["error"];
+			}
 		}
 		else
-			$output = array("success" => false, "id" => $id, "new name" => $new_name, "error" => "could not create new file");
+		{
+			$output = $response1;
+			$output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
+		}
+
 		return new Response(json_encode($output));
 	}
 
