@@ -93,6 +93,20 @@ class DefaultController extends Controller
 	public function librariesAction()
 	{
 		$utilities = $this->get('utilities');
+		$libraries = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "list-included"), true);
+		$libraries = $libraries["list"];
+		foreach($libraries as $key=>$library)
+		{
+			$libraries[$key] = array("name" => $library);
+			$libinfo = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "fetch-info-included&name=".$library), true);
+			$libraries[$key]["description"] =  $libinfo["description"];
+			if(isset($libinfo["url"]))
+				$libraries[$key]["url"] =  $libinfo["url"];
+			if(isset($libinfo["examples"]))
+				$libraries[$key]["examples"] =  $libinfo["examples"];
+		}
+		$included_libraries = $libraries;
+
 		$libraries = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "list-external"), true);
 		$libraries = $libraries["list"];
 		
@@ -106,9 +120,9 @@ class DefaultController extends Controller
 			if(isset($libinfo["examples"]))
 				$libraries[$key]["examples"] =  $libinfo["examples"];
 		}
+		$categories = array($included_libraries, $libraries);
 		
-		
-		return $this->render('AceGenericBundle:Default:libraries.html.twig', array('libraries' => $libraries));
+		return $this->render('AceGenericBundle:Default:libraries.html.twig', array('categories' => $categories));
 	}
 
 	public function exampleAction($library, $example, $url)
