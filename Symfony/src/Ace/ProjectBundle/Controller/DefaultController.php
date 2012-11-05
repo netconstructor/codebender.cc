@@ -26,6 +26,10 @@ class DefaultController extends Controller
 
 	public function createAction($owner, $name, $description)
 	{
+		$validName = json_decode($this->nameIsValid($name), true);
+		if(!$validName["success"])
+			return new Response(json_encode($validName));
+
 		$project = new Project();
 		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
 		$project->setOwner($user);
@@ -104,6 +108,10 @@ class DefaultController extends Controller
 
 	public function renameAction($id, $new_name)
 	{
+		$validName = json_decode($this->nameIsValid($new_name), true);
+		if(!$validName["success"])
+			return new Response(json_encode($validName));
+
 		$output = array("success" => true);
 
 		$project = $this->getProjectById($id);
@@ -274,6 +282,15 @@ class DefaultController extends Controller
 			// return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
 		
 		return $project;
+	}
+
+	private function nameIsValid($name)
+	{
+		$project_name = str_replace(".", "", trim(basename(stripslashes($name)), ".\x00..\x20"));
+		if($project_name == $name)
+			return json_encode(array("success" => true));
+		else
+			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
 	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController)
