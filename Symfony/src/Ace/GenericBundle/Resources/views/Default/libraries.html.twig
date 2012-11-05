@@ -22,7 +22,9 @@
 		<p>Examples:</p>
 		<ul>
 		{% for example in library["examples"] %}
-			<li>{{example["name"]}}</li>
+			<li><a href="{{path('AceGenericBundle_example',{'library':library["name"], 'example':example["name"], 'url':example["url"]})}}">
+				{{example["name"]}}
+			</a></li>
 		{% endfor %}
 		</ul>
 		{% endif %}
