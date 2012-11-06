@@ -244,7 +244,8 @@ class DefaultController extends Controller
 			if (!preg_match('/^[a-z0-9\p{P}]*$/i', $_FILES["files"]["name"][0])){
 
 					$info = $upload_handler->post("Invalid filename.");
-					return $upload_handler->writeResponse($info);
+					$json = json_encode($info);
+					return new Response($json);
 				}
 
 			$file_name = $_FILES["files"]["name"][0];
@@ -257,7 +258,8 @@ class DefaultController extends Controller
 				if (substr(exec("file -bi -- ".escapeshellarg($_FILES["files"]["tmp_name"][0])), 0, 4) !== 'text'){
 
 					$info = $upload_handler->post("Filetype not allowed.");
-					return $upload_handler->writeResponse($info);
+					$json = json_encode($info);
+					return new Response($json);
 				}
 
 				 $info = $upload_handler->post(null);
@@ -269,17 +271,20 @@ class DefaultController extends Controller
 					if(isset($sketch_id)){
 						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
 							$info = $upload_handler->post("Error creating file.");
-							return $upload_handler->writeResponse($info);
+							$json = json_encode($info);
+							return new Response($json);
 						}
 					}else {
 							$info = $upload_handler->post("Error creating Project.");
-							return $upload_handler->writeResponse($info);
+							$json = json_encode($info);
+							return new Response($json);
 					}
 
 				$updated_info = array();
 				$updated_info[] = $upload_handler->fixFile($info, $sketch_id, $project_name, $ext);
+				$json = json_encode($updated_info);
+				return new Response($json);
 
-				return $upload_handler->writeResponse($updated_info);
 			}
 			else if($ext == "zip"){
 
@@ -300,7 +305,8 @@ class DefaultController extends Controller
 				 if (!preg_match('/^[a-z0-9\p{P}]*$/i', $nameIndex)){
 
 					     $info = $upload_handler->post("Invalid filename.");
-						 return $upload_handler->writeResponse($info);
+						 $json = json_encode($info);
+						 return new Response($json);
 						}
 
 						$exp = explode('.', $nameIndex);
@@ -342,15 +348,18 @@ class DefaultController extends Controller
 					if(isset($sketch_id)){
 						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
 							$info = $upload_handler->post("Error creating file.");
-							return $upload_handler->writeResponse($info);
+							$json = json_encode($info);
+							return new Response($json);
 						}
 					}else {
 							$info = $upload_handler->post("Error creating Project.");
-							return $upload_handler->writeResponse($info);
+							$json = json_encode($info);
+							return new Response($json);
 					}
 				} else {
 						$info = $upload_handler->post("Filetype not allowed.");
-						return $upload_handler->writeResponse($info);
+						$json = json_encode($info);
+						return new Response($json);
 				}
 
 				foreach($headers as $key => $value){
@@ -358,7 +367,8 @@ class DefaultController extends Controller
 					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
 						if(!$upload_handler->createUploadedFile($sketch_id, $key, $value)){
 							$info = $upload_handler->post("Error creating file.");
-							return $upload_handler->writeResponse($info);
+							$json = json_encode($info);
+							return new Response($json);
 						}
 					}
 				}
@@ -368,7 +378,8 @@ class DefaultController extends Controller
 					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
 						if(!$upload_handler->createUploadedFile($sketch_id, $key, $value)){
 							$info = $upload_handler->post("Error creating file.");
-							return $upload_handler->writeResponse($info);
+							$json = json_encode($info);
+							return new Response($json);
 						}
 					}
 				}
@@ -379,21 +390,19 @@ class DefaultController extends Controller
 
 				$updated_info = array();
 				$updated_info[] = $upload_handler->fixFile($info, $sketch_id, $project_name, $ext);
-
-				return $upload_handler->writeResponse($updated_info);
+				$json = json_encode($updated_info);
+				return new Response($json);
 
 			}else {
 				$info = $upload_handler->post(null);
-				return $upload_handler->writeResponse($info);
+				$json = json_encode($info);
+				return new Response($json);
 			}
-
 		}
 		 else if($this->getRequest()->getMethod() === 'GET')
 		{
-				return new Response('200');  // temp until i find where the fucking get is..
+			return new Response('200');
 		}
-		else
-			throw $this->createNotFoundException('No POST or GET data!');
 	}
 
 	public function filecreateAction($id, $name)

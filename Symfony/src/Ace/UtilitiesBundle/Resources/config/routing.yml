@@ -67,8 +67,8 @@ AceUtilitiesBundle_listboards:
 AceUtilitiesBundle_upload:
     pattern: /upload/
     defaults: {_controller: AceUtilitiesBundle:Default:upload }
-    #requirements:
-    #    _method:  POST
+    requirements:
+        _method:  POST|GET
 
 AceUtilitiesBundle_filecreate:
   pattern:  /filecreate/{id}/{name}
