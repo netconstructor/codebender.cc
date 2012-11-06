@@ -45,29 +45,7 @@ class UploadHandler
             'min_width' => 1,
             'min_height' => 1,
             // Set the following option to false to enable resumable uploads:
-            'discard_aborted_uploads' => true,
-            // Set to true to rotate images based on EXIF meta data, if available:
-            'orient_image' => false,
-            'image_versions' => array(
-                // Uncomment the following version to restrict the size of
-                // uploaded images. You can also add additional versions with
-                // their own upload directories:
-                /*
-                'large' => array(
-                    'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/files/',
-                    'upload_url' => $this->getFullUrl().'/files/',
-                    'max_width' => 1920,
-                    'max_height' => 1200,
-                    'jpeg_quality' => 95
-                ),
-                */
-                /* 'thumbnail' => array(
-                    'upload_dir' => dirname($_SERVER['SCRIPT_FILENAME']).'/thumbnails/',
-                    'upload_url' => $this->getFullUrl().'/thumbnails/',
-                    'max_width' => 80,
-                    'max_height' => 80
-                ) */
-            )
+            'discard_aborted_uploads' => true
         );
         if ($options) {
             $this->options = array_replace_recursive($this->options, $options);
@@ -93,28 +71,7 @@ class UploadHandler
             $file->delete_url .= '&_method=DELETE';
         }
     }
-
-     protected function get_file_object($file_name) {
-        $file_path = $this->options['upload_dir'].$file_name;
-        if (is_file($file_path) && $file_name[0] !== '.') {
-            $file = new stdClass();
-            $file->name = $file_name;
-            $file->size = filesize($file_path);
-            $file->url = $this->options['upload_url'].rawurlencode($file->name);            
-            $this->set_file_delete_url($file);
-            return $file;
-        }
-        return null;
-    }
-
-    protected function get_file_objects() {
-        return array_values(array_filter(array_map(
-            array($this, 'get_file_object'),
-            scandir($this->options['upload_dir'])
-        )));
-    } */
-
-    
+   */
 
      protected function validate($uploaded_file, $file, $error, $index) {
         if ($error) {
@@ -181,71 +138,11 @@ class UploadHandler
         $file->size = intval($size);
         $file->type = $type;			
 		$info = pathinfo($name);
-	    $fileName =  basename($name,'.'.$info['extension']);				
+	    $fileName =  basename($name,'.'.$info['extension']);
 		$file->url = $this->options['upload_url'];
-         if ($this->validate($uploaded_file, $file, $error, $index)) {
-            /* $this->handle_form_data($file, $index);
-            $file_path = $this->options['upload_dir'].$file->name;
-            $append_file = !$this->options['discard_aborted_uploads'] &&
-                is_file($file_path) && $file->size > filesize($file_path);
-            clearstatcache();
-            if ($uploaded_file && is_uploaded_file($uploaded_file)) {
-                // multipart/formdata uploads (POST method uploads)
-                if ($append_file) {
-                    file_put_contents(
-                        $file_path,
-                        fopen($uploaded_file, 'r'),
-                        FILE_APPEND
-                    );
-                } else {
-                    move_uploaded_file($uploaded_file, $file_path);
-                }
-            } else {
-                // Non-multipart uploads (PUT method support)
-                file_put_contents(
-                    $file_path,
-                    fopen('php://input', 'r'),
-                    $append_file ? FILE_APPEND : 0
-                );
-            }
-            $file_size = filesize($file_path);
-            if ($file_size === $file->size) {
-            	if ($this->options['orient_image']) {
-            		$this->orient_image($file_path);
-            	}
-                $file->url = $this->options['upload_url'].rawurlencode($file->name);
-                foreach($this->options['image_versions'] as $version => $options) {
-                    if ($this->create_scaled_image($file->name, $options)) {
-                        if ($this->options['upload_dir'] !== $options['upload_dir']) {
-                            $file->{$version.'_url'} = $options['upload_url']
-                                .rawurlencode($file->name);
-                        } else {
-                            clearstatcache();
-                            $file_size = filesize($file_path);
-                        }
-                    }
-                }
-            } else if ($this->options['discard_aborted_uploads']) {
-                unlink($file_path);
-                $file->error = 'abort';
-            }
-            $file->size = $file_size;
-            $this->set_file_delete_url($file); */
-        } 		
+        $this->validate($uploaded_file, $file, $error, $index);
         return $file;
     }
-
-    /*  public function get() {
-         $file_name = isset($_REQUEST['file']) ?
-            basename(stripslashes($_REQUEST['file'])) : null;
-        if ($file_name) {
-            $info = $this->get_file_object($file_name);
-        } else {
-            $info = $this->get_file_objects();
-        } 		
-        header('Content-type: application/json');
-        echo json_encode($info);
-    }  */
 
     public function post($error) {
         if (isset($_REQUEST['_method']) && $_REQUEST['_method'] === 'DELETE') {
@@ -327,31 +224,11 @@ class UploadHandler
 		return $File;
 	}
 	
-	public function writeResponse($info)
-	{
-		header('Vary: Accept');
-		$json = json_encode($info);
-		$redirect = isset($_REQUEST['redirect']) ?
-		stripslashes($_REQUEST['redirect']) : null;
-		if ($redirect) {
-               header('Location: '.sprintf($redirect, rawurlencode($json)));
-			return;
-		}
-		if (isset($_SERVER['HTTP_ACCEPT']) &&
-		(strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)) {
-		header('Content-type: application/json');
-		} else {
-			header('Content-type: text/plain');
-		}
-
-		return new Response($json);
-	}
-	
 	public function createUploadedFile($id, $filename, $code)
 	{		
 		$projectmanager = $this->up->get('projectmanager');
 		$response = $projectmanager->createFileAction($id, $filename, $code)->getContent();
-		$response = json_decode($response, true);						
+		$response = json_decode($response, true);
 		
 		return $response["success"];
 	}
@@ -373,5 +250,5 @@ class UploadHandler
 			}
 		return $sketch_id;
 	}
-		
+
 }
