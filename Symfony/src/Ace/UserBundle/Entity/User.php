@@ -20,19 +20,15 @@ class User extends BaseUser
     protected $id;
 
     /**
-	 * @ORM\Column(type="string", length="255")
+	 * @ORM\Column(type="string", length="255", nullable=true)
 	 *
-	 * @Assert\NotBlank(message="Please enter your first name.", groups={"Registration", "Profile"})
-	 * @Assert\MinLength(limit="3", message="The first name is too short.", groups={"Registration", "Profile"})
 	 * @Assert\MaxLength(limit="255", message="The first name is too long.", groups={"Registration", "Profile"})
 	 */
     private $firstname;
 
     /**
-	 * @ORM\Column(type="string", length="255")
+	 * @ORM\Column(type="string", length="255", nullable=true)
 	 *
-	 * @Assert\NotBlank(message="Please enter your last name.", groups={"Registration", "Profile"})
-	 * @Assert\MinLength(limit="3", message="The  last name is too short.", groups={"Registration", "Profile"})
 	 * @Assert\MaxLength(limit="255", message="The last name is too long.", groups={"Registration", "Profile"})
 	 */
     private $lastname;
