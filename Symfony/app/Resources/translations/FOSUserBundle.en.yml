@@ -2,4 +2,5 @@
 fos_user_registration_form_firstname: "Firstname:"
 fos_user_registration_form_lastname: "Lastname:"
 fos_user_registration_form_twitter: "Twitter:"
-fos_user_registration_form_newsletter: "Receive monthly newsletter:"
+fos_user_registration_form_newsletter: "Receive Newsletter:"
+fos_user_security_login_username: "Username or Email:"
