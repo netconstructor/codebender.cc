@@ -147,8 +147,8 @@ class DefaultController extends Controller
 		$name = $name["response"];
 
 		$files = $projectmanager->listFilesAction($id)->getContent();
-		$files = $files["list"];
 		$files = json_decode($files, true);
+		$files = $files["list"];
 
 		if(isset($files[0]))
 		{
