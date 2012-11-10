@@ -93,6 +93,21 @@ class DefaultController extends Controller
 	public function librariesAction()
 	{
 		$utilities = $this->get('utilities');
+
+		$libraries = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "list-builtin"), true);
+		$libraries = $libraries["list"];
+		foreach($libraries as $key=>$library)
+		{
+			$libraries[$key] = array("name" => $library);
+			$libinfo = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "fetch-info-builtin&name=".$library), true);
+			$libraries[$key]["description"] =  $libinfo["description"];
+			if(isset($libinfo["url"]))
+				$libraries[$key]["url"] =  $libinfo["url"];
+			if(isset($libinfo["examples"]))
+				$libraries[$key]["examples"] =  $libinfo["examples"];
+		}
+		$builtin_libraries = $libraries;
+
 		$libraries = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "list-included"), true);
 		$libraries = $libraries["list"];
 		foreach($libraries as $key=>$library)
@@ -120,7 +135,7 @@ class DefaultController extends Controller
 			if(isset($libinfo["examples"]))
 				$libraries[$key]["examples"] =  $libinfo["examples"];
 		}
-		$categories = array($included_libraries, $libraries);
+		$categories = array($builtin_libraries, $included_libraries, $libraries);
 		
 		return $this->render('AceGenericBundle:Default:libraries.html.twig', array('categories' => $categories));
 	}
