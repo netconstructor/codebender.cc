@@ -23,7 +23,8 @@ function warnDeleteProject(deletion_path)
 <h6>Files:</h6>
 <p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p>
 <hr>
-<p><a class='btn btn-danger' href='javascript:void()' onClick='warnDeleteProject(&quot;{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}&quot;);'>Delete Project</a></p>"
+<p><a class='btn btn-danger' href='javascript:void()' onClick='warnDeleteProject(&quot;{{ path('AceUtilitiesBundle_deleteproject', {'id':file['id']}) }}&quot;);' style='margin-bottom:5px'>Delete Project</a></p>
+<p><a class='btn btn-primary' href='{{ path('AceUtilitiesBundle_download', { 'id' : file['id'] }) }}'><i class='icon-download-alt icon-white'></i> Download Project</a></p>"
 				data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
 					{{ file['name'] }}
 				</a>
@@ -32,7 +33,7 @@ function warnDeleteProject(deletion_path)
 	{% endif %}	
      <!-- <li class="active"><a href="#">Link</a></li> -->
 	<li class="nav-header" id="Links">Links</li>
-	<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>External Libraries</a></li>
+	<li><a href="{{ path('AceGenericBundle_libraries') }}"><i class="icon-book"></i>Libraries &amp; Examples</a></li>
 	<li><a href="{{ path('AceGenericBundle_boards') }}"><i class="icon-hdd"></i>Supported Boards</a></li>
 	<li><a href="{{ path('AceUserBundle_options') }}"><i class="icon-cog"></i>Options</a></li>		
 </ul>

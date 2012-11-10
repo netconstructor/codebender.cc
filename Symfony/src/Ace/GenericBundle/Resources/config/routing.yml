@@ -14,6 +14,12 @@ AceGenericBundle_libraries:
     pattern: /libraries
     defaults: {_controller: AceGenericBundle:Default:libraries }
 
+AceGenericBundle_example:
+    pattern: /example/{library}/{example}/{url}
+    defaults: {_controller: AceGenericBundle:Default:example }
+    requirements:
+        url: ".+"
+
 AceGenericBundle_boards:
     pattern: /boards
     defaults: {_controller: AceGenericBundle:Default:boards }
