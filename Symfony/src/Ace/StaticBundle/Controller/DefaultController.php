@@ -90,7 +90,7 @@ class DefaultController extends Controller
 	}
 
 	public function contactAction(Request $request)
-	{	    
+	{
         // create a task and give it some dummy data for this example
         $task = new Contact();
 		if ($this->get('security.context')->isGranted('ROLE_USER') === true)
@@ -113,7 +113,7 @@ class DefaultController extends Controller
 			if ($form->isValid())
 			{
 				$email_addr = $this->container->getParameter('email.addr');
-				
+
 				// perform some action, such as saving the task to the database
 			    $message = \Swift_Message::newInstance()
 			        ->setSubject('codebender contact request')
@@ -132,7 +132,7 @@ class DefaultController extends Controller
             'form' => $form->createView(),
         ));
 	}
-	
+
 	public function notifyAction()
 	{
 		$msg = $this->getRequest()->query->get('message');
@@ -148,5 +148,8 @@ class DefaultController extends Controller
 		}
 		return new Response("OK");
 	}
-	
+	public function pluginAction()
+	{
+		return $this->render('AceStaticBundle:Default:plugin.html.twig', array());
+	}
 }
