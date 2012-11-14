@@ -16,8 +16,6 @@ class DefaultControllerTest extends WebTestCase
 		
 		$this->assertGreaterThan(0, $crawler->filter('html:contains("enter codebender.")')->count());
 		
-		$client->request('GET', '/list');
-		$this->assertTrue($client->getResponse()->isRedirect('/'));
     }
 	
 	 
