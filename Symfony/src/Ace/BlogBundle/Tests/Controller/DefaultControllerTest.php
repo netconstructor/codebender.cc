@@ -69,7 +69,7 @@ class DefaultControllerTest extends WebTestCase
 		print_r($form->getValues());		
 		$crawler = $client->submit($form); 				
 		
-		$this->assertGreaterThan(0, $crawler->filter('html:contains("Hello Dimitris Dimakopoulos (DiMmiOuS) !")')->count());
+		$this->assertGreaterThan(0, $crawler->filter('html:contains("Hello DiMmiOuS!")')->count());
 
 		$link = $crawler->selectLink('Blog')->link();
 		$crawler = $client->click($link);		
