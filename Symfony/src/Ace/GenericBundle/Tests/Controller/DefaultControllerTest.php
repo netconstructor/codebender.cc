@@ -27,7 +27,7 @@ class DefaultControllerTest extends WebTestCase
 		
 		$crawler = $client->request('GET', '/user/tzikis');
 		
-		$this->assertGreaterThan(0, $crawler->filter('html:contains("tzikis (Georgitzikis Vasilis)")')->count());
+		$this->assertGreaterThan(0, $crawler->filter('html:contains("tzikis (Vasilis Georgitzikis)")')->count());
 		
 		$matcher = array('id'   => 'user_projects');
 		$this->assertTag($matcher, $client->getResponse()->getContent()); 
