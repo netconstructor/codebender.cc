@@ -8,6 +8,18 @@ class DefaultControllerTest extends WebTestCase
 {
     public function testEmpty()
     {
-        $this->assertLessThanOrEqual(1,1);
+        $this->assertLessThanOrEqual(1, 1);
     }
+
+    public function testPluginAction()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/static/plugin');
+
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Firefox")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Google Chrome")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("All Browsers - Windows & Mac")')->count());
+    }
+
 }
