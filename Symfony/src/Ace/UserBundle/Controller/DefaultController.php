@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 
 class DefaultController extends Controller
@@ -21,6 +22,7 @@ class DefaultController extends Controller
 	protected $sc;
 	protected $em;
 	protected $vd;
+	protected $container;
 
 	public function getUserAction($username)
 	{
@@ -235,7 +237,16 @@ class DefaultController extends Controller
 		
 	}    
 
-	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator)
+	public function inlineRegisterAction()
+	{
+        $form = $this->container->get('fos_user.registration.form');
+	    return new Response($this->templating->render('AceUserBundle:Registration:register_inline.html.twig', array(
+	            'form' => $form->createView(),
+	            'theme' => $this->container->getParameter('fos_user.template.theme'),
+	        )));
+	}
+
+	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator, ContainerInterface $container)
 	{
 		$this->templating = $templating;
 		$this->request = $request;
@@ -243,6 +254,7 @@ class DefaultController extends Controller
 		$this->sc = $securityContext;
 	    $this->em = $entityManager;
 	    $this->vd = $validator;
+		$this->container = $container;
 	}
 
 }

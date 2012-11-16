@@ -83,12 +83,55 @@
 	background-position: initial initial;
 	background-repeat: no-repeat no-repeat;
 }     
+#login_box
+{
+	background:#fff;
+	border-color: #DDD;
+	border-style: solid;
+	border-radius: 5px;
+	border-width: 1px;
+	padding: 10px;
+	top: 50px;
+	right:10px;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	display:none;
+	position:absolute;
+	width:220px;
+}
 </style>
 
 		{% block javascripts_base %}{% endblock %}
 	    {% block javascripts %}{% endblock %}
 		{% block javascripts_upload_head %}{% endblock %}
 	
+		<script type="text/javascript">
+		var mouse_is_inside = false;
+
+		$(document).ready(function() {
+		    $("#login_btn").click(function() {
+		        var loginBox = $("#login_box");
+		        if (loginBox.is(":visible"))
+		            loginBox.fadeOut("fast");
+		        else
+		            loginBox.fadeIn("fast");
+		        return false;
+		    });
+
+		    $("#login_box").hover(function(){
+		        mouse_is_inside=true;
+		    }, function(){
+		        mouse_is_inside=false;
+		    });
+
+		    $("body").click(function(){
+		        if(! mouse_is_inside) $("#login_box").fadeOut("fast");
+		    });
+
+		});
+		</script>
+
 		<script type="text/javascript">
 
 		  var _gaq = _gaq || [];
@@ -120,13 +163,8 @@
 
 				{% if not is_granted('ROLE_USER') %}
 		        <ul class="nav pull-right">
-				
-					<li id="register">
-				      	<a href="{{ path('fos_user_registration_register')}}">Register</a>
-					</li>				
-								
 					<li id="login">
-				      	<a href="{{ path('fos_user_security_login')}}">Log In</a>
+						<a href="javascript:void(0)" id="login_btn">Log In</a>
 					</li>
 				</ul>
 				{% endif %}		
@@ -142,7 +180,10 @@
 		  </div>
 		</div>		
         {% block body %}{% endblock %}
-	
+
+        <div id="login_box">
+			{% render 'FOSUserBundle:Security:login' %}
+        </div>
 </body>
 
 <!-- Le javascript
