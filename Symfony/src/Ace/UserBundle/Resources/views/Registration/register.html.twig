@@ -3,12 +3,3 @@
 {% block fos_user_content %}
 {% include "FOSUserBundle:Registration:register_content.html.twig" %}
 {% endblock fos_user_content %}
-
-{% block javascripts %}
-<script type="text/javascript" charset="utf-8">
-$(document).ready(function()
-{
-	$("#register").addClass("active");
-});
-</script>
-{% endblock %}
