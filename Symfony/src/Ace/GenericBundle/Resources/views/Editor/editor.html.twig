@@ -340,7 +340,13 @@ body
 						<i class="icon-globe"></i> Cloud Flash<span id="cloudload-ip"></span>
 					</button>
 				</div>
-				<span>Spread the word about your new project!</span>
+				Share on
+				<a href="https://www.facebook.com/dialog/feed?
+				  app_id=439261962789824&amp;
+				  link={{ app.request.uri }}&amp;
+				  name=codebender.cc%20-%20{{project_name}}&amp;
+				  caption=Check%20out%20my%20latest%20Arduino%20project%20on%20codebender.&amp;
+				  redirect_uri={{ app.request.uri }}">Facebook</a> or
 				<a href="https://twitter.com/share" class="twitter-share-button" data-text="Check out my new Arduino project, {{project_name}} on @codebender_cc!" data-count="none">Tweet</a>
 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 				<hr>
