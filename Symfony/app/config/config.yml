@@ -95,6 +95,7 @@ fos_user:
             template: AceUserBundle:User:confirmation.email.twig
        form:
             type: ace_user_registration
+            handler: ace_user.form.handler.registration
     resetting:
        email:
            template: AceUserBundle:User:resetting.email.twig
