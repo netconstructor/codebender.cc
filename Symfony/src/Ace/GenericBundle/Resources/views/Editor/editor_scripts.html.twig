@@ -649,15 +649,15 @@ function loadSettings() {
 }
 
 function checkPermissions() {
-	var group = window.plugin.checkPermissions($("#ports option:selected").text());
-	if (group == "") {
-		clearProgress("No permission Problems!");
-		downHudClose();
-	}
-	else {
-		var message = "Seems like you do not have the required <span style=\"color:red\">permissions<\/span> to communicate with your Arduino.</br>You need to add yourserlf to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> user group.<br>To do it run \"<span style=\"color:red\">useradd -G " + group.replace('\n', '') + " username<\/span>\" with root permissions, then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
-		downHudWrite(message);
-	}
+	// var group = window.plugin.checkPermissions($("#ports option:selected").text());
+	// if (group == "") {
+	// 	clearProgress("No permission Problems!");
+	// 	downHudClose();
+	// }
+	// else {
+	// 	var message = "Seems like you do not have the required <span style=\"color:red\">permissions<\/span> to communicate with your Arduino.</br>You need to add yourserlf to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> user group.<br>To do it run \"<span style=\"color:red\">useradd -G " + group.replace('\n', '') + " username<\/span>\" with root permissions, then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
+	// 	downHudWrite(message);
+	// }
 }
 
 function downHudWrite(message) {
