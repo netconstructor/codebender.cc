@@ -17,35 +17,28 @@ class DefaultController extends Controller
 
 		$project_name = $this->getRequest()->request->get('project_name');
 
-		$projectmanager = $this->get('projectmanager');
-		$response = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
+		$text = "";
+		if($this->getRequest()->request->get('code'))
+		{
+			 $text = htmlspecialchars_decode($this->getRequest()->request->get('code'));
+		}
+		else
+		{
+			$utilities = new DefaultHandler();
+			$text = $utilities->default_text();
+		}
+
+		$response = $this->get('projectmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
-			$text = "";
-			if($this->getRequest()->request->get('code'))
-			{
-				 $text = htmlspecialchars_decode($this->getRequest()->request->get('code'));
-			}
-			else
-			{
-				$utilities = new DefaultHandler();
-				$text = $utilities->default_text();
-			}
-			$response2 = $projectmanager->createFileAction($response["id"], $project_name.".ino", $text)->getContent();
-			$response2=json_decode($response2, true);
-			if($response2["success"])
-			{
-				return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
-			}
-			else
-				$this->get('session')->setFlash('error', "Error: ".$response2["error"]);
+			return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
 		}
-		else
-			$this->get('session')->setFlash('error', "Error: ".$response["error"]);
 
+		$this->get('session')->setFlash('error', "Error: ".$response["error"]);
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
+
 
 	public function deleteprojectAction($id)
 	{

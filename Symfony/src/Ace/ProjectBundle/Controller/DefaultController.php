@@ -13,6 +13,28 @@ class DefaultController extends Controller
     protected $em;
 	protected $mfc;
 
+	public function createprojectAction($user_id, $project_name, $code)
+	{
+		$retval;
+		$response = $this->createAction($user_id, $project_name, "")->getContent();
+		$response=json_decode($response, true);
+		if($response["success"])
+		{
+			$response2 = $this->createFileAction($response["id"], $project_name.".ino", $code)->getContent();
+			$response2=json_decode($response2, true);
+			if($response2["success"])
+			{
+				$retval = array("success" => true, "id" => $response["id"]);
+			}
+			else
+				$retval = $response2;
+		}
+		else
+			$retval = $response;
+
+		return new Response(json_encode($retval));
+	}
+
 	public function listAction($owner)
 	{
 		$projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
