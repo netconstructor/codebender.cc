@@ -24,7 +24,11 @@ $(document).ready(function()
 
 <div class="row-fluid">
 	<div class="span8">
-	{% render 'usercontroller:inlineRegisterAction' %}
+	{% if is_granted('ROLE_USER') %}
+		{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
+	{% else %}
+		{% render 'usercontroller:inlineRegisterAction' %}
+	{% endif %}
 	</div>
 	<div class="span4">
 		<h2>Donate!</h2>
