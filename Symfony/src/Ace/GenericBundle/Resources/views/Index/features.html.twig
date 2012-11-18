@@ -21,23 +21,3 @@ $(document).ready(function()
 </div><!--/row-->
 
 <hr class="soften">
-
-<div class="row-fluid">
-	<div class="span8">
-	{% if is_granted('ROLE_USER') %}
-		{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
-	{% else %}
-		{% render 'usercontroller:inlineRegisterAction' %}
-	{% endif %}
-	</div>
-	<div class="span4">
-		<h2>Donate!</h2>
-		<p>Do you like the idea? We need your support. Please consider donating!</p>
-		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="float:right;margin-top: 30px;">
-			<input type="hidden" name="cmd" value="_s-xclick">
-			<input type="hidden" name="hosted_button_id" value="EJCNGL73TNKSG">
-			<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" style="width:147px;" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-			<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-		</form>
-	</div>
-</div>
