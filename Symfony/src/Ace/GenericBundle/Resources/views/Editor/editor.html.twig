@@ -328,9 +328,30 @@ body
 					        <select id="ports" onChange="savePort()"></select>
 							<button id = "uploadusb" class="btn"><i id="upload_icon" class="icon-upload"></i><span id="upload_text"> USB Flash </span></button>
 						</div>
-						<!-- <div class="btn-group" style="margin-bottom:10px; margin-left:0px;"> -->
-							<!-- <button id="connect" class="btn"><i id="connect_icon" class="icon-asterisk"></i> Serial Monitor</button> -->
-						<!-- </div> -->
+						<div class="input-append">
+                            <div class="btn-group">
+                                <button id="connect" class="btn"><i id="connect_icon" class="icon-asterisk"></i><span id="serial_text">  Serial Monitor @ </span><span id="serial_speed"></span></button>
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <!-- 9600,300,1200,2400,4800,14400,19200,28800,38400,57600,115200 -->
+                                    <li><a href="#" onclick="setSpeed(300)">300</a></li>
+                                    <li><a href="#" onclick="setSpeed(1200)">1200</a></li>
+                                    <li><a href="#" onclick="setSpeed(2400)">2400</a></li>
+                                    <li><a href="#" onclick="setSpeed(4800)">4800</a></li>
+                                    <li><a href="#" onclick="setSpeed(9600)">9600</a></li>
+                                    <li><a href="#" onclick="setSpeed(14400)">14400</a></li>
+                                    <li><a href="#" onclick="setSpeed(19200)">19200</a></li>
+                                    <li><a href="#" onclick="setSpeed(28800)">28800</a></li>
+                                    <li><a href="#" onclick="setSpeed(38400)">38400</a></li>
+                                    <li><a href="#" onclick="setSpeed(57600)">57600</a></li>
+                                    <li><a href="#" onclick="setSpeed(115200)">115200</a></li>
+                                </ul>
+                                <button id="disconnect" onclick="disconnect()" class="btn" disabled="true"><span id="serial_disconnect"> Disconnect</span></button>
+                            </div>
+                            <!-- <button id="connect" class="btn"><i id="connect_icon" class="icon-asterisk"></i><span id="serial_text">  Serial Monitor</span></button>-->
+                        </div>
 					</div>
 				</div>
 				</div>

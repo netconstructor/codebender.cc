@@ -1,72 +1,62 @@
 <script type="text/javascript">
-function getExample(filename){
-	// alert('editting file');
-	$.get(filename, function(data)
-	{
-		// $('.result').html(data);
-		editor.getSession().setValue(data);
-		// alert('Load was performed.');
-	});
-}
+	function getExample(filename) {
+		// alert('editting file');
+		$.get(filename, function (data) {
+			// $('.result').html(data);
+			editor.getSession().setValue(data);
+			// alert('Load was performed.');
+		});
+	}
 </script>
 
 <script type="text/javascript">
-function warnModal(filename){
-	 //alert(filename);
-	 $('#loadLink').attr('onclick','getExample("'+filename+'")');
-	 $('#warningModal').modal('show');	
-}
+	function warnModal(filename) {
+		//alert(filename);
+		$('#loadLink').attr('onclick', 'getExample("' + filename + '")');
+		$('#warningModal').modal('show');
+	}
 </script>
 
 <script type="text/javascript">
 
-function saveDescription()
-{
-	$.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data: $("#newDescription").val()}, function(data)
-	{
+function saveDescription() {
+	$.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#newDescription").val()}, function (data) {
 		$("#oldDescription").html($("#newDescription").val());
 		$("#descriptionModal").modal('hide');
 	});
 }
 
-function saveName()
-{
-	$.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data: $("#newName").val()}, function(data)
-	{
+function saveName() {
+	$.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#newName").val()}, function (data) {
 		$("#nameModal").modal('hide');
 		handleResponse(data);
 	});
 }
 
-function renameFilenameModal(filename)
-{
+function renameFilenameModal(filename) {
 	$("#oldFilename").val(filename);
 	$("#newFilename").val(filename);
 	$("#filenameModal").modal('show');
 }
 
-function renameFilename()
-{
-	$.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename: $("#oldFilename").val(), newFilename: $("#newFilename").val()}, function(data)
-	{
+function renameFilename() {
+	$.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename:$("#oldFilename").val(), newFilename:$("#newFilename").val()}, function (data) {
 		$("#filenameModal").modal('hide');
 		handleResponse(data);
 	});
 }
 
-function handleResponse(response)
-{
-		var response = JSON.parse(response);
-		if(response["success"])
-			location.reload();
-		else
-			clearProgress(response["error"])
+function handleResponse(response) {
+	var response = JSON.parse(response);
+	if (response["success"])
+		location.reload();
+	else
+		clearProgress(response["error"])
 }
 
-function setProgress(newprogress)
-{
+function setProgress(newprogress) {
 	$("#progress").show('fast');
-	$("#progress_val").width(newprogress+'%');
+	$("#progress_val").width(newprogress + '%');
 	$("#operation_output").hide('fast');
 	// $("#progress").show('fast');
 	// if(newprogress < 10)
@@ -74,7 +64,7 @@ function setProgress(newprogress)
 	// else
 	// 	window.currentProgress = 0;
 	// $("#progress_val").width(window.currentProgress+'%');
-	// 
+	//
 	// window.maxProgress = newprogress;
 	// window.interval = setInterval(function()
 	// {
@@ -85,67 +75,59 @@ function setProgress(newprogress)
 	// $("#operation_output").hide('fast');
 }
 
-function clearProgress(output)
-{
+function clearProgress(output) {
 	$("#progress").hide('fast');
-	$("#progress_val").width('0%');	
+	$("#progress_val").width('0%');
 	$("#operation_output").html(output).show('fast');
 	//clear the interval here
 }
 
-function save()
-{
+function save() {
 	loadCode(window.selectedFile);
 	setProgress(90);
-	$.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data: JSON.stringify(window.files)}, function(data)
-	{
+	$.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
 		$("#save").addClass("btn-success");
 		$("#save_icon").addClass("icon-white");
 		clearProgress("Saved successfuly.");
 		window.setTimeout(function () {
-		    $("#save").removeClass("btn-success");
+			$("#save").removeClass("btn-success");
 			$("#save_icon").removeClass("icon-white");
 		}, 500);
 		// alert("Data received: " + data);
-	});	
+	});
 }
 
-function revert()
-{
+function revert() {
 	location.reload();
 }
 
-function generate_payload(format)
-{
+function generate_payload(format) {
 	var pos = editor.getCursorPosition();
 	loadCode(window.selectedFile);
 	editor.moveCursorTo(pos.row, pos.column, true);
 
-	var count=0;
+	var count = 0;
 	var files_array = Array();
-	jQuery.each(window.files, function(i, val) {
-	  files_array[count++] = {"filename":i, "content":$("<div/>").html(val).text()};
+	jQuery.each(window.files, function (i, val) {
+		files_array[count++] = {"filename":i, "content":$("<div/>").html(val).text()};
 	});
 
 	var payload = {"files":files_array, "format":format, "build":window.boardz[$("#boards").prop("selectedIndex")]["build"]};
 	return JSON.stringify(payload)
 }
 
-function verify()
-{
+function verify() {
 	var payload = generate_payload("syntax");
 
 	setProgress(90);
-	$.post("{{compiler}}", payload, function(data)
-	{
+	$.post("{{compiler}}", payload, function (data) {
 		var obj = jQuery.parseJSON(data);
-		if(obj.success == 0)
-		{
+		if (obj.success == 0) {
 			$("#compile_output").css('color', 'black');
-			$("#editor").css("bottom","170px");
-			$("#compile_output").css("bottom","30px");
-			$("#compile_output").css("padding-top","10px");
-			$("#compile_output").css("height","120px");
+			$("#editor").css("bottom", "170px");
+			$("#compile_output").css("bottom", "30px");
+			$("#compile_output").css("padding-top", "10px");
+			$("#compile_output").css("height", "120px");
 			$("#compile_output").addClass("well");
 			$("#compile").addClass("btn-warning");
 			$("#compile_icon").addClass("icon-remove");
@@ -153,14 +135,13 @@ function verify()
 			$("#compile_output").css("visibility", "visible");
 			clearProgress("Verification failed.")
 		}
-		else
-		{
+		else {
 			$("#compile_output").css('color', '');
-			$(".ace_gutter-cell").css("text-decoration", "").css("color","");
-			$("#editor").css("bottom","");
-			$("#compile_output").css("bottom","");
-			$("#compile_output").css("height","");
-			$("#compile_output").css("padding-top","");
+			$(".ace_gutter-cell").css("text-decoration", "").css("color", "");
+			$("#editor").css("bottom", "");
+			$("#compile_output").css("bottom", "");
+			$("#compile_output").css("height", "");
+			$("#compile_output").css("padding-top", "");
 			$("#compile_output").css("visibility", "");
 			$("#compile_output").removeClass("well");
 			$("#compile").addClass("btn-success");
@@ -170,82 +151,72 @@ function verify()
 			clearProgress(progressText)
 			window.sketch_size = obj.size;
 			$("#compile_output").html("");
-			
+
 		}
 		editor.resize();
 		$("#compile_icon").removeClass("icon-check").addClass("icon-white");
 
 		window.setTimeout(function () {
-		    $("#compile").removeClass("btn-success").removeClass("btn-warning");
-				$("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
+			$("#compile").removeClass("btn-success").removeClass("btn-warning");
+			$("#compile_icon").removeClass("icon-white").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-check");
 		}, 500);
 		// alert("Data received: " + data);
-	});	
+	});
 }
 
 
-function getbin(callback)
-{
+function getbin(callback) {
 	var payload = generate_payload("binary");
-	$.post("{{compiler}}", payload, function(data)
-	{
+	$.post("{{compiler}}", payload, function (data) {
 		var obj = jQuery.parseJSON(data);
 		callback(obj);
 	});
 }
 
 
-function cloudload()
-{
+function cloudload() {
 	setProgress(30);
-	getbin(function(obj)
-	{
-		if(obj.success == 0)
-		{
+	getbin(function (obj) {
+		if (obj.success == 0) {
 			clearProgress("There was an error compiling.");
 		}
-		else
-		{
+		else {
 			binary = obj["output"];
 			$("#uploadusb").addClass("btn-success");
 			$("#upload_icon").addClass("icon-white");
 			window.setTimeout(function () {
-			    $("#uploadusb").removeClass("btn-success");
+				$("#uploadusb").removeClass("btn-success");
 				$("#upload_icon").removeClass("icon-white");
 			}, 500);
 
 
 			setProgress(70);
-			var payload = {"ip": $("#ip").val(), "bin":binary}
-			$.post("{{ path('AceSenderBundle_tftp') }}", {"data": JSON.stringify(payload)}, function(data)
-			{
+			var payload = {"ip":$("#ip").val(), "bin":binary}
+			$.post("{{ path('AceSenderBundle_tftp') }}", {"data":JSON.stringify(payload)}, function (data) {
 				var obj = jQuery.parseJSON(data);
-				if(obj.success == 0)
-				{
+				if (obj.success == 0) {
 					$("#compile_output").css('color', 'black');
-					for (var i=0; i<obj.lines.length; i++)
-					{
-						$(".ace_gutter-cell").filter(function(index) {
-						  return $(this).html() == obj.lines[i];
-						}).css("text-decoration","underline").css("color","red");
+					for (var i = 0; i < obj.lines.length; i++) {
+						$(".ace_gutter-cell").filter(function (index) {
+							return $(this).html() == obj.lines[i];
+						}).css("text-decoration", "underline").css("color", "red");
 					}
 
-					$("#editor").css("bottom","150px");
-					$("#compile_output").css("bottom","0px");
-					$("#compile_output").css("padding-top","10px");
-					$("#compile_output").css("height","120px");
+					$("#editor").css("bottom", "150px");
+					$("#compile_output").css("bottom", "0px");
+					$("#compile_output").css("padding-top", "10px");
+					$("#compile_output").css("height", "120px");
 					$("#compile_output").addClass("well");
 					$("#compile_output").html(obj.text);
 					clearProgress("Upload failed.")
 				}
-				else
-				{
+				else {
 					$("#compile_output").css('color', '');
-					$(".ace_gutter-cell").css("text-decoration", "").css("color","");
-					$("#editor").css("bottom","");
-					$("#compile_output").css("bottom","");
-					$("#compile_output").css("height","");
-					$("#compile_output").css("padding-top","");
+					$(".ace_gutter-cell").css("text-decoration", "").css("color", "");
+					$("#editor").css("bottom", "");
+					$("#compile_output").css("bottom", "");
+					$("#compile_output").css("height", "");
+					$("#compile_output").css("padding-top", "");
 					$("#compile_output").removeClass("well");
 
 					var progressText = "<p>" + obj.text + "</p>";
@@ -260,324 +231,452 @@ function cloudload()
 }
 
 
-function getMaxSize()
-{
+function getMaxSize() {
 	var max_size;
-	if($("select[id='boards'] option:selected").html() == "Arduino Uno")
-	{
+	if ($("select[id='boards'] option:selected").html() == "Arduino Uno") {
 		max_size = 32256;
 	}
-	else if($("select[id='boards'] option:selected").html() == "Arduino Duemilanove")
-	{
+	else if ($("select[id='boards'] option:selected").html() == "Arduino Duemilanove") {
 		max_size = 30720;
 	}
 	return max_size;
 }
 
-function uploadusb()
-{
-	if($("#ports").val() != null && $("#ports").val() != "")
-	{
+function uploadusb() {
+	if ($("#ports").val() != null && $("#ports").val() != "") {
 		var max_size = getMaxSize();
-		if(window.size > max_size)
-		{
+		if (window.size > max_size) {
 			clearProgress("There is not enough space!");
 			return;
 		}
 
 		setProgress(50);
 
-		getbin(function(obj)
-		{
-				if(obj.success == 0)
-				{
-					clearProgress("There was an error compiling.");
-				}
+		getbin(function (obj) {
+			if (obj.success == 0) {
+				clearProgress("There was an error compiling.");
+			}
+			else {
+				binary = obj["output"];
+				$("#uploadusb").addClass("btn-success");
+				$("#upload_icon").addClass("icon-white");
+				window.setTimeout(function () {
+					$("#uploadusb").removeClass("btn-success");
+					$("#upload_icon").removeClass("icon-white");
+				}, 500);
+				setProgress(80);
+				var progress = plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"]);
+				if (progress)
+					clearProgress("There was an error uploading. Error #" + progress);
 				else
-				{
-					binary = obj["output"];
-					$("#uploadusb").addClass("btn-success");
-					$("#upload_icon").addClass("icon-white");
-					window.setTimeout(function () {
-					    $("#uploadusb").removeClass("btn-success");
-						$("#upload_icon").removeClass("icon-white");
-					}, 500);
-					setProgress(80);
-					var progress = plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"]);
-					if(progress)
-						clearProgress("There was an error uploading. Error #" + progress);
-					else
-						clearProgress("Upload successful.");
-				}
+					clearProgress("Upload successful.");
+			}
 		});
 	}
-	else
-	{
+	else {
 		clearProgress("Please select a valid port or enable the plugin!!");
 	}
 }
 
-function disableLink(link)
-{
-	link.css("text-decoration","line-through").click(function(e)
-	{
-	    e.preventDefault();
+
+function disableLink(link) {
+	link.css("text-decoration", "line-through").click(function (e) {
+		e.preventDefault();
 	});
 }
-function enableLink(link)
-{
-	link.css("text-decoration","").off('click');
+function enableLink(link) {
+	link.css("text-decoration", "").off('click');
 }
 </script>
 
 
 <script type="text/javascript" charset="utf-8">
-function addCommands()
-{
-	editor.commands.addCommand({
-	    name: 'saveFile',
-	    bindKey: {
-	        win: 'Ctrl-S',
-	        mac: 'Command-S',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request) {
-	        save();
-	    }
-	});
-		
-	editor.commands.addCommand({
-	    name: 'verifyFile',
-	    bindKey: {
-	        win: 'Ctrl-R',
-	        mac: 'Command-R',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request) {
-	        verify();
-	    }
-	});
-	
-	editor.commands.addCommand({
-	    name: 'uploadFile',
-	    bindKey: {
-	        win: 'Ctrl-U',
-	        mac: 'Command-U',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request) {
-			uploadusb();
-	    }
-	});
-	
-	editor.commands.addCommand({
-	    name: 'CheckWord',
-	    bindKey: {
-	        win: 'Ctrl-Space',
-	        mac: 'Ctrl-Space',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request) {
-			var selection = editor.getSession().doc.getTextRange(editor.getSelectionRange());
-			if (selection == "")
-			{
-				var row = editor.getSession().getSelection().getCursor().row;
-				var column = editor.getSession().getSelection().getCursor().column
-				var string = editor.getSession().getLine(editor.getSession().getSelection().getCursor().row);
-				var first_half = string.substring(0,column).match(/\w+$/);
-				var second_half = string.substring(column, string.length).match(/^\w+/);
-				if (first_half == null) first_half = "";
-				if (second_half == null) second_half = "";
-				selection = first_half + second_half;
+	function addCommands() {
+		editor.commands.addCommand({
+			name:'saveFile',
+			bindKey:{
+				win:'Ctrl-S',
+				mac:'Command-S',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				save();
 			}
-			window.open('http://www.google.com/search?q='+selection+'+inurl:arduino.cc/en/Reference&btnI');
-	    }
-	});
-	
-	editor.commands.addCommand({
-	    name: 'MyComments',
-	    bindKey: {
-	        win: 'Ctrl-/',
-	        mac: 'Command-/',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request)
-		{
-			editor.toggleCommentLines();
-	    }
-	});
-	
-	editor.commands.addCommand({
-	    name: 'serialMonitor',
-	    bindKey: {
-	        win: 'Ctrl-Shift-M',
-	        mac: 'Command-Shift-M',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request)
-		{
-	        connect();
-	    }
-	});
-	
-	editor.commands.addCommand({
-	    name: 'autoFormat',
-	    bindKey: {
-	        win: 'Ctrl-Alt-[',
-	        mac: 'Command-Alt-[',
-	        sender: 'editor|cli'
-	    },
-	    exec: function(env, args, request)
-		{
-			autoFormat();
-	    }
-	});
-	
-}
+		});
+
+		editor.commands.addCommand({
+			name:'verifyFile',
+			bindKey:{
+				win:'Ctrl-R',
+				mac:'Command-R',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				verify();
+			}
+		});
+
+		editor.commands.addCommand({
+			name:'uploadFile',
+			bindKey:{
+				win:'Ctrl-U',
+				mac:'Command-U',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				uploadusb();
+			}
+		});
+
+		editor.commands.addCommand({
+			name:'CheckWord',
+			bindKey:{
+				win:'Ctrl-Space',
+				mac:'Ctrl-Space',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				var selection = editor.getSession().doc.getTextRange(editor.getSelectionRange());
+				if (selection == "") {
+					var row = editor.getSession().getSelection().getCursor().row;
+					var column = editor.getSession().getSelection().getCursor().column
+					var string = editor.getSession().getLine(editor.getSession().getSelection().getCursor().row);
+					var first_half = string.substring(0, column).match(/\w+$/);
+					var second_half = string.substring(column, string.length).match(/^\w+/);
+					if (first_half == null) first_half = "";
+					if (second_half == null) second_half = "";
+					selection = first_half + second_half;
+				}
+				window.open('http://www.google.com/search?q=' + selection + '+inurl:arduino.cc/en/Reference&btnI');
+			}
+		});
+
+		editor.commands.addCommand({
+			name:'MyComments',
+			bindKey:{
+				win:'Ctrl-/',
+				mac:'Command-/',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				editor.toggleCommentLines();
+			}
+		});
+
+		editor.commands.addCommand({
+			name:'serialMonitor',
+			bindKey:{
+				win:'Ctrl-Shift-M',
+				mac:'Command-Shift-M',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				connect();
+			}
+		});
+
+		editor.commands.addCommand({
+			name:'autoFormat',
+			bindKey:{
+				win:'Ctrl-Alt-[',
+				mac:'Command-Alt-[',
+				sender:'editor|cli'
+			},
+			exec:function (env, args, request) {
+				autoFormat();
+			}
+		});
+
+	}
 </script>
 
 <script type="text/javascript">
-    function scan()
-	{ 
+function scan() {
+	getFire();
+	setInterval(function () {
 		getFire();
-		setInterval(function(){	getFire(); }, 1000);
-    }
-    
-    function getIds()
-	{
-		window.portslist= $("#ports")[0];
-		window.oldPorts = "";
-		window.plugin = document.getElementById('plugin0');
-		document.getElementById('plugin0').download();
-		setTimeout(function(){ scan(); }, 200);
-	}
-	
-    function connect()
-	{
-		if($("#ports").val() != null && $("#ports").val() != "")
-		{
+	}, 1000);
+}
+
+function getIds() {
+	window.portslist = $("#ports")[0];
+	window.oldPorts = "";
+	window.plugin = document.getElementById('plugin0');
+	document.getElementById('plugin0').download();
+	setTimeout(function () {
+		scan();
+	}, 200);
+}
+
+;
+(function ($) {
+	var h = $.scrollTo = function (a, b, c) {
+		$(window).scrollTo(a, b, c)
+	};
+	h.defaults = {axis:'xy', duration:parseFloat($.fn.jquery) >= 1.3 ? 0 : 1, limit:true};
+	h.window = function (a) {
+		return $(window)._scrollable()
+	};
+	$.fn._scrollable = function () {
+		return this.map(function () {
+			var a = this, isWin = !a.nodeName || $.inArray(a.nodeName.toLowerCase(), ['iframe', '#document', 'html', 'body']) != -1;
+			if (!isWin)return a;
+			var b = (a.contentWindow || a).document || a.ownerDocument || a;
+			return/webkit/i.test(navigator.userAgent) || b.compatMode == 'BackCompat' ? b.body : b.documentElement
+		})
+	};
+	$.fn.scrollTo = function (e, f, g) {
+		if (typeof f == 'object') {
+			g = f;
+			f = 0
 		}
-		else
-		{
+		if (typeof g == 'function')g = {onAfter:g};
+		if (e == 'max')e = 9e9;
+		g = $.extend({}, h.defaults, g);
+		f = f || g.duration;
+		g.queue = g.queue && g.axis.length > 1;
+		if (g.queue)f /= 2;
+		g.offset = both(g.offset);
+		g.over = both(g.over);
+		return this._scrollable().each(function () {
+			if (e == null)return;
+			var d = this, $elem = $(d), targ = e, toff, attr = {}, win = $elem.is('html,body');
+			switch (typeof targ) {
+				case'number':
+				case'string':
+					if (/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)) {
+						targ = both(targ);
+						break
+					}
+					targ = $(targ, this);
+					if (!targ.length)return;
+				case'object':
+					if (targ.is || targ.style)toff = (targ = $(targ)).offset()
+			}
+			$.each(g.axis.split(''), function (i, a) {
+				var b = a == 'x' ? 'Left' : 'Top', pos = b.toLowerCase(), key = 'scroll' + b, old = d[key], max = h.max(d, a);
+				if (toff) {
+					attr[key] = toff[pos] + (win ? 0 : old - $elem.offset()[pos]);
+					if (g.margin) {
+						attr[key] -= parseInt(targ.css('margin' + b)) || 0;
+						attr[key] -= parseInt(targ.css('border' + b + 'Width')) || 0
+					}
+					attr[key] += g.offset[pos] || 0;
+					if (g.over[pos])attr[key] += targ[a == 'x' ? 'width' : 'height']() * g.over[pos]
+				} else {
+					var c = targ[pos];
+					attr[key] = c.slice && c.slice(-1) == '%' ? parseFloat(c) / 100 * max : c
+				}
+				if (g.limit && /^\d+$/.test(attr[key]))attr[key] = attr[key] <= 0 ? 0 : Math.min(attr[key], max);
+				if (!i && g.queue) {
+					if (old != attr[key])animate(g.onAfterFirst);
+					delete attr[key]
+				}
+			});
+			animate(g.onAfter);
+			function animate(a) {
+				$elem.animate(attr, f, g.easing, a && function () {
+					a.call(this, e, g)
+				})
+			}
+		}).end()
+	};
+	h.max = function (a, b) {
+		var c = b == 'x' ? 'Width' : 'Height', scroll = 'scroll' + c;
+		if (!$(a).is('html,body'))return a[scroll] - $(a)[c.toLowerCase()]();
+		var d = 'client' + c, html = a.ownerDocument.documentElement, body = a.ownerDocument.body;
+		return Math.max(html[scroll], body[scroll]) - Math.min(html[d], body[d])
+	};
+	function both(a) {
+		return typeof a == 'object' ? a : {top:a, left:a}
+	}
+})(jQuery);
+
+function connect() {
+	if (window.connected == false) {
+		if ($("#ports").val() != null && $("#ports").val() != "") {
+
+			window.connected = true;
+			document.getElementById("disconnect").disabled = false;
+			document.getElementById("connect").disabled = true;
+			$("#compile_output").html("");
+			window.plugin.serialRead(
+				portslist.options[portslist.selectedIndex].text,
+				window.speed,
+				function (from, line) {
+					//clearProgress(line);
+					$("#editor").css("bottom", "170px");
+					$("#compile_output").css("bottom", "30px");
+					$("#compile_output").css("padding-top", "10px");
+					$("#compile_output").css("height", "120px");
+					$("#compile_output").addClass("well");
+					$("#compile_output").css("visibility", "visible");
+					$("#compile_output").html($("#compile_output").html() + "<br>" + line);
+					$("#compile_output").scrollTo(99999999);
+				}
+			);
+
+		}
+		else {
 			clearProgress("Please select a valid port or enable the plugin!!");
 		}
-    }
+	}
+}
 
-    function getFire()
-	{
-		var ports="";
-		try{
-			ports = plugin.probeUSB();
-			if(ports != oldPorts){
-				$('#ports').find('option').remove();
-				portsAvail=ports.split(",");
-				for (var i =0 ;i< portsAvail.length ; i++){
-					if (portsAvail[i]!=""){
-						portslist.options[i]=new Option(portsAvail[i],portsAvail[i],true,false);
-					}
-				}
-				oldPorts = ports;
-			}
-		}
-		catch(err){
+function disconnect() {
+
+	if (window.connected == true) {
+		document.getElementById("disconnect").disabled = true;
+		document.getElementById("connect").disabled = false;
+		window.connected = false;
+		window.plugin.disconnect();
+
+	}
+}
+
+function getFire() {
+	var ports = "";
+	try {
+		ports = plugin.probeUSB();
+		if (ports != oldPorts) {
 			$('#ports').find('option').remove();
+			portsAvail = ports.split(",");
+			for (var i = 0; i < portsAvail.length; i++) {
+				if (portsAvail[i] != "") {
+					portslist.options[i] = new Option(portsAvail[i], portsAvail[i], true, false);
+				}
+			}
 			oldPorts = ports;
 		}
-    }
-    
-    
-function enableUSB(){
-		window.usb_enabled=true;
-		$("#prescanning").hide("blind", {}, 1000);
-		$("#scanning").show("blind", {}, 1000);
-		
-		setTimeout(function(){
-			getIds();
-		}, 200);
-		setTimeout(function(){
-			loadSettings();
-		}, 500);
+	}
+	catch (err) {
+		$('#ports').find('option').remove();
+		oldPorts = ports;
+	}
+	checkPermissions();
 }
 
-function isMobile(){
 
-     return navigator.userAgent.match(/Android/i) ? true : false 
-     || navigator.userAgent.match(/BlackBerry/i) ? true : false
-     || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
-     ||navigator.userAgent.match(/IEMobile/i) ? true : false;
+function enableUSB() {
+	setSpeed(9600);
+	window.usb_enabled = true;
+	window.connected = false;
+	$("#prescanning").hide("blind", {}, 1000);
+	$("#scanning").show("blind", {}, 1000);
+
+	setTimeout(function () {
+		getIds();
+	}, 200);
+	setTimeout(function () {
+		loadSettings();
+	}, 500);
 }
 
-function loadCode(filename)
-{
+function setSpeed(speed) {
+	window.speed = speed;
+	$("#serial_speed").text(speed);
+}
+
+function isMobile() {
+
+	return navigator.userAgent.match(/Android/i) ? true : false
+		|| navigator.userAgent.match(/BlackBerry/i) ? true : false
+		|| navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
+		|| navigator.userAgent.match(/IEMobile/i) ? true : false;
+}
+
+function loadCode(filename) {
 	window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
 	editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
 	window.selectedFile = filename;
 	$("#selectedFile").text(filename);
 }
 
-function createFile()
-{
+function createFile() {
 	setProgress(90);
-	var val = { filename : $("#createfield").val() };
-	$.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
-	{
+	var val = { filename:$("#createfield").val() };
+	$.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
 		$("#creationModal").modal('hide');
 		handleResponse(data);
 	});
 }
 
-function deleteFile(filename)
-{
+function deleteFile(filename) {
 	setProgress(90);
-	var val = { "filename" : filename };
-	$.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data: JSON.stringify(val)}, function(data)
-	{
+	var val = { "filename":filename };
+	$.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
 		handleResponse(data);
 	});
 }
 
-function autoFormat()
-{
-    editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size': 1, 'indent_char':'\t', 'brace_style':'expand'}))
+function autoFormat() {
+	editor.getSession().setValue(js_beautify(editor.getSession().getValue(), {'indent_size':1, 'indent_char':'\t', 'brace_style':'expand'}))
 }
 
-function saveBoard()
-{
-	new Lawnchair(function() {
-	    this.save({key:'board', name:$("#boards option:selected").text()});
+function saveBoard() {
+	new Lawnchair(function () {
+		this.save({key:'board', name:$("#boards option:selected").text()});
 	});
 }
 
-function savePort()
-{
-	new Lawnchair(function() {
-	    this.save({key:'port', name:$("#ports option:selected").text()});
+function savePort() {
+	new Lawnchair(function () {
+		this.save({key:'port', name:$("#ports option:selected").text()});
 	});
+	checkPermissions();
 }
 
-function loadSettings()
-{
-	Lawnchair(function(){
-		this.exists('board', function(exists){
-			if(exists)
-			{
-				this.get('board', function(config){
+function loadSettings() {
+	Lawnchair(function () {
+		this.exists('board', function (exists) {
+			if (exists) {
+				this.get('board', function (config) {
 					$("#boards").val(config.name)
 				})
 			}
 		});
 	});
 
-	Lawnchair(function(){
-		this.exists('port', function(exists){
-			if(exists)
-			{
-				this.get('port', function(config){
+	Lawnchair(function () {
+		this.exists('port', function (exists) {
+			if (exists) {
+				this.get('port', function (config) {
 					$("#ports").val(config.name)
 				})
 			}
 		});
 	});
+}
+
+function checkPermissions() {
+	var group = window.plugin.checkPermissions($("#ports option:selected").text());
+	if (group == "") {
+		clearProgress("No permission Problems!");
+		downHudClose();
+	}
+	else {
+		var message = "Seems like you do not have the required <span style=\"color:red\">permissions<\/span> to communicate with your Arduino.</br>You need to add yourserlf to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> user group.<br>To do it run \"<span style=\"color:red\">useradd -G " + group.replace('\n', '') + " username<\/span>\" with root permissions, then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
+		downHudWrite(message);
+	}
+}
+
+function downHudWrite(message) {
+	$("#editor").css("bottom", "170px");
+	$("#compile_output").css("bottom", "30px");
+	$("#compile_output").css("padding-top", "10px");
+	$("#compile_output").css("height", "120px");
+	$("#compile_output").addClass("well");
+	$("#compile_output").css("visibility", "visible");
+	$("#compile_output").html(message);
+	$("#compile_output").scrollTo(99999999);
+}
+function downHudClose() {
+	$("#editor").css("bottom", "");
+	$("#compile_output").css("bottom", "");
+	$("#compile_output").css("height", "");
+	$("#compile_output").css("padding-top", "");
+	$("#compile_output").css("visibility", "");
+	$("#compile_output").removeClass("well");
 }
 
 </script>
