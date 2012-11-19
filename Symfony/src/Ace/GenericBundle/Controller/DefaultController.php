@@ -94,7 +94,7 @@ class DefaultController extends Controller
 	{
 		$utilities = $this->get('utilities');
 
-		$libraries = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "all"), true);
+		$libraries = json_decode($utilities->get($this->container->getParameter('library')."?data=all"), true);
 		$categories = $libraries["categories"];
 
 		return $this->render('AceGenericBundle:Default:libraries.html.twig', array('categories' => $categories));
