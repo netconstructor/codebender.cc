@@ -241,7 +241,7 @@ Change your personal information, then click 'save' to save your changes.<br /><
 			<label class="control-label" for="uname"><strong>Username</strong></label>
 			<div class="controls">
 				<div class="input-prepend">
-					<span class="add-on">	<i class="icon-user"></i></span>
+					<span class="add-on"><i class="icon-user"></i></span>
 					<input class="input-large" type="text" name="username" id="uname" value="{{ username }}" disabled/>
 				</div>
 			</div>
@@ -250,7 +250,7 @@ Change your personal information, then click 'save' to save your changes.<br /><
 			<label class="control-label" for="fname"><strong>Firstname</strong></label>
 			<div class="controls">
 				<div class="input-prepend">
-					<span class="add-on">F</span>
+					<span class="add-on"><i class="icon-user"></i></span>
 					<input class="input-large" type="text" name="firstname" id="fname" value="{{ settings.getFirstname() }}" />
 				</div>
 			</div>
@@ -259,7 +259,7 @@ Change your personal information, then click 'save' to save your changes.<br /><
 			<label class="control-label" for="lname"><strong>Lastname</strong></label>
 			<div class="controls">
 				<div class="input-prepend">
-					<span class="add-on">L</span>
+					<span class="add-on"><i class="icon-user"></i></span>
 					<input class="input-large" type="text" name="lastname" id="lname" value="{{ settings.getLastname() }}" />
 				</div>
 			</div>
@@ -268,7 +268,7 @@ Change your personal information, then click 'save' to save your changes.<br /><
 			<label class="control-label" for="email"><strong>E-mail</strong></label>
 			<div class="controls">
 				<div class="input-prepend">
-					<span class="add-on">	<i class="icon-envelope mail-icon"></i></span>
+					<span class="add-on"><i class="icon-envelope mail-icon"></i></span>
 					<input class="input-large" type="email" name="email" id="email" value="{{ settings.getEmail() }}" onkeyup="validation(id)"/>
 					<span class="help-block mail-info"></span>
 				</div>
@@ -289,7 +289,7 @@ Change your personal information, then click 'save' to save your changes.<br /><
 			<label class="control-label" for="old_pass"><strong>Old Password</strong></label>
 			<div class="controls">
 				<div class="input-prepend">
-					<span class="add-on">	<i class="icon-exclamation-sign password_old"></i></span>
+					<span class="add-on"><i class="icon-exclamation-sign password_old"></i></span>
 					<input class="input-large" type="password" name="old_pass" id="old_pass" value="" onkeyup="oldpasscheck(id)" onblur="validation(id)"/>
 					<span class="help-inline oldpass-info"></span>
 				</div>
@@ -299,7 +299,7 @@ Change your personal information, then click 'save' to save your changes.<br /><
 			<label class="control-label" for="new_pass"><strong>New Password</strong></label>
 			<div class="controls">
 				<div class="input-prepend">
-					<span class="add-on">	<i class="icon-exclamation-sign password_signs"></i></span>
+					<span class="add-on"><i class="icon-exclamation-sign password_signs"></i></span>
 					<input class="input-large" type="password" name="new_pass" id="new_pass" value="" onkeyup="validation(id)"/>
 					<span class="help-inline newpass-info"></span>
 				</div>
