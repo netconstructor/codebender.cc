@@ -28,7 +28,7 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->createproject($user["id"], $project_name, $text);
+		$response = $this->get('projectmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
@@ -37,28 +37,6 @@ class DefaultController extends Controller
 
 		$this->get('session')->setFlash('error', "Error: ".$response["error"]);
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
-	}
-
-	public function createproject($user_id, $project_name, $code)
-	{
-
-		$projectmanager = $this->get('projectmanager');
-		$response = $projectmanager->createAction($user_id, $project_name, "")->getContent();
-		$response=json_decode($response, true);
-		if($response["success"])
-		{
-			$response2 = $projectmanager->createFileAction($response["id"], $project_name.".ino", $code)->getContent();
-			$response2=json_decode($response2, true);
-			if($response2["success"])
-			{
-				return json_encode(array("success" => true, "id" => $response["id"]));
-			}
-			else
-				return json_encode($response2);
-		}
-		else
-			return json_encode($response);
-
 	}
 
 	public function deleteprojectAction($id)
