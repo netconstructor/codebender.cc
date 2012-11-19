@@ -39,7 +39,6 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
-
 	public function deleteprojectAction($id)
 	{
 
