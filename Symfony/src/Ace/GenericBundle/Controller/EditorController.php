@@ -41,17 +41,6 @@ class EditorController extends Controller
 		$boardcontroller = $this->get('boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
-		$utilities = $this->get('utilities');
-		$examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "builtin"), true);
-		$lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "included"), true);
-		$extra_lib_examples = json_decode($utilities->get_data($this->container->getParameter('library'), 'data', "external"), true);
-
-		$examples = $examples["list"];
-		$lib_examples = $lib_examples["list"];
-		$extra_lib_examples = $extra_lib_examples["list"];
-
-		// die(var_dump($examples)." ".var_dump($lib_examples)." ".var_dump($extra_lib_examples)." ");
-
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'examples' => $examples, 'lib_examples' => $lib_examples,'extra_lib_examples' => $extra_lib_examples, 'files' => $files, 'boards' => $boards));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards));
 	}		
 }
