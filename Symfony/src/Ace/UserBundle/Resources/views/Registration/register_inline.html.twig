@@ -25,6 +25,24 @@ function update_username()
 	}
 }
 
+function update_email()
+{
+	$("#register_email_id").removeClass("error");
+	$("#register_email_id").removeClass("success");
+
+	var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+	if(emailReg.test($("#fos_user_registration_form_email").val()))
+	{
+		$("#register_email_id").addClass("success");
+		$("#register_info_id").text("Email Validated. Move along, move along...");
+	}
+	else
+	{
+		$("#register_email_id").addClass("error");
+		$("#register_info_id").text("Please enter a valid email.");
+	}
+}
+
 function update_verification()
 {
 	$("#register_verification_id").removeClass("error");
@@ -45,6 +63,8 @@ $(document).ready(function()
 {
 	$("#fos_user_registration_form_username").keyup(update_username);
 	$("#fos_user_registration_form_username").change(update_username);
+	$("#fos_user_registration_form_email").keyup(update_email);
+	$("#fos_user_registration_form_email").change(update_email);
 	$("#fos_user_registration_form_plainPassword_second").keyup(update_verification);
 	$("#fos_user_registration_form_plainPassword_second").change(update_verification);
 });
@@ -67,7 +87,9 @@ $(document).ready(function()
 			{{ form_widget(form.username) }}
 			</div>
 			{{ form_label(form.email) }}
+			<div id = "register_email_id" class="control-group">
 			{{ form_widget(form.email) }}
+			</div>
 	</div><!--/span-->
 	<div class="span6">
 		<!-- right side -->
