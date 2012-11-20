@@ -25,10 +25,28 @@ function update_username()
 	}
 }
 
+function update_verification()
+{
+	$("#register_verification_id").removeClass("error");
+	$("#register_verification_id").removeClass("success");
+	if($("#fos_user_registration_form_plainPassword_first").val() == $("#fos_user_registration_form_plainPassword_second").val())
+	{
+		$("#register_verification_id").addClass("success");
+		$("#register_info_id").text("Passwords matched. Commence Registration.");
+	}
+	else
+	{
+		$("#register_verification_id").addClass("error");
+		$("#register_info_id").text("Your passwords do not match.");
+	}
+}
+
 $(document).ready(function()
 {
 	$("#fos_user_registration_form_username").keyup(update_username);
 	$("#fos_user_registration_form_username").change(update_username);
+	$("#fos_user_registration_form_plainPassword_second").keyup(update_verification);
+	$("#fos_user_registration_form_plainPassword_second").change(update_verification);
 });
 </script>
 
@@ -56,7 +74,9 @@ $(document).ready(function()
 		{{ form_label(form.plainPassword.first) }}
 		{{ form_widget(form.plainPassword.first) }}
 		{{ form_label(form.plainPassword.second) }}
+		<div id = "register_verification_id" class="control-group">
 		{{ form_widget(form.plainPassword.second) }}
+		</div>
 	</div><!--/span-->
 </div><!--/row-->
 <div class="row-fluid">
