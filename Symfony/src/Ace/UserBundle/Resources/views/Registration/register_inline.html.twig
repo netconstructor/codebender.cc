@@ -1,3 +1,37 @@
+<script>
+
+function update_username()
+{
+	$("#register_username_id").removeClass("error");
+	$("#register_username_id").removeClass("success");
+	if($("#fos_user_registration_form_username").val().length > 2)
+		$.get("{{path('AceUserBundle_exists', {'username':''})}}"+ "/" + $("#fos_user_registration_form_username").val(), function (data)
+		{
+			if(data == "true")
+			{
+				$("#register_username_id").addClass("error");
+				$("#register_info_id").text("We are sorry, this username is already taken.");
+			}
+			else
+			{
+				$("#register_username_id").addClass("success");
+				$("#register_info_id").text("What a cool username!");
+			}
+		});
+	else
+	{
+		$("#register_username_id").addClass("error");
+		$("#register_info_id").text("Sorry, your username needs to be at least 3 digits long.");
+	}
+}
+
+$(document).ready(function()
+{
+	$("#fos_user_registration_form_username").keyup(update_username);
+	$("#fos_user_registration_form_username").change(update_username);
+});
+</script>
+
 <div class="row-fluid">
 	<div class="span12">
 	<!-- header -->
@@ -11,7 +45,9 @@
 	<div class="span6">
 		<!-- left side -->
 			{{ form_label(form.username) }}
+			<div id = "register_username_id" class="control-group">
 			{{ form_widget(form.username) }}
+			</div>
 			{{ form_label(form.email) }}
 			{{ form_widget(form.email) }}
 	</div><!--/span-->
@@ -29,6 +65,7 @@
 		<div style="display:none">
 		{{form_rest(form)}}
 		</div>
+		<p id="register_info_id"><br/></p>
 		{{form_errors(form)}}
 		<input type="submit" style="margin-bottom:10px;" class="btn btn-primary" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
 	</form>
