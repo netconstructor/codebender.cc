@@ -43,6 +43,27 @@ function update_email()
 	}
 }
 
+function update_password()
+{
+	$("#register_password_id").removeClass("error");
+	$("#register_password_id").removeClass("success");
+	if($("#fos_user_registration_form_plainPassword_first").val().length < 6)
+	{
+		$("#register_password_id").addClass("error");
+		$("#register_info_id").text("Sorry, your password is too short. It needs to be at least 6 characters long.");
+	}
+	else if(!$("#fos_user_registration_form_plainPassword_first").val().match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\-])$/))
+	{
+		$("#register_password_id").addClass("error");
+		$("#register_info_id").text("Sorry, your password needs to use at least 3 of the 4 character sets (lowercase, uppercase, numerical, symbols).");
+	}
+	else
+	{
+		$("#register_info_id").text("Hooray! You've got a nice, strong and shiny password.");
+		$("#register_password_id").addClass("success");
+	}
+}
+
 function update_verification()
 {
 	$("#register_verification_id").removeClass("error");
@@ -65,6 +86,8 @@ $(document).ready(function()
 	$("#fos_user_registration_form_username").change(update_username);
 	$("#fos_user_registration_form_email").keyup(update_email);
 	$("#fos_user_registration_form_email").change(update_email);
+	$("#fos_user_registration_form_plainPassword_first").keyup(update_password);
+	$("#fos_user_registration_form_plainPassword_first").change(update_password);
 	$("#fos_user_registration_form_plainPassword_second").keyup(update_verification);
 	$("#fos_user_registration_form_plainPassword_second").change(update_verification);
 });
@@ -94,7 +117,9 @@ $(document).ready(function()
 	<div class="span6">
 		<!-- right side -->
 		{{ form_label(form.plainPassword.first) }}
+		<div id = "register_password_id" class="control-group">
 		{{ form_widget(form.plainPassword.first) }}
+	</div>
 		{{ form_label(form.plainPassword.second) }}
 		<div id = "register_verification_id" class="control-group">
 		{{ form_widget(form.plainPassword.second) }}
