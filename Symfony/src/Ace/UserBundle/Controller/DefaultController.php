@@ -27,6 +27,15 @@ class DefaultController extends Controller
 	protected $listapi;
 	protected $listid;
 
+	public function existsAction($username)
+	{
+		$response = json_decode($this->getUserAction($username)->getContent(), true);
+		if($response["success"])
+			return new Response("true");
+		else
+			return new Response("false");
+	}
+
 	public function getUserAction($username)
 	{
 		$response = array("success" => false);

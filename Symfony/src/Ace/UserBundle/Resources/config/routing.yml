@@ -1,3 +1,7 @@
+AceUserBundle_exists:
+    pattern:  /exists/{username}
+    defaults: { _controller: usercontroller:existsAction }
+
 AceUserBundle_getuser:
     pattern:  /getuser/{username}
     defaults: { _controller: usercontroller:getUserAction }
