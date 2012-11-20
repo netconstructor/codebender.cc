@@ -10,17 +10,23 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Mailer\MailerInterface;
 use Ace\UserBundle\Controller\DefaultController as UserController;
 use Ace\ProjectBundle\Controller\DefaultController as ProjectManager;
+use MCAPI;
+
 
 class RegistrationFormHandler extends BaseHandler
 {
 	private $usercontroller;
 	private $projectmanager;
+	private $listapi;
+	private $listid;
 
-    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, UserController $usercontroller, ProjectManager $projectmanager)
+    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, UserController $usercontroller, ProjectManager $projectmanager, $listapi, $listid)
     {
 		parent::__construct($form, $request, $userManager, $mailer);
 		$this->usercontroller = $usercontroller;
 		$this->projectmanager = $projectmanager;
+		$this->listapi = $listapi;
+		$this->listid = $listid;
     }
 
     protected function onSuccess(UserInterface $user, $confirmation)
@@ -76,13 +82,11 @@ void loop()
 		$response = $this->projectmanager->createprojectAction($user["id"], "Second Example", $second_code)->getContent();
 
 		// Mailchimp Integration
-        //$form = $this->form->getData();
-        
-        /* If newsletter is checked update newsletter mailing list
-        if($form['newsletter'])
-        {
-        	
-        }
-        */        
+       	$api = new MCAPI($this->listapi);
+       	$merge_vars = array('EMAIL'=> $user["email"], 'UNAME'=> $user["username"] );
+       	$double_optin=false;
+		$send_welcome=false;
+       	$api->listSubscribe( $this->listid, $user["email"], $merge_vars, $double_optin, $send_welcome);        	
+                
     }
 }

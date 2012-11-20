@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
+use MCAPI;
 
 class DefaultController extends Controller
 {
@@ -23,6 +24,8 @@ class DefaultController extends Controller
 	protected $em;
 	protected $vd;
 	protected $container;
+	protected $listapi;
+	protected $listid;
 
 	public function getUserAction($username)
 	{
@@ -192,11 +195,12 @@ class DefaultController extends Controller
 				$user->setFirstname($fname);
 				$user->setLastname($lname);
 				$user->setTwitter($twitter);
-
-				//set isvalid email check
-				//$emailConstraint = new Email();
-				//$emailConstraint->message = 'Email address is invalid or already in use';
-				//$emailConstraint->pattern = '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/';
+				
+				//update user's info in newsletter mailing list
+				$api = new MCAPI($this->listapi);
+				$merge_vars = array("FNAME"=>$fname, "LNAME"=>$lname);
+				$api->listUpdateMember($this->listid, $user->getEmail(), $merge_vars, false);
+				
 				$emailConstraint = new Regex( array(
 					'pattern' => '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/',
 					'match' => true,
@@ -207,8 +211,12 @@ class DefaultController extends Controller
 
 				if(count($errorList)==0)
 				{
+					//update email in newsletter mailing list
+					$merge_vars = array("EMAIL"=>$mail);
+					$api->listUpdateMember($this->listid, $user->getEmail(), $merge_vars, false);
 					$user->setEmail($mail);
 					$response->setContent('OK');
+
 				}
 				else
 					$response->setContent($errorList[0]->getMessage());
@@ -246,7 +254,7 @@ class DefaultController extends Controller
 	        )));
 	}
 
-	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator, ContainerInterface $container)
+	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator, ContainerInterface $container, $listapi, $listid)
 	{
 		$this->templating = $templating;
 		$this->request = $request;
@@ -255,6 +263,8 @@ class DefaultController extends Controller
 	    $this->em = $entityManager;
 	    $this->vd = $validator;
 		$this->container = $container;
+		$this->listapi = $listapi;
+		$this->listid = $listid;
 	}
 
 }

@@ -16,13 +16,6 @@ class RegistrationFormType extends BaseType
 			->add('firstname', 'text', array('label' => 'user_registration_form_firstname',	'required' => false))
 			->add('lastname', 'text', array('label' => 'user_registration_form_lastname', 'required' => false))
 			->add('twitter', 'text', array('label' => 'user_registration_form_twitter',	'required' => false));
-			/* Commented until Mailchimp's DNS issues are resolved
-			->add('newsletter', 'checkbox', array(
-												'label' => 'user_registration_form_newsletter',
-												'attr' => array('checked' => 'checked'),
-												'property_path' => false,
-												'required' => false,
-												)); */
     }
 
     public function getName()

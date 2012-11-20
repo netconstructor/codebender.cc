@@ -138,6 +138,8 @@ services:
             entityManager: "@doctrine.orm.entity_manager"
             validator: "@validator"
             container: "@service_container"
+            listapi: %listapi%
+            listid: %listid%
     boardcontroller:
         class:        Ace\UtilitiesBundle\Controller\BoardController
         arguments:
