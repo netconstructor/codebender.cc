@@ -265,11 +265,16 @@ function uploadusb() {
 					$("#upload_icon").removeClass("icon-white");
 				}, 500);
 				setProgress(80);
-				var progress = plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"]);
-				if (progress)
-					clearProgress("There was an error uploading. Error #" + progress);
-				else
-					clearProgress("Upload successful.");
+				plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"],
+					function (from, progress) {
+						if (progress) {
+							clearProgress("There was an error uploading. Error #" + progress);
+						} else {
+							clearProgress("Upload successful.");
+							downHudClose();
+						}
+					});
+
 			}
 		});
 	}
@@ -392,6 +397,12 @@ function enableLink(link) {
 
 <script type="text/javascript">
 function scan() {
+
+	window.plugin.setCallback(function (from, output) {
+		//alert(output);
+		downHudWrite(output);
+	});
+
 	getFire();
 	setInterval(function () {
 		getFire();
@@ -422,7 +433,7 @@ function getIds() {
 			var a = this, isWin = !a.nodeName || $.inArray(a.nodeName.toLowerCase(), ['iframe', '#document', 'html', 'body']) != -1;
 			if (!isWin)return a;
 			var b = (a.contentWindow || a).document || a.ownerDocument || a;
-			return/webkit/i.test(navigator.userAgent) || b.compatMode == 'BackCompat' ? b.body : b.documentElement
+			return/webkit/i.test(navigator.userAgent) || b.compatMode == 'BackCo    mpat' ? b.body : b.documentElement
 		})
 	};
 	$.fn.scrollTo = function (e, f, g) {
@@ -497,40 +508,32 @@ function connect() {
 		if ($("#ports").val() != null && $("#ports").val() != "") {
 
 			window.connected = true;
-			document.getElementById("disconnect").disabled = false;
-			document.getElementById("connect").disabled = true;
+			$("#connecttext").html("Disconnect");
+			$("#hideserial").addClass("disabled");
 			$("#compile_output").html("");
+			downHudWrite("");
 			window.plugin.serialRead(
 				portslist.options[portslist.selectedIndex].text,
-				window.speed,
+				$("#serialSpeed option:selected").text(),
 				function (from, line) {
-					//clearProgress(line);
-					$("#editor").css("bottom", "170px");
-					$("#compile_output").css("bottom", "30px");
-					$("#compile_output").css("padding-top", "10px");
-					$("#compile_output").css("height", "120px");
-					$("#compile_output").addClass("well");
-					$("#compile_output").css("visibility", "visible");
-					$("#compile_output").html($("#compile_output").html() + "<br>" + line);
-					$("#compile_output").scrollTo(99999999);
+					downHudAppend(line);
 				}
 			);
-
 		}
 		else {
 			clearProgress("Please select a valid port or enable the plugin!!");
 		}
+	} else {
+		disconnect();
 	}
 }
 
 function disconnect() {
-
 	if (window.connected == true) {
-		document.getElementById("disconnect").disabled = true;
-		document.getElementById("connect").disabled = false;
+		$("#connecttext").html("Connect");
 		window.connected = false;
+		$("#hideserial").removeClass("disabled");
 		window.plugin.disconnect();
-
 	}
 }
 
@@ -649,15 +652,13 @@ function loadSettings() {
 }
 
 function checkPermissions() {
-	// var group = window.plugin.checkPermissions($("#ports option:selected").text());
-	// if (group == "") {
-	// 	clearProgress("No permission Problems!");
-	// 	downHudClose();
-	// }
-	// else {
-	// 	var message = "Seems like you do not have the required <span style=\"color:red\">permissions<\/span> to communicate with your Arduino.</br>You need to add yourserlf to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> user group.<br>To do it run \"<span style=\"color:red\">useradd -G " + group.replace('\n', '') + " username<\/span>\" with root permissions, then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
-	// 	downHudWrite(message);
-	// }
+	if ((navigator.appVersion.indexOf("X11") == -1) && (navigator.appVersion.indexOf("Linux") == -1)) return;
+	var group = window.plugin.checkPermissions($("#ports option:selected").text());
+	if (group != "") {
+		var message = "Seems like you do not have the required <span style=\"color:red\">permissions<\/span> to communicate with your Arduino.</br>You need to add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group.<br>To do it run \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. </br>Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
+		downHudWrite(message);
+		return message;
+	}
 }
 
 function downHudWrite(message) {
@@ -671,12 +672,17 @@ function downHudWrite(message) {
 	$("#compile_output").scrollTo(99999999);
 }
 function downHudClose() {
+	if (window.connected == true) return;
 	$("#editor").css("bottom", "");
 	$("#compile_output").css("bottom", "");
 	$("#compile_output").css("height", "");
 	$("#compile_output").css("padding-top", "");
 	$("#compile_output").css("visibility", "");
 	$("#compile_output").removeClass("well");
+}
+
+function downHudAppend(line) {
+	downHudWrite($("#compile_output").html() + "<br>" + line);
 }
 
 </script>
