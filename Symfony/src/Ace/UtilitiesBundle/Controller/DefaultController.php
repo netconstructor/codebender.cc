@@ -404,4 +404,62 @@ class DefaultController extends Controller
 		}
 	}
 
+public function uploadfilesAction($id){
+
+		$sketch_id = $id;
+
+		if ($this->getRequest()->getMethod() === 'POST')
+		{
+
+			$upload_handler = new UploadHandler(array('accept_file_types' => '/(\.|\/)(h|cpp)$/i'), null, $this);
+
+			if (!preg_match('/^[a-z0-9\p{P}]*$/i', $_FILES["files"]["name"][0])){
+
+					$info = $upload_handler->post("Invalid filename.");
+					$json = json_encode($info);
+					return new Response($json);
+				}
+
+			$file_name = $_FILES["files"]["name"][0];
+			$pinfo = pathinfo($_FILES["files"]["name"][0]);
+			$project_name =  basename($_FILES["files"]["name"][0],'.'.$pinfo['extension']);
+			$ext = $pinfo['extension'];
+
+			if($ext == "cpp" || $ext == "h"){
+
+				if (substr(exec("file -bi -- ".escapeshellarg($_FILES["files"]["tmp_name"][0])), 0, 4) !== 'text'){
+
+					$info = $upload_handler->post("Filetype not allowed.");
+					$json = json_encode($info);
+					return new Response($json);
+				}
+
+				 $info = $upload_handler->post(null);
+				 $file = fopen($_FILES["files"]["tmp_name"][0], 'r');
+				 $code = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
+				 fclose($file);
+
+					if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
+						$info = $upload_handler->post("Error creating file.");
+						$json = json_encode($info);
+						return new Response($json);
+					}
+
+				$updated_info = array();
+				$updated_info[] = $upload_handler->fixFile($info, $sketch_id, $project_name, $ext);
+				$json = json_encode($updated_info);
+				return new Response($json);
+
+			}else {
+				$info = $upload_handler->post(null);
+				$json = json_encode($info);
+				return new Response($json);
+			}
+		}
+		 else if($this->getRequest()->getMethod() === 'GET')
+		{
+			return new Response('200');
+		}
+	}
+
 }

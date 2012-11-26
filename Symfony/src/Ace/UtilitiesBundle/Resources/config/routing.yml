@@ -70,6 +70,12 @@ AceUtilitiesBundle_upload:
     requirements:
         _method:  POST|GET
 
+AceUtilitiesBundle_uploadfiles:
+    pattern: /sketch:{id}/upload/
+    defaults: {_controller: AceUtilitiesBundle:Default:uploadfiles }
+    requirements:
+        _method:  POST|GET
+
 AceUtilitiesBundle_filecreate:
   pattern:  /filecreate/{id}/{name}
   defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
