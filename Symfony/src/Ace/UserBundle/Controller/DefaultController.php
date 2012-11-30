@@ -254,6 +254,14 @@ class DefaultController extends Controller
 		
 	}    
 
+	public function activeAction()
+	{
+		$repository = $this->em->getRepository('AceUserBundle:User');
+		$users = $repository->createQueryBuilder('u')->where('u.enabled = 1')->getQuery()->getResult();
+		return new Response(count($users));
+
+	}
+
 	public function inlineRegisterAction()
 	{
         $form = $this->container->get('fos_user.registration.form');
