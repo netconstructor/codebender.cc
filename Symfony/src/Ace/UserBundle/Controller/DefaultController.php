@@ -254,11 +254,29 @@ class DefaultController extends Controller
 		
 	}    
 
-	public function activeAction()
+	public function enabledAction()
 	{
 		$repository = $this->em->getRepository('AceUserBundle:User');
 		$users = $repository->createQueryBuilder('u')->where('u.enabled = 1')->getQuery()->getResult();
 		return new Response(count($users));
+
+	}
+
+	public function activeAction()
+	{
+		$repository = $this->em->getRepository('AceUserBundle:User');
+		$users = $repository->createQueryBuilder('u')->where('u.enabled = 1')->getQuery()->getResult();
+		$dayofyear = new \DateTime;
+		$count = 0;
+		foreach($users as $user)
+		{
+			if($user->getLastLogin() != null)
+			{
+				if($dayofyear->format("z") == $user->getLastLogin()->format("z"))
+					$count++;
+			}
+		}
+		return new Response($count);
 
 	}
 

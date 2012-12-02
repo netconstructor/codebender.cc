@@ -48,6 +48,10 @@ AceUserBundle_searchTwitter:
     pattern: /search/twitter/{token}
     defaults: { _controller: usercontroller:searchTwitterAction }
 
+AceUserBundle_enabled:
+    pattern: /enabled
+    defaults: { _controller: usercontroller:enabledAction }
+
 AceUserBundle_active:
     pattern: /active
     defaults: { _controller: usercontroller:activeAction }
