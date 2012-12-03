@@ -11,32 +11,37 @@
 	<hr class="soften">
 {% for key, category in categories %}
 	<h2>{{key}}</h2>
+    <div class="accordion" id="accordion{{ key |replace({'.': '', ' ': ''})}}">
 	{% for library in category %}
-		<div class="row-fluid">
-			<div class="span12">
-		    <h3>{{library["name"]}}</h3>
-			{#
-			{% if library["description"] is defined%}
-				{{library["description"]|raw}}
-			{% endif %}
-			#}
-			{% if library["examples"] is defined%}
-			<p>Examples:</p>
-			<ul>
-			{% for example in library["examples"] %}
-				<li><a href="{{path('AceGenericBundle_example',{'library':library["name"], 'example':example["name"], 'url':example["url"]})}}">
-					{{example["name"]}}
-				</a></li>
-			{% endfor %}
-			</ul>
-			{% endif %}
-			{% if library["url"] is defined%}
-			<p><a class="btn" href="{{library['url']}}" style="float:right;">More Info &raquo;</a></p>
-			{% endif %}
-
-		  </div><!--/span-->
-		</div><!--/row-->
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ key |replace({'.': '', ' ': ''})}}" href="#collapse{{library["name"]|replace({'.': '', ' ': ''})}}">{{library["name"]}}</a>
+                </div>
+                <div id="collapse{{library["name"]|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        {#
+                        {% if library["description"] is defined%}
+                            {{library["description"]|raw}}
+                        {% endif %}
+                        #}
+                        {% if library["examples"] is defined%}
+                            <p>Examples:</p>
+                            <ul>
+                                {% for example in library["examples"] %}
+                                    <li><a href="{{path('AceGenericBundle_example',{'library':library["name"], 'example':example["name"], 'url':example["url"]})}}">
+                                        {{example["name"]}}
+                                    </a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {% if library["url"] is defined%}
+                            <p><a class="btn" href="{{library['url']}}" style="float:right;">More Info &raquo;</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 	{% endfor %}
+    </div>
 	<hr class="soft">
 {% endfor %}
 
