@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Ace\UtilitiesBundle\Handler\UploadHandler;
+use ZipArchive;
 
 
 class DefaultController extends Controller
@@ -131,7 +132,8 @@ class DefaultController extends Controller
 	public function downloadAction($id)
 	{
 		$htmlcode = 200;
-		$extension =".ino";
+		$value = "";
+
 		$projectmanager = $this->get('projectmanager');
 
 		$name = $projectmanager->getNameAction($id)->getContent();
@@ -144,8 +146,35 @@ class DefaultController extends Controller
 
 		if(isset($files[0]))
 		{
-			//TODO: We should support multi-file downloading as well
-			$value = $files[0]["code"];
+			// Create a temporary file in the temporary
+			// files directory using sys_get_temp_dir()
+			$filename = tempnam(sys_get_temp_dir(), 'cb_');
+
+			$zip = new ZipArchive();
+
+			if ($zip->open($filename, ZIPARCHIVE::CREATE)!==TRUE)
+			{
+				$value = "";
+				$htmlcode = 404;
+			}
+			else
+			{
+				if($zip->addEmptyDir($name)!==TRUE)
+				{
+					$value = "";
+					$htmlcode = 404;
+				}
+				else
+				{
+					foreach($files as $file)
+					{
+						$zip->addFromString($name."/".$file["filename"], $file["code"]);
+					}
+					$zip->close();
+					$value = readfile($filename);
+				}
+				unlink($filename);
+			}
 		}
 		else
 		{
@@ -154,7 +183,7 @@ class DefaultController extends Controller
 		}
 
 		$headers = array('Content-Type'		=> 'application/octet-stream',
-			'Content-Disposition' => 'attachment;filename="'.$name.$extension.'"');
+			'Content-Disposition' => 'attachment;filename="'.$name.'.zip"');
 
 		return new Response($value, $htmlcode, $headers);
 	}
