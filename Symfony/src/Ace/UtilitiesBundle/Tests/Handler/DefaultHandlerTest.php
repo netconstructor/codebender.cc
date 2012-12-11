@@ -43,12 +43,11 @@ class DefaultHandlerTest extends \PHPUnit_Framework_TestCase
 
 	public function testDefault_text()
 	{
-		$this->assertTrue(FALSE);
-//		$file = fopen($this::directory.$this::default_file, 'r');
-//		$value = fread($file, filesize($this::directory.$this::default_file));
-//		fclose($file);
-//
-//		return $value;
+		$handler = new DefaultHandler();
+
+		//Check for wrong URL
+		$result = $handler->default_text();
+		$this->assertStringMatchesFormat('%asetup()%aloop()%a', $result);
 	}
 
 	public function testGet_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() )
