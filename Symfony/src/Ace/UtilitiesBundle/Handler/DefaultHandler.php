@@ -36,20 +36,6 @@ class DefaultHandler
 		return $data;
 	}
 
-	public function json_request($url, $data)
-	{
-		$ch = curl_init();
-		$timeout = 10;
-		curl_setopt($ch,CURLOPT_URL,$url);
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-		curl_setopt($ch,CURLOPT_POST,1);
-		curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
-		$data = curl_exec($ch);
-		curl_close($ch);
-		return $data;
-	}
-
 	public function default_text()
 	{
 		$file = fopen($this::directory.$this::default_file, 'r');

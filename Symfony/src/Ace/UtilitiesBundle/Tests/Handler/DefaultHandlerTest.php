@@ -41,21 +41,6 @@ class DefaultHandlerTest extends \PHPUnit_Framework_TestCase
 		$this->assertStringMatchesFormat('%a<html>%a</html>%a', $result);
 	}
 
-	public function testJson_request($url, $data)
-	{
-		$this->assertTrue(FALSE);
-//		$ch = curl_init();
-//		$timeout = 10;
-//		curl_setopt($ch,CURLOPT_URL,$url);
-//		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-//		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-//		curl_setopt($ch,CURLOPT_POST,1);
-//		curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
-//		$data = curl_exec($ch);
-//		curl_close($ch);
-//		return $data;
-	}
-
 	public function testDefault_text()
 	{
 		$this->assertTrue(FALSE);
