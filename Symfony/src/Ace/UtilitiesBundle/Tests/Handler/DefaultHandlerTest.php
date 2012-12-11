@@ -50,18 +50,16 @@ class DefaultHandlerTest extends \PHPUnit_Framework_TestCase
 		$this->assertStringMatchesFormat('%asetup()%aloop()%a', $result);
 	}
 
-	public function testGet_gravatar( $email, $s = 80, $d = 'mm', $r = 'g', $img = false, $atts = array() )
+	public function testGet_gravatar()
 	{
-		$this->assertTrue(FALSE);
-//		$url = 'http://www.gravatar.com/avatar/';
-//		$url .= md5( strtolower( trim( $email ) ) );
-//		$url .= "?s=$s&d=$d&r=$r";
-//		if ( $img ) {
-//			$url = '<img src="' . $url . '"';
-//			foreach ( $atts as $key => $val ) $url .= ' ' . $key . '="' . $val . '"';
-//			$url .= ' />';
-//		}
-//		return $url;
+		$handler = new DefaultHandler();
+
+		//Check for wrong URL
+		$result = $handler->get_gravatar("tzikis@gmail.com");
+		$this->assertEquals($result, 'http://www.gravatar.com/avatar/1a6a5289ac4473b5731fa9d9a3032828?s=80&d=mm&r=g');
+
+		$result = $handler->get_gravatar("tzikis@gmail.com", 120);
+		$this->assertEquals($result, 'http://www.gravatar.com/avatar/1a6a5289ac4473b5731fa9d9a3032828?s=120&d=mm&r=g');
 	}
 }
 
