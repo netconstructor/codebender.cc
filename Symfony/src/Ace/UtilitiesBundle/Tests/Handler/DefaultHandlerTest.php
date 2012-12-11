@@ -26,18 +26,19 @@ class DefaultHandlerTest extends \PHPUnit_Framework_TestCase
 		$this->assertStringMatchesFormat('%a<TR VALIGN=TOP><TH ROWSPAN=1>data</TH><TD><PRE>test</PRE></TD></TR>%a', $result);
 	}
 
-	public function testGet($url)
+	public function testGet()
 	{
-		$this->assertTrue(FALSE);
-//		$ch = curl_init();
-//		$timeout = 10;
-//		curl_setopt($ch,CURLOPT_URL,$url);
-//		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-//		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
-//
-//		$data = curl_exec($ch);
-//		curl_close($ch);
-//		return $data;
+		$handler = new DefaultHandler();
+
+		//Check for wrong URL
+		$result = $handler->get("http://codebender.cc\\/");
+		$this->assertNotEmpty($result);
+		$this->assertStringMatchesFormat('%a400 Bad Request%a', $result);
+
+		//Check for No Data
+		$result = $handler->get("http://codebender.cc/");
+		$this->assertNotEmpty($result);
+		$this->assertStringMatchesFormat('%a<html>%a</html>%a', $result);
 	}
 
 	public function testJson_request($url, $data)
