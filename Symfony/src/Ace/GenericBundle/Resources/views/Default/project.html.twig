@@ -178,11 +178,6 @@ h1 small
 {% block javascripts %}
     <script src='http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js' type='text/javascript'></script>
     <script type="text/javascript">
-        $(document).ready(function()
-        {
-            populate('{{ json|raw }}')
-        });
-
         function populate(input)
         {
             input = JSON.parse(input);
@@ -242,6 +237,10 @@ h1 small
 
         }
 
+        $(document).ready(function()
+        {
+            populate('{{ json|raw }}')
+        });
     </script>
 {% endblock %}
 
