@@ -85,8 +85,6 @@ class DefaultController extends Controller
 
 		$json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_project',array("id" => $id), true)),"user"=>array("name"=>$owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user',array('user' => $owner['username']), true )), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download',array('id'=> $id), true), "files" => $files);
 		$json = json_encode($json);
-		$json = str_replace("\\n", "\\\\n", str_replace("\\\\n", "\\n",$json));
-		$json = str_replace("\\t", "\\\\t", str_replace("\\\\t", "\\t",$json));
 
 		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "json" => $json));
 	}

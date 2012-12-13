@@ -241,7 +241,7 @@ h1 small
     <script type="text/javascript">
         $(document).ready(function()
         {
-            populate('{{ json|raw }}');
+            populate({{ json|json_encode()|raw }});
         });
     </script>
 {% endblock %}
