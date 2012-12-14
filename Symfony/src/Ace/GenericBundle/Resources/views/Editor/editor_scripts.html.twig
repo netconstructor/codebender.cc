@@ -404,7 +404,7 @@ function enableLink(link) {
 <script type="text/javascript">
 function scan() {
 
-    window.plugin.setCallback(function (from, output) {
+    window.hasPerm = window.plugin.setCallback(function (from, output) {
         //alert(output);
         if (output == "disconnect") {
             disconnect();
@@ -412,6 +412,11 @@ function scan() {
             downHudWrite(output);
         }
     });
+
+    if (!window.hasPerm) {
+        show_alert("You need to grant permissions to the Codebender extension.");
+    }
+
 
     getFire();
     setInterval(function () {
