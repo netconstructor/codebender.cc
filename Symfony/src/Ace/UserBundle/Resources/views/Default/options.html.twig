@@ -2,44 +2,12 @@
 {% block title "Account Options" %}
 {% block mainspan %}
 
-<!-- Next line left for reference - will be deleted in the future -->
-<!-- <script src={{ asset("validation/jquery.validate.js") }} type="text/javascript"></script> -->
+<script src={{ asset("validation/passvalidation.js") }} type="text/javascript"></script>
 
 <h2>User Account Options</h2>
 <hr />
 
 <script type="text/javascript" charset="utf-8">
-
-//TODO: wrap these javascript into a file and source it with line 6.
-
-function isvalidpass(pass)
-{
-	var regnum = /.*\d/; //number
-	var reglet = /.*[a-z]/; //letters
-	var regcaps = /.*[A-Z]/; //caps
-	var regpunc = /.*[@#$%!^&*()\_\-\+=~<>,.?\/:;'"{}|`[\]]/; //symbols
-	var regexp = [regnum, reglet, regcaps, regpunc];
-	var sets = 0;
-
-	var len = $("#"+pass).val().length;
-
-	if (len == 0)
-		return 2;
-	else if(len < 6 || len > 15)
-		return 3;
-	else
-	{
-		for(var i=0 ; i < 4; i++)
-		{
-			if (regexp[i].test($("#"+pass).val()))
-				sets++;
-		}
-		if (sets < 3)
-			return 4; //less than 3 charsets in pass
-		else
-			return 1; //valid pass
-	}
-};
 
 function oldpasscheck(id)
 {
@@ -49,7 +17,7 @@ function oldpasscheck(id)
 		if(len > 5 && len < 16)//reduce validation overhead
 		{
 			$(".oldpass-info").html('');
-			if(isvalidpass(id)==1)
+			if(passvalid(id)==1)
 			{
 				$(".oldpass").removeClass("error").removeClass("success").addClass("warning");
 				$(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
@@ -57,7 +25,7 @@ function oldpasscheck(id)
 				//setInterval(validation(id),100000);
 			}
 			else{
-				$(".oldpass-info").html('<i>Invalid Password,Password must contain characters from at least 3 of 4 characters sets([a..z][A..Z][0..9][`~!@#$%^&*()-_+={}[]|:;,.<>?/\"\'])</i>');
+				$(".oldpass-info").html('<i>Invalid Password, Passwords contain characters from at least 2 of 4 characters sets([a..z][A..Z][0..9][`~!@#$%^&*()-_+={}[]|:;,.<>?/\"\'])</i>');
 			}
 
 		}
@@ -80,7 +48,7 @@ function validation(id)
 {
 	if(id=="new_pass" || id=="confirm_pass")
 	{
-		var s = isvalidpass("new_pass");
+		var s = passvalid("new_pass");
 
 		if(s == 1) //new_pass valid
 		{
@@ -135,7 +103,7 @@ function validation(id)
 			if(s == 3)
 				$(".newpass-info").html('<i>Passwords must be 6-15 characters long</i>');
 			else
-				$(".newpass-info").html('<i>Password must contain characters from at least 3 of 4 characters sets([a..z][A..Z][0..9][`~!@#$%^&*()-_+={}[]|:;,.<>?/\"\'])</i>');
+				$(".newpass-info").html('<i>Password must contain characters from at least 2 of 4 characters sets([a..z][A..Z][0..9][`~!@#$%^&*()-_+={}[]|:;,.<>?/\"\'])</i>');
 
 			$(".confirmpass-info").html('');
 		}
@@ -172,8 +140,7 @@ function validation(id)
 	{
 		if ($("#"+id).val().length > 4)
 		{
-			var regmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-			if(regmail.test($("#"+id).val()))
+			if(emailReg.test($("#"+id).val()))
 			{
 				$.post("{{ path('AceUserBundle_checkmail') }}", { mail: $("#"+id).val() },
 				function(info)
