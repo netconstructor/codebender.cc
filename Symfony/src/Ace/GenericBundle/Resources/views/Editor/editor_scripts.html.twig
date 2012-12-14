@@ -425,7 +425,7 @@ function getIds() {
 function checkVersion(version) {
     if (window.plugin.version < version) {
         $("#prescanning").show("blind", {}, 1000);
-        $("#missingplugin").html($("#missingplugin").html().replace("enable or install","<span style='color:red;'>update</span>"));
+        $("#missingplugin").html($("#missingplugin").html().replace("enable or install", "<strong>update</strong>"));
     }
 }
 
@@ -699,4 +699,14 @@ function requestAttention(message) {
     $("#attention").html(message);
 }
 
+function show_alert(message) {
+    alertElement = "<div id='alertdiv' class='alert fade in'>";
+    alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
+    alertElement += message
+    alertElement += "</div>";
+    $("#alert_contents").html(alertElement);
+}
+function close_alert() {
+    $("#alertdiv").alert('close');
+}
 </script>
