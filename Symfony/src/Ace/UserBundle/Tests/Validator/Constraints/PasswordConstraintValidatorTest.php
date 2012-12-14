@@ -35,9 +35,9 @@ class PasswordConstraintValidatorTest extends \PHPUnit_Framework_TestCase
  		/* Test valid passwords & if error message is set to null */
         $this->assertTrue($this->validator->isValid($pass, new PasswordConstraint()));
         $this->assertNull($this->validator->getMessageTemplate());
-        $this->assertNull($this->validator->getMessageParameters()); 					
+        $this->assertNull($this->validator->getMessageParameters());					
 	}
-    
+	
 	/* Generate valid passwords */
 	public function validPasswords()
     {
@@ -47,8 +47,43 @@ class PasswordConstraintValidatorTest extends \PHPUnit_Framework_TestCase
             array('m4!kt/'),
             array('<val1d>'),
             array('[Djfdk\']'),
+            array('*rm-rf/*'),
             array('te$tingWord'),
             array('noMorePass!'),
+            array('one1isenough'),
+            array('Superpass'),
+            array('super`pass'),
+            array('super~pass'),
+            array('super~pass'),
+            array('super!pass'),
+            array('super#pass'),
+            array('super$pass'),
+            array('super%pass'),
+            array('super^pass'),
+            array('super&pass'),
+            array('super*pass'),
+            array('super(pass'),
+            array('super)pass'),
+            array('super-pass'),
+            array('super_pass'),
+            array('super+pass'),
+            array('super=pass'),
+            array('super{pass'),
+            array('super}pass'),
+            array('super[pass'),
+            array('super]pass'),
+            array('super|pass'),
+            array('super:pass'),
+            array('super;pass'),
+            array('super,pass'),
+            array('super<pass'),
+            array('super>pass'),
+            array('super?pass'),
+            array('super/pass'),
+            array('super//pass'),
+            array('super\'pass'),
+            array('super"pass'),
+            array('Sup3r/p@ss'),
         );
     }
 	
@@ -68,11 +103,11 @@ class PasswordConstraintValidatorTest extends \PHPUnit_Framework_TestCase
         return array(
             array('123456'),
             array('password'),
-            array('birthDay'),
-            array('fa1lure'),
-            array('jacka$$'),
-            array('SHALLnotpass'),
-            array('fai@"enough'),
+            array('SHALLNOTPASS'),
+            array('!@#$}-+@#$<?/{[>'),
+            array('this\isnotvalid'),
+            array('no space'),
+            array(''),
         );
     }
     
