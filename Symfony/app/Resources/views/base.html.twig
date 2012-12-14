@@ -28,10 +28,8 @@
 		</style>
         {% block stylesheets_base %}{% endblock %}
         {% block stylesheets %}{% endblock %}							
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script> 
-		
-		
+
+{% include '::common_javascript.html.twig' %}
 
 <style type="text/css">
 
@@ -185,13 +183,6 @@
 			{% render 'FOSUserBundle:Security:login' %}
         </div>
 </body>
-
-<!-- Le javascript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-
-<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
-
 
 <!-- begin uservoice code -->
 <script type="text/javascript">
