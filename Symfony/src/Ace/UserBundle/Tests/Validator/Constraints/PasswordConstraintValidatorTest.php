@@ -35,8 +35,7 @@ class PasswordConstraintValidatorTest extends \PHPUnit_Framework_TestCase
  		/* Test valid passwords & if error message is set to null */
         $this->assertTrue($this->validator->isValid($pass, new PasswordConstraint()));
         $this->assertNull($this->validator->getMessageTemplate());
-        $this->assertNull($this->validator->getMessageParameters());
-        echo $pass; 					
+        $this->assertNull($this->validator->getMessageParameters());					
 	}
 	
 	/* Generate valid passwords */
