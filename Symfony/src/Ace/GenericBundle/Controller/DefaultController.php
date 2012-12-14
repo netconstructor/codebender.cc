@@ -49,7 +49,7 @@ class DefaultController extends Controller
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
 	
-	public function projectAction($id)
+	public function projectAction($id, $embed = false)
 	{
 
 		$projectmanager = $this->get('projectmanager');
@@ -90,6 +90,8 @@ class DefaultController extends Controller
 		$json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_project',array("id" => $id), true)),"user"=>array("name"=>$owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user',array('user' => $owner['username']), true )), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download',array('id'=> $id), true), "files" => $files);
 		$json = json_encode($json);
 
+		if($embed)
+			return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
 		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "json" => $json));
 	}
 	
