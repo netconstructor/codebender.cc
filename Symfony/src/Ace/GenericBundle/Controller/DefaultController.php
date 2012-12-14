@@ -65,7 +65,7 @@ class DefaultController extends Controller
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
 
-		if ($this->get('security.context')->isGranted('ROLE_USER'))
+		if (!$embed && $this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
