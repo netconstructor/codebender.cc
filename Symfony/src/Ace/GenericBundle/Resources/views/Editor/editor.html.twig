@@ -323,9 +323,9 @@
 								</li>
 							</ul>
 							<div class="btn-group span12" style="margin-bottom:10px; margin-left:0px;">
-								<button id="delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal"><i
+								<button id="delete" title="Delete" class="btn btn-danger" data-toggle="modal" href="#deletionModal"><i
 									id="delete_icon" class="icon-trash  icon-white"></i>{# Delete#}</button>
-								<a class="btn btn-primary"
+								<a class="btn btn-primary" title="Download"
 										href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}"><i
 									class="icon-download-alt icon-white"></i></a>
 								<button id="revert" class="btn" onclick="revert();"><i id="revert_icon"
