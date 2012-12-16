@@ -1,9 +1,12 @@
 {% extends '::container.html.twig' %}
 {% block title "Plugins" %}
+{% block stylesheets %}
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">
+{% endblock %}
 {% block mainspan %}
 <div class="page-header">
   <h1>The Plugins</h1>
-  <small>Downloading the correct plugin for your browser or Os!</small>  
+  <small>Downloading the correct plugin for your browser or Os!</small>
 </div>
 
 <div>
@@ -12,8 +15,8 @@ We are waiting for approval from the Mozilla and Chrome Addons stores. This will
 </strong>
 <br/>
 <a href="#firefox">Firefox</a>, <a href="#chrome">Chrome</a>, <a href="#other">Other</a>
-  
-	<h3 id="firefox">		
+
+	<h3 id="firefox">
 		Firefox
 		<img src='https://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-512-noshadow.png' width="30px"/>
 		<small>(Window, Linux, Mac)</small>
@@ -32,15 +35,8 @@ We are waiting for approval from the Mozilla and Chrome Addons stores. This will
 		<small>(Window, Linux, Mac)</small>
 	</h3>
 	<ul>
-		<li>Chrome Extensions are packaged in crx format.<br/>
-		<li>Download the crx file from <a id="crx-download-url" href="{{asset('codebender.crx')}}">here</a>.<br/>
-		<li>Open a new tab and type "chrome://extensions/" in the address bar.<br/>
-		<img src="{{asset('pluginsImg/chrome-extensions.jpg')}}" width="500px"><br/>
-		<li>Then just drag and drop the file you downloaded anywhere in the page.<br/>
-		<img src="{{asset('pluginsImg/chrome-install.jpg')}}" width="500px"><br/>
-		<li>Chrome will ask for you confirmation to install the extension.<br/>
-		<img src="{{asset('pluginsImg/chrome-install-mess.jpg')}}" width="500px"><br/>
-		<li>Once installed you are ready to work!
+		<li>The Codebender extension is available in the Chrome Store. <a onclick='chrome.webstore.install()'>Add to Chrome</a>.<br/>
+		<li>Open your project and use it!
 	</ul>
 	<h3 id="other">
 		All Browsers - Windows &amp; Mac
