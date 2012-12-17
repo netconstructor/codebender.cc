@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class PasswordConstraint extends Constraint
 {
-	public $message = 'Password must contain at least 3 of 4 charsets: Lowercase, Uppercase, Numbers and Symbols';
+	public $message = 'Password must contain at least 2 of 4 charsets: Lowercase, Uppercase, Numbers and Symbols';
 }

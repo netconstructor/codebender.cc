@@ -49,7 +49,7 @@ class DefaultController extends Controller
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
 	
-	public function projectAction($id)
+	public function projectAction($id, $embed = false)
 	{
 
 		$projectmanager = $this->get('projectmanager');
@@ -65,7 +65,7 @@ class DefaultController extends Controller
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
 
-		if ($this->get('security.context')->isGranted('ROLE_USER'))
+		if (!$embed && $this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
@@ -86,8 +86,13 @@ class DefaultController extends Controller
 		{
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
-		
-			return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id));
+
+		$json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_project',array("id" => $id), true)),"user"=>array("name"=>$owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user',array('user' => $owner['username']), true )), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download',array('id'=> $id), true), "files" => $files);
+		$json = json_encode($json);
+
+		if($embed)
+			return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
+		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "json" => $json));
 	}
 	
 	public function librariesAction()

@@ -1,8 +1,6 @@
 {% extends '::container.html.twig' %}
 {% block title "Project Info" %}
 {% block stylesheets %}
-<link href='http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css' type="text/css" rel="stylesheet" />
-<script src='http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js' type='text/javascript'></script>
 <style type="text/css" media="screen">
 .page-header
 {
@@ -19,8 +17,13 @@ h1 small
 .modal-footer button.btn {
     width: 20%;
 }
+
 </style>
 {% endblock %}
+
+{% block javascripts %}
+{% endblock %}
+
 {% block body_options %} onload="prettyPrint()"{% endblock %}
 {% block mainspan %}
 	<div class="page-header row-fluid" >
@@ -30,12 +33,14 @@ h1 small
 		<h5>Description: </h5>
 		{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}
 		<hr>
-		<div id="menu-getproject" class="btn-group">
-			<a class="btn btn-primary" href="{{path('AceUtilitiesBundle_download',{'id': project_id })}}">Download</a>
-			{% if is_granted('ROLE_USER') %}
-				<a class="btn btn-primary" href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}">Clone</a>
-			{% endif %}
-		</div>
-	</div>
-	{% include 'AceUtilitiesBundle:Default:list_project_files.html.twig' with {'files': files} only %}
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-primary" href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}">Clone</a>
+            <br><br>
+        {% endif %}
+        {% include 'AceGenericBundle:Default:project_wrapper.html.twig' %}
+        <div class="row-fluid">
+            <h3>Embeddable code</h3>
+            <p>Use the following code to embed this sketch in your blog or website.</p>
+            <pre>&lt;iframe height="500px" width="100%" src="{{ url("AceGenericBundle_embed_project", {"id":project_id}) }}" frameborder="0"&gt;&lt;/iframe&gt;</pre>
+        </div>
 {% endblock %}

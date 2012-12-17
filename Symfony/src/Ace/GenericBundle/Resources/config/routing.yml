@@ -10,6 +10,10 @@ AceGenericBundle_project:
     pattern:  /sketch:{id}
     defaults: { _controller: AceGenericBundle:Default:project }
 
+AceGenericBundle_embed_project:
+    pattern:  /embed/sketch:{id}
+    defaults: { _controller: AceGenericBundle:Default:project, embed:true }
+
 AceGenericBundle_libraries:
     pattern: /libraries
     defaults: {_controller: AceGenericBundle:Default:libraries }

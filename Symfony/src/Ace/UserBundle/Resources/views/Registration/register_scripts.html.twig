@@ -1,3 +1,4 @@
+<script src={{ asset("validation/passvalidation.js") }} type="text/javascript"></script>
 <script>
 
 function update_username()
@@ -30,7 +31,6 @@ function update_email()
 	$("#register_email_id").removeClass("error");
 	$("#register_email_id").removeClass("success");
 
-	var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 	if(emailReg.test($("#fos_user_registration_form_email").val()))
 	{
 		$("#register_email_id").addClass("success");
@@ -52,10 +52,10 @@ function update_password()
 		$("#register_password_id").addClass("error");
 		$("#register_info_id").text("Sorry, your password is too short. It needs to be at least 6 characters long.");
 	}
-	else if(!$("#fos_user_registration_form_plainPassword_first").val().match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\-])$/))
+	else if(!isvalidpass("fos_user_registration_form_plainPassword_first"))
 	{
 		$("#register_password_id").addClass("error");
-		$("#register_info_id").text("Sorry, your password needs to use at least 3 of the 4 character sets (lowercase, uppercase, numerical, symbols).");
+		$("#register_info_id").text("Sorry, your password needs to use at least 2 of the 4 character sets (lowercase, uppercase, numerical, symbols).");
 	}
 	else
 	{
@@ -68,10 +68,15 @@ function update_verification()
 {
 	$("#register_verification_id").removeClass("error");
 	$("#register_verification_id").removeClass("success");
-	if($("#fos_user_registration_form_plainPassword_first").val() == $("#fos_user_registration_form_plainPassword_second").val())
+	if(isvalidpass("fos_user_registration_form_plainPassword_first") && ($("#fos_user_registration_form_plainPassword_first").val() == $("#fos_user_registration_form_plainPassword_second").val()))
 	{
 		$("#register_verification_id").addClass("success");
 		$("#register_info_id").text("Passwords matched. Commence Registration.");
+	}
+	else if(!isvalidpass("fos_user_registration_form_plainPassword_first"))
+	{
+		$("#register_verification_id").addClass("error");
+		$("#register_info_id").text("Sorry, your password needs to be at least 6 characters long and use at least 2 of the 4 character sets.");
 	}
 	else
 	{
