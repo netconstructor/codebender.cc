@@ -404,7 +404,7 @@ function enableLink(link) {
 <script type="text/javascript">
 function scan() {
 
-    window.plugin.setCallback(function (from, output) {
+    window.hasPerm = window.plugin.setCallback(function (from, output) {
         //alert(output);
         if (output == "disconnect") {
             disconnect();
@@ -412,6 +412,11 @@ function scan() {
             downHudWrite(output);
         }
     });
+
+    if (!window.hasPerm) {
+        show_alert("You need to grant permissions to the Codebender extension.","permissions_alert");
+    }
+
 
     getFire();
     setInterval(function () {
@@ -587,7 +592,7 @@ function getFire() {
 
 
 function enableUSB() {
-    close_alert();
+    close_alert("#alertdiv");
     setSpeed(9600);
     window.usb_enabled = true;
     window.connected = false;
@@ -650,10 +655,10 @@ function saveBoard() {
 }
 
 function savePort() {
-    new Lawnchair(function () {
-        this.save({key:'port', name:$("#ports option:selected").text()});
-    });
-    checkPermissions();
+	new Lawnchair(function () {
+		this.save({key:'port', name:$("#ports option:selected").text()});
+	});
+	checkPermissions();
 }
 
 function loadSettings() {
@@ -742,14 +747,16 @@ function serialSend() {
 }
 
 
-function show_alert(message) {
-    alertElement = "<div id='alertdiv' class='alert fade in'>";
+function show_alert(message,divname) {
+    alertElement = "<div id='";
+    alertElement+=divname;
+    alertElement+="' class='alert fade in'>";
     alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
     alertElement += message
     alertElement += "</div>";
-    $("#alert_contents").html(alertElement);
+    $("#alert_contents").html($("#alert_contents").html()+alertElement);
 }
-function close_alert() {
-    $("#alertdiv").alert('close');
+function close_alert(malert) {
+    $(malert).alert('close');
 }
 </script>
