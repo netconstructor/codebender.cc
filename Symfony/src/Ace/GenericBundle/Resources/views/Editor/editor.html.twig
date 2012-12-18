@@ -67,6 +67,21 @@
 			/* text-shadow: #999999 1px 1px 1px; */
 			border-width: 0px;
 		}
+
+        #lines
+        {
+            position: absolute;
+            bottom: 50px;
+            background: #F7F7F7;
+            z-index: 100000;
+            padding: 3px;
+            border-radius: 3px;
+            border-width: 1px;
+            border-color: rgba(0, 0, 0, 0.15);
+            border-style: solid;
+            text-align: center;
+        }
+
 	</style>
     <link rel="chrome-webstore-item"
           href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">
@@ -445,7 +460,6 @@
 								</div>
 							</div>
 
-							<div><p>Total Number of lines: <span id="line_count">0</span></div>
 							<div id="progress" class="progress progress-striped active">
 								<div id="progress_val" class="bar" style="width: 40%;"></div>
 							</div>
@@ -482,7 +496,9 @@
 						<pre id="editor"
 							 class="span7">{% if files[0] is defined %}{{ files[0]['code']|raw }}{% endif %}</pre>
 					</div>
-					<div class="row-fluid">
+                    <div class="row-fluid">
+                        <span id="lines" class="span2 offset5">Total Number of lines: <span id="line_count">0</span></span>
+                    </div>					<div class="row-fluid">
 						<pre id="compile_output" class="span7"></pre>
 					</div>
 				</div>
