@@ -464,6 +464,9 @@
 
 							<p id="oldDescription">{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}</p>
 							<a data-toggle="modal" href="#descriptionModal" style="float:right;">edit</a>
+                            <br>
+                            <hr>
+                            <h4><a href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}">Clone Project</a></h4>
 						</div>
 						<div class="tab-pane" id="tab3">
 							{% render "AceUtilitiesBundle:Default:sidebar" %}
