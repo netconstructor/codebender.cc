@@ -297,7 +297,7 @@ class DefaultController extends Controller
 
 			     $sketch_id = $upload_handler->createUploadedProject($project_name);
 					if(isset($sketch_id)){
-						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
+						if(!$upload_handler->createUploadedFile($sketch_id, $file_name, $code)){
 							$info = $upload_handler->post("Error creating file.");
 							$json = json_encode($info);
 							return new Response($json);

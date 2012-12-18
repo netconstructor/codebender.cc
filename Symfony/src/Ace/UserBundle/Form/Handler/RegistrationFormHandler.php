@@ -71,7 +71,7 @@ void setup()
 
 void loop()
 {
-	Serial.println(number);
+	Serial.println(number++);
 	delay(500);
 }
 ";

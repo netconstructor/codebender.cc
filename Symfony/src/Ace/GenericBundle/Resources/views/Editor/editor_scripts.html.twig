@@ -243,6 +243,11 @@ function getMaxSize() {
 }
 
 function uploadusb() {
+
+    disconnect();
+    $("#collapseSerial").height(0);
+    $("#collapseSerial").removeClass("in");
+
     if ($("#ports").val() != null && $("#ports").val() != "") {
         var max_size = getMaxSize();
         if (window.size > max_size) {
@@ -255,6 +260,7 @@ function uploadusb() {
         getbin(function (obj) {
             if (obj.success == 0) {
                 clearProgress("There was an error compiling.");
+                verify();
             }
             else {
                 binary = obj["output"];
@@ -265,7 +271,7 @@ function uploadusb() {
                     $("#upload_icon").removeClass("icon-white");
                 }, 500);
                 setProgress(80);
-                plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[boards.selectedIndex]["upload"]["maximum_size"], window.boardz[boards.selectedIndex]["upload"]["protocol"], window.boardz[boards.selectedIndex]["upload"]["speed"], window.boardz[boards.selectedIndex]["build"]["mcu"],
+                plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boardz[$("#boards").prop("selectedIndex")]["upload"]["maximum_size"], window.boardz[$("#boards").prop("selectedIndex")]["upload"]["protocol"], window.boardz[$("#boards").prop("selectedIndex")]["upload"]["speed"], window.boardz[$("#boards").prop("selectedIndex")]["build"]["mcu"],
                         function (from, progress) {
                             if (progress) {
                                 clearProgress("There was an error uploading. Error #" + progress);
@@ -398,10 +404,19 @@ function enableLink(link) {
 <script type="text/javascript">
 function scan() {
 
-    window.plugin.setCallback(function (from, output) {
+    window.hasPerm = window.plugin.setCallback(function (from, output) {
         //alert(output);
-        downHudWrite(output);
+        if (output == "disconnect") {
+            disconnect();
+        } else {
+            downHudWrite(output);
+        }
     });
+
+    if (!window.hasPerm) {
+        show_alert("You need to grant permissions to the Codebender extension.","permissions_alert");
+    }
+
 
     getFire();
     setInterval(function () {
@@ -414,7 +429,7 @@ function getIds() {
     window.oldPorts = "";
     window.plugin = document.getElementById('plugin0');
 
-    checkVersion("1.5.1.0");
+    checkVersion("1.5.3.0");
 
     document.getElementById('plugin0').download();
     setTimeout(function () {
@@ -425,7 +440,7 @@ function getIds() {
 function checkVersion(version) {
     if (window.plugin.version < version) {
         $("#prescanning").show("blind", {}, 1000);
-        $("#missingplugin").html($("#missingplugin").html().replace("enable or install","<span style='color:red;'>update</span>"));
+        $("#missingplugin").html($("#missingplugin").html().replace("enable or install", "<strong>update</strong>"));
     }
 }
 
@@ -513,20 +528,21 @@ function checkVersion(version) {
     }
 })(jQuery);
 
-function connect() {
+function connect(obj) {
+    speed = obj.innerHTML;
     if (window.connected == false) {
         if ($("#ports").val() != null && $("#ports").val() != "") {
-
+            setTimeout(function () {
+                $("#toggle_connect_serial").removeAttr("data-toggle", "dropdown");
+            }, 500);
             window.connected = true;
-            $("#connecttext").html("Disconnect");
-            $("#hideserial").addClass("disabled");
-            $("#compile_output").html("");
-            downHudWrite("");
+            $("#connect_message").html("Disconnect");
+            $("#serial_hud").html("");
             window.plugin.serialRead(
                     portslist.options[portslist.selectedIndex].text,
-                    $("#serialSpeed option:selected").text(),
+                    speed,
                     function (from, line) {
-                        downHudAppend(line);
+                        serialHudAppend(line);
                     }
             );
         }
@@ -540,14 +556,19 @@ function connect() {
 
 function disconnect() {
     if (window.connected == true) {
-        $("#connecttext").html("Connect");
+        $("#connect_message").html("Connect");
+        setTimeout(function () {
+            document.getElementById("toggle_connect_serial").setAttribute("data-toggle", "dropdown");
+        }, 500);
         window.connected = false;
-        $("#hideserial").removeClass("disabled");
         window.plugin.disconnect();
+        $("#collapseSerial").height(0);
+        $("#collapseSerial").removeClass("in");
     }
 }
 
 function getFire() {
+
     var ports = "";
     try {
         ports = plugin.probeUSB();
@@ -571,6 +592,7 @@ function getFire() {
 
 
 function enableUSB() {
+    close_alert("#alertdiv");
     setSpeed(9600);
     window.usb_enabled = true;
     window.connected = false;
@@ -633,10 +655,10 @@ function saveBoard() {
 }
 
 function savePort() {
-    new Lawnchair(function () {
-        this.save({key:'port', name:$("#ports option:selected").text()});
-    });
-    checkPermissions();
+	new Lawnchair(function () {
+		this.save({key:'port', name:$("#ports option:selected").text()});
+	});
+	checkPermissions();
 }
 
 function loadSettings() {
@@ -692,11 +714,49 @@ function downHudClose() {
 }
 
 function downHudAppend(line) {
-    downHudWrite($("#compile_output").html() + "<br>" + line);
+    if (isNaN(line)) {
+        downHudWrite($("#compile_output").html() + line + "<br>");
+    } else {
+        if (line == "13")    return;
+        if (line == "10")    downHudWrite($("#compile_output").html() + "<br>");
+        if (line != "10")    downHudWrite($("#compile_output").html() + String.fromCharCode(line));
+    }
+}
+
+function serialHudAppend(line) {
+    if (isNaN(line)) {
+        serialHudWrite($("#serial_hud").html() + line + "<br>");
+    } else {
+        if (line == "13")    return;
+        if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
+        if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+    }
+}
+function serialHudWrite(message) {
+    $("#serial_hud").addClass("well");
+    $("#serial_hud").html(message);
+    $("#serial_hud").scrollTo(99999999);
 }
 
 function requestAttention(message) {
     $("#attention").html(message);
 }
 
+function serialSend() {
+    window.plugin.serialWrite($("#text2send").val());
+}
+
+
+function show_alert(message,divname) {
+    alertElement = "<div id='";
+    alertElement+=divname;
+    alertElement+="' class='alert fade in'>";
+    alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
+    alertElement += message
+    alertElement += "</div>";
+    $("#alert_contents").html($("#alert_contents").html()+alertElement);
+}
+function close_alert(malert) {
+    $(malert).alert('close');
+}
 </script>
