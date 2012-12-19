@@ -439,8 +439,12 @@ function getIds() {
 
 function checkVersion(version) {
     if (window.plugin.version < version) {
-        $("#prescanning").show("blind", {}, 1000);
-        $("#missingplugin").html($("#missingplugin").html().replace("enable or install", "<strong>update</strong>"));
+	show_alert("You need to update the Codebender Browser Plugin. <span id='addtochrome'><a onclick='chrome.webstore.install()'>Add to Chrome</a></span> <span id='installrest'>Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.</span> </p>","alertupdatediv");
+    }
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+	$("#addtochrome").html("");
+    } else {
+	$("#installrest").html("");
     }
 }
 
