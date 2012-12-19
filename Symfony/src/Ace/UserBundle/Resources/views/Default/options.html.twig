@@ -25,7 +25,7 @@ function oldpasscheck(id)
 				//setInterval(validation(id),100000);
 			}
 			else{
-				$(".oldpass-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
+				$(".oldpass-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
 			}
 
 		}
@@ -129,7 +129,7 @@ function validation(id)
 				{
 					$(".oldpass").removeClass("warning").removeClass("success").addClass("error");
 					$(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-					$(".oldpass-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
+					$(".oldpass-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
 				}
 			}).error(function() { alert("error"); });
 		}
