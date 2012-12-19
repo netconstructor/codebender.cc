@@ -199,7 +199,7 @@ white-space: normal;
 }
 </style>
 
-Change your personal information, then click 'save' to save your changes.<br /><br />
+Change your personal information, then click 'Save Changes' to update your profile.<br /><br />
 
 <form name="form" id="form" action="{{ path('AceGenericBundle_index') }}">
 <div class="row-fluid">
@@ -289,6 +289,19 @@ Change your personal information, then click 'save' to save your changes.<br /><
 <input class="btn" type="submit" id="cancel" value="Cancel" />
 </form>
 
+<div class="modal hide fade" id="upd-dialog" >
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3 id="upd-modal-label">Profile Update</h3>
+  </div>
+  <div class="modal-body">
+    <span class="upd-dialog-info"></span>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Close</button>
+  </div>
+</div>
+
 <script>
 $(document).ready(function()
 	{
@@ -305,7 +318,9 @@ $(document).ready(function()
 			$.post("{{ path('AceUserBundle_setoptions') }}", {data: items },
 			function(data)
 			{
-				alert("Profile Updated: " + data);
+				$(".upd-dialog-info").html(data);
+				$("#upd-dialog").modal({show:true});
+				$("#upd-dialog").modal(show);
 			});
 		});
 		$("#options").addClass("active");
