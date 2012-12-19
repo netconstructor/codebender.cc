@@ -55,7 +55,7 @@ function update_password()
 	else if(!isvalidpass("fos_user_registration_form_plainPassword_first"))
 	{
 		$("#register_password_id").addClass("error");
-		$("#register_info_id").text("Sorry, your password needs to use at least 2 of the 4 character sets (lowercase, uppercase, numerical, symbols).");
+		$("#register_info_id").text("Sorry, your password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.");
 	}
 	else
 	{
@@ -76,7 +76,7 @@ function update_verification()
 	else if(!isvalidpass("fos_user_registration_form_plainPassword_first"))
 	{
 		$("#register_verification_id").addClass("error");
-		$("#register_info_id").text("Sorry, your password needs to be at least 6 characters long and use at least 2 of the 4 character sets.");
+		$("#register_info_id").text("Sorry, your password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.");
 	}
 	else
 	{

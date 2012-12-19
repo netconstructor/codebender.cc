@@ -224,7 +224,7 @@ class DefaultController extends Controller
 					$merge_vars = array("EMAIL"=>$mail);
 					$api->listUpdateMember($this->listid, $user->getEmail(), $merge_vars, false);
 					$user->setEmail($mail);
-					$response->setContent('OK');
+					$response->setContent('Your Profile information has been updated successfully.');
 
 				}
 				else
@@ -238,10 +238,12 @@ class DefaultController extends Controller
 					$encoded_oldpass = $encoder->encodePassword($oldpass, $user->getSalt());
 					if ($user->getPassword()===$encoded_oldpass){
 						$user->setPassword($encoder->encodePassword($newpass, $user->getSalt()));
-						$response->setContent('OK, Password Updated');
+						$response->setContent('Your Profile and Password information has been updated successfully.');
 					}
 					else
-						$response->setContent('OK, Password Not Updated');
+						$response->setContent('Your Profile has been updated successfully but 
+						<strong><span style="color:red">there was an error</span></strong> changing
+						 your Password. Please make sure that you type your <strong>Old Password</strong> correctly.');
 				}
 
 				//$response->setContent('OK');

@@ -25,7 +25,7 @@ function oldpasscheck(id)
 				//setInterval(validation(id),100000);
 			}
 			else{
-				$(".oldpass-info").html('<i>Invalid Password, Passwords contain characters from at least 2 of 4 characters sets([a..z][A..Z][0..9][`~!@#$%^&*()-_+={}[]|:;,.<>?/\"\'])</i>');
+				$(".oldpass-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
 			}
 
 		}
@@ -33,7 +33,7 @@ function oldpasscheck(id)
 		{
 			$(".oldpass").removeClass("warning").removeClass("success").addClass("error");
 			$(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-			$(".oldpass-info").html('<i>Passwords are 6-15 characters long</i>');
+			$(".oldpass-info").html('<i>Sorry, Passwords are 6-15 characters long</i>');
 		}
 	}
 	else
@@ -69,7 +69,7 @@ function validation(id)
 				//confirm_pass != new_pass, confirm_pass set to error
 				$(".passwords").removeClass("success").addClass("error");
 				$(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-				$(".confirmpass-info").html('<i>Passwords do not match!</i>');
+				$(".confirmpass-info").html('<i>Sorry, Passwords do not match!</i>');
 				}
 			}
 		}
@@ -91,7 +91,7 @@ function validation(id)
 				//set confirm_pass to error
 				$(".passwords").removeClass("success").addClass("error");
 				$(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-				$(".confirmpass-info").html('<i>Passwords do not match!</i>');
+				$(".confirmpass-info").html('<i>Sorry, Passwords do not match!</i>');
 			}
 		}
 		else //new_pass not in range or not enough charsets
@@ -101,9 +101,9 @@ function validation(id)
 			$(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
 
 			if(s == 3)
-				$(".newpass-info").html('<i>Passwords must be 6-15 characters long</i>');
+				$(".newpass-info").html('<i>Sorry, Passwords must be 6-15 characters long</i>');
 			else
-				$(".newpass-info").html('<i>Password must contain characters from at least 2 of 4 characters sets([a..z][A..Z][0..9][`~!@#$%^&*()-_+={}[]|:;,.<>?/\"\'])</i>');
+				$(".newpass-info").html('<i>Sorry, your Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
 
 			$(".confirmpass-info").html('');
 		}
@@ -129,7 +129,7 @@ function validation(id)
 				{
 					$(".oldpass").removeClass("warning").removeClass("success").addClass("error");
 					$(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-					$(".oldpass-info").html('<i>Wrong Password!</i>');
+					$(".oldpass-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
 				}
 			}).error(function() { alert("error"); });
 		}
@@ -161,7 +161,7 @@ function validation(id)
 					{
 						$(".mail").removeClass("success").addClass("error");
 						$(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
-						$(".mail-info").html('<i>Email is already in use by another member</i>');
+						$(".mail-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
 					}
 				});
 			}
@@ -169,7 +169,7 @@ function validation(id)
 			{
 				$(".mail").removeClass("success").addClass("error");
 				$(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
-				$(".mail-info").html('<i>Invalid Email</i>');
+				$(".mail-info").html('<i>Sorry, this is an invalid email address</i>');
 			}
 		}
 		else
@@ -199,7 +199,7 @@ white-space: normal;
 }
 </style>
 
-Change your personal information, then click 'save' to save your changes.<br /><br />
+Change your personal information, then click 'Save Changes' to update your profile.<br /><br />
 
 <form name="form" id="form" action="{{ path('AceGenericBundle_index') }}">
 <div class="row-fluid">
@@ -258,6 +258,9 @@ Change your personal information, then click 'save' to save your changes.<br /><
 				<div class="input-prepend">
 					<span class="add-on"><i class="icon-exclamation-sign password_old"></i></span>
 					<input class="input-large" type="password" name="old_pass" id="old_pass" value="" onkeyup="oldpasscheck(id)" onblur="validation(id)"/>
+					<a href="http://codebender.cc/resetting/request" tabindex="-1">
+						<i><span style="padding-left:35px">Forgot your password? Get a new one!</span></i>
+					</a>
 					<span class="help-inline oldpass-info"></span>
 				</div>
 			</div>
@@ -289,6 +292,19 @@ Change your personal information, then click 'save' to save your changes.<br /><
 <input class="btn" type="submit" id="cancel" value="Cancel" />
 </form>
 
+<div class="modal hide fade" id="upd-dialog" >
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h3 id="upd-modal-label">Profile Update</h3>
+  </div>
+  <div class="modal-body">
+    <span class="upd-dialog-info"></span>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Close</button>
+  </div>
+</div>
+
 <script>
 $(document).ready(function()
 	{
@@ -305,7 +321,9 @@ $(document).ready(function()
 			$.post("{{ path('AceUserBundle_setoptions') }}", {data: items },
 			function(data)
 			{
-				alert("Profile Updated: " + data);
+				$(".upd-dialog-info").html(data);
+				$("#upd-dialog").modal({show:true});
+				$("#upd-dialog").modal(show);
 			});
 		});
 		$("#options").addClass("active");

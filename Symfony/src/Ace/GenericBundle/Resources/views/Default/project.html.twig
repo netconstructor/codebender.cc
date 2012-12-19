@@ -41,6 +41,6 @@ h1 small
         <div class="row-fluid">
             <h3>Embeddable code</h3>
             <p>Use the following code to embed this sketch in your blog or website.</p>
-            <pre>&lt;iframe height="500px" width="100%" src="{{ url("AceGenericBundle_embed_project", {"id":project_id}) }}" frameborder="0"&gt;&lt;/iframe&gt;</pre>
+            {% include 'AceGenericBundle:Default:project_embeddable_code.html.twig' with {'project_id': project_id}%}
         </div>
 {% endblock %}
