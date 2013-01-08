@@ -1,47 +1,54 @@
 {% include 'AceUserBundle:Registration:register_scripts.html.twig' %}
 
-<div class="row-fluid">
+<div id="signupnow" class="row-fluid">
 	<div class="span12">
-	<!-- header -->
-	<h2>Sign Up</h2>
-	<p>Interested? Sign Up here and get coding in minutes.</p>
-	</div><!--/span-->
+		<!-- header -->
+		<h2>Sign Up</h2>
+
+		<p>Interested? Sign Up here and get coding in minutes.</p>
+	</div>
+	<!--/span-->
 	{% form_theme form theme %}
-	<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+	<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST"
+	      class="fos_user_registration_register">
 </div><!--/row-->
 <div class="row-fluid">
 	<div class="span6">
 		<!-- left side -->
-			{{ form_label(form.username) }}
-			<div id = "register_username_id" class="control-group">
+		{{ form_label(form.username) }}
+		<div id="register_username_id" class="control-group">
 			{{ form_widget(form.username) }}
-			</div>
-			{{ form_label(form.email) }}
-			<div id = "register_email_id" class="control-group">
+		</div>
+		{{ form_label(form.email) }}
+		<div id="register_email_id" class="control-group">
 			{{ form_widget(form.email) }}
-			</div>
-	</div><!--/span-->
+		</div>
+	</div>
+	<!--/span-->
 	<div class="span6">
 		<!-- right side -->
 		{{ form_label(form.plainPassword.first) }}
-		<div id = "register_password_id" class="control-group">
-		{{ form_widget(form.plainPassword.first) }}
+		<div id="register_password_id" class="control-group">
+			{{ form_widget(form.plainPassword.first) }}
 		</div>
 		{{ form_label(form.plainPassword.second) }}
-		<div id = "register_verification_id" class="control-group">
-		{{ form_widget(form.plainPassword.second) }}
+		<div id="register_verification_id" class="control-group">
+			{{ form_widget(form.plainPassword.second) }}
 		</div>
-	</div><!--/span-->
+	</div>
+	<!--/span-->
 </div><!--/row-->
 <div class="row-fluid">
 	<div class="span12">
 		<!-- bottom -->
 		<div style="display:none">
-		{{form_rest(form)}}
+			{{ form_rest(form) }}
 		</div>
 		<p id="register_info_id"><br/></p>
-		{{form_errors(form)}}
-		<input type="submit" style="margin-bottom:10px;" class="btn btn-primary" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
-	</form>
-	</div><!--/span-->
+		{{ form_errors(form) }}
+		<input type="submit" style="margin-bottom:10px;" class="btn btn-primary"
+		       value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}"/>
+		</form>
+	</div>
+	<!--/span-->
 </div><!--/row-->

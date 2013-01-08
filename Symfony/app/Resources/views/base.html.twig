@@ -23,10 +23,10 @@
 			margin: -3px 5px 0 0;
 			border-radius: 3px;
 		}
-		
+
 		</style>
         {% block stylesheets_base %}{% endblock %}
-        {% block stylesheets %}{% endblock %}							
+        {% block stylesheets %}{% endblock %}
 
 {% include '::common_javascript.html.twig' %}
 
@@ -64,11 +64,11 @@
 	margin-top: -60px;
 	margin-right: 0px;
 	display: block;
-} 
+}
 
 .handle
 {
-	background-image: url(http://codebender.cc/images/indiegogo.png); 
+	background-image: url(http://codebender.cc/images/indiegogo.png);
 	width: 32px;
 	height: 127px;
 	display: block;
@@ -79,7 +79,7 @@
 	right: -32px;
 	background-position: initial initial;
 	background-repeat: no-repeat no-repeat;
-}     
+}
 #login_box
 {
 	background:#fff;
@@ -102,7 +102,7 @@
 		{% block javascripts_base %}{% endblock %}
 	    {% block javascripts %}{% endblock %}
 		{% block javascripts_upload_head %}{% endblock %}
-	
+
 		<script type="text/javascript">
 		var mouse_is_inside = false;
 
@@ -149,22 +149,37 @@
 		<div class="navbar navbar-fixed-top">
 		  <div class="navbar-inner">
 		      <a class="brand" style="margin-left: 3px;" href="{{ path('AceGenericBundle_index')}}">{{ site_name }} (beta)</a>
-		        <ul class="nav">		
-					<li><form class="navbar-search pull-left" action="{{ path('AceSearchBundle_find')}}" method="get">
-							<input type="text" name="query" class="search-query" placeholder="Search">
-						</form>
-					</li>
-		        </ul>
-				{% block examples %}
-				{% endblock %}
+			  <ul class="nav">
+				  <li>
+					  <form class="navbar-search pull-left" action="{{ path('AceSearchBundle_find') }}"
+						 method="get">
+						  <input type="text" name="query" class="search-query" placeholder="Search">
+					  </form>
+				  </li>
+			  </ul>
+			  {% block examples %}
+			  {% endblock %}
 
-				{% if not is_granted('ROLE_USER') %}
-		        <ul class="nav pull-right">
-					<li id="login">
-						<a href="javascript:void(0)" id="login_btn">Log In</a>
-					</li>
-				</ul>
-				{% endif %}		
+			  {% if not is_granted('ROLE_USER') %}
+				  <ul class="nav pull-right">
+					  <script type="text/javascript">
+						  function signuplink(){
+							  if ($("#signupnow").length > 0) {
+								  $("#sign_up").attr("href", "#signupnow");
+							  }else{
+							  	$("#sign_up").attr("href", "./#signupnow");
+							  }
+						  }
+					  </script>
+					  <li id="signup">
+						  {#href="register" #}
+						  <a id="sign_up" onclick="signuplink()">Sign Up</a>
+					  </li>
+					  <li id="login">
+						  <a href="javascript:void(0)" id="login_btn">Log In</a>
+					  </li>
+				  </ul>
+			  {% endif %}
 				{% if is_granted('ROLE_USER') %}
 				<ul class="nav pull-right">
 				    <li><a href="{{ path('fos_user_security_logout')}}" id="logout">Log Out</a></li>
@@ -175,7 +190,7 @@
 				</p>
 				{% endif %}
 		  </div>
-		</div>		
+		</div>
         {% block body %}{% endblock %}
 
         <div id="login_box">
