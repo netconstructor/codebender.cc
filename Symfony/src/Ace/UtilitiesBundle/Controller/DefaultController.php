@@ -13,6 +13,7 @@ class DefaultController extends Controller
 {
 	public function newprojectAction()
 	{
+		syslog(LOG_INFO, "new project");
 
 		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
