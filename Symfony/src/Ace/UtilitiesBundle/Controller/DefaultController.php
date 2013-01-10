@@ -131,6 +131,8 @@ class DefaultController extends Controller
 
 	public function downloadAction($id)
 	{
+		syslog(LOG_INFO, "project download");
+
 		$htmlcode = 200;
 		$value = "";
 
