@@ -190,7 +190,7 @@ class DefaultController extends Controller
 
 	public function saveCodeAction($id)
 	{
-
+		syslog(LOG_INFO, "editor save");
 		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$files = $this->getRequest()->request->get('data');
