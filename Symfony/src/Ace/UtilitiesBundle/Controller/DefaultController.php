@@ -212,6 +212,7 @@ class DefaultController extends Controller
 
 	public function cloneAction($id)
 	{
+		syslog(LOG_INFO, "project cloned");
 
 		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
