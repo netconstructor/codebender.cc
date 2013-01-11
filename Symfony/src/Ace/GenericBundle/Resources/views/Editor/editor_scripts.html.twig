@@ -117,6 +117,9 @@ function generate_payload(format) {
 }
 
 function verify() {
+
+    $.get("{{ path('AceUtilitiesBundle_log', {'message':"verify"}) }}");
+
     var payload = generate_payload("syntax");
 
     setProgress(90);
@@ -166,6 +169,8 @@ function verify() {
 
 
 function getbin(callback) {
+    $.get("{{ path('AceUtilitiesBundle_log', {'message':"flash"}) }}");
+
     var payload = generate_payload("binary");
     $.post("{{compiler}}", payload, function (data) {
         var obj = jQuery.parseJSON(data);

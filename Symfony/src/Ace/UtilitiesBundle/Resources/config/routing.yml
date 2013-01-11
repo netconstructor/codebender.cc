@@ -42,6 +42,10 @@ AceUtilitiesBundle_download:
   pattern:  /download/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:download }
 
+AceUtilitiesBundle_log:
+  pattern:  /log/{message}
+  defaults: { _controller: AceUtilitiesBundle:Default:log }
+
 AceUtilitiesBundle_savecode:
   pattern:  /savecode/{id}
   defaults: { _controller: AceUtilitiesBundle:Default:saveCode }

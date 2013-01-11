@@ -494,4 +494,9 @@ public function uploadfilesAction($id){
 		}
 	}
 
+	public function logAction($message)
+	{
+		syslog(LOG_INFO, "codebender generic log: ".$message);
+		return new Response("OK");
+	}
 }
