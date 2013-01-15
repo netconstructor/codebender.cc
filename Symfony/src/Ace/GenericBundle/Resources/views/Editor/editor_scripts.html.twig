@@ -589,14 +589,33 @@ function getFire() {
                     portslist.options[i] = new Option(portsAvail[i], portsAvail[i], true, false);
                 }
             }
-            oldPorts = ports;
+	        oldPorts = ports;
         }
+	    if (navigator.appVersion.indexOf("Windows")>=0){
+		    if (""==$("#ports option:selected").text()){
+			    if (!window.suppressDrivers){
+			        show_alert("Have you installed the Arduino Drivers?<br/>Click <a onclick='installDrivers()'>here</a> to install them now automatically. " +
+                            "If you have already plugged in your Arduino click the Update Drivers Button <img src='{{ asset("images/updateDrivers.png")}}' > on the next window to detect it.","drivers");
+				    window.suppressDrivers=true;
+			    }
+		    }
+	    }
+        loadSettings();
     }
     catch (err) {
         $('#ports').find('option').remove();
         oldPorts = ports;
     }
     checkPermissions();
+}
+
+function installDrivers(){
+    if (navigator.userAgent.substr((navigator.userAgent).indexOf("("),(navigator.userAgent).indexOf(")")).indexOf("5.")==-1){
+        window.plugin.installDrivers(1);
+    }else{
+        window.plugin.installDrivers(0);
+    }
+	close_alert("#drivers");
 }
 
 
@@ -694,6 +713,7 @@ function loadSettings() {
 
 function checkPermissions() {
     if ((navigator.appVersion.indexOf("X11") == -1) && (navigator.appVersion.indexOf("Linux") == -1)) return;
+
     var group = window.plugin.checkPermissions($("#ports option:selected").text());
     if (group != "") {
         var message = "You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
@@ -734,17 +754,24 @@ function downHudAppend(line) {
 
 function serialHudAppend(line) {
     if (isNaN(line)) {
-        serialHudWrite($("#serial_hud").html() + line + "<br>");
+        //serialHudWrite($("#serial_hud").html() + line + "<br>");
+        serialHudWrite( line + "<br>");
     } else {
         if (line == "13")    return;
-        if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
-        if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+//        if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
+        if (line == "10")    serialHudWrite("<br>");
+//        if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+        if (line != "10")    serialHudWrite( String.fromCharCode(line));
     }
 }
 function serialHudWrite(message) {
-    $("#serial_hud").addClass("well");
-    $("#serial_hud").html(message);
-    $("#serial_hud").scrollTo(99999999);
+    serial_hud = $("#serial_hud");
+    serial_hud.addClass("well");
+    if (serial_hud.html().length>1000){
+        serial_hud.html(serial_hud.html().substr(200));
+    }
+    serial_hud.append(message).show();
+    $("#serial_hud").scrollTo(2000);
 }
 
 function requestAttention(message) {
