@@ -110,7 +110,7 @@
                     $("#toggle_connect_serial").removeAttr("data-toggle", "dropdown");
                 }, 500);
                 window.connected = true;
-                $("#connect_message").html("Disconnect");
+                $("#toggle_connect_serial").html("Disconnect");
                 $("#serial_hud").html("");
                 window.plugin.serialRead(
                         portslist.options[portslist.selectedIndex].text,
@@ -130,7 +130,7 @@
 
     function disconnect() {
         if (window.connected == true) {
-            $("#connect_message").html("Connect");
+            $("#toggle_connect_serial").html('Connect<span class="caret"></span>');
             setTimeout(function () {
                 document.getElementById("toggle_connect_serial").setAttribute("data-toggle", "dropdown");
             }, 500);
