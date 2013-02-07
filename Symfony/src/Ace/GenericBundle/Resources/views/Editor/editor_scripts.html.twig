@@ -135,12 +135,11 @@ function cloudload() {
         }
         else {
             binary = obj["output"];
-            $("#" +
-                    "").addClass("btn-success");
-            $("#upload_icon").addClass("icon-white");
+            $("#"cloudload"").addClass("btn-success");
+            $("#cloudload_icon").addClass("icon-white");
             window.setTimeout(function () {
-                $("#uploadusb").removeClass("btn-success");
-                $("#upload_icon").removeClass("icon-white");
+                $("#cloudload").removeClass("btn-success");
+                $("#cloudload_icon").removeClass("icon-white");
             }, 500);
 
 
@@ -295,6 +294,201 @@ function cloudload() {
 
 <script type="text/javascript">
 
+
+    checkVersion("1.5.3.0");
+
+    document.getElementById('plugin0').download();
+    setTimeout(function () {
+        scan();
+    }, 200);
+}
+
+function checkVersion(version) {
+    if (window.plugin.version < version) {
+	show_alert("You need to update the Codebender Browser Plugin. <span id='addtochrome'><a onclick='chrome.webstore.install()'>Add to Chrome</a></span> <span id='installrest'>Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.</span> </p>","alertupdatediv");
+    }
+    if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+	$("#addtochrome").html("");
+    } else {
+	$("#installrest").html("");
+    }
+}
+
+;
+(function ($) {
+    var h = $.scrollTo = function (a, b, c) {
+        $(window).scrollTo(a, b, c)
+    };
+    h.defaults = {axis:'xy', duration:parseFloat($.fn.jquery) >= 1.3 ? 0 : 1, limit:true};
+    h.window = function (a) {
+        return $(window)._scrollable()
+    };
+    $.fn._scrollable = function () {
+        return this.map(function () {
+            var a = this, isWin = !a.nodeName || $.inArray(a.nodeName.toLowerCase(), ['iframe', '#document', 'html', 'body']) != -1;
+            if (!isWin)return a;
+            var b = (a.contentWindow || a).document || a.ownerDocument || a;
+            return/webkit/i.test(navigator.userAgent) || b.compatMode == 'BackCo    mpat' ? b.body : b.documentElement
+        })
+    };
+    $.fn.scrollTo = function (e, f, g) {
+        if (typeof f == 'object') {
+            g = f;
+            f = 0
+        }
+        if (typeof g == 'function')g = {onAfter:g};
+        if (e == 'max')e = 9e9;
+        g = $.extend({}, h.defaults, g);
+        f = f || g.duration;
+        g.queue = g.queue && g.axis.length > 1;
+        if (g.queue)f /= 2;
+        g.offset = both(g.offset);
+        g.over = both(g.over);
+        return this._scrollable().each(function () {
+            if (e == null)return;
+            var d = this, $elem = $(d), targ = e, toff, attr = {}, win = $elem.is('html,body');
+            switch (typeof targ) {
+                case'number':
+                case'string':
+                    if (/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)) {
+                        targ = both(targ);
+                        break
+                    }
+                    targ = $(targ, this);
+                    if (!targ.length)return;
+                case'object':
+                    if (targ.is || targ.style)toff = (targ = $(targ)).offset()
+            }
+            $.each(g.axis.split(''), function (i, a) {
+                var b = a == 'x' ? 'Left' : 'Top', pos = b.toLowerCase(), key = 'scroll' + b, old = d[key], max = h.max(d, a);
+                if (toff) {
+                    attr[key] = toff[pos] + (win ? 0 : old - $elem.offset()[pos]);
+                    if (g.margin) {
+                        attr[key] -= parseInt(targ.css('margin' + b)) || 0;
+                        attr[key] -= parseInt(targ.css('border' + b + 'Width')) || 0
+                    }
+                    attr[key] += g.offset[pos] || 0;
+                    if (g.over[pos])attr[key] += targ[a == 'x' ? 'width' : 'height']() * g.over[pos]
+                } else {
+                    var c = targ[pos];
+                    attr[key] = c.slice && c.slice(-1) == '%' ? parseFloat(c) / 100 * max : c
+                }
+                if (g.limit && /^\d+$/.test(attr[key]))attr[key] = attr[key] <= 0 ? 0 : Math.min(attr[key], max);
+                if (!i && g.queue) {
+                    if (old != attr[key])animate(g.onAfterFirst);
+                    delete attr[key]
+                }
+            });
+            animate(g.onAfter);
+            function animate(a) {
+                $elem.animate(attr, f, g.easing, a && function () {
+                    a.call(this, e, g)
+                })
+            }
+        }).end()
+    };
+    h.max = function (a, b) {
+        var c = b == 'x' ? 'Width' : 'Height', scroll = 'scroll' + c;
+        if (!$(a).is('html,body'))return a[scroll] - $(a)[c.toLowerCase()]();
+        var d = 'client' + c, html = a.ownerDocument.documentElement, body = a.ownerDocument.body;
+        return Math.max(html[scroll], body[scroll]) - Math.min(html[d], body[d])
+    };
+    function both(a) {
+        return typeof a == 'object' ? a : {top:a, left:a}
+    }
+})(jQuery);
+
+function connect(obj) {
+    speed = obj.innerHTML;
+    if (window.connected == false) {
+        if ($("#ports").val() != null && $("#ports").val() != "") {
+            setTimeout(function () {
+                $("#toggle_connect_serial").removeAttr("data-toggle", "dropdown");
+            }, 500);
+            window.connected = true;
+            $("#connect_message").html("Disconnect");
+            $("#serial_hud").html("");
+            window.plugin.serialRead(
+                    portslist.options[portslist.selectedIndex].text,
+                    speed,
+                    function (from, line) {
+                        serialHudAppend(line);
+                    }
+            );
+        }
+        else {
+            clearProgress("Please select a valid port or enable the plugin!!");
+        }
+    } else {
+        disconnect();
+    }
+}
+
+function disconnect() {
+    if (window.connected == true) {
+        $("#connect_message").html("Connect");
+        setTimeout(function () {
+            document.getElementById("toggle_connect_serial").setAttribute("data-toggle", "dropdown");
+        }, 500);
+        window.connected = false;
+        window.plugin.disconnect();
+        $("#collapseSerial").height(0);
+        $("#collapseSerial").removeClass("in");
+    }
+}
+
+function getFire() {
+
+    var ports = "";
+    try {
+        ports = plugin.probeUSB();
+        if (ports != oldPorts) {
+            $('#ports').find('option').remove();
+            portsAvail = ports.split(",");
+            for (var i = 0; i < portsAvail.length; i++) {
+                if (portsAvail[i] != "") {
+                    portslist.options[i] = new Option(portsAvail[i], portsAvail[i], true, false);
+                }
+            }
+            oldPorts = ports;
+        }
+    }
+    catch (err) {
+        $('#ports').find('option').remove();
+        oldPorts = ports;
+    }
+    checkPermissions();
+}
+
+
+function enableUSB() {
+    close_alert("#alertdiv");
+    setSpeed(9600);
+    window.usb_enabled = true;
+    window.connected = false;
+    $("#prescanning").hide("blind", {}, 1000);
+    $("#scanning").show("blind", {}, 1000);
+
+    setTimeout(function () {
+        getIds();
+    }, 200);
+    setTimeout(function () {
+        loadSettings();
+    }, 500);
+}
+
+function setSpeed(speed) {
+    window.speed = speed;
+    $("#serial_speed").text(speed);
+}
+
+function isMobile() {
+
+    return navigator.userAgent.match(/Android/i) ? true : false
+            || navigator.userAgent.match(/BlackBerry/i) ? true : false
+            || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
+            || navigator.userAgent.match(/IEMobile/i) ? true : false;
+}
 
 function loadCode(filename) {
     window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
