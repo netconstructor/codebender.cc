@@ -42,5 +42,25 @@ class EditorController extends Controller
 		$boards = $boardcontroller->listAction()->getContent();
 
 		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards));
-	}		
+	}
+
+	public function embeddedCompilerAction($id)
+	{
+
+		$projectmanager = $this->get('projectmanager');
+
+		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = json_decode($files, true);
+		$files = $files["list"];
+
+		foreach ($files as $key => $file)
+		{
+			$files[$key]["code"] = htmlspecialchars($file["code"]);
+		}
+
+		$boardcontroller = $this->get('boardcontroller');
+		$boards = $boardcontroller->listAction()->getContent();
+
+		return $this->render('AceGenericBundle:Editor:compiler_embeddable.html.twig', array('files' => $files, 'boards' => $boards));
+	}
 }

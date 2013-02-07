@@ -1,0 +1,32 @@
+<html>
+<head>
+    {% include '::common_stylesheets.html.twig' %}
+    {% include '::common_javascript.html.twig' %}
+    {% include 'AceGenericBundle:Editor:compiler_embeddable_scripts.html.twig' %}
+    {% include 'AceGenericBundle:Editor:flasher_embeddable_scripts.html.twig' %}
+    <script type="text/javascript">
+
+        function load_files() {
+            return {
+                {% for file in files %}
+                "{{file['filename']}}":"{{file['code'] | e('js')}}",
+                {% endfor %}
+            };
+        }
+
+        function setProgress(){}
+        function clearProgress(){}
+        function verification_update(){}
+
+        function uploadusb() {
+            disconnect();
+            flashusb();
+        }
+
+    </script>
+</head>
+<body>
+{% include 'AceGenericBundle:Editor:compiler_embeddable_section.html.twig' %}
+{% include 'AceGenericBundle:Editor:flasher_embeddable_section.html.twig' %}
+</body>
+</html>

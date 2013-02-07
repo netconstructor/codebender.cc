@@ -1,0 +1,384 @@
+
+<script type="text/javascript" >
+
+    $(document).ready(function () {
+
+        if (isMobile())
+        {
+            $("#usb-sidebar-div").hide();
+        }
+        else
+        {
+            $("#scanning").hide();
+
+            var plugin_found = false;
+            for (i = 0; i < navigator.plugins.length; i++)
+                if (navigator.plugins[i].name == "Codebender.cc")
+                    plugin_found = true;
+            if (plugin_found) {
+                $("#usb-sidebar-div").html($("#usb-sidebar-div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
+                enableUSB();
+                loadBoard();
+            }
+            else {
+                show_alert("<p>Seems like you need to enable or install the Codebender Browser Plugin. <span id='addtochrome'><a onclick='chrome.webstore.install()'>Add to Chrome</a></span> <span id='installrest'>Visit the <a href='{{ asset('static/plugin') }}'>plugins page</a> for detailed information.</span> </p>", "alertdiv");
+                if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+                    $("#addtochrome").html("");
+                } else {
+                    $("#installrest").html("");
+                }
+            }
+
+        }
+    });
+
+    function getbin(callback) {
+        $.get("{{ path('AceUtilitiesBundle_log', {'message':"flash"}) }}");
+
+        var payload = generate_payload("binary");
+        $.post("{{compiler}}", payload, function (data) {
+            var obj = jQuery.parseJSON(data);
+            callback(obj);
+        });
+    }
+
+
+    function flashusb(){
+
+        if ($("#ports").val() != null && $("#ports").val() != "") {
+            var max_size = getMaxSize();
+            if (window.size > max_size) {
+                clearProgress("There is not enough space!");
+                return;
+            }
+
+            setProgress(50);
+
+            getbin(function (obj) {
+                if (obj.success == 0) {
+                    clearProgress("There was an error compiling.");
+                    verify();
+                }
+                else {
+                    binary = obj["output"];
+
+                    $("#uploadusb").addClass("btn-success");
+                    $("#upload_icon").addClass("icon-white");
+                    window.setTimeout(function () {
+                        $("#uploadusb").removeClass("btn-success");
+                        $("#upload_icon").removeClass("icon-white");
+                    }, 500);
+
+                    setProgress(80);
+
+                    plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boards_list[$("#boards").prop("selectedIndex")]["upload"]["maximum_size"], window.boards_list[$("#boards").prop("selectedIndex")]["upload"]["protocol"], window.boards_list[$("#boards").prop("selectedIndex")]["upload"]["speed"], window.boards_list[$("#boards").prop("selectedIndex")]["build"]["mcu"],
+                            function (from, progress)
+                            {
+                                if (progress)
+                                {
+                                    clearProgress("There was an error uploading. Error #" + progress);
+                                } else
+                                {
+                                    clearProgress("Upload successful.");
+                                }
+                            });
+                }
+            });
+        }
+        else {
+            clearProgress("Please select a valid port or enable the plugin!!");
+        }
+    }
+
+    function checkVersion(version) {
+        if (window.plugin.version < version) {
+            show_alert("You need to update the Codebender Browser Plugin. <span id='addtochrome'><a onclick='chrome.webstore.install()'>Add to Chrome</a></span> <span id='installrest'>Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.</span> </p>", "alertupdatediv");
+        }
+        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+            $("#addtochrome").html("");
+        } else {
+            $("#installrest").html("");
+        }
+    }
+
+
+    function connect(obj) {
+        speed = obj.innerHTML;
+        if (window.connected == false) {
+            if ($("#ports").val() != null && $("#ports").val() != "") {
+                setTimeout(function () {
+                    $("#toggle_connect_serial").removeAttr("data-toggle", "dropdown");
+                }, 500);
+                window.connected = true;
+                $("#connect_message").html("Disconnect");
+                $("#serial_hud").html("");
+                window.plugin.serialRead(
+                        portslist.options[portslist.selectedIndex].text,
+                        speed,
+                        function (from, line) {
+                            serialHudAppend(line);
+                        }
+                );
+            }
+            else {
+                clearProgress("Please select a valid port or enable the plugin!!");
+            }
+        } else {
+            disconnect();
+        }
+    }
+
+    function disconnect() {
+        if (window.connected == true) {
+            $("#connect_message").html("Connect");
+            setTimeout(function () {
+                document.getElementById("toggle_connect_serial").setAttribute("data-toggle", "dropdown");
+            }, 500);
+            window.connected = false;
+            window.plugin.disconnect();
+            $("#collapseSerial").height(0);
+            $("#collapseSerial").removeClass("in");
+        }
+    }
+
+    function getFire() {
+
+        var ports = "";
+        try {
+            ports = plugin.probeUSB();
+            if (ports != oldPorts) {
+                $('#ports').find('option').remove();
+                portsAvail = ports.split(",");
+                for (var i = 0; i < portsAvail.length; i++) {
+                    if (portsAvail[i] != "") {
+                        portslist.options[i] = new Option(portsAvail[i], portsAvail[i], true, false);
+                    }
+                }
+                oldPorts = ports;
+            }
+        }
+        catch (err) {
+            $('#ports').find('option').remove();
+            oldPorts = ports;
+        }
+        checkPermissions();
+    }
+
+
+    function enableUSB() {
+        setSpeed(9600);
+
+        window.connected = false;
+        $("#scanning").show("blind", {}, 1000);
+
+        setTimeout(function () {
+            getIds();
+        }, 200);
+        setTimeout(function () {
+            loadPort();
+        }, 500);
+    }
+
+    function setSpeed(speed) {
+        window.speed = speed;
+        $("#serial_speed").text(speed);
+    }
+
+    function savePort() {
+        new Lawnchair(function () {
+            this.save({key:'port', name:$("#ports option:selected").text()});
+        });
+        checkPermissions();
+    }
+
+    function loadPort() {
+        Lawnchair(function () {
+            this.exists('port', function (exists) {
+                if (exists) {
+                    this.get('port', function (config) {
+                        $("#ports").val(config.name)
+                    })
+                }
+            });
+        });
+    }
+
+    function checkPermissions() {
+        if ((navigator.appVersion.indexOf("X11") == -1) && (navigator.appVersion.indexOf("Linux") == -1)) return;
+        var group = window.plugin.checkPermissions($("#ports option:selected").text());
+        if (group != "") {
+            var message = "You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
+            requestAttention(message);
+            return message;
+        }
+    }
+
+    function serialHudAppend(line) {
+        if (isNaN(line)) {
+            serialHudWrite($("#serial_hud").html() + line + "<br>");
+        } else {
+            if (line == "13")    return;
+            if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
+            if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+        }
+    }
+    function serialHudWrite(message) {
+        $("#serial_hud").addClass("well");
+        $("#serial_hud").html(message);
+        $("#serial_hud").scrollTo(99999999);
+    }
+
+    function requestAttention(message) {
+        $("#attention").html(message);
+    }
+
+    function serialSend() {
+        window.plugin.serialWrite($("#text2send").val());
+    }
+
+
+    function scan() {
+
+        window.hasPerm = window.plugin.setCallback(function (from, output) {
+            if (output == "disconnect") {
+                disconnect();
+            } else
+            {
+                if(output == "Trying Arduino Leonardo auto-reset. If it does not reset automatically please reset the Arduino manualy!")
+                    $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset automatically"}) }}");
+                else if (output == "Could not auto-reset or detect a manual reset!")
+                    $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset at all"}) }}");
+                else
+                    $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: unkown error"}) }}"); //todo find a way to send the output
+                clearProgress(output);
+            }
+        });
+
+        if (!window.hasPerm) {
+            show_alert("You need to grant permissions to the Codebender extension.", "permissions_alert");
+        }
+
+
+        getFire();
+        setInterval(function () {
+            getFire();
+        }, 1000);
+    }
+
+    function getIds() {
+        window.portslist = $("#ports")[0];
+        window.oldPorts = "";
+        window.plugin = document.getElementById('plugin0');
+
+        checkVersion("1.5.3.0");
+
+        document.getElementById('plugin0').download();
+        setTimeout(function () {
+            scan();
+        }, 200);
+    }
+
+    function show_alert(message, divname) {
+        alertElement = "<div id='";
+        alertElement += divname;
+        alertElement += "' class='alert fade in'>";
+        alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
+        alertElement += message
+        alertElement += "</div>";
+        $("#alert_contents").html($("#alert_contents").html() + alertElement);
+    }
+
+    //Device check function
+    function isMobile() {
+
+        return navigator.userAgent.match(/Android/i) ? true : false
+                || navigator.userAgent.match(/BlackBerry/i) ? true : false
+                || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
+                || navigator.userAgent.match(/IEMobile/i) ? true : false;
+    }
+
+    //Scrolling function
+    (function ($) {
+        var h = $.scrollTo = function (a, b, c) {
+            $(window).scrollTo(a, b, c)
+        };
+        h.defaults = {axis:'xy', duration:parseFloat($.fn.jquery) >= 1.3 ? 0 : 1, limit:true};
+        h.window = function (a) {
+            return $(window)._scrollable()
+        };
+        $.fn._scrollable = function () {
+            return this.map(function () {
+                var a = this, isWin = !a.nodeName || $.inArray(a.nodeName.toLowerCase(), ['iframe', '#document', 'html', 'body']) != -1;
+                if (!isWin)return a;
+                var b = (a.contentWindow || a).document || a.ownerDocument || a;
+                return/webkit/i.test(navigator.userAgent) || b.compatMode == 'BackCo    mpat' ? b.body : b.documentElement
+            })
+        };
+        $.fn.scrollTo = function (e, f, g) {
+            if (typeof f == 'object') {
+                g = f;
+                f = 0
+            }
+            if (typeof g == 'function')g = {onAfter:g};
+            if (e == 'max')e = 9e9;
+            g = $.extend({}, h.defaults, g);
+            f = f || g.duration;
+            g.queue = g.queue && g.axis.length > 1;
+            if (g.queue)f /= 2;
+            g.offset = both(g.offset);
+            g.over = both(g.over);
+            return this._scrollable().each(function () {
+                if (e == null)return;
+                var d = this, $elem = $(d), targ = e, toff, attr = {}, win = $elem.is('html,body');
+                switch (typeof targ) {
+                    case'number':
+                    case'string':
+                        if (/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)) {
+                            targ = both(targ);
+                            break
+                        }
+                        targ = $(targ, this);
+                        if (!targ.length)return;
+                    case'object':
+                        if (targ.is || targ.style)toff = (targ = $(targ)).offset()
+                }
+                $.each(g.axis.split(''), function (i, a) {
+                    var b = a == 'x' ? 'Left' : 'Top', pos = b.toLowerCase(), key = 'scroll' + b, old = d[key], max = h.max(d, a);
+                    if (toff) {
+                        attr[key] = toff[pos] + (win ? 0 : old - $elem.offset()[pos]);
+                        if (g.margin) {
+                            attr[key] -= parseInt(targ.css('margin' + b)) || 0;
+                            attr[key] -= parseInt(targ.css('border' + b + 'Width')) || 0
+                        }
+                        attr[key] += g.offset[pos] || 0;
+                        if (g.over[pos])attr[key] += targ[a == 'x' ? 'width' : 'height']() * g.over[pos]
+                    } else {
+                        var c = targ[pos];
+                        attr[key] = c.slice && c.slice(-1) == '%' ? parseFloat(c) / 100 * max : c
+                    }
+                    if (g.limit && /^\d+$/.test(attr[key]))attr[key] = attr[key] <= 0 ? 0 : Math.min(attr[key], max);
+                    if (!i && g.queue) {
+                        if (old != attr[key])animate(g.onAfterFirst);
+                        delete attr[key]
+                    }
+                });
+                animate(g.onAfter);
+                function animate(a) {
+                    $elem.animate(attr, f, g.easing, a && function () {
+                        a.call(this, e, g)
+                    })
+                }
+            }).end()
+        };
+        h.max = function (a, b) {
+            var c = b == 'x' ? 'Width' : 'Height', scroll = 'scroll' + c;
+            if (!$(a).is('html,body'))return a[scroll] - $(a)[c.toLowerCase()]();
+            var d = 'client' + c, html = a.ownerDocument.documentElement, body = a.ownerDocument.body;
+            return Math.max(html[scroll], body[scroll]) - Math.min(html[d], body[d])
+        };
+        function both(a) {
+            return typeof a == 'object' ? a : {top:a, left:a}
+        }
+    })(jQuery);
+
+</script>
