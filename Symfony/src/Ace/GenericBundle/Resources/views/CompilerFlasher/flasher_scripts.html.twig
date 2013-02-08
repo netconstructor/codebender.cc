@@ -21,12 +21,7 @@
                 loadBoard();
             }
             else {
-                var alert = "Seems like you need to enable or install the Codebender Browser Plugin. "
-                if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
-                    alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.";
-                } else {
-                    alert += "<a href='javascript:void()' onclick='chrome.webstore.install()'>Add to Chrome</a>";
-                }
+                var alert = browserSpecificPluginInstall("Seems like you need to enable or install the Codebender Browser Plugin. ");
                 show_alert(alert, "alertupdatediv");
             }
 
@@ -94,17 +89,21 @@
 
     function checkVersion(version) {
         if (window.plugin.version < version) {
-            var alert = "You need to update the Codebender Browser Plugin. "
-            if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
-                alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.";
-            } else {
-                $('head').append('<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">');
-                alert += "<a href='javascript:void()' onclick='chrome.webstore.install()'>Add to Chrome</a>";
-            }
+            var alert = browserSpecificPluginInstall("You need to update the Codebender Browser Plugin. ");
             show_alert(alert, "alertupdatediv");
         }
     }
 
+    function browserSpecificPluginInstall(alert)
+    {
+        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+            alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.";
+        } else {
+            $('head').append('<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">');
+            alert += "<a href='javascript:void()' onclick='chrome.webstore.install()'>Add to Chrome</a>";
+        }
+        return alert;
+    }
 
     function connect(obj) {
         speed = obj.innerHTML;
