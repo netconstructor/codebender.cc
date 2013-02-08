@@ -1,10 +1,11 @@
 <div id="usb-sidebar-div">
     <span id="alert_contents"></span>
+
     <div id="scanning">
         <div class="input-append">
             <select id="ports" onclick="savePort()"></select>
             <button id="uploadusb" class="btn" onclick="uploadusb()"><i id="upload_icon"
-                                                  class="icon-upload"></i><span
+                                                                        class="icon-upload"></i><span
                     id="upload_text"> USB Flash </span></button>
         </div>
 
@@ -28,12 +29,7 @@
                                             Connect<span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu">
-                                            {#<li><a onclick="connect(this);">300</a></li>#}
-                                            {#<li><a onclick="connect(this);">1200</a></li>#}
-                                            {#<li><a onclick="connect(this);">2400</a></li>#}
-                                            {#<li><a onclick="connect(this);">4800</a></li>#}
                                             <li><a onclick="connect(this);">9600</a></li>
-                                            {#<li><a onclick="connect(this);">14400</a></li>#}
                                             <li><a onclick="connect(this);">19200</a></li>
                                             <li><a onclick="connect(this);">28800</a></li>
                                             <li><a onclick="connect(this);">38400</a></li>
@@ -59,4 +55,4 @@
     </div>
 
 </div>
-</div>
+

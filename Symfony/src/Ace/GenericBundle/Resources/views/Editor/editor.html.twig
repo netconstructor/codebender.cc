@@ -94,8 +94,8 @@
 			charset="utf-8"></script>
 
     {% include 'AceGenericBundle:Editor:editor_scripts.html.twig' %}
-    {% include 'AceGenericBundle:Editor:compiler_embeddable_scripts.html.twig' %}
-    {% include 'AceGenericBundle:Editor:flasher_embeddable_scripts.html.twig' %}
+    {% include 'AceGenericBundle:CompilerFlasher:compiler_scripts.html.twig' %}
+    {% include 'AceGenericBundle:CompilerFlasher:flasher_scripts.html.twig' %}
 
     <script>
 		var dirty = false;
@@ -319,8 +319,8 @@
                                 </button>
                             </div>
                             <hr>
-                            {% include 'AceGenericBundle:Editor:compiler_embeddable_section.html.twig' %}
-                            {% include 'AceGenericBundle:Editor:flasher_embeddable_section.html.twig' %}
+                            {% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig' %}
+                            {% include 'AceGenericBundle:CompilerFlasher:plugin_section.html.twig' %}
                             <div id="progress" class="progress progress-striped active">
                                 <div id="progress_val" class="bar" style="width: 40%;"></div>
                             </div>

@@ -61,6 +61,6 @@ class EditorController extends Controller
 		$boardcontroller = $this->get('boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
-		return $this->render('AceGenericBundle:Editor:compiler_embeddable.html.twig', array('files' => $files, 'boards' => $boards));
+		return $this->render('AceGenericBundle:CompilerFlasher:compiler_embeddable.html.twig', array('files' => $files, 'boards' => $boards));
 	}
 }
