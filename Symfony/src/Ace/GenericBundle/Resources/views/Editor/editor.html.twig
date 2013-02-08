@@ -83,8 +83,6 @@
         }
 
 	</style>
-    <link rel="chrome-webstore-item"
-          href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">
 {% endblock %}
 
 {% block javascripts %}
@@ -321,7 +319,8 @@
                             <hr>
                             {% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig' %}
                             {% include 'AceGenericBundle:CompilerFlasher:plugin_section.html.twig' %}
-                            <div id="progress" class="progress progress-striped active">
+                        </div>
+                        <div id="progress" class="progress progress-striped active">
                                 <div id="progress_val" class="bar" style="width: 40%;"></div>
                             </div>
                             <div id="operation_output">
