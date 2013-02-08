@@ -2,31 +2,44 @@
 <script type="text/javascript" >
 
     $(document).ready(function () {
+        initializePlugin();
+    });
 
+
+    function initializePlugin()
+    {
         if (isMobile())
         {
-            $("#usb-sidebar-div").hide();
+            $("#plugin_div").hide();
         }
         else
         {
-            $("#scanning").hide();
-
             var plugin_found = false;
             for (i = 0; i < navigator.plugins.length; i++)
                 if (navigator.plugins[i].name == "Codebender.cc")
                     plugin_found = true;
-            if (plugin_found) {
-                $("#usb-sidebar-div").html($("#usb-sidebar-div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
-                enableUSB();
-                loadBoard();
-            }
-            else {
+            if (!plugin_found)
+            {
                 var alert = browserSpecificPluginInstall("Seems like you need to enable or install the Codebender Browser Plugin. ");
                 show_alert(alert, "alertupdatediv");
+                return;
             }
-
+            $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
+            window.plugin = document.getElementById('plugin0');
+            validateVersion("1.5.4.0");
         }
-    });
+
+    }
+
+    function validateVersion(version)
+    {
+        if (window.plugin.version < version) {
+            var alert = browserSpecificPluginInstall("You need to update the Codebender Browser Plugin. ");
+            show_alert(alert, "alertupdatediv");
+        }
+        else
+            enableUSB();
+    }
 
     function getbin(callback) {
         $.get("{{ path('AceUtilitiesBundle_log', {'message':"flash"}) }}");
@@ -87,12 +100,6 @@
         }
     }
 
-    function checkVersion(version) {
-        if (window.plugin.version < version) {
-            var alert = browserSpecificPluginInstall("You need to update the Codebender Browser Plugin. ");
-            show_alert(alert, "alertupdatediv");
-        }
-    }
 
     function browserSpecificPluginInstall(alert)
     {
@@ -169,22 +176,19 @@
 
 
     function enableUSB() {
-        setSpeed(9600);
 
         window.connected = false;
-        $("#scanning").show("blind", {}, 1000);
+
+        window.portslist = $("#ports")[0];
+        window.oldPorts = "";
 
         setTimeout(function () {
-            getIds();
+            scan();
         }, 200);
+
         setTimeout(function () {
             loadPort();
         }, 500);
-    }
-
-    function setSpeed(speed) {
-        window.speed = speed;
-        $("#serial_speed").text(speed);
     }
 
     function savePort() {
@@ -210,9 +214,8 @@
         if ((navigator.appVersion.indexOf("X11") == -1) && (navigator.appVersion.indexOf("Linux") == -1)) return;
         var group = window.plugin.checkPermissions($("#ports option:selected").text());
         if (group != "") {
-            var message = "You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!";
-            requestAttention(message);
-            return message;
+            var message = "<small>You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!</small>";
+            show_alert(message);
         }
     }
 
@@ -231,9 +234,6 @@
         $("#serial_hud").scrollTo(99999999);
     }
 
-    function requestAttention(message) {
-        $("#attention").html(message);
-    }
 
     function serialSend() {
         window.plugin.serialWrite($("#text2send").val());
@@ -268,19 +268,6 @@
         }, 1000);
     }
 
-    function getIds() {
-        window.portslist = $("#ports")[0];
-        window.oldPorts = "";
-        window.plugin = document.getElementById('plugin0');
-
-        checkVersion("1.5.4.0");
-
-        document.getElementById('plugin0').download();
-        setTimeout(function () {
-            scan();
-        }, 200);
-    }
-
     function show_alert(message, divname) {
         alertElement = "<div id='";
         alertElement += divname;
@@ -288,7 +275,7 @@
         alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
         alertElement += message
         alertElement += "</div>";
-        $("#alert_contents").html($("#alert_contents").html() + alertElement);
+        $("#plugin_div").html(alertElement);
     }
 
     //Device check function

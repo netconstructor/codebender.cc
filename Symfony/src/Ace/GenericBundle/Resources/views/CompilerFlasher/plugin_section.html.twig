@@ -1,56 +1,51 @@
-<div id="usb-sidebar-div">
-    <span id="alert_contents"></span>
+<div id="plugin_div">
+    <div class="input-append">
+        <select id="ports" onclick="savePort()"></select>
+        <button id="uploadusb" class="btn" onclick="uploadusb()"><i id="upload_icon"
+                                                                    class="icon-upload"></i><span
+                id="upload_text"> USB Flash </span></button>
+    </div>
 
-    <div id="scanning">
-        <div class="input-append">
-            <select id="ports" onclick="savePort()"></select>
-            <button id="uploadusb" class="btn" onclick="uploadusb()"><i id="upload_icon"
-                                                                        class="icon-upload"></i><span
-                    id="upload_text"> USB Flash </span></button>
-        </div>
-
-        <div id="serial_util">
-            <div class="accordion" id="accordion2">
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
-                           href="#collapseSerial">
-                            <i id="connect_icon" class="icon-asterisk"></i><span
-                                id="serial_text">  Serial Monitor
-                        </a>
-                    </div>
-                    <div id="collapseSerial" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                            <div class="btn-group">
-                                <div class="input-append">
-                                    <div class="btn-group">
-                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"
-                                           id="toggle_connect_serial" onclick="disconnect();">
-                                            Connect<span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a onclick="connect(this);">9600</a></li>
-                                            <li><a onclick="connect(this);">19200</a></li>
-                                            <li><a onclick="connect(this);">28800</a></li>
-                                            <li><a onclick="connect(this);">38400</a></li>
-                                            <li><a onclick="connect(this);">57600</a></li>
-                                            <li><a onclick="connect(this);">115200</a></li>
-                                        </ul>
-                                        <input id="text2send" type="text" placeholder="Serial Message"
-                                               style="width: 40%;">
-                                        <button id="serial_send" onclick="serialSend()" class="btn"> Send
-                                        </button>
-                                    </div>
+    <div id="serial_util">
+        <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                       href="#collapseSerial">
+                        <i id="connect_icon" class="icon-asterisk"></i><span
+                            id="serial_text">  Serial Monitor
+                    </a>
+                </div>
+                <div id="collapseSerial" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <div class="btn-group">
+                            <div class="input-append">
+                                <div class="btn-group">
+                                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"
+                                       id="toggle_connect_serial" onclick="disconnect();">
+                                        Connect<span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a onclick="connect(this);">9600</a></li>
+                                        <li><a onclick="connect(this);">19200</a></li>
+                                        <li><a onclick="connect(this);">28800</a></li>
+                                        <li><a onclick="connect(this);">38400</a></li>
+                                        <li><a onclick="connect(this);">57600</a></li>
+                                        <li><a onclick="connect(this);">115200</a></li>
+                                    </ul>
+                                    <input id="text2send" type="text" placeholder="Serial Message"
+                                           style="width: 40%;">
+                                    <button id="serial_send" onclick="serialSend()" class="btn"> Send
+                                    </button>
                                 </div>
                             </div>
-										<pre id="serial_hud" class="span7 well"
-                                             style="overflow-y:scroll; color: black; width:100%; height: 280px; visibility: visible;"></pre>
                         </div>
+                                    <pre id="serial_hud" class="span7 well"
+                                         style="overflow-y:scroll; color: black; width:100%; height: 280px; visibility: visible;"></pre>
                     </div>
                 </div>
             </div>
-
         </div>
-        <div id="attention"></div>
+
     </div>
 </div>
