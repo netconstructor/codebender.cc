@@ -44,6 +44,7 @@
 
 
     function flashusb(){
+        disconnect();
 
         if ($("#ports").val() != null && $("#ports").val() != "") {
             var max_size = getMaxSize();
