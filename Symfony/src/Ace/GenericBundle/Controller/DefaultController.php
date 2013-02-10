@@ -139,8 +139,14 @@ class DefaultController extends Controller
 		$files = array($file);
 		return $this->render('AceGenericBundle:Default:example.html.twig', array('library' => $library, 'example' => $example, 'files' => $files));
 	}
-	
+
 	public function boardsAction()
+	{
+		$boardcontroller = $this->get('boardcontroller');
+		$boards = json_decode($boardcontroller->listAction()->getContent(), true);
+		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
+	}
+	public function boardslistAction()
 	{
 		$boardcontroller = $this->get('boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();

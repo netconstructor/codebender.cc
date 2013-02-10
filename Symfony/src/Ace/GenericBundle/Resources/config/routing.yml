@@ -31,14 +31,13 @@ AceGenericBundle_example:
         url: ".+"
 
 AceGenericBundle_boards:
-    pattern: /boards
-    defaults: {_controller: AceGenericBundle:Default:boards }
-
+    pattern:  /boards
+    defaults: { _controller: AceGenericBundle:Default:boards}
 
 AceGenericBundle_embedded_compilerflasher_js:
     pattern:  /embed/compilerflasher.js
     defaults: { _controller: AceGenericBundle:Editor:embeddedCompilerFlasherJavascript }
 
 AceGenericBundle_boardslist:
-    pattern:  /boards
+    pattern:  /boardslist
     defaults: { _controller: AceGenericBundle:Default:boardslist }
