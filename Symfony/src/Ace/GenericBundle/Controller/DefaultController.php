@@ -94,7 +94,33 @@ class DefaultController extends Controller
 			return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
 		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "json" => $json));
 	}
-	
+
+	public function projectfilesAction()
+	{
+
+		$id = $this->getRequest()->request->get('project_id');
+
+		$projectmanager = $this->get('projectmanager');
+		$projects = NULL;
+
+		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
+		if ($project["success"] === false)
+		{
+			return new Response("Project Not Found",404);
+		}
+
+		$files = $projectmanager->listFilesAction($id)->getContent();
+		$files = json_decode($files, true);
+		$files = $files["list"];
+
+		$files_hashmap = array();
+		foreach ($files as $file)
+		{
+			$files_hashmap[$file["filename"]] = htmlspecialchars($file["code"]);
+		}
+		return new Response(json_encode($files_hashmap));
+	}
+
 	public function librariesAction()
 	{
 		$utilities = $this->get('utilities');

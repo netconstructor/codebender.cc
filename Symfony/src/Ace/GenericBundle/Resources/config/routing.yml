@@ -10,6 +10,12 @@ AceGenericBundle_project:
     pattern:  /sketch:{id}
     defaults: { _controller: AceGenericBundle:Default:project }
 
+AceGenericBundle_projectfiles:
+    pattern:  /files
+    defaults: { _controller: AceGenericBundle:Default:projectfiles }
+    requirements:
+       _method:  POST
+
 AceGenericBundle_embed_project:
     pattern:  /embed/sketch:{id}
     defaults: { _controller: AceGenericBundle:Default:project, embed:true }
