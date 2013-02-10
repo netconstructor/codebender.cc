@@ -1,10 +1,4 @@
 
-<script type="text/javascript" >
-
-    $(document).ready(function () {
-        initializePlugin();
-    });
-
 
     function initializePlugin()
     {
@@ -25,8 +19,10 @@
                 return;
             }
             $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
-            window.plugin = document.getElementById('plugin0');
-            validateVersion("1.5.4.0");
+            setTimeout(function(){
+                window.plugin = document.getElementById('plugin0');
+                validateVersion("1.5.3.0");
+            }, 100);
         }
 
     }
@@ -52,24 +48,26 @@
     }
 
 
-    function flashusb(){
+    function usbflash(){
         disconnect();
 
         if ($("#ports").val() != null && $("#ports").val() != "") {
-            var max_size = getMaxSize();
-            if (window.size > max_size) {
-                clearProgress("There is not enough space!");
-                return;
-            }
 
-            setProgress(50);
+            setOperationProgress(50);
 
             getbin(function (obj) {
                 if (obj.success == 0) {
-                    clearProgress("There was an error compiling.");
+                    setOperationOutput("There was an error compiling.");
                     verify();
                 }
                 else {
+
+                    if (obj.size > getMaxSize())
+                    {
+                        setOperationOutput("There is not enough space!");
+                        return;
+                    }
+
                     binary = obj["output"];
 
                     $("#uploadusb").addClass("btn-success");
@@ -79,24 +77,24 @@
                         $("#upload_icon").removeClass("icon-white");
                     }, 500);
 
-                    setProgress(80);
+                    setOperationProgress(80);
 
-                    plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.boards_list[$("#boards").prop("selectedIndex")]["upload"]["maximum_size"], window.boards_list[$("#boards").prop("selectedIndex")]["upload"]["protocol"], window.boards_list[$("#boards").prop("selectedIndex")]["upload"]["speed"], window.boards_list[$("#boards").prop("selectedIndex")]["build"]["mcu"],
+                    plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.selectedBoard["upload"]["maximum_size"], window.selectedBoard["upload"]["protocol"], window.selectedBoard["upload"]["speed"], window.selectedBoard["build"]["mcu"],
                             function (from, progress)
                             {
                                 if (progress)
                                 {
-                                    clearProgress("There was an error uploading. Error #" + progress);
+                                    setOperationOutput("There was an error uploading. Error #" + progress);
                                 } else
                                 {
-                                    clearProgress("Upload successful.");
+                                    setOperationOutput("Upload successful.");
                                 }
                             });
                 }
             });
         }
         else {
-            clearProgress("Please select a valid port or enable the plugin!!");
+            setOperationOutput("Please select a valid port or enable the plugin!!");
         }
     }
 
@@ -131,7 +129,7 @@
                 );
             }
             else {
-                clearProgress("Please select a valid port or enable the plugin!!");
+                setOperationOutput("Please select a valid port or enable the plugin!!");
             }
         } else {
             disconnect();
@@ -253,7 +251,7 @@
                     $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset at all"}) }}");
                 else
                     $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: unkown error"}) }}"); //todo find a way to send the output
-                clearProgress(output);
+                setOperationOutput(output);
             }
         });
 
@@ -370,5 +368,3 @@
             return typeof a == 'object' ? a : {top:a, left:a}
         }
     })(jQuery);
-
-</script>

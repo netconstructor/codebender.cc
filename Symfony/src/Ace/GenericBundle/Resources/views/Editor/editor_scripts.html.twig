@@ -32,10 +32,10 @@ function handleResponse(response) {
     if (response["success"])
         location.reload();
     else
-        clearProgress(response["error"])
+        setOperationOutput(response["error"])
 }
 
-function setProgress(newprogress) {
+function setOperationProgress(newprogress) {
     $("#progress").show('fast');
     $("#progress_val").width(newprogress + '%');
     $("#operation_output").hide('fast');
@@ -56,7 +56,7 @@ function setProgress(newprogress) {
     // $("#operation_output").hide('fast');
 }
 
-function clearProgress(output) {
+function setOperationOutput(output) {
     $("#progress").hide('fast');
     $("#progress_val").width('0%');
     $("#operation_output").html(output).show('fast');
@@ -65,11 +65,11 @@ function clearProgress(output) {
 
 function save() {
     loadCode(window.selectedFile);
-    setProgress(90);
+    setOperationProgress(90);
     $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
-        clearProgress("Saved successfuly.");
+        setOperationOutput("Saved successfuly.");
         window.setTimeout(function () {
             $("#save").removeClass("btn-success");
             $("#save_icon").removeClass("icon-white");
@@ -83,58 +83,59 @@ function revert() {
 }
 
 
-function verification_update(obj)
+function verification_onFail(message)
 {
-    if (obj.success == 0)
-    {
-        $("#compile_output").css('color', 'black');
-        $("#editor").css("bottom", "170px");
-        $("#compile_output").css("bottom", "30px");
-        $("#compile_output").css("padding-top", "10px");
-        $("#compile_output").css("height", "120px");
-        $("#compile_output").addClass("well");
-        $("#compile_output").html(obj.message);
-        $("#compile_output").css("visibility", "visible");
-    }
-    else
-    {
-        $("#compile_output").css('color', '');
-        $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
-        $("#editor").css("bottom", "");
-        $("#compile_output").css("bottom", "");
-        $("#compile_output").css("height", "");
-        $("#compile_output").css("padding-top", "");
-        $("#compile_output").css("visibility", "");
-        $("#compile_output").removeClass("well");
-    }
+    $("#compile_output").css('color', 'black');
+    $("#editor").css("bottom", "170px");
+    $("#compile_output").css("bottom", "30px");
+    $("#compile_output").css("padding-top", "10px");
+    $("#compile_output").css("height", "120px");
+    $("#compile_output").addClass("well");
+    $("#compile_output").html(message);
+    $("#compile_output").css("visibility", "visible");
     editor.resize();
 }
 
-function uploadusb()
+function verification_onSuccess()
 {
-    $("#collapseSerial").height(0);
-    $("#collapseSerial").removeClass("in");
-
-    flashusb();
+    $("#compile_output").css('color', '');
+    $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
+    $("#editor").css("bottom", "");
+    $("#compile_output").css("bottom", "");
+    $("#compile_output").css("height", "");
+    $("#compile_output").css("padding-top", "");
+    $("#compile_output").css("visibility", "");
+    $("#compile_output").removeClass("well");
+    editor.resize();
 }
 
-function load_files()
-{
+
+old_usbflash = usbflash;
+usbflash = function(){
+    $("#collapseSerial").height(0);
+    $("#collapseSerial").removeClass("in");
+    old_usbflash();
+
+}
+
+
+old_load_files = load_files;
+load_files = function(){
     var pos = editor.getCursorPosition();
     loadCode(window.selectedFile);
     editor.moveCursorTo(pos.row, pos.column, true);
-    return window.files;
+    return old_load_files();
 }
 
 function cloudload() {
-    setProgress(30);
+    setOperationProgress(30);
     getbin(function (obj) {
         if (obj.success == 0) {
-            clearProgress("There was an error compiling.");
+            setOperationOutput("There was an error compiling.");
         }
         else {
             binary = obj["output"];
-            $("#"cloudload"").addClass("btn-success");
+            $("#cloudload").addClass("btn-success");
             $("#cloudload_icon").addClass("icon-white");
             window.setTimeout(function () {
                 $("#cloudload").removeClass("btn-success");
@@ -142,7 +143,7 @@ function cloudload() {
             }, 500);
 
 
-            setProgress(70);
+            setOperationProgress(70);
             var payload = {"ip":$("#ip").val(), "bin":binary}
             $.post("{{ path('AceSenderBundle_tftp') }}", {"data":JSON.stringify(payload)}, function (data) {
                 var obj = jQuery.parseJSON(data);
@@ -160,7 +161,7 @@ function cloudload() {
                     $("#compile_output").css("height", "120px");
                     $("#compile_output").addClass("well");
                     $("#compile_output").html(obj.text);
-                    clearProgress("Upload failed.")
+                    setOperationOutput("Upload failed.")
                 }
                 else {
                     $("#compile_output").css('color', '');
@@ -172,7 +173,7 @@ function cloudload() {
                     $("#compile_output").removeClass("well");
 
                     var progressText = "<p>" + obj.text + "</p>";
-                    clearProgress(progressText)
+                    setOperationOutput(progressText)
                     window.sketch_size = obj.size;
                     $("#compile_output").html("");
                 }
@@ -220,7 +221,7 @@ function cloudload() {
                 sender:'editor|cli'
             },
             exec:function (env, args, request) {
-                uploadusb();
+                usbflash();
             }
         });
 
@@ -301,7 +302,7 @@ function loadCode(filename) {
 }
 
 function createFile() {
-    setProgress(90);
+    setOperationProgress(90);
     var val = { filename:$("#createfield").val() };
     $.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
         $("#creationModal").modal('hide');
@@ -310,7 +311,7 @@ function createFile() {
 }
 
 function deleteFile(filename) {
-    setProgress(90);
+    setOperationProgress(90);
     var val = { "filename":filename };
     $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
         handleResponse(data);

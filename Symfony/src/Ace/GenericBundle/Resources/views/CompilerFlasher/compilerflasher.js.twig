@@ -1,0 +1,61 @@
+$(document).ready(function () {
+
+    //verifier scripts
+    if ($("#cb_cf").length > 0)
+    {
+        if($.isNumeric($("#cb_cf").data().sketch))
+        {
+            $.post("{{ path('AceGenericBundle_projectfiles') }}", {'project_id':$("#cb_cf").data().sketch}, function(data){
+                window.files = JSON.parse(data);
+            });
+        }
+
+        if ($("#cb_cf").hasClass("cb_verify") || !$("#cb_cf").data().board)
+            $("#cb_cf").html($("#cb_cf").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:compiler_section.html.twig'%}{% endfilter %}');
+
+        if($("#cb_cf").hasClass("cb_verify"))
+            $("#verify_div").html($("#verify_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig'%}{% endfilter %}');
+
+
+        $.getJSON("{{ path('AceGenericBundle_boardslist') }}", function (data) {
+        window.boards_list = JSON.parse(data);
+
+        if ($("#cb_cf").data().board){
+            for (var i = 0; i < window.boards_list.length; i++) {
+                if (window.boards_list[i]["name"] == $("#cb_cf").data().board)
+                    window.selectedBoard = window.boards_list[i];
+            }
+        }
+        else
+        {
+            $("#verify_div").html('{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:boardlist_section.html.twig'%}{% endfilter %}' + $("#verify_div").html());
+            $("#verify_div").addClass("input-append");
+            for (var i = 0; i < window.boards_list.length; i++)
+                $("#boards").append($('<option></option>').val(window.boards_list[i]["name"]).html(window.boards_list[i]["name"]));
+            loadBoard();
+        }
+    });
+
+        //flasher scripts
+        if ($("#cb_cf").hasClass("cb_usbflash") || $("#cb_cf").hasClass("cb_serialmonitor"))
+        {
+            $("#cb_cf").html($("#cb_cf").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:plugin_section.html.twig' %}{% endfilter %}');
+            if ($("#cb_cf").hasClass("cb_usbflash"))
+            {
+                $("#ports_div").html($("#ports_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:usbflash_section.html.twig' %}{% endfilter %}');
+                $("#ports_div").addClass("input-append");
+
+            }
+            if ($("#cb_cf").hasClass("cb_serialmonitor"))
+                $("#plugin_div").html($("#plugin_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:serialmonitor_section.html.twig' %}{% endfilter %}');
+
+            initializePlugin();
+        }
+
+        $("#cb_cf").html($("#cb_cf").html() + "<div id='operation_output'></div>");
+    }
+});
+
+
+{% include 'AceGenericBundle:CompilerFlasher:compiler_scripts.js.twig' %}
+{% include 'AceGenericBundle:CompilerFlasher:flasher_scripts.js.twig' %}
