@@ -37,3 +37,6 @@ AceGenericBundle_boards:
 AceGenericBundle_embedded_compiler:
     pattern:  /embed/compiler/sketch:{id}
     defaults: { _controller: AceGenericBundle:Editor:embeddedCompiler }
+AceGenericBundle_boardslist:
+    pattern:  /boards
+    defaults: { _controller: AceGenericBundle:Default:boardslist }
