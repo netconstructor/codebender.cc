@@ -24,9 +24,9 @@ function loadBoard() {
             if (exists) {
                 this.get('board', function (config) {
                     $("#boards").val(config.name)
-                    window.selectedBoard = window.boards_list[$("#boards").prop("selectedIndex")];
                 })
             }
+            window.selectedBoard = window.boards_list[$("#boards").prop("selectedIndex")];
         });
     });
 }
