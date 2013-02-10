@@ -37,6 +37,11 @@ AceGenericBundle_boards:
 AceGenericBundle_embedded_compiler:
     pattern:  /embed/compiler/sketch:{id}
     defaults: { _controller: AceGenericBundle:Editor:embeddedCompiler }
+
+AceGenericBundle_embedded_compilerflasher_js:
+    pattern:  /embed/compilerflasher.js
+    defaults: { _controller: AceGenericBundle:Editor:embeddedCompilerFlasherJavascript }
+
 AceGenericBundle_boardslist:
     pattern:  /boards
     defaults: { _controller: AceGenericBundle:Default:boardslist }

@@ -60,7 +60,12 @@ class EditorController extends Controller
 
 		$boardcontroller = $this->get('boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
+	public function embeddedCompilerFlasherJavascriptAction()
+	{
+		$response = $this->render('AceGenericBundle:CompilerFlasher:compilerflasher.js.twig');
+		$response->headers->set('Content-Type', 'text/javascript');
 
-		return $this->render('AceGenericBundle:CompilerFlasher:compiler_embeddable.html.twig', array('files' => $files, 'boards' => $boards));
+		return $response;
 	}
+
 }
