@@ -62,7 +62,7 @@ class DefaultController extends Controller
 		if($show_ino == 0)
 		{
 			foreach($files as $key=>$file)
-			if(strpos($file['filename'], ".ino") !== FALSE)
+			if(strpos($file['filename'], ".ino") !== false)
 			{
 				unset($files[$key]);
 			}
@@ -155,14 +155,14 @@ class DefaultController extends Controller
 
 			$zip = new ZipArchive();
 
-			if ($zip->open($filename, ZIPARCHIVE::CREATE)!==TRUE)
+			if ($zip->open($filename, ZIPARCHIVE::CREATE)!==true)
 			{
 				$value = "";
 				$htmlcode = 404;
 			}
 			else
 			{
-				if($zip->addEmptyDir($name)!==TRUE)
+				if($zip->addEmptyDir($name)!==true)
 				{
 					$value = "";
 					$htmlcode = 404;
@@ -350,14 +350,14 @@ class DefaultController extends Controller
 
 						 if( $ext2 == "pde"){
 							 //if( $folderName == $fileName || count($exp) == 2)
-						     if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== FALSE){
+						     if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== false){
 								$count++;
 								$code = $z->getFromIndex($i);
 								$project_name = $end;
 							 }
 						 } else if($ext2 == "ino" /*&& count($exp) == 2*/){
 
-								if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== FALSE){
+								if(mb_detect_encoding($z->getFromIndex($i), 'UTF-8', true) !== false){
 								$count++;
 								$code = $z->getFromIndex($i);
 								$project_name = $end;
@@ -375,7 +375,7 @@ class DefaultController extends Controller
 
 			if($count == 1){
 
-				if(mb_detect_encoding($code, 'UTF-8', true) !== FALSE){
+				if(mb_detect_encoding($code, 'UTF-8', true) !== false){
 					$sketch_id = $upload_handler->createUploadedProject($project_name);
 					if(isset($sketch_id)){
 						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
@@ -396,7 +396,7 @@ class DefaultController extends Controller
 
 				foreach($headers as $key => $value){
 
-					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
+					if(mb_detect_encoding($value, 'UTF-8', true) !== false){
 						if(!$upload_handler->createUploadedFile($sketch_id, $key, $value)){
 							$info = $upload_handler->post("Error creating file.");
 							$json = json_encode($info);
@@ -407,7 +407,7 @@ class DefaultController extends Controller
 
 				foreach($cpps as $key => $value){
 
-					if(mb_detect_encoding($value, 'UTF-8', true) !== FALSE){
+					if(mb_detect_encoding($value, 'UTF-8', true) !== false){
 						if(!$upload_handler->createUploadedFile($sketch_id, $key, $value)){
 							$info = $upload_handler->post("Error creating file.");
 							$json = json_encode($info);
@@ -497,6 +497,8 @@ public function uploadfilesAction($id){
 
 	public function logAction($message)
 	{
+		header('Access-Control-Allow-Origin: *');
+
 		syslog(LOG_INFO, "codebender generic log: ".$message);
 		return new Response("OK");
 	}
