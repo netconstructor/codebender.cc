@@ -10,10 +10,10 @@ $(document).ready(function () {
             });
         }
 
-        if ($("#cb_cf").hasClass("cb_verify") || !$("#cb_cf").data().board)
+        if ($("#cb_cf").data().sections.indexOf("verify") != -1 || !$("#cb_cf").data().board)
             $("#cb_cf").html($("#cb_cf").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:compiler_section.html.twig'%}{% endfilter %}');
 
-        if($("#cb_cf").hasClass("cb_verify"))
+        if($("#cb_cf").data().sections.indexOf("verify") != -1)
             $("#verify_div").html($("#verify_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig'%}{% endfilter %}');
 
 
@@ -29,7 +29,7 @@ $(document).ready(function () {
         else
         {
             $("#verify_div").html('{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:boardlist_section.html.twig'%}{% endfilter %}' + $("#verify_div").html());
-            if ($("#cb_cf").hasClass("cb_verify"))
+            if ($("#cb_cf").data().sections.indexOf("verify") != -1)
                 $("#verify_div").addClass("input-append");
             for (var i = 0; i < window.boards_list.length; i++)
                 $("#boards").append($('<option></option>').val(window.boards_list[i]["name"]).html(window.boards_list[i]["name"]));
@@ -38,16 +38,16 @@ $(document).ready(function () {
     });
 
         //flasher scripts
-        if ($("#cb_cf").hasClass("cb_usbflash") || $("#cb_cf").hasClass("cb_serialmonitor"))
+        if ($("#cb_cf").data().sections.indexOf("usbflash") != -1 || $("#cb_cf").data().sections.indexOf("serialmonitor") != -1)
         {
             $("#cb_cf").html($("#cb_cf").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:plugin_section.html.twig' %}{% endfilter %}');
-            if ($("#cb_cf").hasClass("cb_usbflash"))
+            if ($("#cb_cf").data().sections.indexOf("usbflash") != -1)
             {
                 $("#ports_div").html($("#ports_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:usbflash_section.html.twig' %}{% endfilter %}');
                 $("#ports_div").addClass("input-append");
 
             }
-            if ($("#cb_cf").hasClass("cb_serialmonitor"))
+            if ($("#cb_cf").data().sections.indexOf("serialmonitor") != -1)
                 $("#plugin_div").html($("#plugin_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:serialmonitor_section.html.twig' %}{% endfilter %}');
 
             initializePlugin();
