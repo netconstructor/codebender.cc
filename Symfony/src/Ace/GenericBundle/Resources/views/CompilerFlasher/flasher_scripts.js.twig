@@ -14,7 +14,7 @@
                     plugin_found = true;
             if (!plugin_found)
             {
-                var alert = browserSpecificPluginInstall("Seems like you need to enable or install the Codebender Browser Plugin. ");
+                var alert = browserSpecificPluginInstall("Seems like you need to enable or install the Codebender Plugin. ");
                 show_alert(alert, "alertupdatediv");
                 return;
             }
@@ -30,7 +30,7 @@
     function validateVersion(version)
     {
         if (window.plugin.version < version) {
-            var alert = browserSpecificPluginInstall("You need to update the Codebender Browser Plugin. ");
+            var alert = browserSpecificPluginInstall("You need to update the Codebender Plugin. ");
             show_alert(alert, "alertupdatediv");
         }
         else
@@ -102,7 +102,7 @@
     function browserSpecificPluginInstall(alert)
     {
         if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
-            alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for detailed information.";
+            alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for more.";
         } else {
             $('head').append('<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">');
             alert += "<a href='javascript:void()' onclick='chrome.webstore.install()'>Add to Chrome</a>";
