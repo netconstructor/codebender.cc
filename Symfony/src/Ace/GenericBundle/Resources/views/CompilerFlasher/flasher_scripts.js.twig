@@ -62,7 +62,7 @@
                 }
                 else {
 
-                    if (obj.size > getMaxSize())
+                    if (parseInt(obj.size) > getMaxSize())
                     {
                         setOperationOutput("There is not enough space!");
                         return;

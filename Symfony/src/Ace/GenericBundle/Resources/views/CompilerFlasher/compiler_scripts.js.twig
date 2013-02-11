@@ -31,7 +31,7 @@ function loadBoard() {
     });
 }
     function getMaxSize() {
-    return window.selectedBoard["upload"]["maximum_size"];
+    return parseInt(window.selectedBoard["upload"]["maximum_size"]);
 }
 
 function generate_payload(format) {
