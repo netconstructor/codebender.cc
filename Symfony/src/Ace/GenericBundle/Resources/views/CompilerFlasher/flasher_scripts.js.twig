@@ -269,8 +269,8 @@
     function show_alert(message, divname) {
         alertElement = "<div id='";
         alertElement += divname;
-        alertElement += "' class='alert fade in'>";
-        alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
+        alertElement += "' class='alert'>";
+//        alertElement += "<button type='button' class='close' data-dismiss='alert'>x</button>";
         alertElement += message
         alertElement += "</div>";
         $("#plugin_div").html(alertElement);
