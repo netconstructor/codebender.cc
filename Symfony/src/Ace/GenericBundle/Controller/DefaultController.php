@@ -97,6 +97,7 @@ class DefaultController extends Controller
 
 	public function projectfilesAction()
 	{
+		header('Access-Control-Allow-Origin: *');
 
 		$id = $this->getRequest()->request->get('project_id');
 
@@ -148,6 +149,8 @@ class DefaultController extends Controller
 	}
 	public function boardslistAction()
 	{
+		header('Access-Control-Allow-Origin: *');
+
 		$boardcontroller = $this->get('boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 		return new Response(json_encode($boards));
