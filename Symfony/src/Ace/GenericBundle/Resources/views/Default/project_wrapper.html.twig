@@ -95,7 +95,7 @@
     }
 
     #codeBender_embed_wrapper #codeBender_embed_footer{
-        height: 24px;
+        height: 40px;
         position: absolute;
         bottom: 0;
         left: 0;
@@ -113,19 +113,30 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cbcdcd', endColorstr='#8d8d8d',GradientType=0 ); /* IE6-9 */
     }
 
-    #codeBender_embed_wrapper #codeBender_embed_footer .codebenderLogo{
-        position: relative;
-        left: 20px;
-        line-height: 24px;
-        color: #5f6060;
-        text-decoration: none;
-    }
+    /*#codeBender_embed_wrapper #codeBender_embed_footer .codebenderLogo{*/
+        /*position: absolute;*/
+        /*right: 15px;*/
+        /*line-height: 24px;*/
+        /*color: #5f6060;*/
+        /*text-decoration: none;*/
+    /*}*/
 
     #codeBender_embed_wrapper #codeBender_embed_footer img{
-        position: relative;
+        position: absolute;
         left: 10px;
+        margin-top:8px;
     }
 
+    #codeBender_embed_wrapper #codeBender_embed_footer #codeBender_flashing_plugin
+    {
+        margin-top:3px;
+        position: absolute;
+        left: 40px;
+        line-height: 24px;
+        color: #5f6060;
+        display: inline-block;
+        text-decoration: none;
+    }
     .name
     {
         margin-left: 10px;
@@ -155,8 +166,32 @@
         border:none;
         overflow-y:auto;
     }
+
+    #verify_div
+    {
+        display: inline;
+    }
+
+    #plugin_div
+    {
+        display:inline;
+    }
+
+    #operation_output
+    {
+        display: inline-block;
+    }
+
+    .alert
+    {
+        padding-top: 9px;
+        padding-bottom: 2px;
+        margin-left: 5px;
+        display: inline;
+    }
 </style>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js' type='text/javascript'></script>
+<script type="text/javascript" src="{{ path("AceGenericBundle_embedded_compilerflasher_js") }}"></script>
 <script type="text/javascript">
     function populate(input)
     {
@@ -251,6 +286,11 @@
 
     <div id="codeBender_embed_footer">
         <img id="sidebar-toggle"  src="{{ asset('images/sidebar-open.png') }}" onclick="sidebarToggle()">
-        <a class="codebenderLogo" href="{{ path("AceGenericBundle_index") }}">codebender</a>
+
+        <div id="codeBender_flashing_plugin">
+            <div id="cb_cf" data-sketch="{{ project_id }}" class="cb_usbflash"></div>
+        </div>
+
+        {#<a class="codebenderLogo" href="{{ path("AceGenericBundle_index") }}">codebender</a>#}
     </div>
 </div>

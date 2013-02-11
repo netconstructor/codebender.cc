@@ -91,7 +91,7 @@ class DefaultController extends Controller
 		$json = json_encode($json);
 
 		if($embed)
-			return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
+			return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json, "project_id" => $id));
 		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "json" => $json));
 	}
 
