@@ -38,7 +38,7 @@
     }
 
     function getbin(callback) {
-        $.get("{{ path('AceUtilitiesBundle_log', {'message':"flash"}) }}");
+        $.get("{{ url('AceUtilitiesBundle_log', {'message':"flash"}) }}");
 
         var payload = generate_payload("binary");
         $.post("{{compiler}}", payload, function (data) {
@@ -246,11 +246,11 @@
             } else
             {
                 if(output == "Trying Arduino Leonardo auto-reset. If it does not reset automatically please reset the Arduino manualy!")
-                    $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset automatically"}) }}");
+                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset automatically"}) }}");
                 else if (output == "Could not auto-reset or detect a manual reset!")
-                    $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset at all"}) }}");
+                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset at all"}) }}");
                 else
-                    $.get("{{ path('AceUtilitiesBundle_log', {'message':"programmer: unkown error"}) }}"); //todo find a way to send the output
+                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: unkown error"}) }}"); //todo find a way to send the output
                 setOperationOutput(output);
             }
         });

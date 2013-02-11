@@ -49,7 +49,7 @@ function generate_payload(format) {
 
 function verify() {
 
-    $.get("{{ path('AceUtilitiesBundle_log', {'message':"verify"}) }}");
+    $.get("{{ url('AceUtilitiesBundle_log', {'message':"verify"}) }}");
 
     var payload = generate_payload("syntax");
 

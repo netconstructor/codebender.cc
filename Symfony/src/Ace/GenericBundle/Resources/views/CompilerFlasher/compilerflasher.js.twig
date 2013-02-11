@@ -5,7 +5,7 @@ $(document).ready(function () {
     {
         if($.isNumeric($("#cb_cf").data().sketch))
         {
-            $.post("{{ path('AceGenericBundle_projectfiles') }}", {'project_id':$("#cb_cf").data().sketch}, function(data){
+            $.post("{{ url('AceGenericBundle_projectfiles') }}", {'project_id':$("#cb_cf").data().sketch}, function(data){
                 window.files = JSON.parse(data);
             });
         }
@@ -17,7 +17,7 @@ $(document).ready(function () {
             $("#verify_div").html($("#verify_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig'%}{% endfilter %}');
 
 
-        $.getJSON("{{ path('AceGenericBundle_boardslist') }}", function (data) {
+        $.getJSON("{{ url('AceGenericBundle_boardslist') }}", function (data) {
         window.boards_list = JSON.parse(data);
 
         if ($("#cb_cf").data().board){
