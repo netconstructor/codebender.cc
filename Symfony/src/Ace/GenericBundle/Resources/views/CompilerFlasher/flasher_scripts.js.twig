@@ -155,6 +155,7 @@
         try {
             ports = plugin.probeUSB();
             if (ports != oldPorts) {
+                var oldport = $("#ports option:selected").val();
                 $('#ports').find('option').remove();
                 portsAvail = ports.split(",");
                 for (var i = 0; i < portsAvail.length; i++) {
@@ -162,6 +163,9 @@
                         portslist.options[i] = new Option(portsAvail[i], portsAvail[i], true, false);
                     }
                 }
+
+                if(oldport == window.loaded_port)
+                    savePort(oldport);
                 oldPorts = ports;
                 loadPort();
             }
@@ -190,9 +194,12 @@
         }, 500);
     }
 
-    function savePort() {
+    function savePort(port) {
         new Lawnchair(function () {
-            this.save({key:'port', name:$("#ports option:selected").text()});
+            if(port === undefined)
+                port = $("#ports option:selected").text();
+
+            this.save({key:'port', name:port});
         });
         checkPermissions();
     }
@@ -202,8 +209,10 @@
             this.exists('port', function (exists) {
                 if (exists) {
                     this.get('port', function (config) {
-                        $("#ports").val(config.name)
+                        $("#ports").val(config.name);
+                        window.loaded_port = config.name;
                     })
+
                 }
             });
         });
