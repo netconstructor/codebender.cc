@@ -197,12 +197,16 @@
     {
         input = JSON.parse(input);
 
-        files = input["files"];
+        var files = input["files"];
+        window.files = Object();
         for(i = 0; i < files.length; i++)
         {
+            window.files[files[i]["filename"]] = files[i]["code"];
+            if(i != files.length -1 ) files_string += ",";
             $("#file_list").html($("#file_list").html()+'<div id="file_list_file_'+i+'" class="file" for="codeBender_embed_file'+i+'" onclick=\'selectFile('+i+')\'> <span class="name">'+files[i]["filename"]+'</span> </div>');
             $("#codeBender_embed_codeWrapper").html($("#codeBender_embed_codeWrapper").html()+'<div id="codeBender_embed_file'+i+'" class="codeBender_embed_file"><pre class="prettyprint linenums pre-scrollable">'+files[i]["code"]+'</pre></div>');
         }
+
         $("#file_list_file_0").addClass("file-selected");
         $(".projectName").html("<a href='"+input["project"]["url"]+"'>"+input["project"]["name"]+"</a>");
         $(".userName").html("<a href='"+input["user"]["url"]+"'>"+input["user"]["name"]+"</a>");
@@ -288,7 +292,7 @@
         <img id="sidebar-toggle"  src="{{ asset('images/sidebar-open.png') }}" onclick="sidebarToggle()">
 
         <div id="codeBender_flashing_plugin">
-            <div id="cb_cf" data-sketch="{{ project_id }}" data-sections="usbflash"></div>
+            <div id="cb_cf" data-sections="usbflash"></div>
         </div>
 
         {#<a class="codebenderLogo" href="{{ path("AceGenericBundle_index") }}">codebender</a>#}
