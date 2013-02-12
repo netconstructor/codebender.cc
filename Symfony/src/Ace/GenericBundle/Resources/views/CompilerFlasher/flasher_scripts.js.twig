@@ -102,7 +102,7 @@
     function browserSpecificPluginInstall(alert)
     {
         if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1 && navigator.userAgent.toLowerCase().indexOf('firefox') == -1) {
-            alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for more.";
+            alert += "Visit the <a href='{{ url("AceStaticBundle_plugin") }}'>plugins page</a> for more.";
         } else {
             if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
             {
