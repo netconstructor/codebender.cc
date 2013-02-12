@@ -101,11 +101,18 @@
 
     function browserSpecificPluginInstall(alert)
     {
-        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1 && navigator.userAgent.toLowerCase().indexOf('firefox') == -1) {
             alert += "Visit the <a href='{{ asset("static/plugin") }}'>plugins page</a> for more.";
         } else {
-            $('head').append('<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">');
-            alert += "<a href='javascript:void()' onclick='chrome.webstore.install()'>Add to Chrome</a>";
+            if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
+            {
+                alert+= '<a id="xpi-download-url" href = "{{ 'http://' ~ app.request.host ~ asset('codebender.xpi') }}" >Add to Firefox.</a>';
+            }
+            else
+            {
+                $('head').append('<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">');
+                alert += "<a href='javascript:void(0);' onclick='chrome.webstore.install()'>Add to Chrome</a>";
+            }
         }
         return alert;
     }
