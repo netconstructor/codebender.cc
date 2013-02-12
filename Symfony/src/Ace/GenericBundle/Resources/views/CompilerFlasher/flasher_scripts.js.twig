@@ -245,10 +245,8 @@
                 disconnect();
             } else
             {
-                if(output == "Trying Arduino Leonardo auto-reset. If it does not reset automatically please reset the Arduino manualy!")
-                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset automatically"}) }}");
-                else if (output == "Could not auto-reset or detect a manual reset!")
-                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset at all"}) }}");
+                if (output == "Could not auto-reset or detect a manual reset!")
+                    $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: leonardo didn't reset"}) }}");
                 else
                     $.get("{{ url('AceUtilitiesBundle_log', {'message':"programmer: unkown error"}) }}"); //todo find a way to send the output
                 setOperationOutput(output);
