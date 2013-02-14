@@ -117,45 +117,6 @@
         return alert;
     }
 
-    function connect(obj) {
-        speed = obj.innerHTML;
-        if (window.connected == false) {
-            if ($("#ports").val() != null && $("#ports").val() != "") {
-                setTimeout(function () {
-                    $("#toggle_connect_serial").removeAttr("data-toggle", "dropdown");
-                }, 500);
-                window.connected = true;
-                $("#toggle_connect_serial").html("Disconnect");
-                $("#serial_hud").html("");
-                window.plugin.serialRead(
-                        portslist.options[portslist.selectedIndex].text,
-                        speed,
-                        function (from, line) {
-                            serialHudAppend(line);
-                        }
-                );
-            }
-            else {
-                setOperationOutput("Please select a valid port or enable the plugin!!");
-            }
-        } else {
-            disconnect();
-        }
-    }
-
-    function disconnect() {
-        if (window.connected == true) {
-            $("#toggle_connect_serial").html('Connect<span class="caret"></span>');
-            setTimeout(function () {
-                document.getElementById("toggle_connect_serial").setAttribute("data-toggle", "dropdown");
-            }, 500);
-            window.connected = false;
-            window.plugin.disconnect();
-            $("#collapseSerial").height(0);
-            $("#collapseSerial").removeClass("in");
-        }
-    }
-
     function getFire() {
 
         var ports = "";
@@ -233,27 +194,6 @@
         }
     }
 
-    function serialHudAppend(line) {
-        if (isNaN(line)) {
-            serialHudWrite($("#serial_hud").html() + line + "<br>");
-        } else {
-            if (line == "13")    return;
-            if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
-            if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
-        }
-    }
-    function serialHudWrite(message) {
-        $("#serial_hud").addClass("well");
-        $("#serial_hud").html(message);
-        $("#serial_hud").scrollTo(99999999);
-    }
-
-
-    function serialSend() {
-        window.plugin.serialWrite($("#text2send").val());
-    }
-
-
     function scan() {
 
         window.hasPerm = window.plugin.setCallback(function (from, output) {
@@ -298,6 +238,64 @@
                 || navigator.userAgent.match(/iPhone|iPad|iPod/i) ? true : false
                 || navigator.userAgent.match(/IEMobile/i) ? true : false;
     }
+
+    /*
+    Serial Monitor functions
+     */
+    function connect() {
+        speed = $("#baudrates option:selected").val();
+        if (window.connected == false) {
+            if ($("#ports").val() != null && $("#ports").val() != "") {
+                $("#serial_monitor_content").show(1000);
+                window.connected = true;
+                $("#toggle_connect_serial").html("Disconnect").attr("onClick", "disconnect();");
+                $("#serial_hud").html("");
+                window.plugin.serialRead(
+                    portslist.options[portslist.selectedIndex].text,
+                    speed,
+                    function (from, line) {
+                        serialHudAppend(line);
+                    }
+                );
+            }
+            else {
+                setOperationOutput("Please select a valid port or enable the plugin!!");
+            }
+        } else {
+            disconnect();
+        }
+    }
+
+
+    function disconnect() {
+        if (window.connected == true) {
+            $("#toggle_connect_serial").html("Open Serial Monitor").attr("onClick", "connect();");
+            window.connected = false;
+            window.plugin.disconnect();
+            $("#serial_monitor_content").hide(1000);
+        }
+    }
+
+    function serialHudAppend(line) {
+    if (isNaN(line)) {
+        serialHudWrite($("#serial_hud").html() + line + "<br>");
+    } else {
+        if (line == "13")    return;
+        if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
+        if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+    }
+}
+
+    function serialHudWrite(message) {
+        $("#serial_hud").html(message);
+        $("#serial_hud").scrollTo(99999999);
+    }
+
+
+    function serialSend() {
+        window.plugin.serialWrite($("#text2send").val());
+    }
+
 
     //Scrolling function
     (function ($) {
