@@ -162,7 +162,6 @@
         try {
             ports = plugin.probeUSB();
             if (ports != oldPorts) {
-                var oldport = $("#ports option:selected").val();
                 $('#ports').find('option').remove();
                 portsAvail = ports.split(",");
                 for (var i = 0; i < portsAvail.length; i++) {
@@ -171,8 +170,8 @@
                     }
                 }
 
-                if(oldport == window.loaded_port)
-                    savePort(oldport);
+                if(window.loaded_port != null)
+                    savePort(window.loaded_port);
                 oldPorts = ports;
                 loadPort();
             }
