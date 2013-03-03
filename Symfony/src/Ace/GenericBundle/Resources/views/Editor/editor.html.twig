@@ -104,6 +104,7 @@
 
     <script>
 		var dirty = false;
+		var warnMessage = "You have unsaved changes in your code. If you leave, your changes will be discarded.";
 
         //editor specific stuff
 		var editor;
@@ -115,7 +116,11 @@
 			editor.getSession().setUseSoftTabs(false);
 			editor.getSession().on('change', function () {
 				$("#line_count").html(editor.getSession().getValue().split("\n").length);
+				dirty = true;
 			});
+			
+			$("#save, #revert").on('click', function() {dirty = false;});
+			window.onbeforeunload = function () { if (dirty) return warnMessage;}
 
 		addCommands();
         //editor specific stuff over
