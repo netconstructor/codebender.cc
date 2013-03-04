@@ -90,7 +90,7 @@
   </div>
 {% endfor %}
 
-  <div class="pagination">
+  <div class="pagination pagination-centered">
      <ul>
        <li {% if page == 1 %} class="disabled" {% endif %}><a {% if page != 1 %} href={{path("AceBlogBundle_blog", {'page': page - 1 } )}} {% endif %} >Previous</a></li>
 	   {% for i in 1..pages %}
