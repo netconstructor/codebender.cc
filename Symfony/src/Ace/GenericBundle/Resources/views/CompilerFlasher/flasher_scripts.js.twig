@@ -51,7 +51,7 @@
     function usbflash(){
         disconnect();
 
-        if ($("#ports").val() != null && $("#ports").val() != "") {
+        if (($("#ports").val() != null && $("#ports").val() != "") || typeof window.selectedBoard["upload"]["using"] === "string") {
 
             setOperationProgress(50);
 
