@@ -21,7 +21,7 @@
             $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
             setTimeout(function(){
                 window.plugin = document.getElementById('plugin0');
-                validateVersion("1.5.4.0");
+                validateVersion("1.5.4.3");
             }, 100);
         }
 
@@ -79,7 +79,12 @@
 
                     setOperationProgress(80);
 
-                    plugin.flash(portslist.options[portslist.selectedIndex].text, binary, window.selectedBoard["upload"]["maximum_size"], window.selectedBoard["upload"]["protocol"], window.selectedBoard["upload"]["speed"], window.selectedBoard["build"]["mcu"],
+                    //this fixes the plugin crashing when no device is selected for DigiSpark etc
+                    var device = "COM0";
+                    if(typeof window.selectedBoard["upload"]["using"] === "undefined")
+                        device = portslist.options[portslist.selectedIndex].text;
+
+                    plugin.flash(device, binary, window.selectedBoard["upload"]["maximum_size"], window.selectedBoard["upload"]["protocol"], window.selectedBoard["upload"]["speed"], window.selectedBoard["build"]["mcu"],
                             function (from, progress)
                             {
                                 if (progress)
