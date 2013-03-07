@@ -29,8 +29,6 @@ $(document).ready(function () {
         else
         {
             $("#verify_div").html('{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:boardlist_section.html.twig'%}{% endfilter %}' + $("#verify_div").html());
-            if ($("#cb_cf").data().sections.indexOf("verify") != -1)
-                $("#verify_div").addClass("input-append");
             for (var i = 0; i < window.boards_list.length; i++)
                 $("#boards").append($('<option></option>').val(window.boards_list[i]["name"]).html(window.boards_list[i]["name"]));
             loadBoard();
