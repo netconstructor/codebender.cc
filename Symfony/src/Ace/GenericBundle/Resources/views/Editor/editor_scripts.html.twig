@@ -1,18 +1,5 @@
 <script type="text/javascript">
 
-function saveDescription() {
-    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#newDescription").val()}, function (data) {
-        $("#oldDescription").html($("#newDescription").val());
-        $("#descriptionModal").modal('hide');
-    });
-}
-
-function saveName() {
-    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#newName").val()}, function (data) {
-        $("#nameModal").modal('hide');
-        handleResponse(data);
-    });
-}
 
 function renameFilenameModal(filename) {
     $("#oldFilename").val(filename);
@@ -64,7 +51,7 @@ function setOperationOutput(output) {
 }
 
 function save() {
-    loadCode(window.selectedFile);
+    loadCode();
     setOperationProgress(90);
     $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
         $("#save").addClass("btn-success");
@@ -86,8 +73,7 @@ function revert() {
 function verification_onFail(message)
 {
     $("#compile_output").css('color', 'black');
-    $("#editor").css("bottom", "170px");
-    $("#compile_output").css("bottom", "30px");
+    $("#editor").css("bottom", "180px");
     $("#compile_output").css("padding-top", "10px");
     $("#compile_output").css("height", "120px");
     $("#compile_output").addClass("well");
@@ -101,7 +87,6 @@ function verification_onSuccess()
     $("#compile_output").css('color', '');
     $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
     $("#editor").css("bottom", "");
-    $("#compile_output").css("bottom", "");
     $("#compile_output").css("height", "");
     $("#compile_output").css("padding-top", "");
     $("#compile_output").css("visibility", "");
@@ -122,7 +107,7 @@ usbflash = function(){
 old_load_files = load_files;
 load_files = function(){
     var pos = editor.getCursorPosition();
-    loadCode(window.selectedFile);
+    loadCode();
     editor.moveCursorTo(pos.row, pos.column, true);
     return old_load_files();
 }
@@ -294,11 +279,18 @@ function cloudload() {
 
 <script type="text/javascript">
 
-function loadCode(filename) {
-    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
+function selectFile(filename)
+{
+    loadCode(filename);
     editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
     window.selectedFile = filename;
-    $("#selectedFile").text(filename);
+
+    $(".filelist").css("font-weight", "");
+    event.target.setAttribute("style", "font-weight:bold;");
+}
+
+function loadCode() {
+    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
 }
 
 function createFile() {
@@ -310,10 +302,50 @@ function createFile() {
     });
 }
 
+function deleteFileModal(filename) {
+//    $("#oldFilename").val(filename);
+//    $("#newFilename").val(filename);
+    $("#filedeleteButton").attr("href","javascript:deleteFile('"+filename+"');");
+    $("#filedeleteModal").modal('show');
+}
+
 function deleteFile(filename) {
     setOperationProgress(90);
     var val = { "filename":filename };
     $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+        handleResponse(data);
+    });
+}
+
+function editDescription()
+{
+    $("#description").replaceWith("<textarea id='description' style='resize: none; width:100%;' rows=4>" + $("#description").text() + "</textarea>");
+    $("#description_change_link").text("save");
+    $("#description_change_link").attr("onClick", "saveDescription()");
+    $("#description_change_link").addClass("btn btn-primary");
+}
+
+function saveDescription() {
+    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#description").val()}, function (data)
+    {
+        $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
+        $("#description_change_link").removeClass("btn btn-primary");
+        $("#description_change_link").text("edit");
+    });
+}
+
+function editName() {
+    $("#name").replaceWith("<input type='text' id='name' value='"+ $("#name").text() +"'/>");
+    $("#name_change_link").text("save");
+    $("#name_change_link").attr("onClick", "saveName()");
+    $("#name_change_link").addClass("btn btn-primary");
+}
+
+function saveName() {
+    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#name").val()}, function (data) {
+        $("#name").replaceWith("<p id='name'>" + $("#name").val() + "</p>");
+        $("#name_change_link").removeClass("btn btn-primary");
+        $("#name_change_link").text("edit");
         handleResponse(data);
     });
 }

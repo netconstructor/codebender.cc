@@ -1,0 +1,29 @@
+<div class="modal hide fade" id="infoModal">
+    <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3>Project Info.</h3>
+    </div>
+    <div class="modal-body span5">
+        <h5>Name:</h5>
+
+        <p id="name">{{ project_name }}</p>
+        <a id="name_change_link" href="javascript:void(0)" onclick="editName();" style="float:right;">edit</a>
+
+        <br>
+
+        <h5>Description:</h5>
+
+        <p id="description">{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}</p>
+        <a id="description_change_link" href="javascript:void(0)" onclick="editDescription();"
+           style="float:right;">edit</a>
+        <br>
+        <h5>Embed Project</h5>
+
+        <p>You can easily embed your project to your blog or website by copying the
+            following code.</p>
+        {% include 'AceGenericBundle:Default:project_embeddable_code.html.twig' with {'project_id': project_id} %}
+    </div>
+    <div class="modal-footer">
+        <a data-dismiss="modal" class="btn">Close</a>
+    </div>
+</div>
