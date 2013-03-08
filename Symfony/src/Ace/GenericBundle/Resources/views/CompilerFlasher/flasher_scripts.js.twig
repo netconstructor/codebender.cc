@@ -27,9 +27,41 @@
 
     }
 
+    function parseVersionString(str) {
+        if (typeof(str) != 'string') {
+            return false;
+        }
+        var x = str.split('.');
+        // parse from string or default to 0 if can't parse
+        var maj = parseInt(x[0]) || 0;
+        var min = parseInt(x[1]) || 0;
+        var pat = parseInt(x[2]) || 0;
+        var bui = parseInt(x[3]) || 0;
+        return {
+            major:maj,
+            minor:min,
+            patch:pat,
+            build:bui
+        }
+    }
+
+    function comparePluginVersions(firstVersion, secondVersion)
+    {
+        var major = firstVersion.major - secondVersion.major;
+        var minor = firstVersion.minor - secondVersion.minor;
+        var patch = firstVersion.patch - secondVersion.patch;
+        var build = firstVersion.build - secondVersion.build;
+
+        if (major != 0) return major;
+        if (minor != 0) return minor;
+        if (patch != 0) return patch;
+        return build;
+    }
+
     function validateVersion(version)
     {
-        if (window.plugin.version < version) {
+        if (comparePluginVersions(parseVersionString(window.plugin.version), parseVersionString(version)) < 0)
+        {
             var alert = browserSpecificPluginInstall("You need to update the Codebender Plugin. ");
             show_alert(alert, "alertupdatediv");
         }
