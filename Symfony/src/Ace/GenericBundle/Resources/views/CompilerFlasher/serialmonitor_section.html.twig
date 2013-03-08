@@ -15,7 +15,7 @@
 
     <div id="serial_monitor_content" style="display:none;">
         <div class="input-append">
-            <input id="text2send" type="text" placeholder="Serial Message">
+            <input id="text2send" type="text" placeholder="Serial Message" onkeypress="serialSendOnEnter()">
             <button id="serial_send" onclick="serialSend()" class="btn"> Send
             </button>
         </div>

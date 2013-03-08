@@ -296,6 +296,14 @@
         $("#serial_hud").scrollTo(99999999);
     }
 
+    function serialSendOnEnter(event){
+        e = window.event;   // resolve event instance
+        if (e.keyCode == '13'){
+        serialSend();
+        }else if (e.keyCode == '10'){
+        serialSend();
+        }
+    }
 
     function serialSend() {
         window.plugin.serialWrite($("#text2send").val());
