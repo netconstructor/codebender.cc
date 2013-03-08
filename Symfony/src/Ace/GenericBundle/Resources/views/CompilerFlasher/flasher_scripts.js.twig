@@ -274,7 +274,7 @@
 
     function disconnect() {
         if (window.connected == true) {
-            $("#toggle_connect_serial").html("Open Serial Monitor").attr("onClick", "connect();");
+            $("#toggle_connect_serial").html("<i class='icon-list-alt'></i> Open Serial Monitor").attr("onClick", "connect();");
             window.connected = false;
             window.plugin.disconnect();
             $("#serial_monitor_content").hide(1000);
