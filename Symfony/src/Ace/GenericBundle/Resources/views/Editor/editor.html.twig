@@ -123,9 +123,36 @@
             margin-bottom: 10px;
         }
 
+        #toggle_connect_serial
+        {
+            width: 171px;
+        }
+
         #serial_hud
         {
-            height:100px;
+            overflow: auto;
+            width: 312px;
+            height:120px;
+        }
+
+        #text2send
+        {
+            width: 280px;
+        }
+
+        #boards
+        {
+            width: 230px;
+        }
+
+        #ports
+        {
+            width: 242px;
+        }
+
+        #baudrates
+        {
+            width: 123px;
         }
 
         #files_list
@@ -198,7 +225,7 @@
 				<div id="container_left">
 					<h4>
                         {{ project_name }}
-                        <a href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}" style="float: right">
+                        <a href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}" style="float: right; margin-right: 10px;">
                             <i class="icon-file" style="margin-top: 6px; margin-right: -4px;"></i>
                             <small>Clone Project</small>
                         </a>

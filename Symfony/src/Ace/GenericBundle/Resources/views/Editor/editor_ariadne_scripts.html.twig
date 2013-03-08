@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    function webconnect() {
+        speed = $("#baudrates option:selected").val();
+        if (window.connected == false) {
+            if ($("#ports").val() != null && $("#ports").val() != "") {
+                $("#serial_monitor_content").show(1000);
+                window.connected = true;
+                $("#toggle_connect_serial").html("Disconnect").attr("onClick", "disconnect();");
+                $("#serial_hud").html("");
+                window.plugin.serialRead(
+                        portslist.options[portslist.selectedIndex].text,
+                        speed,
+                        function (from, line) {
+                            serialHudAppend(line);
+                        }
+                );
+            }
+            else {
+                setOperationOutput("Please select a valid port or enable the plugin!!");
+            }
+        } else {
+            disconnect();
+        }
+    }
+
+
+    function webdisconnect() {
+        if (window.connected == true) {
+            $("#toggle_connect_serial").html("<i class='icon-list-alt'></i> Open Serial Monitor").attr("onClick", "connect();");
+            window.connected = false;
+            window.plugin.disconnect();
+            $("#serial_monitor_content").hide(1000);
+        }
+    }
+
+    function webserialHudAppend(line) {
+        if (isNaN(line)) {
+            serialHudWrite($("#serial_hud").html() + line + "<br>");
+        } else {
+            if (line == "13")    return;
+            if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
+            if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+        }
+    }
+
+    function webserialHudWrite(message) {
+        $("#serial_hud").html(message);
+        $("#serial_hud").scrollTo(99999999);
+    }
+
+
+    function webserialSend() {
+        window.plugin.serialWrite($("#text2send").val());
+    }
+
+
+</script>
