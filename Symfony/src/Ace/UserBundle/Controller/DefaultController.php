@@ -134,7 +134,11 @@ class DefaultController extends Controller
 		if (!$user) {
 			throw $this->createNotFoundException('No user found with username '.$name);
 		}
-		return new Response($this->templating->render('AceUserBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user)));
+
+		$utilities = $this->get('utilities');
+		$image = $utilities->get_gravatar($user->getEmail(), 120);
+
+		return new Response($this->templating->render('AceUserBundle:Default:options.html.twig', array('username' => $name, 'settings' => $user, 'image' => $image)));
 	}
 
 	public function checkpassAction()

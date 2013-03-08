@@ -186,7 +186,7 @@
 					{% render "AceUtilitiesBundle:Default:image" %}
 				</ul>
 				<p class="navbar-text pull-right">
-					Logged in as <a href="{{path('AceGenericBundle_user',{'user':app.user.username})}}">{{ app.user.username }}</a>
+					Logged in as <a href="{{ path('AceUserBundle_options') }}">{{ app.user.username }}</a>
 				</p>
 				{% endif %}
 		  </div>
