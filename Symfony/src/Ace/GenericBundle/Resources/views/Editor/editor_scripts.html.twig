@@ -112,62 +112,6 @@ load_files = function(){
     return old_load_files();
 }
 
-function cloudload() {
-    setOperationProgress(30);
-    getbin(function (obj) {
-        if (obj.success == 0) {
-            setOperationOutput("There was an error compiling.");
-        }
-        else {
-            binary = obj["output"];
-            $("#cloudload").addClass("btn-success");
-            $("#cloudload_icon").addClass("icon-white");
-            window.setTimeout(function () {
-                $("#cloudload").removeClass("btn-success");
-                $("#cloudload_icon").removeClass("icon-white");
-            }, 500);
-
-
-            setOperationProgress(70);
-            var payload = {"ip":$("#ip").val(), "bin":binary}
-            $.post("{{ path('AceSenderBundle_tftp') }}", {"data":JSON.stringify(payload)}, function (data) {
-                var obj = jQuery.parseJSON(data);
-                if (obj.success == 0) {
-                    $("#compile_output").css('color', 'black');
-                    for (var i = 0; i < obj.lines.length; i++) {
-                        $(".ace_gutter-cell").filter(function (index) {
-                            return $(this).html() == obj.lines[i];
-                        }).css("text-decoration", "underline").css("color", "red");
-                    }
-
-                    $("#editor").css("bottom", "150px");
-                    $("#compile_output").css("bottom", "0px");
-                    $("#compile_output").css("padding-top", "10px");
-                    $("#compile_output").css("height", "120px");
-                    $("#compile_output").addClass("well");
-                    $("#compile_output").html(obj.text);
-                    setOperationOutput("Upload failed.")
-                }
-                else {
-                    $("#compile_output").css('color', '');
-                    $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
-                    $("#editor").css("bottom", "");
-                    $("#compile_output").css("bottom", "");
-                    $("#compile_output").css("height", "");
-                    $("#compile_output").css("padding-top", "");
-                    $("#compile_output").removeClass("well");
-
-                    var progressText = "<p>" + obj.text + "</p>";
-                    setOperationOutput(progressText)
-                    window.sketch_size = obj.size;
-                    $("#compile_output").html("");
-                }
-                editor.resize();
-            });
-        }
-    });
-}
-
 </script>
 
 

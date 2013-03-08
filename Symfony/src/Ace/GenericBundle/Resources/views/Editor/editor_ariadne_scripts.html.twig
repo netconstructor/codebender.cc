@@ -1,57 +1,168 @@
 <script type="text/javascript">
+    $(document).ready(function () {
+        window.webconnected = false;
+    });
+
+    function getIP()
+    {
+        var ip = $("#ip").val().split(":")[0];
+        return ip;
+    }
+
+    function getPort()
+    {
+        var port = $("#ip").val().indexOf(":") > 0 ? $("#ip").val().split(":")[1] : 80;
+        return port;
+    }
+
     function webconnect() {
-        speed = $("#baudrates option:selected").val();
-        if (window.connected == false) {
-            if ($("#ports").val() != null && $("#ports").val() != "") {
-                $("#serial_monitor_content").show(1000);
-                window.connected = true;
-                $("#toggle_connect_serial").html("Disconnect").attr("onClick", "disconnect();");
-                $("#serial_hud").html("");
-                window.plugin.serialRead(
-                        portslist.options[portslist.selectedIndex].text,
-                        speed,
-                        function (from, line) {
-                            serialHudAppend(line);
-                        }
-                );
+
+        if (window.webconnected == false)
+        {
+
+            ip = getIP();
+            port = getPort();
+
+            if (ip != "")
+            {
+
+                $("#webserial_monitor_content").show(1000);
+                window.webconnected = true;
+                $("#toggle_connect_webserial").html("Disconnect").attr("onClick", "webdisconnect();");
+                $("#webserial_hud").html("Opening WebSocket<br>");
+
+                window.wscon = new WebSocket("ws://" + ip + ":" + port);
+
+                window.wscon.onopen = function () {
+                    webserialHudAppend("WebSocket has been opened!");
+                }
+
+                window.wscon.onclose = function () {
+                    setOperationOutput("WebSocket has been closed!");
+                    webdisconnect();
+                }
+
+                window.wscon.onerror = function (line) {
+                    setOperationOutput("WebSocket Error: " + line.data);
+                    webdisconnect();
+                }
+
+                window.wscon.onmessage = function (line) {
+                    webserialHudAppend(line.data); //Awesome!
+                }
             }
             else {
-                setOperationOutput("Please select a valid port or enable the plugin!!");
+                setOperationOutput("Please enter a valid network address.")
             }
         } else {
-            disconnect();
+            webdisconnect();
         }
     }
 
 
     function webdisconnect() {
-        if (window.connected == true) {
-            $("#toggle_connect_serial").html("<i class='icon-list-alt'></i> Open Serial Monitor").attr("onClick", "connect();");
-            window.connected = false;
-            window.plugin.disconnect();
-            $("#serial_monitor_content").hide(1000);
+        if (window.webconnected == true) {
+            $("#toggle_connect_webserial").html("<i class='icon-globe'></i> Monitor").attr("onClick", "webconnect();");
+            window.webconnected = false;
+
+            if (window.wscon.readyState != window.wscon.CLOSED) {
+                window.wscon.close();
+            }
+
+            $("#webserial_monitor_content").hide(1000);
         }
     }
 
     function webserialHudAppend(line) {
         if (isNaN(line)) {
-            serialHudWrite($("#serial_hud").html() + line + "<br>");
+            webserialHudWrite($("#webserial_hud").html() + line + "<br>");
         } else {
             if (line == "13")    return;
-            if (line == "10")    serialHudWrite($("#serial_hud").html() + "<br>");
-            if (line != "10")    serialHudWrite($("#serial_hud").html() + String.fromCharCode(line));
+            if (line == "10")    webserialHudWrite($("#webserial_hud").html() + "<br>");
+            else webserialHudWrite($("#webserial_hud").html() + line.toString());
         }
     }
 
     function webserialHudWrite(message) {
-        $("#serial_hud").html(message);
-        $("#serial_hud").scrollTo(99999999);
+        $("#webserial_hud").html(message);
+        $("#webserial_hud").scrollTo(99999999);
     }
 
+
+    function webserialSendOnEnter(event) {
+        e = window.event;   // resolve event instance
+        if (e.keyCode == '13') {
+            webserialSend();
+        } else if (e.keyCode == '10') {
+            webserialSend();
+        }
+    }
 
     function webserialSend() {
-        window.plugin.serialWrite($("#text2send").val());
+        window.wscon.send($("#webtext2send").val());
     }
 
+    function webflash() {
+        ip = getIP();
+        if (ip != "")
+        {
+            setOperationProgress(30);
+            getbin(function (obj) {
+                if (obj.success == 0) {
+                    setOperationOutput("There was an error compiling.");
+                }
+                else {
+                    binary = obj["output"];
+                    $("#cloudload").addClass("btn-success");
+                    $("#cloudload_icon").addClass("icon-white");
+                    window.setTimeout(function () {
+                        $("#cloudload").removeClass("btn-success");
+                        $("#cloudload_icon").removeClass("icon-white");
+                    }, 500);
+
+
+                    setOperationProgress(70);
+                        var payload = {"ip":$("#ip").val(), "bin":binary}
+                        $.post("{{ path('AceSenderBundle_tftp') }}", {"data":JSON.stringify(payload)}, function (data) {
+                            var obj = jQuery.parseJSON(data);
+                            if (obj.success == 0) {
+                                $("#compile_output").css('color', 'black');
+                                for (var i = 0; i < obj.lines.length; i++) {
+                                    $(".ace_gutter-cell").filter(function (index) {
+                                        return $(this).html() == obj.lines[i];
+                                    }).css("text-decoration", "underline").css("color", "red");
+                                }
+
+                                $("#editor").css("bottom", "150px");
+                                $("#compile_output").css("bottom", "0px");
+                                $("#compile_output").css("padding-top", "10px");
+                                $("#compile_output").css("height", "120px");
+                                $("#compile_output").addClass("well");
+                                $("#compile_output").html(obj.text);
+                                setOperationOutput("Cloud Flash failed.")
+                            }
+                            else {
+                                $("#compile_output").css('color', '');
+                                $(".ace_gutter-cell").css("text-decoration", "").css("color", "");
+                                $("#editor").css("bottom", "");
+                                $("#compile_output").css("bottom", "");
+                                $("#compile_output").css("height", "");
+                                $("#compile_output").css("padding-top", "");
+                                $("#compile_output").removeClass("well");
+
+                                var progressText = "<p>" + obj.text + "</p>";
+                                setOperationOutput(progressText)
+                                window.sketch_size = obj.size;
+                                $("#compile_output").html("");
+                            }
+                            editor.resize();
+                        });
+                }
+            });
+        }
+        else {
+            setOperationOutput("Please enter a valid network address.")
+        }
+    }
 
 </script>
