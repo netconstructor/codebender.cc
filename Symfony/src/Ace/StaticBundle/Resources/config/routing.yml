@@ -10,6 +10,10 @@ AceStaticBundle_tutorials:
     pattern:  /tutorials
     defaults: { _controller: AceStaticBundle:Default:tutorials }
 
+AceStaticBundle_walkthrough:
+    pattern:  /walkthrough/page/{page}
+    defaults: { _controller: AceStaticBundle:Default:walkthrough }
+
 AceStaticBundle_contact:
     pattern:  /contact
     defaults: { _controller: AceStaticBundle:Default:contact }

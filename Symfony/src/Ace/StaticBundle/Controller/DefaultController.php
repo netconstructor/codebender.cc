@@ -89,6 +89,11 @@ class DefaultController extends Controller
 		return $this->render('AceStaticBundle:Default:tutorials.html.twig');
 	}
 
+	public function walkthroughAction($page)
+	{
+		return $this->render('AceStaticBundle:Walkthrough:page'.$page.'.html.twig', array("page" => $page));
+	}
+
 	public function contactAction(Request $request)
 	{
         // create a task and give it some dummy data for this example
