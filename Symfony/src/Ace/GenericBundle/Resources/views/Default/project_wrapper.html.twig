@@ -132,6 +132,7 @@
         margin-top:3px;
         position: absolute;
         left: 40px;
+        right:10px;
         line-height: 24px;
         color: #5f6060;
         display: inline-block;
@@ -172,14 +173,36 @@
         display: inline;
     }
 
+    #boards
+    {
+        width:25%;
+    }
+
     #plugin_div
     {
         display:inline;
     }
 
+    #ports_div
+    {
+        width: 35%;
+    }
+
+    #ports
+    {
+        width: calc(100% - 111px);
+        width: -moz-calc(100% - 111px);
+        width: -webkit-calc(100% - 111px);
+    }
+
     #operation_output
     {
         display: inline-block;
+        width:37%;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .alert
