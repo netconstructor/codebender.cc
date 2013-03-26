@@ -127,6 +127,7 @@ load_files = function(){
             },
             exec:function (env, args, request) {
                 save();
+                window.savedfiles = refreshFiles();
             }
         });
 
@@ -292,6 +293,35 @@ function saveName() {
         $("#name_change_link").text("edit");
         handleResponse(data);
     });
+}
+
+//Check if two js objects are equal
+function jsObjEquals(obj1, obj2) {
+	for (var i in obj1) {
+		if (!obj2.hasOwnProperty(i)) return false;
+		if (obj1[i] != obj2[i]) return false;
+	}
+	for (var i in obj2) {
+		if (!obj1.hasOwnProperty(i)) return false;
+		if (obj1[i] != obj2[i]) return false;
+	}
+	return true;
+}
+		
+//Manual shallow js object copy - faster than .extend()
+function jsObjClone(obj) {
+	var objcopy = {};
+	for (var i in obj) {
+		if (obj.hasOwnProperty(i))
+			objcopy[i] = obj[i];
+	}
+	return objcopy;
+}
+		
+function refreshFiles(){
+	loadCode();
+	var filesObj = jsObjClone(window.files);
+	return filesObj;
 }
 
 </script>
