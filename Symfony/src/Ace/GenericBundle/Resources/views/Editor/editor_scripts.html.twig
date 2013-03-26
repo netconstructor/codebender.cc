@@ -19,7 +19,7 @@ function handleResponse(response) {
     if (response["success"])
         location.reload();
     else
-        setOperationOutput(response["error"])
+        setOperationOutput(response["error"]);
 }
 
 function setOperationProgress(newprogress) {
@@ -66,7 +66,16 @@ function save() {
 }
 
 function revert() {
-    location.reload();
+	$("#revert").addClass("btn-success");
+    $("#revert_icon").addClass("icon-white");
+	window.files = jsObjClone(window.savedfiles);
+    editor.getSession().setValue($("<div/>").html(window.files[window.selectedFile]).text().replace(/&quot;/g, "\""));
+	window.currentfiles = refreshFiles();
+	setOperationOutput("Project reverted to last Saved state.");
+    window.setTimeout(function () {
+		$("#revert").removeClass("btn-success");
+        $("#revert_icon").removeClass("icon-white");
+    }, 100);
 }
 
 
@@ -127,6 +136,7 @@ load_files = function(){
             },
             exec:function (env, args, request) {
                 save();
+                window.savedfiles = refreshFiles();
             }
         });
 
@@ -226,7 +236,7 @@ load_files = function(){
 function selectFile(filename)
 {
     loadCode(filename);
-    editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
+    editor.getSession().setValue($("<div/>").html(window.files[filename]).text().replace(/&quot;/g, "\""));
     window.selectedFile = filename;
 
     $(".filelist").css("font-weight", "");
@@ -234,7 +244,7 @@ function selectFile(filename)
 }
 
 function loadCode() {
-    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
+    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html().replace(/"/g, "&quot;");
 }
 
 function createFile() {
@@ -292,6 +302,35 @@ function saveName() {
         $("#name_change_link").text("edit");
         handleResponse(data);
     });
+}
+
+//Check if two js objects are equal
+function jsObjEquals(obj1, obj2) {
+	for (var i in obj1) {
+		if (!obj2.hasOwnProperty(i)) return false;
+		if (obj1[i] != obj2[i]) return false;
+	}
+	for (var i in obj2) {
+		if (!obj1.hasOwnProperty(i)) return false;
+		if (obj1[i] != obj2[i]) return false;
+	}
+	return true;
+}
+		
+//Manual shallow js object copy - faster than .extend()
+function jsObjClone(obj) {
+	var objcopy = {};
+	for (var i in obj) {
+		if (obj.hasOwnProperty(i))
+			objcopy[i] = obj[i];
+	}
+	return objcopy;
+}
+		
+function refreshFiles(){
+	loadCode();
+	var filesObj = jsObjClone(window.files);
+	return filesObj;
 }
 
 </script>

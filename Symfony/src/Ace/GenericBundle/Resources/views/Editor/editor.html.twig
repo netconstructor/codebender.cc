@@ -197,8 +197,8 @@
     {% include 'AceGenericBundle:Editor:editor_ariadne_scripts.html.twig' %}
 
     <script>
-		var dirty = false;
-		var warnMessage = "You have unsaved changes in your code. If you leave, your changes will be discarded.";
+		window.youShallNotPass = true;
+		var warnMessage = "You have UNSAVED CHANGES in your project. If you leave now, your changes WILL BE LOST.";
 
         //editor specific stuff
 		var editor;
@@ -210,30 +210,48 @@
 			editor.getSession().setUseSoftTabs(false);
 			editor.getSession().on('change', function () {
 				$("#line_count").html(editor.getSession().getValue().split("\n").length);
-				dirty = true;
 			});
-			
-			$("#save, #revert").on('click', function() {dirty = false;});
-			window.onbeforeunload = function () { if (dirty) return warnMessage;}
 
-		addCommands();
+			addCommands();
         //editor specific stuff over
 
 			window.files = {
 				{% for file in files %}
-				"{{file['filename']}}":"{{file['code'] | e('js')}}",
+					"{{file['filename']}}":"{{file['code'] | e('js')}}",
 				{% endfor %}
 			};
+			
 			{% if files[0] is defined %}
-			window.selectedFile = "{{files[0]['filename']}}";
-            $(".filelist")[0].setAttribute("style", "font-weight:bold;");
+				window.selectedFile = "{{files[0]['filename']}}";
+				$(".filelist")[0].setAttribute("style", "font-weight:bold;");
 			{% endif %}
 
-            window.binary = null;
-
+			window.binary = null;
 			$("#progress").hide();
-
 			$("#line_count").html(editor.getSession().getValue().split("\n").length);
+
+			//Check for dirty state(unsaved changes)
+			window.savedfiles = refreshFiles();
+			
+			window.onbeforeunload = function () {
+				if(window.youShallNotPass){
+					window.currentfiles = refreshFiles();
+					var saved=jsObjEquals( window.savedfiles, window.currentfiles );
+					if (!saved) return warnMessage;
+				}
+				else
+					window.youShallNotPass = true;
+			}
+			
+			$("#save").on('click', function(){
+				window.savedfiles = refreshFiles();
+			});
+			/*  Clicking Download triggers onbeforeunload
+			 *	flag set to false to prevent raising unsaved changes alert
+			 */
+			$("#download").on('click', function(){
+				window.youShallNotPass = false;
+			});
         });
 	</script>
 {% endblock %}
@@ -284,12 +302,12 @@
                             <i id="delete_icon" class="icon-trash  icon-white"></i>
                             Delete
                         </button>
-                        <a class="btn btn-primary" title="Download"
+                        <a id="download" class="btn btn-primary" title="Download"
                                 href="{{ path('AceUtilitiesBundle_download', { 'id' : project_id }) }}">
                             <i class="icon-download-alt icon-white"></i>
                             Download
                         </a>
-                        <button id="revert" class="btn" onclick="revert();">
+                        <button id="revert" class="btn" onclick="revert();" title="Go back to your last saved state">
                             <i id="revert_icon" class="icon-arrow-left"></i>
                             Revert
                         </button>

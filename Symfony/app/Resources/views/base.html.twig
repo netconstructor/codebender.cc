@@ -143,7 +143,30 @@
 		  })();
 
 		</script>
+		<script>
+			$(document).ready(function() {
 
+				// Click event for any anchor tag that's href starts with #
+				$('a[href^="#off"]').click(function(event) {
+
+					// The id of the section we want to go to.
+					var id = $(this).attr("href");
+
+					// An offset to push the content down from the top.
+					var offset = 41;
+
+					// Our scroll target : the top position of the
+					// section that has the id referenced by our href.
+					var target = $(id).offset().top - offset;
+
+					// The magic...smooth scrollin' goodness.
+					$('html, body').animate({scrollTop:target}, 500);
+
+					//prevent the page from jumping down to our section.
+					event.preventDefault();
+				});
+			});
+		</script>
     </head>
     <body {% block body_options %}{% endblock %}>
 		<div class="navbar navbar-fixed-top">
@@ -164,10 +187,10 @@
 				  <ul class="nav pull-right">
 					  <script type="text/javascript">
 						  function signuplink(){
-							  if ($("#signupnow").length > 0) {
-								  $("#sign_up").attr("href", "#signupnow");
-							  }else{
-							  	$("#sign_up").attr("href", "./#signupnow");
+							  if ($("#offsignupnow").length > 0) {
+								  $('html, body').animate({scrollTop:$('#offsignupnow').offset().top - 41}, 500);
+							}else{
+								  $("#sign_up").attr("href", "/#offsignupnow");
 							  }
 						  }
 					  </script>

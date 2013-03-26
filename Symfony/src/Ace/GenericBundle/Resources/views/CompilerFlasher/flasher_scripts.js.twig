@@ -226,7 +226,7 @@
         if ((navigator.appVersion.indexOf("X11") == -1) && (navigator.appVersion.indexOf("Linux") == -1)) return;
         var group = window.plugin.checkPermissions($("#ports option:selected").text());
         if (group != "") {
-            var message = "<small>You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again!</small>";
+            var message = "<small>You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again from your computer to reload user permissions.</small>";
             show_alert(message);
         }
     }
