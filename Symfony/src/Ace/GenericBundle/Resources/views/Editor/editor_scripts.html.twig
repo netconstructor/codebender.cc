@@ -226,7 +226,7 @@ load_files = function(){
 function selectFile(filename)
 {
     loadCode(filename);
-    editor.getSession().setValue($("<div/>").html(window.files[filename]).text());
+    editor.getSession().setValue($("<div/>").html(window.files[filename]).text().replace(/&quot;/g, "\""));
     window.selectedFile = filename;
 
     $(".filelist").css("font-weight", "");
@@ -234,7 +234,7 @@ function selectFile(filename)
 }
 
 function loadCode() {
-    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html();
+    window.files[window.selectedFile] = $("<div/>").text(editor.getSession().getValue()).html().replace(/"/g, "&quot;");
 }
 
 function createFile() {
