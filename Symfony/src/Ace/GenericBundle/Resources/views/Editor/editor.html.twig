@@ -235,17 +235,21 @@
 			
 			window.onbeforeunload = function () {
 				if(window.youShallNotPass){
-					window.youShallNotPass = true;
 					window.currentfiles = refreshFiles();
 					var saved=jsObjEquals( window.savedfiles, window.currentfiles );
 					if (!saved) return warnMessage;
 				}
+				else
+					window.youShallNotPass = true;
 			}
 			
 			$("#save").on('click', function(){
 				window.savedfiles = refreshFiles();
 			});
-			$("#revert, #download").on('click', function(){
+			/*  Clicking Download triggers onbeforeunload
+			 *	flag set to false to prevent raising unsaved changes alert
+			 */
+			$("#download").on('click', function(){
 				window.youShallNotPass = false;
 			});
         });

@@ -19,7 +19,7 @@ function handleResponse(response) {
     if (response["success"])
         location.reload();
     else
-        setOperationOutput(response["error"])
+        setOperationOutput(response["error"]);
 }
 
 function setOperationProgress(newprogress) {
@@ -66,7 +66,16 @@ function save() {
 }
 
 function revert() {
-    location.reload();
+	$("#revert").addClass("btn-success");
+    $("#revert_icon").addClass("icon-white");
+	window.files = jsObjClone(window.savedfiles);
+    editor.getSession().setValue($("<div/>").html(window.files[window.selectedFile]).text().replace(/&quot;/g, "\""));
+	window.currentfiles = refreshFiles();
+	setOperationOutput("Project reverted to last Saved state.");
+    window.setTimeout(function () {
+		$("#revert").removeClass("btn-success");
+        $("#revert_icon").removeClass("icon-white");
+    }, 100);
 }
 
 
