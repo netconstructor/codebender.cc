@@ -15,8 +15,8 @@
 	{% if key == "External Libraries" %}
 		<div class="btn-toolbar" style="margin: 0;text-align: center;">
 			<div class="btn-group">
-				{% for library in categories["External Libraries"] %}
-					{% set lname = library['name']|slice(0, 1)|capitalize %}
+				{% for library_name, library in categories["External Libraries"] %}
+					{% set lname = library_name|slice(0, 1)|capitalize %}
 					{% set startingChar = startingChar |merge( { (lname): '1' }) %}
 				{% endfor %}
 				{% for key, value in startingChar %}
@@ -30,19 +30,19 @@
         {% if key == "External Libraries" %}
 	        {% for starting, value in startingChar %}
 		        <h4 id="off{{ starting}}" >{{ starting}}</h4>
-	            {% for library in category %}
-		            {% if library['name']|slice(0,1)|capitalize == starting %}
+	            {% for library_name, library in category %}
+		            {% if library_name|slice(0,1)|capitalize == starting %}
 		            <div class="accordion-group">
 			            <div class="accordion-heading">
-				            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ key |replace({'.': '', ' ': ''})}}" href="#collapse{{library["name"]|replace({'.': '', ' ': ''})}}">{{library["name"]}}</a>
+				            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ key |replace({'.': '', ' ': ''})}}" href="#collapse{{library_name|replace({'.': '', ' ': ''})}}">{{library_name}}</a>
 			            </div>
-			            <div id="collapse{{library["name"]|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
+			            <div id="collapse{{library_name|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
 				            <div class="accordion-inner">
 					            {% if library["examples"] is defined%}
 						            <p>Examples:</p>
 						            <ul>
 							            {% for example in library["examples"] %}
-								            <li><a href="{{path('AceGenericBundle_example',{'library':library["name"], 'example':example["name"], 'url':example["url"]})}}">
+								            <li><a href="{{path('AceGenericBundle_example',{'library':library_name, 'example':example["name"], 'url':example["url"]})}}">
 									            {{example["name"]}}
 								            </a>
 								            </li>
@@ -59,18 +59,18 @@
 				{% endfor %}
 	        {% endfor %}
 	    {% else %}
-		    {% for library in category %}
+		    {% for library_name, library in category %}
 		    <div class="accordion-group">
 			    <div class="accordion-heading">
-				    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ key |replace({'.': '', ' ': ''})}}" href="#collapse{{library["name"]|replace({'.': '', ' ': ''})}}">{{library["name"]}}</a>
+				    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion{{ key |replace({'.': '', ' ': ''})}}" href="#collapse{{library_name|replace({'.': '', ' ': ''})}}">{{library_name}}</a>
 			    </div>
-			    <div id="collapse{{library["name"]|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
+			    <div id="collapse{{library_name|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
 				    <div class="accordion-inner">
 					    {% if library["examples"] is defined%}
 						    <p>Examples:</p>
 						    <ul>
 							    {% for example in library["examples"] %}
-								    <li><a href="{{path('AceGenericBundle_example',{'library':library["name"], 'example':example["name"], 'url':example["url"]})}}">
+								    <li><a href="{{path('AceGenericBundle_example',{'library':library_name, 'example':example["name"], 'url':example["url"]})}}">
 									    {{example["name"]}}
 								    </a>
 								    </li>
