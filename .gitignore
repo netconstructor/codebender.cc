@@ -6,3 +6,4 @@ vendor/codebendercc/arduino-files/.git
 Symfony/app/phpunit.xml
 Symfony/jlog.xml
 Symfony/app/config/parameters.ini
+Symfony/web/update.rdf
