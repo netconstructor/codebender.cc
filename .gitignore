@@ -5,3 +5,4 @@ Symfony/app/logs
 vendor/codebendercc/arduino-files/.git
 Symfony/app/phpunit.xml
 Symfony/jlog.xml
+Symfony/app/config/parameters.ini
