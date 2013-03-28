@@ -21,7 +21,11 @@
             $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
             setTimeout(function(){
                 window.plugin = document.getElementById('plugin0');
-                validateVersion("1.5.4.16");
+
+	            version = "1.5.4.16";
+	            if($("#cb_cf").data().pluginVersion)
+	                version = $("#cb_cf").data().pluginVersion;
+                validateVersion(version);
             }, 100);
         }
 
