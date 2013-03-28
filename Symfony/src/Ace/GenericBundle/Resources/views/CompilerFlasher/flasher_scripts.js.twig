@@ -94,11 +94,16 @@
             getbin(function (obj) {
                 if (obj.success == 0) {
                     setOperationOutput("There was an error compiling.");
-                    verify();
+	                if (typeof verification_onFail == 'function')
+		                verification_onFail(obj.message);
+
                 }
                 else {
 
-                    if (parseInt(obj.size) > getMaxSize())
+	                if (typeof verification_onSuccess == 'function')
+		                verification_onSuccess();
+
+	                if (parseInt(obj.size) > getMaxSize())
                     {
                         setOperationOutput("There is not enough space!");
                         return;
