@@ -14,7 +14,7 @@
                     plugin_found = true;
             if (!plugin_found)
             {
-                var alert = browserSpecificPluginInstall("Seems like you need to enable or install the Codebender Plugin. ");
+                var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
                 show_alert(alert, "alertupdatediv");
                 return;
             }
@@ -147,8 +147,7 @@
             }
             else
             {
-                $('head').append('<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/fkjidelplakiboijmadcpcbpboihkmee">');
-                alert += "<a href='javascript:void(0);' onclick='chrome.webstore.install()'>Add to Chrome</a>";
+                alert += "<a href='https://chrome.google.com/webstore/detail/codebendercc-extension/fkjidelplakiboijmadcpcbpboihkmee' target='_blank'>Add to Chrome</a>";
             }
         }
         return alert;
