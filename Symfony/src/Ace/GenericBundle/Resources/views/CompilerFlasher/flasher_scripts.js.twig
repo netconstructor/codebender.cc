@@ -1,4 +1,7 @@
-
+	window.flashing_errors =
+	{
+		256:"Could not open serial port. Make sure you have selected the correct device and serial port."
+	};
 
     function initializePlugin()
     {
@@ -130,7 +133,10 @@
                             {
                                 if (progress)
                                 {
-                                    setOperationOutput("There was an error uploading. Error #" + progress);
+	                                if(window.flashing_errors[progress])
+		                                setOperationOutput(window.flashing_errors[progress]);
+	                                else
+	                                    setOperationOutput("There was an error uploading. Error #" + progress);
                                 } else
                                 {
                                     setOperationOutput("Upload successful");
