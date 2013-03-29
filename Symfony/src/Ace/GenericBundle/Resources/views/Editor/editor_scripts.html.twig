@@ -277,7 +277,6 @@ function editDescription()
     $("#description").replaceWith("<textarea id='description' style='resize: none; width:100%;' rows=4>" + $("#description").text() + "</textarea>");
     $("#description_change_link").text("save");
     $("#description_change_link").attr("onClick", "saveDescription()");
-    $("#description_change_link").addClass("btn btn-primary");
 }
 
 function saveDescription() {
@@ -293,7 +292,6 @@ function editName() {
     $("#name").replaceWith("<input type='text' id='name' value='"+ $("#name").text() +"'/>");
     $("#name_change_link").text("save");
     $("#name_change_link").attr("onClick", "saveName()");
-    $("#name_change_link").addClass("btn btn-primary");
 }
 
 function saveName() {
