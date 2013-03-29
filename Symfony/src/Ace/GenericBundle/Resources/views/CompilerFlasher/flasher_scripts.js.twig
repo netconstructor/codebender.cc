@@ -114,13 +114,6 @@
 
                     binary = obj["output"];
 
-                    $("#uploadusb").addClass("btn-success");
-                    $("#upload_icon").addClass("icon-white");
-                    window.setTimeout(function () {
-                        $("#uploadusb").removeClass("btn-success");
-                        $("#upload_icon").removeClass("icon-white");
-                    }, 500);
-
                     setOperationProgress(80);
 
                     //this fixes the plugin crashing when no device is selected for DigiSpark etc
@@ -131,16 +124,28 @@
                     plugin.flash(device, binary, window.selectedBoard["upload"]["maximum_size"], window.selectedBoard["upload"]["protocol"], window.selectedBoard["upload"]["speed"], window.selectedBoard["build"]["mcu"],
                             function (from, progress)
                             {
-                                if (progress)
+	                            if (progress)
                                 {
+	                                $("#uploadusb").addClass("btn-warning");
+
 	                                if(window.flashing_errors[progress])
 		                                setOperationOutput(window.flashing_errors[progress]);
 	                                else
 	                                    setOperationOutput("There was an error uploading. Error #" + progress);
                                 } else
                                 {
-                                    setOperationOutput("Upload successful");
+	                                $("#uploadusb").addClass("btn-success");
+
+	                                setOperationOutput("Upload successful");
                                 }
+
+	                            $("#upload_icon").addClass("icon-white");
+	                            window.setTimeout(function ()
+	                            {
+		                            $("#uploadusb").removeClass("btn-success").removeClass("btn-warning");
+		                            $("#upload_icon").removeClass("icon-white");
+	                            }, 500);
+
                             });
                 }
             });
