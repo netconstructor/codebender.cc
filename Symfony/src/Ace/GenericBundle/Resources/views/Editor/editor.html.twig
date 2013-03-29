@@ -107,11 +107,10 @@
             bottom: 0px;
             right: 0px;
             margin-bottom: 10px;
-            width: 200px;
             background: #F7F7F7;
             z-index: 100000;
-            padding: 3px;
-            border-radius: 3px 0 3px 0;
+            padding: 3px 15px 3px 15px;
+	        border-radius: 3px 0 3px 0;
             border-width: 1px;
             border-color: rgba(0, 0, 0, 0.15);
             border-style: solid;
@@ -351,7 +350,7 @@
 				<div id="container_right">
                     <pre id="editor">{% if files[0] is defined %}{{ files[0]['code']|raw }}{% endif %}</pre>
                     <span id="editor_header"><a data-toggle="modal" href="#infoModal"<i class="icon-info-sign"></i></a>{#<i class="icon-resize-full"></i>#}</span>
-                    <span id="lines">Total Number of lines: <span id="line_count">0</span></span>
+                    <span id="lines">Number of lines: <span id="line_count">0</span></span>
                     <pre id="compile_output"></pre>
 				</div>
 
