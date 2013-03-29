@@ -235,12 +235,13 @@ load_files = function(){
 
 function selectFile(filename)
 {
+
     loadCode(filename);
     editor.getSession().setValue($("<div/>").html(window.files[filename]).text().replace(/&quot;/g, "\""));
     window.selectedFile = filename;
 
     $(".filelist").css("font-weight", "");
-    event.target.setAttribute("style", "font-weight:bold;");
+	$("a:contains("+filename+")")[0].setAttribute("style", "font-weight:bold;");
 }
 
 function loadCode() {
