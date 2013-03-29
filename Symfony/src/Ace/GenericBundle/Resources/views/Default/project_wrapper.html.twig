@@ -23,6 +23,28 @@
         border-top-right-radius: 5px;
     }
 
+    #codeBender_embed_wrapper #codeBender_embed_header a.clone-link
+    {
+	    position: absolute;
+	    top: 0;
+	    right: 115px;
+	    width: 115px;
+	    height: 100%;
+	    line-height: 34px;
+	    text-align: center;
+	    border-left: 1px solid #333;
+	    background: #2e3340; /* Old browsers */
+	    background: -moz-linear-gradient(top, #666666 0%, #2e3340 100%); /* FF3.6+ */
+	    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #666666), color-stop(100%, #2e3340)); /* Chrome,Safari4+ */
+	    background: -webkit-linear-gradient(top, # #666666 0%, #2e3340 100%); /* Chrome10+,Safari5.1+ */
+	    background: -o-linear-gradient(top, # #666666 0%, #2e3340 100%); /* Opera 11.10+ */
+	    background: -ms-linear-gradient(top, # #666666 0%, #2e3340 100%); /* IE10+ */
+	    background: linear-gradient(to bottom, # #666666 0%, #2e3340 100%); /* W3C */
+	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#666666', endColorstr='#2e3340', GradientType=0); /* IE6-9 */
+	    text-decoration: none;
+	    color: #fff;
+    }
+
     #codeBender_embed_wrapper #codeBender_embed_header a.download-link{
         position: absolute;
         top: 0;
@@ -241,8 +263,9 @@
         $(".projectName").html("<a href='"+input["project"]["url"]+"'>"+input["project"]["name"]+"</a>");
         $(".userName").html("<a href='"+input["user"]["url"]+"'>"+input["user"]["name"]+"</a>");
         $(".download-link").attr("href", input["download_url"]);
+	    $(".clone-link").attr("href", input["clone_url"]);
 
-        window.height = parseInt($("#codeBender_embed_wrapper").css("height")) - parseInt($("#codeBender_embed_header").css("height")) - parseInt($("#codeBender_embed_footer").css("height"));
+	    window.height = parseInt($("#codeBender_embed_wrapper").css("height")) - parseInt($("#codeBender_embed_header").css("height")) - parseInt($("#codeBender_embed_footer").css("height"));
         $("#codeBender_embed_codeContainer").css("height", height);
         $("#codeBender_embed_codeWrapper").css("height", height*files.length);
         $(".codeBender_embed_file").css("height", height);
@@ -312,7 +335,11 @@
             <span class="projectName">Project Name</span> by <span class="userName">User Name</span>
         </div>
 
-        <a class="download-link" href="#">download</a>
+	    {% if is_granted('ROLE_USER') %}
+		    <a class="clone-link" href="#">clone</a>
+	    {% endif %}
+
+	    <a class="download-link" href="#">download</a>
     </div>
 
 

@@ -32,11 +32,9 @@ h1 small
 	<div class="row-fluid">
 		<h5>Description: </h5>
 		{% render "AceUtilitiesBundle:Default:getDescription" with {'id': project_id} %}
-		<hr>
-        {% if is_granted('ROLE_USER') %}
-            <a class="btn btn-primary" href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}">Clone</a>
-            <br><br>
-        {% endif %}
+
+		<br />
+
         {% include 'AceGenericBundle:Default:project_wrapper.html.twig' %}
         <div class="row-fluid">
             <h3>Embeddable code</h3>
