@@ -157,4 +157,9 @@ class DefaultController extends Controller
 	{
 		return $this->render('AceStaticBundle:Default:plugin.html.twig', array());
 	}
+
+	public function partnerAction($name)
+	{
+		return $this->render('AceStaticBundle:Partner:'.$name.'.html.twig');
+	}
 }

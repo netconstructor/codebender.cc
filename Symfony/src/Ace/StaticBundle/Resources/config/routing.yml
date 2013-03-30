@@ -29,3 +29,7 @@ AceStaticBundle_notify:
 AceStaticBundle_plugin:
     pattern:  /plugin
     defaults: { _controller: AceStaticBundle:Default:plugin }
+
+AceStaticBundle_partner:
+    pattern:  /partner/{name}
+    defaults: { _controller: AceStaticBundle:Default:partner }
