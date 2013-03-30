@@ -129,7 +129,7 @@
 	                                $("#uploadusb").addClass("btn-warning");
 
 	                                if(window.flashing_errors[progress])
-		                                setOperationOutput(window.flashing_errors[progress]);
+		                                setOperationOutput(window.flashing_errors[progress]+" <a href='https://codebender.uservoice.com/knowledgebase/articles/183395-usb-flashing-known-errors' target='_blank'>More Info</a>");
 	                                else
 	                                    setOperationOutput("There was an error uploading. Error #" + progress);
                                 } else
