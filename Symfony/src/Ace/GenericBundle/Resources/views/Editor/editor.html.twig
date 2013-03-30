@@ -310,7 +310,7 @@
                             <i id="revert_icon" class="icon-arrow-left"></i>
                             Revert
                         </button>
-                        <button id="save" class="btn" onclick="save();">
+                        <button id="save" class="btn" onclick="save();" title="Save changes">
                             <i id="save_icon" class="icon-download"></i>
                             Save
                         </button>
@@ -320,11 +320,13 @@
 
                     <div class="input-append">
                         <input type="text" id='ip' placeholder="IP Address">
-                        <button id="toggle_connect_webserial" onclick="webconnect();" class="btn">
+                        <button id="toggle_connect_webserial" onclick="webconnect();" class="btn"
+                                title="Open Cloud Serial Monitor">
                             <i class="icon-globe"></i>
                             Monitor
                         </button>
-                        <button id="cloudload" onclick="webflash();" class="btn">
+                        <button id="cloudload" onclick="webflash();" class="btn"
+                                title="Flash an arduino through th cloud">
                             <i class="icon-globe"></i>
                             Flash
                         </button>
@@ -332,7 +334,7 @@
                     <div id="webserial_monitor_content" style="display:none;">
                         <div class="input-append">
                             <input id="webtext2send" type="text" placeholder="Web Serial Message" onkeypress="webserialSendOnEnter()">
-                            <button id="webserial_send" onclick="webserialSend()" class="btn"> Send
+                            <button id="webserial_send" onclick="webserialSend()" class="btn" title="Send message"> Send
                             </button>
                         </div>
                         <pre id="webserial_hud" class="well"></pre>
@@ -349,7 +351,12 @@
                 </div>
 				<div id="container_right">
                     <pre id="editor">{% if files[0] is defined %}{{ files[0]['code']|raw }}{% endif %}</pre>
-                    <span id="editor_header"><a data-toggle="modal" href="#infoModal"<i class="icon-info-sign"></i></a>{#<i class="icon-resize-full"></i>#}</span>
+                    <span id="editor_header">
+	                    <a data-toggle="modal" href="#infoModal" title="Project Info">
+		                    <i class="icon-info-sign"></i>
+	                    </a>
+	                    {#<i class="icon-resize-full"></i>#}
+                    </span>
                     <span id="lines">Number of lines: <span id="line_count">0</span></span>
                     <pre id="compile_output"></pre>
 				</div>
