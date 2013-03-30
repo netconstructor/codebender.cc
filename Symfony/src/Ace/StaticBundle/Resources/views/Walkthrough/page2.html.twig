@@ -31,22 +31,30 @@
             }
             else
             {
-                window.setInterval(function(){
-                    if(window.plugin.checkForDrivers(""))
-                        window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
-                    else
-                    {
-                        if($("#install_drivers_button").css("display") == "none")
-                        {
-                            $("#install_drivers_button").show();
-                            if (os.isXP || os.isMac) {
-                                $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(0);");
-                            }
 
-                            if (os.isVista || os.isWin7) {
-                                $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(1);");
-                            }
-                        }
+	            window.setInterval(function(){
+                    if($("#install_drivers_button").css("display") == "none")
+                    {
+	                    if (window.plugin.checkForDrivers(""))
+		                    window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
+	                    else
+	                    {
+		                    $("#install_drivers_button").show();
+		                    if (os.isXP || os.isMac)
+		                    {
+			                    $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(0);");
+		                    }
+
+		                    if (os.isVista || os.isWin7)
+		                    {
+			                    $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(1);");
+		                    }
+	                    }
+                    }
+		            else
+                    {
+	                    if ($("#operation_output:contains(Drivers Installed Successfully.)").length > 0)
+		                    window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
                     }
                 }, 5000);
 
