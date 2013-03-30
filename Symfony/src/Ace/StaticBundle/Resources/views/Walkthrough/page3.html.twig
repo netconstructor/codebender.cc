@@ -31,7 +31,7 @@
                 if(typeof portsAvail === "undefined")
                     portsAvail = [""];
                 var oldPortsAvail = portsAvail;
-                window.setInterval(function(){
+                window.device_detection =  window.setInterval(function(){
                     if(oldPortsAvail.length < portsAvail.length)
                     {
                         var tempPortsAvail = portsAvail.slice(0);
@@ -68,7 +68,10 @@
                 if ($("#operation_output").text() == "Digispark Flashed" || $("#operation_output").text() == "Upload successful")
                 {
                     $("#operation_output").text($("#operation_output").text()+". You should now see a blinking LED on your device. Congratulations, you are done!");
-
+	                $("#next_button").show();
+	                $("#step_output_text").hide();
+	                $("#ports_div").hide();
+	                window.clearInterval(window.device_detection);
                 }
             }, 100);
         }
@@ -124,4 +127,5 @@
     <div id="step_output_text"><p>Please select your board from the list below and then click on 'Start'</p></div>
     <div id="cb_cf" data-sections="usbflash"></div>
     <button id="start_button" onclick="start();" class="huge-button">Start</button>
+	<a id="next_button" href="{{ path("AceGenericBundle_index") }}" class="huge-button" style="display: none;">Finish!</a>
 {% endblock %}
