@@ -174,7 +174,7 @@ class DefaultController extends Controller
 						$zip->addFromString($name."/".$file["filename"], $file["code"]);
 					}
 					$zip->close();
-					$value = readfile($filename);
+					$value = file_get_contents($filename);
 				}
 				unlink($filename);
 			}
