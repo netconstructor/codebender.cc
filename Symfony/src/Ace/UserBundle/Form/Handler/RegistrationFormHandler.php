@@ -78,8 +78,8 @@ void loop()
 		//create new projects
 		$username = $user->getUsernameCanonical();
 		$user = json_decode($this->usercontroller->getUserAction($username)->getContent(), true);
-		$response = $this->projectmanager->createprojectAction($user["id"], "First Example", $first_code)->getContent();
-		$response = $this->projectmanager->createprojectAction($user["id"], "Second Example", $second_code)->getContent();
+		$response = $this->projectmanager->createprojectAction($user["id"], "Blink Example", $first_code)->getContent();
+		$response = $this->projectmanager->createprojectAction($user["id"], "Serial Comm Example", $second_code)->getContent();
 
 		// Mailchimp Integration
        	$api = new MCAPI($this->listapi);
