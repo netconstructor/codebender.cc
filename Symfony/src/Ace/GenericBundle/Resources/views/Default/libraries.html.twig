@@ -38,7 +38,11 @@
 			            </div>
 			            <div id="collapse{{library_name|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
 				            <div class="accordion-inner">
-					            {% if library["examples"] is defined%}
+				            {% if library["description"] is not empty %}
+					            <p>Description:</p>
+					            <p>{{ library["description"] }}</p>
+				            {% endif %}
+				            {% if library["examples"] is defined%}
 						            <p>Examples:</p>
 						            <ul>
 							            {% for example in library["examples"] %}
@@ -66,6 +70,10 @@
 			    </div>
 			    <div id="collapse{{library_name|replace({'.': '', ' ': ''})}}" class="accordion-body collapse">
 				    <div class="accordion-inner">
+					    {% if library["description"] is not empty %}
+						    <p>Description:</p>
+						    <p>{{ library["description"] }}</p>
+					    {% endif %}
 					    {% if library["examples"] is defined%}
 						    <p>Examples:</p>
 						    <ul>
