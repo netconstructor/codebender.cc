@@ -38,7 +38,13 @@ class User extends BaseUser
      */
     private $twitter;
 
-    /**
+	/**
+	 * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+	 */
+	private $karma;
+
+
+	/**
      * Set firstname
      *
      * @param string $firstname
@@ -112,5 +118,25 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set karma
+     *
+     * @param integer $karma
+     */
+    public function setKarma($karma)
+    {
+        $this->karma = $karma;
+    }
+
+    /**
+     * Get karma
+     *
+     * @return integer 
+     */
+    public function getKarma()
+    {
+        return $this->karma;
     }
 }
