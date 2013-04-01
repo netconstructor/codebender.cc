@@ -1,5 +1,5 @@
 /* GLOBAL variables */
-var emailReg = /^[\w-\.]+@[\w-]+\.+[\w-]{2,4}$/;
+var emailReg = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
 
 /* Check if password meets requirements */
 function passvalid(pass)
