@@ -43,6 +43,21 @@ class User extends BaseUser
 	 */
 	private $karma;
 
+	/**
+	 * @ORM\Column(type="integer", nullable=true)
+	 */
+	private $referrer_id_int;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Ace\UserBundle\Entity\User")
+	 * @ORM\JoinColumn(nullable=true)
+	 **/
+	protected $referrer;
+
+	/**
+	 * @ORM\Column(type="string", length="255", nullable=true)
+	 */
+	private $referral_code;
 
 	/**
      * Set firstname
@@ -139,4 +154,65 @@ class User extends BaseUser
     {
         return $this->karma;
     }
+
+	/**
+	 * Set referrer_id_int
+	 *
+	 * @param integer $referrerIdInt
+	 */
+	public function setReferrerIdInt($referrerIdInt)
+	{
+		$this->referrer_id_int = $referrerIdInt;
+	}
+
+	/**
+	 * Get referrer_id_int
+	 *
+	 * @return integer
+	 */
+	public function getReferrerIdInt()
+	{
+		return $this->referrer_id_int;
+	}
+
+	/**
+	 * Set referrer
+	 *
+	 * @param Ace\UserBundle\Entity\User $referrer
+	 */
+	public function setReferrer(\Ace\UserBundle\Entity\User $referrer)
+	{
+		$this->referrer = $referrer;
+	}
+
+	/**
+	 * Get referrer
+	 *
+	 * @return Ace\UserBundle\Entity\User
+	 */
+	public function getReferrer()
+	{
+		return $this->referrer;
+	}
+
+    /**
+     * Set referral_code
+     *
+     * @param string $referralCode
+     */
+    public function setReferralCode($referralCode)
+    {
+        $this->referral_code = $referralCode;
+    }
+
+    /**
+     * Get referral_code
+     *
+     * @return string 
+     */
+    public function getReferralCode()
+    {
+        return $this->referral_code;
+    }
+
 }
