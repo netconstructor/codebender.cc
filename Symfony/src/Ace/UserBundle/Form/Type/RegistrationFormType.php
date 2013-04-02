@@ -15,7 +15,9 @@ class RegistrationFormType extends BaseType
 		$builder
 			->add('firstname', 'text', array('label' => 'user_registration_form_firstname',	'required' => false))
 			->add('lastname', 'text', array('label' => 'user_registration_form_lastname', 'required' => false))
-			->add('twitter', 'text', array('label' => 'user_registration_form_twitter',	'required' => false));
+			->add('twitter', 'text', array('label' => 'user_registration_form_twitter',	'required' => false))
+			->add('referrer_username', 'text', array('label' => 'user_registration_form_referrer', 'required' => false))
+			->add('referral_code', 'text', array('label' => 'user_registration_form_referral_code', 'required' => false));
     }
 
     public function getName()
