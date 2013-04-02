@@ -29,10 +29,10 @@
 	<div class="span6">
 		<h2>Hello {{ name }}!</h2>
 		<h4>Create New Project</h4>
-		<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}'>
-			<div class="input-prepend input-append">
+		<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject')}}' style="max-width:80%;">
+			<div class="input-prepend input-append" style="max-width:80%;">
 				<span class="add-on">Name:</span>
-				 <input type="text" name='project_name'>
+				 <input type="text" name='project_name' style="max-width:80%;">
 				<button type="submit" class="btn">Create</button>
 			</div>
 		</form>
