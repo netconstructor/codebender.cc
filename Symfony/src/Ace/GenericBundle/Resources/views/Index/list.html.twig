@@ -36,10 +36,11 @@
 				<button type="submit" class="btn">Create</button>
 			</div>
 		</form>
-		<p>Or upload your existing projects: <a data-toggle="modal" href="#upModal"><i class="icon-upload"></i> Upload Sketch</a></p>
+		<p>Or upload your existing projects: <a data-toggle="modal" href="#upModal" style="display: inline-block;">
+				<i class="icon-upload"></i> Upload Sketch</a></p>
 		<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://codebender.cc" data-text="Check out codebender. An awesome web platform for Arduino programming." data-size="large">Tweet</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
+		<a href="#referModal" class="btn btn-success" data-toggle="modal" style="margin-bottom: 20px;">Invite a friend!</a>
 
 	</div>
 	<div class="span6">
@@ -48,7 +49,34 @@
 </div>
 
 
-<div class="modal hide fade" id="upModal">
+	<div class="modal hide fade" id="referModal">
+		<div class="modal-header">
+			<button class="close" data-dismiss="modal">&#215;</button>
+			<h3>Refer a friend!</h3>
+			<hr>
+			<p style="text-align: justify">
+				Hi there. We hope you like codebender, and we really hope you like it enough to share it with your
+				friends. In fact, we strongly encourage you to do that. To give you an extra nudge, we'd like to offer
+				you a some incentive.
+			</p>
+			<p style="text-align: justify">
+				For every friend you invite to codebender, you will earn 20 codebender points, and they will also earn 50
+				points. codebender points is a new system we are introducing, which rewards users for their good deeds
+				and for spreading the word about codebender. In the future, you will be able to use your codebender
+				points to unlock extra features and other cool stuff.
+			</p>
+			<h4>Referral Code</h4>
+			<p>To invite your friends to codebender and gain codebender points, just share this invitation link with
+				them.
+			</p>
+			<p class="well">
+				<a href="{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}" target="_blank">{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}</a>
+			</p>
+		</div>
+	</div>
+
+
+	<div class="modal hide fade" id="upModal">
   <div class="modal-header">
     <button class="close" data-dismiss="modal">&#215;</button>
     <h3 style="font-size: 18px; line-height: 27px;">Add or drag your sketch here.</h3>
