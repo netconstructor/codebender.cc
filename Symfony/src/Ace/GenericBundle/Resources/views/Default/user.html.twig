@@ -20,10 +20,7 @@
 	<div class="span9">
 		<h1>
 			{{ user["username"] }} ({{user["firstname"]}} {{user["lastname"]}})
-			<span style="float: right; opacity: 0.75;" title="codebender points">
-				<i class="icon-star" style=""></i>
-				{{ user["points"] }}
-			</span>
+			{% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
 		</h1>
 		{% if user["twitter"] %}
 		<div><img src="https://si0.twimg.com/images/dev/cms/intents/bird/bird_blue/bird_16_blue.png"/>

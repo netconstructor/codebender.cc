@@ -32,7 +32,10 @@
 
 	<div class="row-fluid">
 		<div class="span6">
-			<h2>Hello {{ name }}!</h2>
+			<h2>
+				Hello {{ user["username"] }}!
+				{% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
+			</h2>
 			<h4>Create New Project</h4>
 
 			<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject') }}' style="max-width:80%;">

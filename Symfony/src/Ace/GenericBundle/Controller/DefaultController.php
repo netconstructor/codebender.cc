@@ -18,7 +18,7 @@ class DefaultController extends Controller
 		{
 			// Load user content here
 			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
-			return $this->render('AceGenericBundle:Index:list.html.twig', array('name' =>$user["username"]));
+			return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user));
 		}
 
 		return $this->render('AceGenericBundle:Index:index.html.twig');
