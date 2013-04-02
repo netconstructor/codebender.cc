@@ -49,9 +49,9 @@ class User extends BaseUser
 	private $points;
 
 	/**
-	 * @ORM\Column(type="integer", nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
-	private $referrer_id_int;
+	private $referrer_username;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="Ace\UserBundle\Entity\User")
@@ -183,23 +183,23 @@ class User extends BaseUser
     }
 
 	/**
-	 * Set referrer_id_int
+	 * Set referrer_username
 	 *
-	 * @param integer $referrerIdInt
+	 * @param string $referrerUsername
 	 */
-	public function setReferrerIdInt($referrerIdInt)
+	public function setReferrerUsername($referrerUsername)
 	{
-		$this->referrer_id_int = $referrerIdInt;
+		$this->referrer_username = $referrerUsername;
 	}
 
 	/**
-	 * Get referrer_id_int
+	 * Get referrer_username
 	 *
-	 * @return integer
+	 * @return string
 	 */
-	public function getReferrerIdInt()
+	public function getReferrerUsername()
 	{
-		return $this->referrer_id_int;
+		return $this->referrer_username;
 	}
 
 	/**
