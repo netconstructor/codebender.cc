@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Mailer\MailerInterface;
+use Ace\UserBundle\Entity\User;
 use Ace\UserBundle\Controller\DefaultController as UserController;
 use Ace\ProjectBundle\Controller\DefaultController as ProjectManager;
 use MCAPI;
@@ -28,6 +29,16 @@ class RegistrationFormHandler extends BaseHandler
 		$this->listapi = $listapi;
 		$this->listid = $listid;
     }
+
+	public function generateReferrals()
+	{
+		$user = new User();
+
+		$user->setReferrerUsername($this->request->query->get('referrer'));
+		$user->setReferralCode($this->request->query->get('referral_code'));
+		$this->form->setData($user);
+		return $this->form;
+	}
 
     protected function onSuccess(UserInterface $user, $confirmation)
     {
@@ -77,11 +88,24 @@ void loop()
 ";
 		//create new projects
 		$username = $user->getUsernameCanonical();
-		$user = json_decode($this->usercontroller->getUserAction($username)->getContent(), true);
+	    $user = json_decode($this->usercontroller->getUserAction($username)->getContent(), true);
 		$response = $this->projectmanager->createprojectAction($user["id"], "Blink Example", $first_code)->getContent();
 		$response = $this->projectmanager->createprojectAction($user["id"], "Serial Comm Example", $second_code)->getContent();
 
-		// Mailchimp Integration
+	    $referrer = json_decode($this->usercontroller->getUserAction($user["referrer_username"])->getContent(), true);
+	    if($referrer["success"])
+	    {
+		    $response = $this->usercontroller->setReferrerAction($username, $user["referrer_username"])->getContent();
+		    $response = $this->usercontroller->setKarmaAction($username, 50)->getContent();
+		    $response = $this->usercontroller->setPointsAction($username, 50)->getContent();
+	    }
+	    else if ($user["referral_code"] == "codebender_special")
+	    {
+		    $response = $this->usercontroller->setKarmaAction($user["id"], 50)->getContent();
+		    $response = $this->usercontroller->setPointsAction($user["id"], 50)->getContent();
+	    }
+
+	    // Mailchimp Integration
        	$api = new MCAPI($this->listapi);
        	$merge_vars = array('EMAIL'=> $user["email"], 'UNAME'=> $user["username"] );
        	$double_optin=false;

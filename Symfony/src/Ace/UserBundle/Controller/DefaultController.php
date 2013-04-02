@@ -48,7 +48,9 @@ class DefaultController extends Controller
 			"username" => $user->getUsername(),
 			"firstname" => $user->getFirstname(),
 			"lastname" => $user->getLastname(),
-			"twitter" => $user->getTwitter()
+			"twitter" => $user->getTwitter(),
+			"referrer_username" => $user->getReferrerUsername(),
+			"referral_code" => $user->getReferralCode()
 			);
 		}
 		return new Response(json_encode($response));
@@ -258,7 +260,45 @@ class DefaultController extends Controller
 			}
 			return $response;
 		
-	}    
+	}
+
+	public function setReferrerAction($username, $referrer_username)
+	{
+		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
+		$referrer = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($referrer_username);
+
+		if($referrer != NULL)
+		{
+			//update object - no checks atm
+			$user->setReferrer($referrer);
+			$this->em->flush();
+			return new Response(json_encode(array("success" => true)));
+		}
+
+		return new Response(json_encode(array("success" => false)));
+	}
+
+	public function setKarmaAction($username, $karma)
+	{
+		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
+
+		//update object - no checks atm
+		$user->setKarma(intval($karma));
+		$this->em->flush();
+
+		return new Response(json_encode(array("success" => true)));
+	}
+
+	public function setPointsAction($username, $points)
+	{
+		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
+
+		//update object - no checks atm
+		$user->setPoints(intval($points));
+		$this->em->flush();
+
+		return new Response(json_encode(array("success" => true)));
+	}
 
 	public function enabledAction()
 	{

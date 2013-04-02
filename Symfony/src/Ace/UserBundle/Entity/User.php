@@ -38,7 +38,33 @@ class User extends BaseUser
      */
     private $twitter;
 
-    /**
+	/**
+	 * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+	 */
+	private $karma;
+
+	/**
+	 * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+	 */
+	private $points;
+
+	/**
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	private $referrer_username;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Ace\UserBundle\Entity\User")
+	 * @ORM\JoinColumn(nullable=true)
+	 **/
+	protected $referrer;
+
+	/**
+	 * @ORM\Column(type="string", length="255", nullable=true)
+	 */
+	private $referral_code;
+
+	/**
      * Set firstname
      *
      * @param string $firstname
@@ -102,6 +128,8 @@ class User extends BaseUser
     {
         parent::__construct();
         // your own logic
+	    $this->setKarma(0);
+	    $this->setPoints(0);
     }
 
     /**
@@ -113,4 +141,105 @@ class User extends BaseUser
     {
         return $this->id;
     }
+
+	/**
+	 * Set points
+	 *
+	 * @param integer $points
+	 */
+	public function setPoints($points)
+	{
+		$this->points = $points;
+	}
+
+	/**
+	 * Get points
+	 *
+	 * @return integer
+	 */
+	public function getPoints()
+	{
+		return $this->points;
+	}
+
+	/**
+     * Set karma
+     *
+     * @param integer $karma
+     */
+    public function setKarma($karma)
+    {
+        $this->karma = $karma;
+    }
+
+    /**
+     * Get karma
+     *
+     * @return integer 
+     */
+    public function getKarma()
+    {
+        return $this->karma;
+    }
+
+	/**
+	 * Set referrer_username
+	 *
+	 * @param string $referrerUsername
+	 */
+	public function setReferrerUsername($referrerUsername)
+	{
+		$this->referrer_username = $referrerUsername;
+	}
+
+	/**
+	 * Get referrer_username
+	 *
+	 * @return string
+	 */
+	public function getReferrerUsername()
+	{
+		return $this->referrer_username;
+	}
+
+	/**
+	 * Set referrer
+	 *
+	 * @param Ace\UserBundle\Entity\User $referrer
+	 */
+	public function setReferrer(\Ace\UserBundle\Entity\User $referrer)
+	{
+		$this->referrer = $referrer;
+	}
+
+	/**
+	 * Get referrer
+	 *
+	 * @return Ace\UserBundle\Entity\User
+	 */
+	public function getReferrer()
+	{
+		return $this->referrer;
+	}
+
+    /**
+     * Set referral_code
+     *
+     * @param string $referralCode
+     */
+    public function setReferralCode($referralCode)
+    {
+        $this->referral_code = $referralCode;
+    }
+
+    /**
+     * Get referral_code
+     *
+     * @return string 
+     */
+    public function getReferralCode()
+    {
+        return $this->referral_code;
+    }
+
 }
