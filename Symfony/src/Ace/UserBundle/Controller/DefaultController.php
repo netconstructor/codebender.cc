@@ -50,6 +50,9 @@ class DefaultController extends Controller
 			"firstname" => $user->getFirstname(),
 			"lastname" => $user->getLastname(),
 			"twitter" => $user->getTwitter(),
+			"karma" => $user->getKarma(),
+			"points" => $user->getPoints(),
+			"referrals" => $user->getReferrals(),
 			"referrer_username" => $user->getReferrerUsername(),
 			"referral_code" => $user->getReferralCode()
 			);
