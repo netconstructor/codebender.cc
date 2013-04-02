@@ -44,6 +44,11 @@ class User extends BaseUser
 	private $karma;
 
 	/**
+	 * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+	 */
+	private $points;
+
+	/**
 	 * @ORM\Column(type="integer", nullable=true)
 	 */
 	private $referrer_id_int;
@@ -123,6 +128,8 @@ class User extends BaseUser
     {
         parent::__construct();
         // your own logic
+	    $this->setKarma(0);
+	    $this->setPoints(0);
     }
 
     /**
@@ -135,7 +142,27 @@ class User extends BaseUser
         return $this->id;
     }
 
-    /**
+	/**
+	 * Set points
+	 *
+	 * @param integer $points
+	 */
+	public function setPoints($points)
+	{
+		$this->points = $points;
+	}
+
+	/**
+	 * Get points
+	 *
+	 * @return integer
+	 */
+	public function getPoints()
+	{
+		return $this->points;
+	}
+
+	/**
      * Set karma
      *
      * @param integer $karma
