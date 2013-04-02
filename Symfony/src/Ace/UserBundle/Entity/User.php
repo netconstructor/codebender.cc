@@ -65,6 +65,11 @@ class User extends BaseUser
 	private $referral_code;
 
 	/**
+	 * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+	 */
+	private $referrals;
+
+	/**
      * Set firstname
      *
      * @param string $firstname
@@ -130,6 +135,7 @@ class User extends BaseUser
         // your own logic
 	    $this->setKarma(0);
 	    $this->setPoints(0);
+	    $this->setReferrals(0);
     }
 
     /**
@@ -240,6 +246,27 @@ class User extends BaseUser
     public function getReferralCode()
     {
         return $this->referral_code;
+    }
+
+
+    /**
+     * Set referrals
+     *
+     * @param integer $referrals
+     */
+    public function setReferrals($referrals)
+    {
+        $this->referrals = $referrals;
+    }
+
+    /**
+     * Get referrals
+     *
+     * @return integer 
+     */
+    public function getReferrals()
+    {
+        return $this->referrals;
     }
 
 }

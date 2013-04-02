@@ -2,6 +2,7 @@
 
 namespace Ace\UserBundle\Controller;
 
+use Ace\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -264,12 +265,17 @@ class DefaultController extends Controller
 
 	public function setReferrerAction($username, $referrer_username)
 	{
+
+		/** @var User $user */
 		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
+		/** @var User $referrer */
 		$referrer = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($referrer_username);
 
 		if($referrer != NULL)
 		{
-			//update object - no checks atm
+			$referrer->setReferrals($referrer->getReferrals()+1);
+			$referrer->setKarma($referrer->getKarma()+20);
+			$referrer->setPoints($referrer->getPoints() + 20);
 			$user->setReferrer($referrer);
 			$this->em->flush();
 			return new Response(json_encode(array("success" => true)));
