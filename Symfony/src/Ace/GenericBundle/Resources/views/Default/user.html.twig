@@ -1,7 +1,7 @@
 {% extends '::container.html.twig' %}
 {% block title "User Info" %}
 {% block mainspan %}
-<script src="http://platform.twitter.com/anywhere.js?id=YOUR_API_KEY&v=1" type="text/javascript"></script>
+<script src="http://platform.twitter.com/anywhere.js?id=YOUR_API_KEY&v=1" type="text/javascript" xmlns="http://www.w3.org/1999/html"></script>
 <script type="text/javascript">
     twttr.anywhere(function (T) {
 		T.linkifyUsers();
@@ -18,7 +18,13 @@
 	</ul>
 	</div>
 	<div class="span9">
-		<h1>{{ user["username"] }} ({{user["firstname"]}} {{user["lastname"]}})</h1>
+		<h1>
+			{{ user["username"] }} ({{user["firstname"]}} {{user["lastname"]}})
+			<span style="float: right; opacity: 0.75;" title="codebender points">
+				<i class="icon-star" style=""></i>
+				{{ user["points"] }}
+			</span>
+		</h1>
 		{% if user["twitter"] %}
 		<div><img src="https://si0.twimg.com/images/dev/cms/intents/bird/bird_blue/bird_16_blue.png"/>
 			@{{user["twitter"]}}
