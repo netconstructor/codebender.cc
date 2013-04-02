@@ -1,5 +1,16 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
+{% block layout_title %}<h1>Sign Up</h1>{% endblock %}
 {% block fos_user_content %}
-{% include "FOSUserBundle:Registration:register_content.html.twig" %}
+	<p>Welcome to codebender. We're really glad you're interested.</p>
+	<p>Go ahead and sign up to give it a try.</p>
+	{% include "FOSUserBundle:Registration:register_content.html.twig" %}
 {% endblock fos_user_content %}
+
+{% block extra_content %}
+	<a href="http://www.flickr.com/photos/mjparnell/435465575/in/photostream/"
+	   title="Image courtesy of mcclouds. Used under Creative Commons Lincense">
+		<img style="border-width: 2px; border-color: #D5D5D5; border-style: dashed; padding: 5px;"
+		     src="{{ asset("images/welcome-mat.jpg") }}">
+	</a>
+{% endblock %}
