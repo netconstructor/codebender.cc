@@ -19,7 +19,10 @@
 	</div>
 	<div class="span9">
 		<h1>
-			{{ user["username"] }} ({{user["firstname"]}} {{user["lastname"]}})
+			{{ user["username"] }}
+			{% if user["firstname"] or user["lastname"]%}
+				({{user["firstname"]}} {{user["lastname"]}})
+			{% endif %}
 			{% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
 		</h1>
 		{% if user["twitter"] %}
