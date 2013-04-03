@@ -23,9 +23,11 @@
 			{% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
 		</h1>
 		{% if user["twitter"] %}
-		<div><img src="https://si0.twimg.com/images/dev/cms/intents/bird/bird_blue/bird_16_blue.png"/>
-			@{{user["twitter"]}}
-		</div>
+		<h4>
+			<a href="http://twitter.com/{{ user["twitter"] }}" target="_blank">
+				<i class="icon-twitter"></i> @{{ user["twitter"] }}
+			</a>
+		</h4>
 		{% endif %}
 	</div>
 </div>
