@@ -6,9 +6,11 @@
 {% endblock %}
 #}
 
+
 {% block content %}
+	{% block precontainer_content %}{% endblock %}
+
 	<div id="mycontainer" class="container">
-			<br />
 
 			{% if app.session.hasFlash('notice') %}
 			    <div class="alert alert-success flash-notice">
