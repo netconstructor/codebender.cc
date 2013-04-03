@@ -71,7 +71,7 @@ function revert() {
 	window.files = jsObjClone(window.savedfiles);
     editor.getSession().setValue($("<div/>").html(window.files[window.selectedFile]).text().replace(/&quot;/g, "\""));
 	window.currentfiles = refreshFiles();
-	setOperationOutput("Project reverted to last Saved state.");
+	setOperationOutput("Reverted to the last saved state.");
     window.setTimeout(function () {
 		$("#revert").removeClass("btn-success");
         $("#revert_icon").removeClass("icon-white");
