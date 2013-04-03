@@ -2,6 +2,10 @@ AceUserBundle_exists:
     pattern:  /exists/{username}
     defaults: { _controller: usercontroller:existsAction }
 
+AceUserBundle_email_exists:
+    pattern:  /email_exists/{email}
+    defaults: { _controller: usercontroller:emailExistsAction }
+
 AceUserBundle_getuser:
     pattern:  /getuser/{username}
     defaults: { _controller: usercontroller:getUserAction }

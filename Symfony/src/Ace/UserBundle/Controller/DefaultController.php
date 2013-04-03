@@ -37,6 +37,16 @@ class DefaultController extends Controller
 			return new Response("false");
 	}
 
+	public function emailExistsAction($email)
+	{
+		//TODO: Fix this to use a generic function, not call the db directly
+		$user = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($email);
+		if($user)
+			return new Response("true");
+		else
+			return new Response("false");
+	}
+
 	public function getUserAction($username)
 	{
 		$response = array("success" => false);
