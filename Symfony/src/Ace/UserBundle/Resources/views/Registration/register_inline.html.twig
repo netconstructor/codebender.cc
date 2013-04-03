@@ -3,9 +3,7 @@
 <div id="offsignupnow" class="row-fluid">
 	<div class="span12">
 		<!-- header -->
-		<h2>Sign Up</h2>
-
-		<p>Interested? Sign Up here and get coding in minutes.</p>
+		<h3>Sign Up<small> Interested? Sign Up here and get coding in minutes.</small></h3>
 	</div>
 	<!--/span-->
 	{% form_theme form theme %}
@@ -13,24 +11,28 @@
 	      class="fos_user_registration_register">
 </div><!--/row-->
 <div class="row-fluid">
-	<div class="span6">
+	<div class="span3">
 		<!-- left side -->
 		{{ form_label(form.username) }}
 		<div id="register_username_id" class="control-group">
 			{{ form_widget(form.username) }}
 		</div>
+	</div>
+	<div class="span3">
 		{{ form_label(form.email) }}
 		<div id="register_email_id" class="control-group">
 			{{ form_widget(form.email) }}
 		</div>
 	</div>
 	<!--/span-->
-	<div class="span6">
+	<div class="span3">
 		<!-- right side -->
 		{{ form_label(form.plainPassword.first) }}
 		<div id="register_password_id" class="control-group">
 			{{ form_widget(form.plainPassword.first) }}
 		</div>
+	</div>
+	<div class="span3">
 		{{ form_label(form.plainPassword.second) }}
 		<div id="register_verification_id" class="control-group">
 			{{ form_widget(form.plainPassword.second) }}
@@ -39,15 +41,20 @@
 	<!--/span-->
 </div><!--/row-->
 <div class="row-fluid">
-	<div class="span12">
+	<div class="span10">
 		<!-- bottom -->
 		<div style="display:none">
 			{{ form_rest(form) }}
 		</div>
-		<p id="register_info_id">Hi! Why don't you sign up for a codebender account?<br/></p>
-		{{ form_errors(form) }}
-		<input type="submit" style="margin-bottom:10px;" class="btn btn-primary"
-		       value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}"/>
+		<p>
+			<span id="register_info_id">
+				Hi! Why don't you sign up for a codebender account? {{ form_errors(form) }}
+			</span>
+		</p>
+	</div>
+	<div class="span2">
+		<input type="submit" style="margin-right:40px; float: right;" class="btn btn-primary"
+		       value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
 		</form>
 	</div>
 	<!--/span-->
