@@ -33,8 +33,19 @@ function update_email()
 
 	if(emailReg.test($("#fos_user_registration_form_email").val()))
 	{
-		$("#register_email_id").addClass("success");
-		$("#register_info_id").text("Email Validated. Move along, move along...");
+		$.get("{{path('AceUserBundle_email_exists', {'email':''})}}" + "/" + $("#fos_user_registration_form_email").val(), function (data)
+		{
+			if (data == "true")
+			{
+				$("#register_email_id").addClass("error");
+				$("#register_info_id").text("We are sorry, this email is already used.");
+			}
+			else
+			{
+				$("#register_email_id").addClass("success");
+				$("#register_info_id").text("Email Validated. Move along, move along...");
+			}
+		});
 	}
 	else
 	{
