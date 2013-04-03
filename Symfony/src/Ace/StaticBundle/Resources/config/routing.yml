@@ -2,6 +2,10 @@ AceStaticBundle_about:
     pattern:  /about
     defaults: { _controller: AceStaticBundle:Default:about }
 
+AceStaticBundle_tech:
+    pattern:  /tech
+    defaults: { _controller: AceStaticBundle:Default:tech }
+
 AceStaticBundle_team:
     pattern:  /team
     defaults: { _controller: AceStaticBundle:Default:team }

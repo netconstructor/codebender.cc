@@ -33,6 +33,11 @@ class DefaultController extends Controller
 		return $this->render('AceStaticBundle:Default:about.html.twig');
 	}
 
+	public function techAction()
+	{
+		return $this->render('AceStaticBundle:Default:tech.html.twig');
+	}
+
 	public function teamAction()
 	{
 		$dev_images_dir = "images/developers/";
