@@ -4,84 +4,57 @@
 {% block javascripts %}
     <script type="text/javascript" src="{{ path("AceGenericBundle_embedded_compilerflasher_js") }}"></script>
     <script type="text/javascript">
-
-        var plugin_check_id = window.setInterval(function () {
-            if ($(".alert").length > 0) {
-                window.clearInterval(plugin_check_id);
-                window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":1}) }}");
-            }
-        }, 500);
-
-        $(document).ready(function () {
-            var os = (function () {
-                var ua = navigator.userAgent.toLowerCase();
-                return {
-                    isWin2K:/windows nt 5.0/.test(ua),
-                    isXP:/windows nt 5.1/.test(ua),
-                    isVista:/windows nt 6.0/.test(ua),
-                    isWin7:/windows nt 6.1/.test(ua),
-                    isMac:/macintosh/.test(ua),
-                    isLinux:/linux/.test(ua)
-                };
-            }());
-
-
-            if (os.isLinux) {
+        window.setTimeout(function () {
+            if ($(".alert").length == 0) {
                 window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
             }
-            else
+	        else
             {
-
-	            window.setInterval(function(){
-                    if($("#install_drivers_button").css("display") == "none")
-                    {
-	                    if (window.plugin.checkForDrivers(""))
-		                    window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
-	                    else
-	                    {
-		                    $("#install_drivers_button").show();
-		                    if (os.isXP || os.isMac)
-		                    {
-			                    $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(0);");
-		                    }
-
-		                    if (os.isVista || os.isWin7)
-		                    {
-			                    $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(1);");
-		                    }
-	                    }
-                    }
-		            else
-                    {
-	                    if ($("#operation_output:contains(Drivers Installed Successfully.)").length > 0)
-		                    window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
-                    }
-                }, 5000);
-
-
+	            $("#cb_cf").hide();
+	            $("#cb_cf").css("visibility", "visible")
+	            $("#step_output_text").hide(1000);
+	            $("#cb_cf").show(1000);
             }
-        });
+        }, 5000);
     </script>
 {% endblock %}
 
 {% block stylesheets %}
     <style>
+	    #cb_cf
+	    {
+		    visibility: hidden;
+	    }
         #ports_div {
             visibility: hidden;
             width: 0px;
             height: 0px;
             position: fixed;
         }
+
+        .alert {
+            font-size: 30px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        #step_output_text
+        {
+	        font-size: 30px;
+	        line-height: 50px;
+	        text-align: center;
+        }
+
     </style>
-    {% include 'AceStaticBundle:Walkthrough:huge_button_style.html.twig' %}
 {% endblock %}
 
 {% block page_content %}
-    <h3>Driver Installation</h3>
-    <p>We strongly encourage you to install the required drivers for your device.
-        It will only take a few seconds, and you will ensure that you will be able to use any Arduino
-        or Arduino-compatible device with codebender.</p>
-    <button class="huge-button" id="install_drivers_button" style="display:none;">Install Drivers</button>
+	<div id="step_output_text">
+		<p>
+			Please wait
+			<i class="icon-spinner icon-spin"></i>
+		</p>
+	</div>
 
-    <div id="cb_cf" data-board="Arduino Uno" data-sketch="3" data-sections="usbflash"></div>
+	<div id="cb_cf" data-board="Arduino Uno" data-sections="usbflash" data-plugin-version="1.5.4.20"></div>
 {% endblock %}
