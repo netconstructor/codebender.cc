@@ -1,15 +1,5 @@
 {% extends '::container.html.twig' %}
 {% block title "Project Info" %}
-{% block stylesheets %}
-	{% if is_granted('ROLE_USER') %}
-		<style type="text/css" media="screen">
-			#operation_output
-			{
-				-webkit-margin-after: 24px;
-			}
-		</style>
-	{% endif %}
-{% endblock %}
 
 {% block javascripts %}
 {% endblock %}
