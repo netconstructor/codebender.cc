@@ -92,8 +92,9 @@ void loop()
 		$response = $this->projectmanager->createprojectAction($user["id"], "Blink Example", $first_code)->getContent();
 		$response = $this->projectmanager->createprojectAction($user["id"], "Serial Comm Example", $second_code)->getContent();
 
-	    $referrer = json_decode($this->usercontroller->getUserAction($user["referrer_username"])->getContent(), true);
-	    if($referrer["success"])
+	    if($user["referrer_username"])
+	        $referrer = json_decode($this->usercontroller->getUserAction()->getContent(), true);
+	    if($user["referrer_username"] && $referrer["success"])
 	    {
 		    $response = $this->usercontroller->setReferrerAction($username, $user["referrer_username"])->getContent();
 		    $response = $this->usercontroller->setKarmaAction($username, 50)->getContent();
