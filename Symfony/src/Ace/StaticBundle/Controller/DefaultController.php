@@ -83,9 +83,15 @@ class DefaultController extends Controller
 		$christidis_desc = "Currently a student and an assistant administrator. I am responsible for the compiler backend, ensuring that it's fast and robust.  Known as a perfectionist, I often fuss over coding style and documentation.";
 		$christidis = new developer($christidis_name, $christidis_title, $christidis_avatar, $christidis_desc);
 
-		$developers = array($tzikis, $tsampas, $amaxilatis, $orfanos, $dimakopoulos);
-		$friends = array($christidis);
-		$past = array($kousta);
+		$baltas_name = "Alexandros Baltas";
+		$baltas_title = "teh artist";
+		$baltas_avatar = $dev_images_dir."baltas.png";
+		$baltas_desc = "Guess what. I'm also a CEID graduate. And a drummer. When I'm not being chased by crazy chicks and generally being a diva, I can be found contributing to codebender and saying 'kamena asteia' (burned jokes) to the rest of the team.";
+		$baltas = new developer($baltas_name, $baltas_title, $baltas_avatar, $baltas_desc);
+
+		$developers = array($tzikis, $amaxilatis, $orfanos, $christidis, $baltas);
+		$friends = array($tsampas);
+		$past = array($kousta, $dimakopoulos);
 		return $this->render('AceStaticBundle:Default:team.html.twig', array("developers" => $developers, "friends" => $friends, "past" => $past));
 	}
 
