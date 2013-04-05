@@ -11,6 +11,7 @@ use FOS\UserBundle\Mailer\MailerInterface;
 use Ace\UserBundle\Entity\User;
 use Ace\UserBundle\Controller\DefaultController as UserController;
 use Ace\ProjectBundle\Controller\DefaultController as ProjectManager;
+use Ace\UtilitiesBundle\Controller\ReferralCodeController;
 use MCAPI;
 
 
@@ -18,14 +19,16 @@ class RegistrationFormHandler extends BaseHandler
 {
 	private $usercontroller;
 	private $projectmanager;
+	private $referralcontroller;
 	private $listapi;
 	private $listid;
 
-    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, UserController $usercontroller, ProjectManager $projectmanager, $listapi, $listid)
+    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, UserController $usercontroller, ProjectManager $projectmanager, ReferralCodeController $referralcontroller, $listapi, $listid)
     {
 		parent::__construct($form, $request, $userManager, $mailer);
 		$this->usercontroller = $usercontroller;
 		$this->projectmanager = $projectmanager;
+	    $this->referralcontroller = $referralcontroller;
 		$this->listapi = $listapi;
 		$this->listid = $listid;
     }
@@ -94,16 +97,20 @@ void loop()
 
 	    if($user["referrer_username"])
 	        $referrer = json_decode($this->usercontroller->getUserAction()->getContent(), true);
+
+	    if($user["referral_code"])
+		    $referral_code = json_decode($this->referralcontroller->useCodeAction($user["referral_code"])->getContent(), true);
+
 	    if($user["referrer_username"] && $referrer["success"])
 	    {
 		    $response = $this->usercontroller->setReferrerAction($username, $user["referrer_username"])->getContent();
 		    $response = $this->usercontroller->setKarmaAction($username, 50)->getContent();
 		    $response = $this->usercontroller->setPointsAction($username, 50)->getContent();
 	    }
-	    else if ($user["referral_code"] == "codebender_special")
+	    else if ($user["referral_code"] && $referral_code["success"])
 	    {
-		    $response = $this->usercontroller->setKarmaAction($user["id"], 50)->getContent();
-		    $response = $this->usercontroller->setPointsAction($user["id"], 50)->getContent();
+		    $response = $this->usercontroller->setKarmaAction($username, 50)->getContent();
+		    $response = $this->usercontroller->setPointsAction($username, $referral_code["points"])->getContent();
 	    }
 
 	    // Mailchimp Integration
