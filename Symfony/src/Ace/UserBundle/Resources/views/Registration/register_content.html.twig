@@ -19,7 +19,9 @@
 		{{ form_widget(form.plainPassword.second, { 'attr': {'placeholder': 'Repeat Password', 'style': 'max-width:100%' } }) }}
 		</div>
 		{{ form_errors(form.plainPassword) }}
-		{{ form_errors(form) }}
+		<div class="text-error">
+			{{ form_errors(form, { 'attr': {'class' : 'text-error'} }) }}
+		</div>
 		<p id="register_info_id">Hi! Why don't you sign up for a codebender account?<br /></p>
 	</div>	
 	<div style="display:none">
