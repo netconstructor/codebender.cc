@@ -33,7 +33,8 @@ security:
 #        - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/list/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/options/*, roles: ROLE_USER }
+        - { path: ^/users/options, roles: ROLE_USER }
+        - { path: ^/users/setoptions, roles: ROLE_USER }
         - { path: ^/create/*, roles: ROLE_USER }
         - { path: ^/admin/, role: ROLE_ADMIN }
 
