@@ -1,11 +1,14 @@
 <div class="row-fluid">
-	<div class="span8">
+	<div class="span12 well">
+		{#<button class="close">&times;</button>#}
 		<h2>Getting Started</h2>
-		<p>Need help getting started? If you are new to Arduino and physical programming, take a look at the sample projects we created to get you started or watch our <a href="{{ path('AceStaticBundle_tutorials') }}">tutorials</a>.</p>
-		<p>Or you can take a look at various examples on the <a href="{{path("AceGenericBundle_libraries")}}">Examples &amp; Libraries</a> page, and clone a project to your account if you find something interesting.</p>
-		<p>If you are already an Arduino user, you can also start by uploading your existing projects online.</p>
-	</div>
-	<div class="span4">
-		{% include "AceUtilitiesBundle:Default:donate.html.twig" %}
+		<p>Hi there. Thanks for chosing codebender. We would strongly encourage you to follow our
+			<a href="{{ path("AceStaticBundle_walkthrough", {"page": 1}) }}">
+				Getting Started
+			</a>
+			guide. It will guide you through the process of installing our plugin, and if it's the first time you follow
+			the guide, you will also be rewarded with codebender points, which you can use to unlock extra features or
+			claim codebender swag as gifts.
+		</p>
 	</div>
 </div>

@@ -18,7 +18,15 @@ class DefaultController extends Controller
 		{
 			// Load user content here
 			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
-			return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user));
+			{
+				$popular_users = json_decode($this->get('usercontroller')->getTopUsersAction(5)->getContent(), true);
+				if($popular_users["success"] == true)
+					$popular_users = $popular_users["list"];
+				else
+					unset($popular_users);
+
+				return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user, "popular_users" => $popular_users));
+			}
 		}
 
 		return $this->render('AceGenericBundle:Index:index.html.twig');
