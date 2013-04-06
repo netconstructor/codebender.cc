@@ -354,6 +354,23 @@ class DefaultController extends Controller
 	        )));
 	}
 
+	public function getTopUsersAction($count)
+	{
+		$repository = $this->em->getRepository('AceUserBundle:User');
+		$users = $repository->createQueryBuilder('u')
+			->orderBy('u.karma', 'DESC')
+			->setMaxResults($count)
+			->getQuery()->getResult();
+
+		$users_array = array();
+		foreach($users as $user)
+		{
+			$users_array[] = json_decode($this->getUserAction($user->getUsername())->getContent(), true);
+		}
+
+		return new Response(json_encode(array("success" => true, "list" => $users_array)));
+	}
+
 	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator, ContainerInterface $container, $listapi, $listid)
 	{
 		$this->templating = $templating;
