@@ -173,4 +173,9 @@ class DefaultController extends Controller
 	{
 		return $this->render('AceStaticBundle:Partner:'.$name.'.html.twig');
 	}
+
+	public function infoPointsAction()
+	{
+		return $this->render('AceStaticBundle:Default:info_points.html.twig', array());
+	}
 }

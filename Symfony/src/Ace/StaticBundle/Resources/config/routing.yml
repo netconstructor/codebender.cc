@@ -37,3 +37,7 @@ AceStaticBundle_plugin:
 AceStaticBundle_partner:
     pattern:  /partner/{name}
     defaults: { _controller: AceStaticBundle:Default:partner }
+
+AceStaticBundle_info_points:
+    pattern:  /info/points
+    defaults: { _controller: AceStaticBundle:Default:infoPoints }
