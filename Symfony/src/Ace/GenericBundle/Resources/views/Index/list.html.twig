@@ -5,8 +5,12 @@
 	    <div class="span12">
 		    <h2>
 			    Hello {{ user["username"] }}!
-			    {% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
-			    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
+			    <a href="{{ path("AceStaticBundle_info_points") }}">
+				    {% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
+			    </a>
+			    <a href="{{ path("AceStaticBundle_info_karma") }}">
+				    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
+			    </a>
 		    </h2>
 
 	    </div>
