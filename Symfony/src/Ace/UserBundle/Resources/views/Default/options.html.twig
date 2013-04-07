@@ -119,7 +119,7 @@
                 $(".currentPassword-info").html('<i>Checking Password</i>');
                 $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:$("#" + id).val() },
                         function (response) {
-                            if (response == 1) {
+                            if (response.valid) {
                                 $(".oldpass").removeClass("warning").addClass("success");
                                 $(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
                                 $(".currentPassword-info").html('');

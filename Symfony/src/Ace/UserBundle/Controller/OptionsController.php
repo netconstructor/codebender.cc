@@ -160,9 +160,11 @@ class OptionsController extends Controller
 		if("POST" === $this->request->getMethod()){
 			$currentPassword = $this->request->get('currentPassword');
 			if($this->comparePassword($currentPassword))
-				return new Response('1',200,array('content-type'=>'text/plain'));
+				$response = array('valid' => true);
 			else
-				return new Response('0',200,array('content-type'=>'text/plain'));
+				$response = array('valid' => false);
+				
+			return new Response(json_encode($response), 200, array('Content-Type'=>'application/json'));
 		}
 	}
 	
