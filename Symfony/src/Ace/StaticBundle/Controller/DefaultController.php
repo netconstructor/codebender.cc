@@ -178,4 +178,9 @@ class DefaultController extends Controller
 	{
 		return $this->render('AceStaticBundle:Default:info_points.html.twig', array());
 	}
+
+	public function infoKarmaAction()
+	{
+		return $this->render('AceStaticBundle:Default:info_karma.html.twig', array());
+	}
 }

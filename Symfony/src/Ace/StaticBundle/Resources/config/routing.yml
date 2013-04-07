@@ -41,3 +41,7 @@ AceStaticBundle_partner:
 AceStaticBundle_info_points:
     pattern:  /info/points
     defaults: { _controller: AceStaticBundle:Default:infoPoints }
+
+AceStaticBundle_info_karma:
+    pattern:  /info/karma
+    defaults: { _controller: AceStaticBundle:Default:infoKarma }
