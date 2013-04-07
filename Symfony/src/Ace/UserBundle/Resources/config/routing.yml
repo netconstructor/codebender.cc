@@ -24,9 +24,9 @@ AceUserBundle_options:
 #    requirements:
 #        _method:   POST
 
-AceUserBundle_checkpass:
-    pattern:  /checkpass
-    defaults: { _controller: usercontroller:checkpassAction }
+AceUserBundle_iscurrentpassword:
+    pattern:  /iscurrentpassword
+    defaults: { _controller: optionscontroller:isCurrentPasswordAction }
     requirements:
         _method:   POST
 

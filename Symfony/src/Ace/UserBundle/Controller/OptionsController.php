@@ -69,23 +69,10 @@ class OptionsController extends Controller
 			}
 			
 			// flag to state user password request
-			$passChange = false;
+			$passChange = $this->isCurrentPass($form);
+			if(!$passChange)
+				$form->get('currentPassword')->addError(new FormError('Wrong password!'));
 						
-			// check if user entered his own old password
-			$currentPassword = $form->get('currentPassword')->getData();
-			if($currentPassword != NULL)
-			{
-				//hash password
-				$encoder = $this->ef->getEncoder($currentUser);
-				$encodedPass = $encoder->encodePassword($currentPassword, $currentUser->getSalt());
-				
-				if($encodedPass !== $currentUser->getPassword())
-					$form->get('currentPassword')->addError(new FormError('Wrong password!'));
-				else
-					$passChange = true;
-			}
-			
-			
 			if ($form->isValid())
 			{
 				$this->em->persist($currentUser);
@@ -164,7 +151,38 @@ class OptionsController extends Controller
 
     }
     
-    private function getErrorMessages($form) {
+    private function isCurrentPass(Form $form){
+		$currentPassword = $form->get('currentPassword')->getData();
+		return $this->comparePassword($currentPassword);
+	}
+    
+    public function isCurrentPasswordAction(){
+		if("POST" === $this->request->getMethod()){
+			$currentPassword = $this->request->get('currentPassword');
+			if($this->comparePassword($currentPassword))
+				$response = array('valid' => true);
+			else
+				$response = array('valid' => false);
+				
+			return new Response(json_encode($response), 200, array('Content-Type'=>'application/json'));
+		}
+	}
+	
+	private function comparePassword($currentPassword){	
+		if($currentPassword != NULL)
+		{
+			$currentUser = $this->sc->getToken()->getUser();
+			//hash password
+			$encoder = $this->ef->getEncoder($currentUser);
+			$encodedPass = $encoder->encodePassword($currentPassword, $currentUser->getSalt());
+			
+			if($encodedPass === $currentUser->getPassword())
+				return true;
+		}
+		return false;		
+	}
+    
+    private function getErrorMessages(Form $form) {
     
 		$errors = array();
 		foreach ($form->getErrors() as $key => $error) {

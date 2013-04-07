@@ -125,14 +125,14 @@
             }
         }
 
-        else if (id == "old_pass") {
+        else if (id == "options_currentPassword") {
             if ($("#" + id).val().length != 0) {
                 $(".oldpass").removeClass("error").removeClass("success").addClass("warning");
                 $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
                 $(".currentPassword-info").html('<i>Checking Password</i>');
-                $.post("{{ path('AceUserBundle_checkpass') }}", {oldpass:$("#" + id).val() },
-                        function (info) {
-                            if (info == 1) {
+                $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:$("#" + id).val() },
+                        function (response) {
+                            if (response.valid) {
                                 $(".oldpass").removeClass("warning").addClass("success");
                                 $(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
                                 $(".currentPassword-info").html('');
@@ -192,14 +192,17 @@
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
+			$("#loading").hide();
             $("#modify").click(function (e) {
 				e.preventDefault();
+				$("#loading").show();
                 $.post("{{ url('AceUserBundle_options') }}", $('#options_form').serializeArray(),
                 function (response) {
+					$("#loading").hide();
 					var content = jQuery.parseJSON(response);
 					$.each( content, function(field,info){
 						if(field == "message")
-							$(".update-info").html(info).show().delay(7000).fadeOut();
+							$(".update-info").html(info).delay(10000).fadeOut();
 						else{
 							$("." + field + "-info").html(info[0]);
 							$($("#options_" + field)).parent().parent().parent().addClass("error")
@@ -342,6 +345,7 @@
     </div>
     <hr />
     <input class="btn btn-primary" type="submit" id="modify" value="Update Profile" />
+    <i id="loading" class="icon-spinner icon-spin"></i>
     <span class="help-inline update-info"></span>
     </form>
 {% endblock %}

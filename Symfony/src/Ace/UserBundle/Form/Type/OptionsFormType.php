@@ -26,7 +26,6 @@ class OptionsFormType extends AbstractType
             ->add('twitter', 'text', array( 'required' => false ))
             ->add('currentPassword', 'password', array(
 												'label' => 'Old Password',
-												//'error_bubbling' => true,
             									'required' => false,
 		        								'attr'=> array(
 				    											'onkeyup' => 'oldpasscheck(id)',
@@ -39,7 +38,6 @@ class OptionsFormType extends AbstractType
 												'invalid_message' => 'The New Password fields must match.',
 												'first_name' => 'new',
 												'second_name' => 'confirm',
-												//'error_bubbling' => true,
 												'required' => false,
 												'options' => array(
 														 'attr' => array(
