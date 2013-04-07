@@ -20,95 +20,95 @@
     <script src={{ asset("validation/passvalidation.js") }} type="text/javascript"></script>
     <script type="text/javascript" charset="utf-8">
 
-        function oldpasscheck(id) {
+     function oldpasscheck(id) {
             var len = $("#" + id).val().length;
             if (len != 0) {
                 if (len > 5 && len < 16)//reduce validation overhead
                 {
-                    $(".oldpass-info").html('');
+                    $(".currentPassword-info").html('');
                     if (passvalid(id) == 1) {
                         $(".oldpass").removeClass("error").removeClass("success").addClass("warning");
                         $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
-                        $(".oldpass-info").html('<i>Valid, type your Password and press Tab key</i>');
+                        $(".currentPassword-info").html('<i>Valid, type your Password and press Tab key</i>');
                         //setInterval(validation(id),100000);
                     }
                     else {
-                        $(".oldpass-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
+                        $(".currentPassword-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
                     }
 
                 }
                 else {
                     $(".oldpass").removeClass("warning").removeClass("success").addClass("error");
                     $(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-                    $(".oldpass-info").html('<i>Sorry, Passwords are 6-15 characters long</i>');
+                    $(".currentPassword-info").html('<i>Sorry, Passwords are 6-15 characters long</i>');
                 }
             }
             else {
                 $(".oldpass").removeClass("error").removeClass("success").removeClass("warning");
                 $(".password_old").removeClass("icon-remove").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-exclamation-sign");
-                $(".oldpass-info").html('');
+                $(".currentPassword-info").html('');
             }
         }
 
     function validation(id) {
-        if (id == "new_pass" || id == "confirm_pass") {
-            var s = passvalid("new_pass");
+        if (id == "options_plainPassword_new" || id == "options_plainPassword_confirm") {
+            var s = passvalid("options_plainPassword_new");
 
-            if (s == 1) //new_pass valid
+            if (s == 1) //options_plainPassword_new valid
             {
-                //new_pass set OK
+                //options_plainPassword_new set OK
                 $(".password_signs").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
-                $(".newpass-info").html('');
+                $(".plainPassword-info").html('');
 
-                if ($("#new_pass").val() == $("#confirm_pass").val()) //passwords match
+                if ($("#options_plainPassword_new").val() == $("#options_plainPassword_confirm").val()) //passwords match
                 {
-                    //confirm_pass set OK
+                    //options_plainPassword_confirm set OK
                     $(".passwords").removeClass("error").addClass("success");
                     $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
-                    $(".confirmpass-info").html('');
+                    $(".plainPassword-info").html('');
                 }
                 else {
-                    if ($("#confirm_pass").val().length != 0) {
-                        //confirm_pass != new_pass, confirm_pass set to error
+                    if ($("#options_plainPassword_confirm").val().length != 0) {
+                        //options_plainPassword_confirm != options_plainPassword_new, options_plainPassword_confirm set to error
                         $(".passwords").removeClass("success").addClass("error");
                         $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-                        $(".confirmpass-info").html('<i>Sorry, Passwords do not match!</i>');
+                        $(".plainPassword-info").html('<i>Sorry, Passwords do not match!</i>');
                     }
                 }
             }
-            else if (s == 2) //new_pass is empty
+            else if (s == 2) //options_plainPassword_new is empty
             {
-                //bring new_pass to normal
+                //bring options_plainPassword_new to normal
                 $(".password_signs").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
-                $(".newpass-info").html('');
+                $(".plainPassword-info").html('');
 
-                if ($("#new_pass").val() == $("#confirm_pass").val()) //both empty
+                if ($("#options_plainPassword_new").val() == $("#options_plainPassword_confirm").val()) //both empty
                 {
-                    //bring confirm_pass to normal
+                    //bring options_plainPassword_confirm to normal
                     $(".passwords").removeClass("error").removeClass("success");
                     $(".password_confirm").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
-                    $(".confirmpass-info").html('');
+                    $(".plainPassword-info").html('');
                 }
-                else    //confirm_pass not empty
+                else    //options_plainPassword_confirm not empty
                 {
-                    //set confirm_pass to error
+                    //set options_plainPassword_confirm to error
                     $(".passwords").removeClass("success").addClass("error");
                     $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-                    $(".confirmpass-info").html('<i>Sorry, Passwords do not match!</i>');
+                    $(".plainPassword-info").html('<i>Sorry, Passwords do not match!</i>');
                 }
             }
-            else //new_pass not in range or not enough charsets
+            else //options_plainPassword_new not in range or not enough charsets
             {
                 //set passwords to error
                 $(".passwords").removeClass("success").addClass("error");
                 $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
 
                 if (s == 3)
-                    $(".newpass-info").html('<i>Sorry, Passwords must be 6-15 characters long</i>');
+                    $(".plainPassword-info").html('<i>Sorry, Passwords must be 6-15 characters long</i>');
                 else
-                    $(".newpass-info").html('<i>Sorry, your Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
+                    $(".plainPassword-info").html('<i>Sorry, your Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
 
-                $(".confirmpass-info").html('');
+                $(".plainPassword-info").html('');
             }
         }
 
@@ -116,18 +116,18 @@
             if ($("#" + id).val().length != 0) {
                 $(".oldpass").removeClass("error").removeClass("success").addClass("warning");
                 $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
-                $(".oldpass-info").html('<i>Checking Password</i>');
+                $(".currentPassword-info").html('<i>Checking Password</i>');
                 $.post("{{ path('AceUserBundle_checkpass') }}", {oldpass:$("#" + id).val() },
                         function (info) {
                             if (info == 1) {
                                 $(".oldpass").removeClass("warning").addClass("success");
                                 $(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
-                                $(".oldpass-info").html('');
+                                $(".currentPassword-info").html('');
                             }
                             else {
                                 $(".oldpass").removeClass("warning").removeClass("success").addClass("error");
                                 $(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-                                $(".oldpass-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
+                                $(".currentPassword-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
                             }
                         }).error(function () {
                             alert("error");
@@ -135,8 +135,7 @@
             }
         }
 
-
-        else if (id == "email") //using type="email" instead
+		else if (id == "email") //using type="email" instead
         {
             if ($("#" + id).val().length > 4) {
                 if (emailReg.test($("#" + id).val())) {
@@ -145,30 +144,30 @@
                                 if (info == 1) {
                                     $(".mail").removeClass("error").addClass("success");
                                     $(".mail-icon").removeClass("icon-remove").removeClass("icon-envelope").addClass("icon-ok");
-                                    $(".mail-info").html('');
+                                    $(".email-info").html('');
                                 }
                                 else if (info == 2) {
                                     $(".mail").removeClass("error").removeClass("success");
                                     $(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-envelope");
-                                    $(".mail-info").html('');
+                                    $(".email-info").html('');
                                 }
                                 else {
                                     $(".mail").removeClass("success").addClass("error");
                                     $(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
-                                    $(".mail-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
+                                    $(".email-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
                                 }
                             });
                 }
                 else {
                     $(".mail").removeClass("success").addClass("error");
                     $(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
-                    $(".mail-info").html('<i>Sorry, this is an invalid email address</i>');
+                    $(".email-info").html('<i>Sorry, this is an invalid email address</i>');
                 }
             }
             else {
                 $(".mail").removeClass("error").removeClass("success");
                 $(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-envelope");
-                $(".mail-info").html('');
+                $(".email-info").html('');
             }
         }
 
@@ -180,23 +179,23 @@
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
-            $("#modify").click(function () {
-                //construct array name=>value from form fields
-                var items = {};
-                $.each($('#form').serializeArray(),
-                        function (i, field) {
-                            items[field.name] = field.value;
-                        });
-
-                $.post("{{ path('AceUserBundle_setoptions') }}", {data:items },
-                        function (data) {
-                            $(".upd-dialog-info").html(data);
-                            $("#upd-dialog").modal({show:true});
-                            $("#upd-dialog").modal(show);
-                        });
+            $("#modify").click(function (e) {
+				e.preventDefault();
+                $.post("{{ url('AceUserBundle_options') }}", $('#options_form').serializeArray(),
+                function (response) {
+					var content = jQuery.parseJSON(response);
+					$.each( content, function(field,info){
+						if(field == "message")
+							$(".update-info").html(info).show().delay(7000).fadeOut();
+						else{
+							$("." + field + "-info").html(info[0]);
+							$($("#options_" + field)).parent().parent().parent().addClass("error")
+						}		
+					});   
+				});
             });
-            $("#options").addClass("active");
         });
+
     </script>
 
 {% endblock %}
@@ -224,114 +223,104 @@
         </div>
     </div>
 
-
-    <form name="form" id="form" action="{{ path('AceGenericBundle_index') }}">
+	{% form_theme form 'AceUserBundle:Form:labels.html.twig' %}
+    <form name="form" id="options_form" action="{{ path('AceUserBundle_options') }}" method="POST">
     <div class="row-fluid">
         <div class="span4">
             <div class="control-group">
-                <label class="control-label" for="uname"><strong>Username</strong></label>
+                {{ form_label(form.username) }}
                 <div class="controls">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-user"></i></span>
-                        <input class="input-large" type="text" name="username" id="uname" value="{{ username }}" disabled/>
+                        {{ form_widget(form.username, { 'attr': 'disabled' })  }}
+                         <span class="help-block"></span><!--used only for spacing-->
                     </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="fname"><strong>Firstname</strong></label>
+                {{ form_label(form.firstname) }}
                 <div class="controls">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-user"></i></span>
-                        <input class="input-large" type="text" name="firstname" id="fname" value="{{ settings.getFirstname() }}" />
+                        {{ form_widget(form.firstname) }}
+                        <span class="help-inline firstname-info">{{ form_errors(form.firstname) }}</span>
                     </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="lname"><strong>Lastname</strong></label>
+                {{ form_label(form.lastname) }}
                 <div class="controls">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-user"></i></span>
-                        <input class="input-large" type="text" name="lastname" id="lname" value="{{ settings.getLastname() }}" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="oldpass control-group">
-                <label class="control-label" for="old_pass"><strong>Old Password</strong></label>
-                <div class="controls">
-                    <div class="input-prepend">
-                        <span class="add-on"><i class="icon-exclamation-sign password_old"></i></span>
-                        <input class="input-large" type="password" name="old_pass" id="old_pass" value="" onkeyup="oldpasscheck(id)" onblur="validation(id)"/>
-                        <a href="http://codebender.cc/resetting/request" tabindex="-1">
-                            <i><span style="padding-left:35px">Forgot your password? Get a new one!</span></i>
-                        </a>
-                        <span class="help-inline oldpass-info"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="passwords control-group">
-                <label class="control-label" for="new_pass"><strong>New Password</strong></label>
-                <div class="controls">
-                    <div class="input-prepend">
-                        <span class="add-on"><i class="icon-exclamation-sign password_signs"></i></span>
-                        <input class="input-large" type="password" name="new_pass" id="new_pass" value="" onkeyup="validation(id)"/>
-                        <span class="help-inline newpass-info"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="passwords control-group">
-                <label class="control-label" for="confirm_pass"><strong>Confirm New Password</strong></label>
-                <div class="controls">
-                    <div class="input-prepend">
-                        <span class="add-on"><i class="icon-exclamation-sign password_confirm"></i></span>
-                        <input class="input-large" type="password" name="confirm_pass" id="confirm_pass" value=""  onkeyup="validation(id)" />
-                        <span class="help-inline confirmpass-info"></span>
+                        {{ form_widget(form.lastname) }}
+                        <span class="help-block lastname-info">{{ form_errors(form.lastname) }}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="span4">
             <div class="mail control-group">
-                <label class="control-label" for="email"><strong>E-mail</strong></label>
-
+                {{ form_label(form.email) }}
                 <div class="controls">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-envelope mail-icon"></i></span>
-                        <input class="input-large" type="email" name="email" id="email"
-                               value="{{ settings.getEmail() }}" onkeyup="validation(id)"/>
-                        <span class="help-block mail-info"></span>
+							{{ form_widget(form.email) }}
+                        <span class="help-block email-info">{{ form_errors(form.email) }}</span>
                     </div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="tweet"><strong>Twitter</strong></label>
-
+                {{ form_label(form.twitter) }}
                 <div class="controls">
                     <div class="input-prepend">
                         <span class="add-on">@</span>
-                        <input class="input-large" type="text" name="tweet" id="tweet"
-                               value="{{ settings.getTwitter() }}"/>
+                        {{ form_widget(form.twitter) }}
                     </div>
                 </div>
             </div>
         </div>
+        <div class="span4">
+			<div class="oldpass control-group">
+                {{ form_label(form.currentPassword) }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-exclamation-sign password_old"></i></span>
+                        {{ form_widget(form.currentPassword) }}
+                        <a href="{{ url('fos_user_resetting_request') }}" tabindex="-1">
+                            <i><span style="padding-left:35px">Forgot your password? Get a new one!</span></i>
+                        </a>
+                        <span class="help-block currentPassword-info">{{ form_errors(form.currentPassword) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="passwords control-group">
+                {{ form_label(form.plainPassword.new, 'New Password') }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-exclamation-sign password_signs"></i></span>
+                        {{ form_widget(form.plainPassword.new) }}
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="passwords control-group">
+                {{ form_label(form.plainPassword.confirm, 'Confirm New Password') }}
+                <div class="controls">
+                    <div class="input-prepend">
+                        <span class="add-on"><i class="icon-exclamation-sign password_confirm"></i></span>
+                        {{ form_widget(form.plainPassword.confirm) }}
+                        <span class="help-block plainPassword-info">{{form_errors(form.plainPassword)}}</span>
+                    </div>
+                </div>
+            </div>
+			<span class="help-block form-info">{{ form_errors(form) }}</span>
+			<div style="display:none">
+				{{form_rest(form)}}
+			</div>
+        </div>
     </div>
     <hr />
-    <input class="btn btn-primary" type="button" id="modify" value="Save Changes" />
-    <input class="btn" type="submit" id="cancel" value="Cancel" />
+    <input class="btn btn-primary" type="submit" id="modify" value="Update Profile" />
+    <span class="help-inline update-info"></span>
     </form>
-
-    <div class="modal hide fade" id="upd-dialog" >
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3 id="upd-modal-label">Profile Update</h3>
-      </div>
-      <div class="modal-body">
-        <span class="upd-dialog-info"></span>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal">Close</button>
-      </div>
-    </div>
 {% endblock %}
