@@ -16,13 +16,13 @@ AceUserBundle_getcurrentuser:
 
 AceUserBundle_options:
     pattern:  /options
-    defaults: { _controller: usercontroller:optionsAction }
+    defaults: { _controller: optionscontroller:optionsEditAction }
     
-AceUserBundle_setoptions:
-    pattern:  /setoptions
-    defaults: { _controller: usercontroller:setoptionsAction }
-    requirements:
-        _method:   POST
+#AceUserBundle_setoptions:
+#    pattern:  /setoptions
+#    defaults: { _controller: usercontroller:setoptionsAction }
+#    requirements:
+#        _method:   POST
 
 AceUserBundle_checkpass:
     pattern:  /checkpass

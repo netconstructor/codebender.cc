@@ -139,9 +139,20 @@ services:
             entityManager: "@doctrine.orm.entity_manager"
             validator: "@validator"
             container: "@service_container"
-            listapi: %listapi%
-            listid: %listid%
     boardcontroller:
         class:        Ace\UtilitiesBundle\Controller\BoardController
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
+    optionscontroller:
+        class: Ace\UserBundle\Controller\OptionsController
+        scope: request
+        arguments:
+            templating:  "@templating"
+            securityContext: "@security.context"
+            container: "@service_container"
+            request: "@request"
+            usermanager: "@fos_user.user_manager"
+            encoderFactory: "@security.encoder_factory"
+            entityManager: "@doctrine.orm.entity_manager"
+            listapi: %listapi%
+            listid: %listid%
