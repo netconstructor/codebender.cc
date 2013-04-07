@@ -23,26 +23,37 @@
 
 	<div class="row-fluid">
 		<div class="span12">
-			<h3>Refer a friend!</h3>
 			<p style="text-align: justify">
-				Hi there. We hope you like codebender, and we really hope you like it enough to share it with your
-				friends. In fact, we strongly encourage you to do that. To give you an extra nudge, we'd like to offer
-				you a some incentive.
+				What's codebender points? Put simply, a way for us to say thank you! We want to encourage people to
+				spread the word about codebender, and generally <strong>be excellent with each other</strong>. And we
+				like showing our appreciation in meaningful, tangible ways. That's why we're introducing codebender
+				points. Every time you do something good for the community, you will earn points that you can use to
+				claim gifts or unlock extra functionality within {{ site_name }}.
 			</p>
-
+		</div
+	</div>
+	<div class="row-fluid">
+		<div class="span6">
+			<a href="{{ asset("images/codebender t-shirt.png") }}" rel="lightbox" title="codebender's editor page">
+				<img class="img-screenshot" src="{{ asset("images/codebender t-shirt.png") }}">
+			</a>
+		</div>
+		<div class="span6">
+			<h3>Do good. Get T-Shirts!</h3>
 			<p style="text-align: justify">
-				For every friend you invite to codebender, you will earn 20 codebender points, and they will also earn
-				50
-				points. codebender points is a new system we are introducing, which rewards users for their good deeds
-				and for spreading the word about codebender. In the future, you will be able to use your codebender
-				points to unlock extra features and other cool stuff.
+				We start off with referrals. When you invite a friend to {{ site_name }} and they register, you get 20
+				points and they get 50. And we kick it off with offering you an awesome T-Shirt when you gather 300
+				points. And we're adding many more ways to get points, so don't worry, you'll get it in no time.
 			</p>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
 			<h4>Referral Code</h4>
-
-			<p>To invite your friends to codebender and gain codebender points, just share this invitation link with
-				them.
+			<p>
+				To invite your friends to codebender, share this link with them, or use the tweet button in the
+				<strong>Invite a friend</strong> section bellow.
 			</p>
-
 			<p class="well">
 				<a href="{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}" target="_blank">{{ url("fos_user_registration_register") ~ "?referrer=" ~ app.user.username }}</a>
 			</p>
