@@ -159,7 +159,7 @@ class OptionsController extends Controller
 			return new Response(json_encode($content));
         }
         else
-			return new Response($this->templating->render('AceUserBundle:Default:options.html.twig', array('form' => $form->createView(), 'image' => $image)));
+			return new Response($this->templating->render('AceUserBundle:Default:options.html.twig', array('form' => $form->createView(), 'image' => $image, "user" => $currentUser)));
 		
 
     }

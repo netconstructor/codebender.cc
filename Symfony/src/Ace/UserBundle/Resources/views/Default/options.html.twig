@@ -214,7 +214,15 @@
 {% endblock %}
 
 {% block mainspan %}
-    <h2>User Account Options</h2>
+    <h2>
+	    User Account Options
+	    <a href="{{ path("AceStaticBundle_info_points") }}">
+		    {% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user.getPoints} %}
+	    </a>
+	    <a href="{{ path("AceStaticBundle_info_karma") }}">
+		    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user.getKarma} %}
+	    </a>
+    </h2>
     <h5> Change your personal information, then click 'Save Changes' to update your profile.</h5>
     <hr />
     <div class="row-fluid">
