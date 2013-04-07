@@ -107,7 +107,7 @@ class DefaultController extends Controller
 		$result = array();
 		foreach($users as $user)
 		{
-			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername()));
+			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma()));
 		}
 		return new Response(json_encode($result));
 	}
@@ -122,7 +122,7 @@ class DefaultController extends Controller
 		$result = array();
 		foreach($users as $user)
 		{
-			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername()));
+			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma()));
 		}
 		return new Response(json_encode($result));
 	}
@@ -137,7 +137,7 @@ class DefaultController extends Controller
 		$result = array();
 		foreach($users as $user)
 		{
-			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername()));
+			$result[] = array($user->getId() => array("firstname" => $user->getFirstname(), "lastname" => $user->getLastname(), "username" => $user->getUsername(), "karma" => $user->getKarma()));
 		}
 		return new Response(json_encode($result));
 	}
