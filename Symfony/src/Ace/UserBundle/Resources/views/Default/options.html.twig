@@ -112,14 +112,14 @@
             }
         }
 
-        else if (id == "old_pass") {
+        else if (id == "options_currentPassword") {
             if ($("#" + id).val().length != 0) {
                 $(".oldpass").removeClass("error").removeClass("success").addClass("warning");
                 $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
                 $(".currentPassword-info").html('<i>Checking Password</i>');
-                $.post("{{ path('AceUserBundle_checkpass') }}", {oldpass:$("#" + id).val() },
-                        function (info) {
-                            if (info == 1) {
+                $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:$("#" + id).val() },
+                        function (response) {
+                            if (response == 1) {
                                 $(".oldpass").removeClass("warning").addClass("success");
                                 $(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
                                 $(".currentPassword-info").html('');
