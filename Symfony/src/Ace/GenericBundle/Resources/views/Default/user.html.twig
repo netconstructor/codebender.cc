@@ -23,7 +23,7 @@
 			{% if user["firstname"] or user["lastname"]%}
 				({{user["firstname"]}} {{user["lastname"]}})
 			{% endif %}
-			{% include "AceUtilitiesBundle:Default:codebender_points.html.twig" with {"points": user["points"]} %}
+			{% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
 		</h1>
 		{% if user["twitter"] %}
 		<h4>
