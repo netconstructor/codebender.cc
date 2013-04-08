@@ -113,7 +113,3 @@ doctrine_mongodb:
             auto_mapping: true
 
 services:
-    mongofilecontroller:
-        class:        Ace\ProjectBundle\Controller\MongoFilesController
-        arguments: 
-            documentManager: "@doctrine.odm.mongodb.document_manager"
