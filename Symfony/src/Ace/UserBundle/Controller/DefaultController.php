@@ -54,7 +54,8 @@ class DefaultController extends Controller
 			"points" => $user->getPoints(),
 			"referrals" => $user->getReferrals(),
 			"referrer_username" => $user->getReferrerUsername(),
-			"referral_code" => $user->getReferralCode()
+			"referral_code" => $user->getReferralCode(),
+			"walkthrough_status" => $user->getWalkthroughStatus()
 			);
 		}
 		return new Response(json_encode($response));
