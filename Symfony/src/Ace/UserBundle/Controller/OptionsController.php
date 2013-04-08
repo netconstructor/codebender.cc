@@ -109,7 +109,7 @@ class OptionsController extends Controller
 					$updated = true;
 				}
 				
-				$message = '<span style="color:green; font-weight:bold">SUCCESS:</span> Profile Updated!';
+				$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile Updated!';
 				
 				// check if new password is valid and update user password 
 				$newPassConstraint = new PasswordConstraint();
@@ -120,13 +120,13 @@ class OptionsController extends Controller
 					
 					if(count($error)!=0){
 						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
-						$message = '<span style="color:orange; font-weight:bold">WARNING:</span> Profile Updated but your Password was <strong>NOT Changed!</strong>. Please fix the errors and try again.';
+						$message = '<span style="color:orange; font-weight:bold"><i class="icon-warning-sign icon-large"></i> WARNING:</span> Profile Updated but your Password was <strong>NOT Changed!</strong>. Please fix the errors and try again.';
 					}
 					else{
 						$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
 						$this->um->updatePassword($currentUser);
 						$updated = true;
-						$message = '<span style="color:green; font-weight:bold">SUCCESS:</span> Profile and Password Updated Sucessfully!';
+						$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile and Password Updated Sucessfully!';
 					}
 				}
 				
@@ -141,7 +141,7 @@ class OptionsController extends Controller
 				}				
 			}
 			else
-				$message = '<span style="color:red; font-weight:bold">ERROR:</span> Your Profile was <strong>NOT updated</strong>, please fix the errors and try again.';
+				$message = '<span style="color:red; font-weight:bold"><i class="icon-remove-sign icon-large"></i> ERROR:</span> Your Profile was <strong>NOT updated</strong>, please fix the errors and try again.';
 			
 			//get errors from fields and store them in an assosiative array
 			$content = array();

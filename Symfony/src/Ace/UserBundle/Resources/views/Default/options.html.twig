@@ -119,9 +119,9 @@
                 if (s == 3)
                     $(".plainPassword-info").html('<i>Sorry, Passwords must be 6-15 characters long</i>');
                 else
-                    $(".plainPassword-info").html('<i>Sorry, your Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
+                    $(".plainPassword-info").html('<i>Sorry, your New Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
 
-                $(".plainPassword-info").html('');
+               // $(".plainPassword-info").html('');
             }
         }
 
@@ -204,7 +204,7 @@
 						if(field == "message")
 							$(".update-info").html(info).show().delay(10000).fadeOut();
 						else{
-							$("." + field + "-info").html(info[0]);
+							$("." + field + "-info").html("<ul><li><i>"+info[0]+"</i></ul></li>");
 							$($("#options_" + field)).closest('.control-group').addClass("error");
 						}		
 					});   
