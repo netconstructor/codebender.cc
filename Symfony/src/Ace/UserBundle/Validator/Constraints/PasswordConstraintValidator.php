@@ -25,7 +25,7 @@ class PasswordConstraintValidator extends ConstraintValidator
 			$regpunc = 1; //symbols
 		
 		$length = strlen($pass);
-		if (($regnum + $reglet + $regcaps + $regpunc > 1) && ($length > 5) && ($length < 256))
+		if ($regnum + $reglet + $regcaps + $regpunc > 1)
 			return true; 
 		else
 			return false;

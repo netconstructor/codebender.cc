@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class PasswordConstraint extends Constraint
 {
-	public $message = 'Sorry, your New Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.';
+	public $message = 'Your Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.';
 }

@@ -37,7 +37,7 @@ class OptionsFormType extends AbstractType
 											'attr' => array(
 													'class' => 'option-form-input')))
             ->add('currentPassword', 'password', array(
-														'label' => 'Old Password',
+														'label' => 'Current Password',
 														'required' => false,
 														'attr'=> array(
 																'onkeyup' => 'oldpasscheck(id)',
@@ -54,7 +54,7 @@ class OptionsFormType extends AbstractType
 													'options' => array(
 																'attr' => array(
 																		'onkeyup' => 'validation(id)',
-																		'max_length' => 15,
+																		'max_length' => 255,
 																		'placeholder'=> 'Type your new password',
 																		'class' => 'option-form-input')),
 													));
@@ -68,23 +68,23 @@ class OptionsFormType extends AbstractType
 									new Regex( array(
 													'pattern' => '/\d/',
 													'match' => false,
-													'message' => 'Your Firstname cannot contain a number'
+													'message' => 'Sorry, your Firstname cannot contain a number'
 													)),
 									),
 					'lastname' => array(
 									new Regex( array(
 													'pattern' => '/\d/',
 													'match' => false,
-													'message' => 'Your Lastname cannot contain a number'
+													'message' => 'Sorry, your Lastname cannot contain a number'
 													)),
 									),
 					'email' => array(
-								new NotBlank(array('message' => 'Please fill in your email address')),
-								new Email(array('message' => 'Invalid email address', 'checkMX' => true)),
+								new NotBlank(array('message' => 'Please fill in your Email address')),
+								new Email(array('message' => 'Sorry, this is not a valid Email address', 'checkMX' => true)),
 								),
 					'plainPassword' => array(
-										new MinLength(array('limit' => 6, 'message' => 'Password must be at least 6 characters long')),
-										new MaxLength(array('limit' => 15, 'message' => 'Password cannot be longer than 15 characters')),
+										new MinLength(array('limit' => 6, 'message' => 'Sorry, New Password must be at least 6 characters long')),
+										new MaxLength(array('limit' => 255, 'message' => 'Sorry, New Password cannot be longer than 255 characters')),
 								),
 					),
 					'allowExtraFields' => true,
