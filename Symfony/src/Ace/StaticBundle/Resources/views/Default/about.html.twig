@@ -86,14 +86,16 @@
 	</div>
 	<div class="row-fluid">
 	{% if is_granted('ROLE_USER') %}
-		<div class="span8">
+		<div class="span12">
 	{% else %}
 		<div class="span6">
 	{% endif %}
 			<iframe style="height: 510px; width: 100%; margin: 10px 0 10px" allowTransparency="true" src="http://codebender.cc/embed/sketch:8026" frameborder="0"></iframe>
 		</div>
 	{% if is_granted('ROLE_USER') %}
-		<div class="span4">
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
 	{% else %}
 		<div class="span6">
 		{% endif %}
@@ -113,7 +115,7 @@
 			</ul>
 			<p>
 				With {{ site_name }}, you can show people the exact code you're using and make your posts more
-				interesting. In fact, that's exactly what we did on the left.
+				interesting. In fact, that's exactly what we did here.
 			</p>
 		</div>
 	</div>
