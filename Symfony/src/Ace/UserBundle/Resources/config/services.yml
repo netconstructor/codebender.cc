@@ -40,7 +40,7 @@ services:
         class: Ace\UserBundle\Form\Type\RegistrationFormType
         arguments: [%fos_user.model.user.class%]
         tags:
-            - { name: form.type, alias: ace_user_registrleation }
+            - { name: form.type, alias: ace_user_registration }
 
     ace_user.form.handler.registration:
         class: Ace\UserBundle\Form\Handler\RegistrationFormHandler
