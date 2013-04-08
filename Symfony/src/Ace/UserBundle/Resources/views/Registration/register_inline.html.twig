@@ -14,24 +14,24 @@
 	<div class="span3">
 		<!-- left side -->
 		<div id="register_username_id" class="control-group">
-			{{ form_widget(form.username, { 'attr': {'placeholder': 'Username', 'style': 'max-width:100%' } }) }}
+			{{ form_widget(form.username) }}
 		</div>
 	</div>
 	<div class="span3">
 		<div id="register_email_id" class="control-group">
-			{{ form_widget(form.email, { 'attr': {'placeholder': 'Email', 'style': 'max-width:100%' } }) }}
+			{{ form_widget(form.email) }}
 		</div>
 	</div>
 	<!--/span-->
 	<div class="span3">
 		<!-- right side -->
 		<div id="register_password_id" class="control-group">
-			{{ form_widget(form.plainPassword.first, { 'attr': {'placeholder': 'Type a Password', 'style': 'max-width:100%' } }) }}
+			{{ form_widget(form.plainPassword.first) }}
 		</div>
 	</div>
 	<div class="span3">
 		<div id="register_verification_id" class="control-group">
-			{{ form_widget(form.plainPassword.second, { 'attr': {'placeholder': 'Repeat Password', 'style': 'max-width:100%' } }) }}
+			{{ form_widget(form.plainPassword.second) }}
 		</div>
 	</div>
 	<!--/span-->
