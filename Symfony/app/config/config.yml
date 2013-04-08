@@ -136,10 +136,6 @@ services:
             securityContext: "@security.context"
             entityManager: "@doctrine.orm.entity_manager"
             container: "@service_container"
-    boardcontroller:
-        class:        Ace\UtilitiesBundle\Controller\BoardController
-        arguments:
-            entityManager: "@doctrine.orm.entity_manager"
     optionscontroller:
         class: Ace\UserBundle\Controller\OptionsController
         scope: request

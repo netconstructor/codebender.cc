@@ -160,7 +160,7 @@ class DefaultController extends Controller
 
 	public function boardsAction()
 	{
-		$boardcontroller = $this->get('boardcontroller');
+		$boardcontroller = $this->get('ace_utilities.boardcontroller');
 		$boards = json_decode($boardcontroller->listAction()->getContent(), true);
 		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
 	}
@@ -168,7 +168,7 @@ class DefaultController extends Controller
 	{
 		header('Access-Control-Allow-Origin: *');
 
-		$boardcontroller = $this->get('boardcontroller');
+		$boardcontroller = $this->get('ace_utilities.boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 		return new Response(json_encode($boards));
 	}
