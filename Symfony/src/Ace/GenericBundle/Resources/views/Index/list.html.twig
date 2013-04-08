@@ -100,7 +100,7 @@
 	    </div>
     </div>
 
-	{% if user["walkthrough_status"] == 0 %}
+	{% if user["walkthrough_status"] < 5  %}
 		{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
 	{% endif %}
 
