@@ -5,16 +5,16 @@
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
 	<div>
 		<div id = "register_username_id" class="control-group">
-		{{ form_widget(form.username, { 'attr': {'placeholder': 'Username', 'style': 'max-width:100%' } }) }}
+		{{ form_widget(form.username) }}
 		</div>
 		<div id = "register_email_id" class="control-group">
-		{{ form_widget(form.email, { 'attr': {'placeholder': 'Email', 'style': 'max-width:100%' } }) }}
+		{{ form_widget(form.email) }}
 		</div>
 		<div id = "register_password_id" class="control-group">
-		{{ form_widget(form.plainPassword.first, { 'attr': {'placeholder': 'Type a Password', 'style': 'max-width:100%' } }) }}
+		{{ form_widget(form.plainPassword.first) }}
 		</div>
 		<div id = "register_verification_id" class="control-group">
-		{{ form_widget(form.plainPassword.second, { 'attr': {'placeholder': 'Repeat Password', 'style': 'max-width:100%' } }) }}
+		{{ form_widget(form.plainPassword.second) }}
 		</div>
 		<div class="text-error">
 			{{ form_errors(form.username) }}
