@@ -1,6 +1,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         window.webconnected = false;
+        window.heartbeatFlag = false;
     });
 
     function getIP()
@@ -14,6 +15,26 @@
         var port = $("#ip").val().indexOf(":") > 0 ? $("#ip").val().split(":")[1] : 80;
         return port;
     }
+
+    function startHeartbeatTimers()
+    {
+	    window.heartbeatFlag = true;
+		window.heartbeatReq = setInterval(function() { wscon.send("codebender.cc_heartbeat_req");},1000);
+		window.heartbeatRes = setInterval(function() {
+			if(window.heartbeatFlag == 0) {
+			webdisconnect();
+			} else {
+				window.heartbeatFlag = 0;
+			}
+		},5000);
+	}
+
+	function stopHeartbeatTimers()
+	{
+		window.heartbeatFlag = false;
+		clearInterval(window.heartbeatReq);
+		clearInterval(window.heartbeatRes);
+	}
 
     function webconnect() {
 
@@ -35,6 +56,7 @@
 
                 window.wscon.onopen = function () {
                     webserialHudAppend("WebSocket has been opened!");
+                    startHeartbeatTimers();
                 }
 
                 window.wscon.onclose = function () {
@@ -48,7 +70,14 @@
                 }
 
                 window.wscon.onmessage = function (line) {
-                    webserialHudAppend(line.data); //Awesome!
+                    if(line.data == "codebender.cc_heartbeat_res")
+                    {
+                        window.heartbeatFlag = true;
+                    }
+                    else
+                    {
+                        webserialHudAppend(line.data); //Awesome!
+                    }
                 }
             }
             else {
@@ -64,6 +93,8 @@
         if (window.webconnected == true) {
             $("#toggle_connect_webserial").html("<i class='icon-globe'></i> Monitor").attr("onClick", "webconnect();");
             window.webconnected = false;
+
+			stopHeartbeatTimers();
 
             if (window.wscon.readyState != window.wscon.CLOSED) {
                 window.wscon.close();
@@ -164,5 +195,7 @@
             setOperationOutput("Please enter a valid network address.")
         }
     }
+
+
 
 </script>
