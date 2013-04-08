@@ -126,14 +126,6 @@ services:
         class:        Ace\OwnerBundle\Controller\DefaultController
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
-    usercontroller:
-        class:        Ace\UserBundle\Controller\DefaultController
-        scope: request
-        arguments:
-            templating:  "@templating"
-            securityContext: "@security.context"
-            entityManager: "@doctrine.orm.entity_manager"
-            container: "@service_container"
     optionscontroller:
         class: Ace\UserBundle\Controller\OptionsController
         scope: request

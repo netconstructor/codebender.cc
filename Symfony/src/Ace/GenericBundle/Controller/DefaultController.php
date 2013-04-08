@@ -17,9 +17,9 @@ class DefaultController extends Controller
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			// Load user content here
-			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 			{
-				$popular_users = json_decode($this->get('usercontroller')->getTopUsersAction(5)->getContent(), true);
+				$popular_users = json_decode($this->get('ace_user.usercontroller')->getTopUsersAction(5)->getContent(), true);
 				if($popular_users["success"] == true)
 					$popular_users = $popular_users["list"];
 				else
@@ -34,7 +34,7 @@ class DefaultController extends Controller
 	
 	public function userAction($user)
 	{
-		$user = json_decode($this->get('usercontroller')->getUserAction($user)->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getUserAction($user)->getContent(), true);
 
 		if ($user["success"] === false)
 		{
@@ -75,7 +75,7 @@ class DefaultController extends Controller
 
 		if (!$embed && $this->get('security.context')->isGranted('ROLE_USER'))
 		{
-			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 			if($owner["id"] == $user["id"])
 			{

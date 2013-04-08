@@ -15,7 +15,7 @@ class DefaultController extends Controller
 	{
 		syslog(LOG_INFO, "new project");
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$project_name = $this->getRequest()->request->get('project_name');
 
@@ -44,7 +44,7 @@ class DefaultController extends Controller
 	public function deleteprojectAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$projectmanager = $this->get('projectmanager');
 		$response = $projectmanager->deleteAction($id)->getContent();
@@ -85,7 +85,7 @@ class DefaultController extends Controller
 	public function setDescriptionAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$description = $this->getRequest()->request->get('data');
 
@@ -97,7 +97,7 @@ class DefaultController extends Controller
 	public function setNameAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$new_name = $this->getRequest()->request->get('data');
 
@@ -109,7 +109,7 @@ class DefaultController extends Controller
 	public function renameFileAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$old_filename = $this->getRequest()->request->get('oldFilename');
 		$new_filename = $this->getRequest()->request->get('newFilename');
@@ -121,7 +121,7 @@ class DefaultController extends Controller
 
 	public function sidebarAction()
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$projectmanager = $this->get('projectmanager');
 		$files = $projectmanager->listAction($user["id"])->getContent();
@@ -194,7 +194,7 @@ class DefaultController extends Controller
 	public function saveCodeAction($id)
 	{
 		syslog(LOG_INFO, "editor save");
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$files = $this->getRequest()->request->get('data');
 		$files = json_decode($files, true);
@@ -214,7 +214,7 @@ class DefaultController extends Controller
 	{
 		syslog(LOG_INFO, "project cloned");
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$name = $this->getRequest()->request->get('name');
 
@@ -226,7 +226,7 @@ class DefaultController extends Controller
 
 	public function createFileAction($id)
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
@@ -241,7 +241,7 @@ class DefaultController extends Controller
 
 	public function deleteFileAction($id)
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
@@ -256,7 +256,7 @@ class DefaultController extends Controller
 
 	public function imageAction()
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$utilities = $this->get('ace_utilities.handler');
 		$image = $utilities->get_gravatar($user["email"]);

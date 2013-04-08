@@ -62,7 +62,7 @@ class OptionsController extends Controller
 			$email = $form->get('email')->getData();
             if($email != NULL)
 			{
-				if($this->get('usercontroller')->emailExistsAction($email)){
+				if($this->get('ace_user.usercontroller')->emailExistsAction($email)){
 					if($email !== $currentUser->getEmail())
 						$form->get('email')->addError(new FormError('This email address is already in use by another member'));
 				}
@@ -190,7 +190,7 @@ class OptionsController extends Controller
 			$currentUser = $this->sc->getToken()->getUser();
 			$email = $this->request->get('email');
 			
-			// TODO: find out why $this->get('usercontroller')->emailExistsAction($email) doesn't work
+			// TODO: find out why $this->get('ace_user.usercontroller')->emailExistsAction($email) doesn't work
 			$exists = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($email);
 			if($exists){
 					if($email !== $currentUser->getEmail())

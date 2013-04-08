@@ -235,7 +235,7 @@ class UploadHandler
 	
 	public function createUploadedProject($file_name)
 	{
-		$user = json_decode($this->up->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->up->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$exp = explode(".", $file_name);
 		$project_name =  $exp[0];

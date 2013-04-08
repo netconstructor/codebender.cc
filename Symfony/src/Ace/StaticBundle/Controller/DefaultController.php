@@ -103,7 +103,7 @@ class DefaultController extends Controller
 	public function walkthroughAction($page)
 	{
 		if(intval($page) >= 0 && intval($page)< 6)
-			$this->get('usercontroller')->setWalkthroughStatusAction(intval($page));
+			$this->get('ace_user.usercontroller')->setWalkthroughStatusAction(intval($page));
 
 		return $this->render('AceStaticBundle:Walkthrough:page'.$page.'.html.twig', array("page" => $page));
 	}
@@ -114,7 +114,7 @@ class DefaultController extends Controller
         $task = new Contact();
 		if ($this->get('security.context')->isGranted('ROLE_USER') === true)
 		{
-			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 	        $task->setName($user["firstname"]." ".$user["lastname"]." (".$user["username"].")");
 	        $task->setEmail($user["email"]);
 		}

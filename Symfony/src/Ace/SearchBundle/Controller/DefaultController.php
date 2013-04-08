@@ -14,7 +14,7 @@ class DefaultController extends Controller
             
             $query = $this->getRequest()->query->get('query');
 
-			$usercontroller = $this->get('usercontroller');
+			$usercontroller = $this->get('ace_user.usercontroller');
 			$users = json_decode($usercontroller->searchAction($query)->getContent(), true);
 
 			$projectmanager = $this->get('projectmanager');
