@@ -87,6 +87,15 @@ class DefaultController extends Controller
 		$name = json_decode($name, true);
 		$name = $name["response"];
 
+		$parent = $projectmanager->getParentAction($id)->getContent();
+		$parent = json_decode($parent, true);
+		if($parent["success"])
+		{
+			$parent = $parent["response"];
+		}
+		else
+			$parent = NULL;
+
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files = json_decode($files, true);
 		$files = $files["list"];
@@ -100,7 +109,7 @@ class DefaultController extends Controller
 
 		if($embed)
 			return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
-		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "json" => $json));
+		return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name'=>$name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "parent" => $parent, "json" => $json));
 	}
 
 	public function projectfilesAction()

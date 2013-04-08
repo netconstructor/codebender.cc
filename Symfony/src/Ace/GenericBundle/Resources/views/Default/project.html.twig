@@ -7,7 +7,17 @@
 {% block body_options %} onload="prettyPrint()"{% endblock %}
 {% block mainspan %}
 	<div class="page-header row-fluid" >
-		<h1>Codebender Project</h1>
+		<h1>
+			Codebender Project
+			{% if parent is not null %}
+				<small style="float: right; display: inline-block;">
+					cloned from
+					<a href="{{ path("AceGenericBundle_project", {"id":parent["id"]}) }}">
+						{{ parent["owner"] }}/{{ parent["name"] }}
+					</a>
+				</small>
+			{% endif %}
+		</h1>
 		{#
 				<h1>{{ project_name }}<small>By <a href="{{path('AceGenericBundle_user',{'user':owner['username'] })}}">{{ owner['username'] }}</a> ({{owner['firstname']}} {{owner['lastname']}})</small></h1>
 		#}
