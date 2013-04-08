@@ -69,23 +69,15 @@ class OptionsController extends Controller
 			}
 			
 			// flag to state user password request
-			$passChange = false;
-						
-			// check if user entered his own old password
 			$currentPassword = $form->get('currentPassword')->getData();
-			if($currentPassword != NULL)
-			{
-				//hash password
-				$encoder = $this->ef->getEncoder($currentUser);
-				$encodedPass = $encoder->encodePassword($currentPassword, $currentUser->getSalt());
-				
-				if($encodedPass !== $currentUser->getPassword())
+			if($currentPassword != NULL){
+				$passChange = $this->isCurrentPass($form, $currentPassword);
+				if(!$passChange)
 					$form->get('currentPassword')->addError(new FormError('Wrong password!'));
-				else
-					$passChange = true;
 			}
-			
-			
+			else
+				$passChange = false;
+				
 			if ($form->isValid())
 			{
 				$this->em->persist($currentUser);
@@ -117,7 +109,7 @@ class OptionsController extends Controller
 					$updated = true;
 				}
 				
-				$message = "Profile Updated Sucessfully!";
+				$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile Updated!';
 				
 				// check if new password is valid and update user password 
 				$newPassConstraint = new PasswordConstraint();
@@ -128,13 +120,13 @@ class OptionsController extends Controller
 					
 					if(count($error)!=0){
 						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
-						$message = "Profile Updated Sucessfully although <strong>your Password was NOT Changed!<strong>. Please fix the errors and try again.";
+						$message = '<span style="color:orange; font-weight:bold"><i class="icon-warning-sign icon-large"></i> WARNING:</span> Profile Updated but your Password was <strong>NOT Changed!</strong>. Please fix the errors and try again.';
 					}
 					else{
 						$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
 						$this->um->updatePassword($currentUser);
 						$updated = true;
-						$message = "Profile and Password Updated Sucessfully!";
+						$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile and Password Updated Sucessfully!';
 					}
 				}
 				
@@ -149,7 +141,7 @@ class OptionsController extends Controller
 				}				
 			}
 			else
-				$message = "<strong>Your Profile was NOT updated, please fix the errors before trying again.</strong>";
+				$message = '<span style="color:red; font-weight:bold"><i class="icon-remove-sign icon-large"></i> ERROR:</span> Your Profile was <strong>NOT updated</strong>, please fix the errors and try again.';
 			
 			//get errors from fields and store them in an assosiative array
 			$content = array();
@@ -164,7 +156,58 @@ class OptionsController extends Controller
 
     }
     
-    private function getErrorMessages($form) {
+    private function isCurrentPass(Form $form, $currentPassword){
+		
+			return $this->comparePassword($currentPassword);
+	}
+    
+    public function isCurrentPasswordAction(){
+		
+		if("POST" === $this->request->getMethod()){
+			$currentPassword = $this->request->get('currentPassword');
+			$return = $this->comparePassword($currentPassword);
+			$response = array('valid' => $return);
+							
+			return new Response(json_encode($response), 200, array('Content-Type'=>'application/json'));
+		}
+	}
+	
+	private function comparePassword($currentPassword){	
+		
+		$currentUser = $this->sc->getToken()->getUser();
+		$encoder = $this->ef->getEncoder($currentUser);
+		$encodedPass = $encoder->encodePassword($currentPassword, $currentUser->getSalt());
+			
+		if($encodedPass === $currentUser->getPassword())
+			return true;
+		
+		return false;		
+	}
+    
+    public function isEmailAvailableAction(){
+		
+		if("POST" === $this->request->getMethod()){
+			$currentUser = $this->sc->getToken()->getUser();
+			$email = $this->request->get('email');
+			
+			// TODO: find out why $this->get('usercontroller')->emailExistsAction($email) doesn't work
+			$exists = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($email);
+			if($exists){
+					if($email !== $currentUser->getEmail())
+						$return = 'inUse'; //in use by another member
+					else
+						$return = 'own'; //already stored
+			}
+			else
+				$return = 'available'; //success! New available email
+				
+			$response = array('valid' => $return);
+							
+			return new Response(json_encode($response), 200, array('Content-Type'=>'application/json'));
+		}
+	}
+    
+    private function getErrorMessages(Form $form) {
     
 		$errors = array();
 		foreach ($form->getErrors() as $key => $error) {

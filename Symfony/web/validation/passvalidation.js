@@ -15,7 +15,7 @@ function passvalid(pass)
 
 	if (len == 0)
 		return 2;
-	else if(len < 6 || len > 15)
+	else if(len < 6 || len > 255)
 		return 3;
 	else
 	{

@@ -24,8 +24,8 @@ class PasswordConstraintValidator extends ConstraintValidator
 		if(preg_match('/.*[@#$%!^&*()\_\-\+=~<>,.?\/:;\'"}{|`[\]]/', $pass ))
 			$regpunc = 1; //symbols
 		
-		
-		if ($regnum + $reglet + $regcaps + $regpunc > 1)
+		$length = strlen($pass);
+		if (($regnum + $reglet + $regcaps + $regpunc > 1) && ($length > 5) && ($length < 256))
 			return true; 
 		else
 			return false;

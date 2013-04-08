@@ -2,28 +2,20 @@
 
 namespace Ace\UserBundle\Controller;
 
-use Ace\UserBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Validator\Validator;
-use Symfony\Component\Validator\Constraints\Email;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
+use Ace\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class DefaultController extends Controller
 {
 	protected $templating;
-	protected $request;
-	protected $ef;
 	protected $sc;
 	protected $em;
-	protected $vd;
 	protected $container;
 
 	public function existsAction($username)
@@ -235,14 +227,11 @@ class DefaultController extends Controller
 		return new Response(json_encode(array("success" => true, "list" => $users_array)));
 	}
 
-	public function __construct(EngineInterface $templating, Request $request, EncoderFactory $encoderFactory, SecurityContext $securityContext, EntityManager $entityManager, Validator $validator, ContainerInterface $container)
+	public function __construct(EngineInterface $templating, SecurityContext $securityContext, EntityManager $entityManager, ContainerInterface $container)
 	{
 		$this->templating = $templating;
-		$this->request = $request;
-		$this->ef = $encoderFactory;
 		$this->sc = $securityContext;
 	    $this->em = $entityManager;
-	    $this->vd = $validator;
 		$this->container = $container;
 	}
 
