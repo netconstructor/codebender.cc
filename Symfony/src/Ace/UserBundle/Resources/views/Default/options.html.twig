@@ -36,7 +36,7 @@
      function oldpasscheck(id) {
             var len = $("#" + id).val().length;
             if (len != 0) {
-                if (len > 5 && len < 16)//reduce validation overhead
+                if (len > 5 && len < 255)//reduce validation overhead
                 {
                     $(".currentPassword-info").html('');
                     if (passvalid(id) == 1) {
@@ -53,7 +53,7 @@
                 else {
                     $(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
                     $(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-                    $(".currentPassword-info").html('<i>Sorry, Passwords are 6-15 characters long</i>');
+                    $(".currentPassword-info").html('<i>Sorry, Passwords must be between 6 to 255 characters long</i>');
                 }
             }
             else {
@@ -117,7 +117,7 @@
                 $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
 
                 if (s == 3)
-                    $(".plainPassword-info").html('<i>Sorry, Passwords must be 6-15 characters long</i>');
+                    $(".plainPassword-info").html('<i>Sorry, Passwords must be between 6 to 255 characters long</i>');
                 else
                     $(".plainPassword-info").html('<i>Sorry, your New Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
 
@@ -140,7 +140,7 @@
                             else {
                                 $(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
                                 $(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-                                $(".currentPassword-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
+                                $(".currentPassword-info").html('<i>Sorry, this is not your Current Password, give it another try</i>');
                             }
                         }).error(function () {
                             alert("error");
