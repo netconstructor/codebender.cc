@@ -57,7 +57,7 @@ class DefaultController extends Controller
 		$project->setOwner($user);
 	    $project->setName($name);
 	    $project->setDescription($description);
-	    $project->setIsPublic(TRUE);
+	    $project->setIsPublic(true);
 	
 		$project->setType("mongo");
 		$mongo = $this->mfc;
@@ -104,7 +104,7 @@ class DefaultController extends Controller
 		$new_project->setOwner($user);
 	    $new_project->setName($project->getName());
 	    $new_project->setDescription($project->getDescription());
-	    $new_project->setIsPublic(TRUE);
+	    $new_project->setIsPublic(true);
 		$new_project->setParent($id);
 
 		$new_project->setType("mongo");
