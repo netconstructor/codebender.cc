@@ -15,7 +15,7 @@ class EditorController extends Controller
 
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];

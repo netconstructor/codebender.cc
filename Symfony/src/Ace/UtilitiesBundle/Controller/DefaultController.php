@@ -30,7 +30,7 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->get('projectmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
+		$response = $this->get('ace_project.projectmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
@@ -46,7 +46,7 @@ class DefaultController extends Controller
 
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->deleteAction($id)->getContent();
 		$response=json_decode($response, true);
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
@@ -54,7 +54,7 @@ class DefaultController extends Controller
 
 	public function listFilenamesAction($id, $show_ino)
 	{
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files=json_decode($files, true);
 		$files=$files["list"];
@@ -73,7 +73,7 @@ class DefaultController extends Controller
 
 	public function getDescriptionAction($id)
 	{
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->getDescriptionAction($id)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
@@ -89,7 +89,7 @@ class DefaultController extends Controller
 
 		$description = $this->getRequest()->request->get('data');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
 		return new Response("hehe");
 	}
@@ -101,7 +101,7 @@ class DefaultController extends Controller
 
 		$new_name = $this->getRequest()->request->get('data');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->renameAction($id, $new_name)->getContent();
 		return new Response($response);
 	}
@@ -114,7 +114,7 @@ class DefaultController extends Controller
 		$old_filename = $this->getRequest()->request->get('oldFilename');
 		$new_filename = $this->getRequest()->request->get('newFilename');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->renameFileAction($id, $old_filename, $new_filename)->getContent();
 		return new Response($response);
 	}
@@ -123,7 +123,7 @@ class DefaultController extends Controller
 	{
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$files = $projectmanager->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
 
@@ -137,7 +137,7 @@ class DefaultController extends Controller
 		$htmlcode = 200;
 		$value = "";
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 
 		$name = $projectmanager->getNameAction($id)->getContent();
 		$name = json_decode($name, true);
@@ -199,7 +199,7 @@ class DefaultController extends Controller
 		$files = $this->getRequest()->request->get('data');
 		$files = json_decode($files, true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		foreach($files as $key => $file)
 		{
 			$response = $projectmanager->setFileAction($id, $key, htmlspecialchars_decode($file))->getContent();
@@ -218,7 +218,7 @@ class DefaultController extends Controller
 
 		$name = $this->getRequest()->request->get('name');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->cloneAction($user["id"], $id)->getContent();
 		$response = json_decode($response, true);
 		return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
@@ -231,7 +231,7 @@ class DefaultController extends Controller
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
 		$response = json_decode($response, true);
 		if($response["success"] ==  false)
@@ -246,7 +246,7 @@ class DefaultController extends Controller
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
 		if($response["success"] ==  false)

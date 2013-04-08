@@ -17,7 +17,7 @@ class DefaultController extends Controller
 			$usercontroller = $this->get('ace_user.usercontroller');
 			$users = json_decode($usercontroller->searchAction($query)->getContent(), true);
 
-			$projectmanager = $this->get('projectmanager');
+			$projectmanager = $this->get('ace_project.projectmanager');
 			$projects = json_decode($projectmanager->searchAction($query)->getContent(), true);
 
 	        return $this->render('AceSearchBundle:Default:find.html.twig', array('query'=>$query, 'users'=>$users, 'projects'=>$projects));
