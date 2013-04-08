@@ -102,6 +102,9 @@ class DefaultController extends Controller
 
 	public function walkthroughAction($page)
 	{
+		if(intval($page) >= 0 && intval($page)< 6)
+			$this->get('usercontroller')->setWalkthroughStatusAction(intval($page));
+
 		return $this->render('AceStaticBundle:Walkthrough:page'.$page.'.html.twig', array("page" => $page));
 	}
 
