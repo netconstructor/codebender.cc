@@ -19,32 +19,45 @@ class OptionsFormType extends AbstractType
 		
 		/* create the form*/
         $builder
-            ->add('username', 'text', array('read_only' => true ))
-            ->add('firstname', 'text',array('attr' => array('onkeyup' => 'validation(id)')))
-            ->add('lastname', 'text',array('attr' => array('onkeyup' => 'validation(id)')))
-            ->add('email', 'email', array('attr' => array('onkeyup' => 'validation(id)')))
-            ->add('twitter', 'text', array( 'required' => false ))
+            ->add('username', 'text', array('read_only' => true,
+											'attr'=> array(
+													'disabled'=>true,
+													'class' => 'option-form-input')))
+            ->add('firstname', 'text',array('attr' => array(
+													'onkeyup' => 'validation(id)',
+													'class' => 'option-form-input')))
+            ->add('lastname', 'text',array('attr' => array(
+													'onkeyup' => 'validation(id)',
+													'class' => 'option-form-input')))
+            ->add('email', 'email', array('attr' => array(
+													'onkeyup' => 'validation(id)',
+													'class' => 'option-form-input'),
+											))
+            ->add('twitter', 'text', array('required' => false,
+											'attr' => array(
+													'class' => 'option-form-input')))
             ->add('currentPassword', 'password', array(
-												'label' => 'Old Password',
-            									'required' => false,
-		        								'attr'=> array(
-				    											'onkeyup' => 'oldpasscheck(id)',
-				    											'onblur' => 'validation(id)',
-				    											'placeholder'=> 'Type your current password'),
-            									))
+														'label' => 'Old Password',
+														'required' => false,
+														'attr'=> array(
+																'onkeyup' => 'oldpasscheck(id)',
+																'onblur' => 'validation(id)',
+																'placeholder'=> 'Type your current password',
+																'class' => 'option-form-input')))
             ->add('plainPassword', 'repeated', array(
-												'label' => 'New Password',
-												'type' => 'password',
-												'invalid_message' => 'The New Password fields must match.',
-												'first_name' => 'new',
-												'second_name' => 'confirm',
-												'required' => false,
-												'options' => array(
-														 'attr' => array(
-																	'onkeyup' => 'validation(id)',
-																	'max_length' => 15,
-																	'placeholder'=> 'Type your new password')),
-												));
+													'label' => 'New Password',
+													'type' => 'password',
+													'invalid_message' => 'The New Password fields must match.',
+													'first_name' => 'new',
+													'second_name' => 'confirm',
+													'required' => false,
+													'options' => array(
+																'attr' => array(
+																		'onkeyup' => 'validation(id)',
+																		'max_length' => 15,
+																		'placeholder'=> 'Type your new password',
+																		'class' => 'option-form-input')),
+													));
     }
     
     public function getDefaultOptions(array $options)
