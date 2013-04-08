@@ -49,7 +49,12 @@ class Project
      **/
 	protected $owner;
 
-    /**
+	/**
+	 * @ORM\Column(type="integer", nullable=true)
+	 **/
+	protected $parent;
+
+	/**
      * Get id
      *
      * @return integer 
@@ -177,5 +182,25 @@ class Project
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param integer $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return integer 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

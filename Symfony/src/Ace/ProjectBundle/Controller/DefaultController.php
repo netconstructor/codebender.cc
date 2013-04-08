@@ -105,6 +105,7 @@ class DefaultController extends Controller
 	    $new_project->setName($project->getName());
 	    $new_project->setDescription($project->getDescription());
 	    $new_project->setIsPublic(TRUE);
+		$new_project->setParent($id);
 
 		$new_project->setType("mongo");
 		$mongo = $this->mfc;
@@ -172,6 +173,24 @@ class DefaultController extends Controller
 		$project = $this->getProjectById($id);
 		$name = $project->getName();
 		return new Response(json_encode(array("success" => true, "response" => $name)));
+	}
+
+	public function getParentAction($id)
+	{
+		$project = $this->getProjectById($id);
+		$parent = $project->getParent();
+		if($parent != NULL)
+		{
+			$exists = json_decode($this->checkExistsAction($id)->getContent(), true);
+			if ($exists["success"])
+			{
+				$parent = $this->getProjectById($parent);
+				$response = array("id" => $parent->getId(), "owner" => $project->getOwner()->getUsername(), "name" => $project->getName());
+				return new Response(json_encode(array("success" => true, "response" => $response)));
+			}
+		}
+
+		return new Response(json_encode(array("success" => false)));
 	}
 
 	public function getOwnerAction($id)
