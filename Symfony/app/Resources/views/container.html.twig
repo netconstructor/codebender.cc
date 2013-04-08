@@ -29,11 +29,11 @@
 				<div class="row-fluid">
 					{% if is_granted('ROLE_USER') %}		      
 					{% block sidebar %}
-					<div class="span3">
+					<div class="span4">
 					    {% render "AceUtilitiesBundle:Default:sidebar" %}    
 					</div>    	
 					{% endblock %}
-					<div class="span9">
+					<div class="span8">
 					{% else %}
 					<div class="span12">
 					{% endif %}
