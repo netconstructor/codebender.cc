@@ -70,6 +70,11 @@ class User extends BaseUser
 	private $referrals;
 
 	/**
+	 * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+	 */
+	private $walkthrough_status;
+
+	/**
      * Set firstname
      *
      * @param string $firstname
@@ -136,6 +141,7 @@ class User extends BaseUser
 	    $this->setKarma(0);
 	    $this->setPoints(0);
 	    $this->setReferrals(0);
+	    $this->setWalkthroughStatus(0);
     }
 
     /**
@@ -269,4 +275,24 @@ class User extends BaseUser
         return $this->referrals;
     }
 
+
+    /**
+     * Set walkthrough_status
+     *
+     * @param integer $walkthroughStatus
+     */
+    public function setWalkthroughStatus($walkthroughStatus)
+    {
+        $this->walkthrough_status = $walkthroughStatus;
+    }
+
+    /**
+     * Get walkthrough_status
+     *
+     * @return integer 
+     */
+    public function getWalkthroughStatus()
+    {
+        return $this->walkthrough_status;
+    }
 }

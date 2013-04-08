@@ -17,9 +17,9 @@ class DefaultController extends Controller
 		if ($this->get('security.context')->isGranted('ROLE_USER'))
 		{
 			// Load user content here
-			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 			{
-				$popular_users = json_decode($this->get('usercontroller')->getTopUsersAction(5)->getContent(), true);
+				$popular_users = json_decode($this->get('ace_user.usercontroller')->getTopUsersAction(5)->getContent(), true);
 				if($popular_users["success"] == true)
 					$popular_users = $popular_users["list"];
 				else
@@ -34,14 +34,14 @@ class DefaultController extends Controller
 	
 	public function userAction($user)
 	{
-		$user = json_decode($this->get('usercontroller')->getUserAction($user)->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getUserAction($user)->getContent(), true);
 
 		if ($user["success"] === false)
 		{
 			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error'=> "There is no such user."));
 		}
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$projects = $projectmanager->listAction($user["id"])->getContent();
 		$projects = json_decode($projects, true);
 
@@ -52,7 +52,7 @@ class DefaultController extends Controller
 		} else {
 			$lastTweet=0;
 		}
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 		$image = $utilities->get_gravatar($user["email"],120);
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
@@ -60,7 +60,7 @@ class DefaultController extends Controller
 	public function projectAction($id, $embed = false)
 	{
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$projects = NULL;
 		
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
@@ -75,7 +75,7 @@ class DefaultController extends Controller
 
 		if (!$embed && $this->get('security.context')->isGranted('ROLE_USER'))
 		{
-			$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 			if($owner["id"] == $user["id"])
 			{
@@ -118,7 +118,7 @@ class DefaultController extends Controller
 
 		$id = $this->getRequest()->request->get('project_id');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$projects = NULL;
 
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
@@ -141,7 +141,7 @@ class DefaultController extends Controller
 
 	public function librariesAction()
 	{
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 
 		$libraries = json_decode($utilities->get($this->container->getParameter('library')), true);
 		$categories = $libraries["categories"];
@@ -151,7 +151,7 @@ class DefaultController extends Controller
 
 	public function exampleAction($library, $example, $url)
 	{
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 		$data = htmlspecialchars($utilities->get($url));
 		$file = array("filename" => $example.".ino", "code" => $data);
 		$files = array($file);
@@ -160,7 +160,7 @@ class DefaultController extends Controller
 
 	public function boardsAction()
 	{
-		$boardcontroller = $this->get('boardcontroller');
+		$boardcontroller = $this->get('ace_utilities.boardcontroller');
 		$boards = json_decode($boardcontroller->listAction()->getContent(), true);
 		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
 	}
@@ -168,7 +168,7 @@ class DefaultController extends Controller
 	{
 		header('Access-Control-Allow-Origin: *');
 
-		$boardcontroller = $this->get('boardcontroller');
+		$boardcontroller = $this->get('ace_utilities.boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 		return new Response(json_encode($boards));
 	}

@@ -13,9 +13,9 @@ class EditorController extends Controller
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
@@ -38,7 +38,7 @@ class EditorController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
-		$boardcontroller = $this->get('boardcontroller');
+		$boardcontroller = $this->get('ace_utilities.boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
 		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards));

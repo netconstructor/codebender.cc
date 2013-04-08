@@ -15,7 +15,7 @@ class DefaultController extends Controller
 	{
 		syslog(LOG_INFO, "new project");
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$project_name = $this->getRequest()->request->get('project_name');
 
@@ -30,7 +30,7 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->get('projectmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
+		$response = $this->get('ace_project.projectmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
@@ -44,9 +44,9 @@ class DefaultController extends Controller
 	public function deleteprojectAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->deleteAction($id)->getContent();
 		$response=json_decode($response, true);
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
@@ -54,7 +54,7 @@ class DefaultController extends Controller
 
 	public function listFilenamesAction($id, $show_ino)
 	{
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files=json_decode($files, true);
 		$files=$files["list"];
@@ -73,7 +73,7 @@ class DefaultController extends Controller
 
 	public function getDescriptionAction($id)
 	{
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->getDescriptionAction($id)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
@@ -85,11 +85,11 @@ class DefaultController extends Controller
 	public function setDescriptionAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$description = $this->getRequest()->request->get('data');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
 		return new Response("hehe");
 	}
@@ -97,11 +97,11 @@ class DefaultController extends Controller
 	public function setNameAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$new_name = $this->getRequest()->request->get('data');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->renameAction($id, $new_name)->getContent();
 		return new Response($response);
 	}
@@ -109,21 +109,21 @@ class DefaultController extends Controller
 	public function renameFileAction($id)
 	{
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$old_filename = $this->getRequest()->request->get('oldFilename');
 		$new_filename = $this->getRequest()->request->get('newFilename');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->renameFileAction($id, $old_filename, $new_filename)->getContent();
 		return new Response($response);
 	}
 
 	public function sidebarAction()
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$files = $projectmanager->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
 
@@ -137,7 +137,7 @@ class DefaultController extends Controller
 		$htmlcode = 200;
 		$value = "";
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 
 		$name = $projectmanager->getNameAction($id)->getContent();
 		$name = json_decode($name, true);
@@ -194,12 +194,12 @@ class DefaultController extends Controller
 	public function saveCodeAction($id)
 	{
 		syslog(LOG_INFO, "editor save");
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$files = $this->getRequest()->request->get('data');
 		$files = json_decode($files, true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		foreach($files as $key => $file)
 		{
 			$response = $projectmanager->setFileAction($id, $key, htmlspecialchars_decode($file))->getContent();
@@ -214,11 +214,11 @@ class DefaultController extends Controller
 	{
 		syslog(LOG_INFO, "project cloned");
 
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$name = $this->getRequest()->request->get('name');
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->cloneAction($user["id"], $id)->getContent();
 		$response = json_decode($response, true);
 		return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
@@ -226,12 +226,12 @@ class DefaultController extends Controller
 
 	public function createFileAction($id)
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
 		$response = json_decode($response, true);
 		if($response["success"] ==  false)
@@ -241,12 +241,12 @@ class DefaultController extends Controller
 
 	public function deleteFileAction($id)
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$data = $this->getRequest()->request->get('data');
 		$data = json_decode($data, true);
 
-		$projectmanager = $this->get('projectmanager');
+		$projectmanager = $this->get('ace_project.projectmanager');
 		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
 		if($response["success"] ==  false)
@@ -256,9 +256,9 @@ class DefaultController extends Controller
 
 	public function imageAction()
 	{
-		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 		$image = $utilities->get_gravatar($user["email"]);
 
 		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["username"],'image' => $image));

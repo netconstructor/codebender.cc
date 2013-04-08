@@ -17,7 +17,7 @@
 	</p>
 
 	<h4>Arduino Code</h4>
-	<p>This is the code that was loaded if you selected any Arduin-compatible device.</p>
+	<p>This is the code that was loaded if you selected any Arduino-compatible device.</p>
 	<iframe style="height: 510px; width: 100%; margin: 10px 0 10px;" allowTransparency="true" src="http://codebender.cc/embed/sketch:8283" frameborder="0"></iframe>
 	<h4>Digispark Code</h4>
 	<p>This is the code that was loaded if you selected a Digispark.</p>
@@ -25,7 +25,7 @@
 	{% if not is_granted('ROLE_USER') %}
 		<hr class="soften">
 		<h4>Get a codebender account to code, flash your device and share your work online.</h4>
-		{% render 'usercontroller:inlineRegisterAction' %}
+		{% render 'ace_user.usercontroller:inlineRegisterAction' %}
 	{% endif %}
 
 {% endblock %}

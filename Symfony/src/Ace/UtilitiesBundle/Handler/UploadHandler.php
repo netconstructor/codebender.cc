@@ -226,7 +226,7 @@ class UploadHandler
 	
 	public function createUploadedFile($id, $filename, $code)
 	{		
-		$projectmanager = $this->up->get('projectmanager');
+		$projectmanager = $this->up->get('ace_project.projectmanager');
 		$response = $projectmanager->createFileAction($id, $filename, $code)->getContent();
 		$response = json_decode($response, true);
 		
@@ -235,12 +235,12 @@ class UploadHandler
 	
 	public function createUploadedProject($file_name)
 	{
-		$user = json_decode($this->up->get('usercontroller')->getCurrentUserAction()->getContent(), true);
+		$user = json_decode($this->up->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$exp = explode(".", $file_name);
 		$project_name =  $exp[0];
 
-			$projectmanager = $this->up->get('projectmanager');
+			$projectmanager = $this->up->get('ace_project.projectmanager');
 			$response1 = $projectmanager->createAction($user["id"], $project_name, "")->getContent();
 			$response1=json_decode($response1, true);
 			if($response1["success"]){

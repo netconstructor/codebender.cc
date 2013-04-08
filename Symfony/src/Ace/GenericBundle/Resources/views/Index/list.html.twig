@@ -100,7 +100,9 @@
 	    </div>
     </div>
 
-	{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
+	{% if user["walkthrough_status"] < 5  %}
+		{% include 'AceGenericBundle:Index:getstarted.html.twig' %}
+	{% endif %}
 
 	<div class="row-fluid">
 		<div class="span6">
