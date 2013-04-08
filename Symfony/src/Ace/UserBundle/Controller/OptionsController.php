@@ -69,10 +69,15 @@ class OptionsController extends Controller
 			}
 			
 			// flag to state user password request
-			$passChange = $this->isCurrentPass($form);
-			if(!$passChange)
-				$form->get('currentPassword')->addError(new FormError('Wrong password!'));
-						
+			$currentPassword = $form->get('currentPassword')->getData();
+			if($currentPassword != NULL){
+				$passChange = $this->isCurrentPass($form, $currentPassword);
+				if(!$passChange)
+					$form->get('currentPassword')->addError(new FormError('Wrong password!'));
+			}
+			else
+				$passChange = false;
+				
 			if ($form->isValid())
 			{
 				$this->em->persist($currentUser);
@@ -151,34 +156,31 @@ class OptionsController extends Controller
 
     }
     
-    private function isCurrentPass(Form $form){
-		$currentPassword = $form->get('currentPassword')->getData();
-		return $this->comparePassword($currentPassword);
+    private function isCurrentPass(Form $form, $currentPassword){
+		
+			return $this->comparePassword($currentPassword);
 	}
     
     public function isCurrentPasswordAction(){
+		
 		if("POST" === $this->request->getMethod()){
 			$currentPassword = $this->request->get('currentPassword');
-			if($this->comparePassword($currentPassword))
-				$response = array('valid' => true);
-			else
-				$response = array('valid' => false);
-				
+			$return = $this->comparePassword($currentPassword);
+			$response = array('valid' => $return);
+							
 			return new Response(json_encode($response), 200, array('Content-Type'=>'application/json'));
 		}
 	}
 	
 	private function comparePassword($currentPassword){	
-		if($currentPassword != NULL)
-		{
-			$currentUser = $this->sc->getToken()->getUser();
-			//hash password
-			$encoder = $this->ef->getEncoder($currentUser);
-			$encodedPass = $encoder->encodePassword($currentPassword, $currentUser->getSalt());
+		
+		$currentUser = $this->sc->getToken()->getUser();
+		$encoder = $this->ef->getEncoder($currentUser);
+		$encodedPass = $encoder->encodePassword($currentPassword, $currentUser->getSalt());
 			
-			if($encodedPass === $currentUser->getPassword())
-				return true;
-		}
+		if($encodedPass === $currentUser->getPassword())
+			return true;
+		
 		return false;		
 	}
     

@@ -40,7 +40,7 @@
                 {
                     $(".currentPassword-info").html('');
                     if (passvalid(id) == 1) {
-                        $(".oldpass").removeClass("error").removeClass("success").addClass("warning");
+                        $(".currentPassword").removeClass("error").removeClass("success").addClass("warning");
                         $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
                         $(".currentPassword-info").html('<i>Valid, type your Password and press Tab key</i>');
                         //setInterval(validation(id),100000);
@@ -51,13 +51,13 @@
 
                 }
                 else {
-                    $(".oldpass").removeClass("warning").removeClass("success").addClass("error");
+                    $(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
                     $(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
                     $(".currentPassword-info").html('<i>Sorry, Passwords are 6-15 characters long</i>');
                 }
             }
             else {
-                $(".oldpass").removeClass("error").removeClass("success").removeClass("warning");
+                $(".currentPassword").removeClass("error").removeClass("success").removeClass("warning");
                 $(".password_old").removeClass("icon-remove").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-exclamation-sign");
                 $(".currentPassword-info").html('');
             }
@@ -127,18 +127,18 @@
 
         else if (id == "options_currentPassword") {
             if ($("#" + id).val().length != 0) {
-                $(".oldpass").removeClass("error").removeClass("success").addClass("warning");
+                $(".currentPassword").removeClass("error").removeClass("success").addClass("warning");
                 $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
                 $(".currentPassword-info").html('<i>Checking Password</i>');
                 $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:$("#" + id).val() },
                         function (response) {
                             if (response.valid) {
-                                $(".oldpass").removeClass("warning").addClass("success");
+                                $(".currentPassword").removeClass("warning").addClass("success");
                                 $(".password_old").removeClass("icon-question-sign").addClass("icon-ok");
                                 $(".currentPassword-info").html('');
                             }
                             else {
-                                $(".oldpass").removeClass("warning").removeClass("success").addClass("error");
+                                $(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
                                 $(".password_old").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
                                 $(".currentPassword-info").html('<i>Sorry, this is not your old Password, give it another try</i>');
                             }
@@ -205,7 +205,7 @@
 							$(".update-info").html(info).delay(10000).fadeOut();
 						else{
 							$("." + field + "-info").html(info[0]);
-							$($("#options_" + field)).parent().parent().parent().addClass("error")
+							$($("#options_" + field)).closest('.control-group').addClass("error");
 						}		
 					});   
 				});
@@ -304,7 +304,7 @@
             </div>
         </div>
         <div class="span4">
-			<div class="oldpass control-group">
+			<div class="currentPassword control-group">
                 {{ form_label(form.currentPassword) }}
                 <div class="controls">
                     <div class="input-prepend">
