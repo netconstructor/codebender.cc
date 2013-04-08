@@ -176,6 +176,23 @@ class DefaultController extends Controller
 		return new Response(json_encode(array("success" => true)));
 	}
 
+	public function setWalkthroughStatusAction($status)
+	{
+		/** @var User $current_user */
+		$current_user = $this->sc->getToken()->getUser();
+		if ($current_user !== "anon.")
+		{
+			if ($current_user->getWalkthroughStatus() < $status)
+			{
+				if($status == 5)
+					$current_user->setPoints($current_user->getPoints() + 50);
+				$current_user->setWalkthroughStatus($status);
+			}
+		}
+		$this->em->flush();
+		return new Response(json_encode(array("success" => true)));
+	}
+
 	public function enabledAction()
 	{
 		$repository = $this->em->getRepository('AceUserBundle:User');
