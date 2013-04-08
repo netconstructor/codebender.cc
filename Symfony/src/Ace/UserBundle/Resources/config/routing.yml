@@ -16,17 +16,17 @@ AceUserBundle_getcurrentuser:
 
 AceUserBundle_options:
     pattern:  /options
-    defaults: { _controller: optionscontroller:optionsEditAction }
+    defaults: { _controller: ace_user.optionscontroller:optionsEditAction }
     
 AceUserBundle_iscurrentpassword:
     pattern:  /iscurrentpassword
-    defaults: { _controller: optionscontroller:isCurrentPasswordAction }
+    defaults: { _controller: ace_user.optionscontroller:isCurrentPasswordAction }
     requirements:
         _method:   POST
 
 AceUserBundle_isemailavailable:
     pattern:  /isemailavailable
-    defaults: { _controller: optionscontroller:isEmailAvailableAction }
+    defaults: { _controller: ace_user.optionscontroller:isEmailAvailableAction }
     requirements:
         _method:   POST
 

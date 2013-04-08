@@ -16,6 +16,21 @@ services:
             entityManager: "@doctrine.orm.entity_manager"
             container: "@service_container"
 
+    ace_user.optionscontroller:
+        class: Ace\UserBundle\Controller\OptionsController
+        scope: request
+        arguments:
+            templating:  "@templating"
+            securityContext: "@security.context"
+            container: "@service_container"
+            request: "@request"
+            usermanager: "@fos_user.user_manager"
+            encoderFactory: "@security.encoder_factory"
+            entityManager: "@doctrine.orm.entity_manager"
+            listapi: %listapi%
+            listid: %listid%
+
+
     ace_user.experimental_provider:
         class: Ace\UserBundle\Security\Provider\ExperimentalProvider
         public: false
@@ -25,7 +40,7 @@ services:
         class: Ace\UserBundle\Form\Type\RegistrationFormType
         arguments: [%fos_user.model.user.class%]
         tags:
-            - { name: form.type, alias: ace_user_registration }
+            - { name: form.type, alias: ace_user_registrleation }
 
     ace_user.form.handler.registration:
         class: Ace\UserBundle\Form\Handler\RegistrationFormHandler
