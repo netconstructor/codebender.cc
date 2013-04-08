@@ -202,7 +202,7 @@
 					var content = jQuery.parseJSON(response);
 					$.each( content, function(field,info){
 						if(field == "message")
-							$(".update-info").html(info).delay(10000).fadeOut();
+							$(".update-info").html(info).show().delay(10000).fadeOut();
 						else{
 							$("." + field + "-info").html(info[0]);
 							$($("#options_" + field)).closest('.control-group').addClass("error");
