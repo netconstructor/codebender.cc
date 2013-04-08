@@ -147,27 +147,27 @@
                         });
             }
         }
-
-		else if (id == "email") //using type="email" instead
+		
+		else if (id == "options_email") //using type="email" instead
         {
-            if ($("#" + id).val().length > 4) {
+            if ($("#" + id).val().length > 6) {
                 if (emailReg.test($("#" + id).val())) {
-                    $.post("{{ path('AceUserBundle_checkmail') }}", { mail:$("#" + id).val() },
-                            function (info) {
-                                if (info == 1) {
+                    $.post("{{ url('AceUserBundle_isemailavailable') }}", { email:$("#" + id).val() },
+                            function (response) {
+								if (response.valid == "available") {
                                     $(".mail").removeClass("error").addClass("success");
                                     $(".mail-icon").removeClass("icon-remove").removeClass("icon-envelope").addClass("icon-ok");
                                     $(".email-info").html('');
                                 }
-                                else if (info == 2) {
-                                    $(".mail").removeClass("error").removeClass("success");
-                                    $(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-envelope");
-                                    $(".email-info").html('');
-                                }
-                                else {
+                                else if (response.valid == "inUse") {
                                     $(".mail").removeClass("success").addClass("error");
                                     $(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
                                     $(".email-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
+                                }
+                                else { //response.valid == "own"
+                                    $(".mail").removeClass("error").removeClass("success");
+                                    $(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-envelope");
+                                    $(".email-info").html('');
                                 }
                             });
                 }

@@ -120,7 +120,7 @@ class OptionsController extends Controller
 					
 					if(count($error)!=0){
 						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
-						$message = "Profile Updated Sucessfully although <strong>your Password was NOT Changed!<strong>. Please fix the errors and try again.";
+						$message = "Profile Updated Sucessfully although your Password was <strong>NOT Changed!</strong>. Please fix the errors and try again.";
 					}
 					else{
 						$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
@@ -182,6 +182,29 @@ class OptionsController extends Controller
 			return true;
 		
 		return false;		
+	}
+    
+    public function isEmailAvailableAction(){
+		
+		if("POST" === $this->request->getMethod()){
+			$currentUser = $this->sc->getToken()->getUser();
+			$email = $this->request->get('email');
+			
+			// TODO: find out why $this->get('usercontroller')->emailExistsAction($email) doesn't work
+			$exists = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($email);
+			if($exists){
+					if($email !== $currentUser->getEmail())
+						$return = 'inUse'; //in use by another member
+					else
+						$return = 'own'; //already stored
+			}
+			else
+				$return = 'available'; //success! New available email
+				
+			$response = array('valid' => $return);
+							
+			return new Response(json_encode($response), 200, array('Content-Type'=>'application/json'));
+		}
 	}
     
     private function getErrorMessages(Form $form) {

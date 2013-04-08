@@ -18,21 +18,15 @@ AceUserBundle_options:
     pattern:  /options
     defaults: { _controller: optionscontroller:optionsEditAction }
     
-#AceUserBundle_setoptions:
-#    pattern:  /setoptions
-#    defaults: { _controller: usercontroller:setoptionsAction }
-#    requirements:
-#        _method:   POST
-
 AceUserBundle_iscurrentpassword:
     pattern:  /iscurrentpassword
     defaults: { _controller: optionscontroller:isCurrentPasswordAction }
     requirements:
         _method:   POST
 
-AceUserBundle_checkmail:
-    pattern:  /checkmail
-    defaults: { _controller: usercontroller:checkmailAction }
+AceUserBundle_isemailavailable:
+    pattern:  /isemailavailable
+    defaults: { _controller: optionscontroller:isEmailAvailableAction }
     requirements:
         _method:   POST
 
