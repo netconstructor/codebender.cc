@@ -113,8 +113,6 @@ doctrine_mongodb:
             auto_mapping: true
 
 services:
-    utilities:
-        class:        Ace\UtilitiesBundle\Handler\DefaultHandler
     mongofilecontroller:
         class:        Ace\ProjectBundle\Controller\MongoFilesController
         arguments: 

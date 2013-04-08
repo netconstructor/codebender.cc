@@ -52,7 +52,7 @@ class DefaultController extends Controller
 		} else {
 			$lastTweet=0;
 		}
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 		$image = $utilities->get_gravatar($user["email"],120);
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
@@ -141,7 +141,7 @@ class DefaultController extends Controller
 
 	public function librariesAction()
 	{
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 
 		$libraries = json_decode($utilities->get($this->container->getParameter('library')), true);
 		$categories = $libraries["categories"];
@@ -151,7 +151,7 @@ class DefaultController extends Controller
 
 	public function exampleAction($library, $example, $url)
 	{
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 		$data = htmlspecialchars($utilities->get($url));
 		$file = array("filename" => $example.".ino", "code" => $data);
 		$files = array($file);

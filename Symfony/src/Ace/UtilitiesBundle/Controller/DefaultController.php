@@ -258,7 +258,7 @@ class DefaultController extends Controller
 	{
 		$user = json_decode($this->get('usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$utilities = $this->get('utilities');
+		$utilities = $this->get('ace_utilities.handler');
 		$image = $utilities->get_gravatar($user["email"]);
 
 		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["username"],'image' => $image));

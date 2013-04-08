@@ -44,7 +44,7 @@ class OptionsController extends Controller
         }
         
         // Get user's avatar
-		$image = $this->get('utilities')->get_gravatar($currentUser->getEmail(), 120);
+		$image = $this->get('ace_utilities.handler')->get_gravatar($currentUser->getEmail(), 120);
 				
         $form = $this->createForm(new OptionsFormType());
         
@@ -181,7 +181,7 @@ class OptionsController extends Controller
 		if($encodedPass === $currentUser->getPassword())
 			return true;
 		
-		return false;		
+		return false;
 	}
     
     public function isEmailAvailableAction(){
