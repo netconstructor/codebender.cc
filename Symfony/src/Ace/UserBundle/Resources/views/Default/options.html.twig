@@ -215,15 +215,20 @@
                 $.post("{{ url('AceUserBundle_options') }}", $('#options_form').serializeArray(),
                 function (response) {
 					$("#loading").hide();
-					var content = jQuery.parseJSON(response);
-					$.each( content, function(field,info){
-						if(field == "message")
-							$(".update-info").html(info).show().delay(10000).fadeOut();
-						else{
-							$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
-							$($("#options_" + field)).closest('.control-group').addClass("error");
-						}		
-					});   
+					var response = $.parseJSON(response);
+					if(response.success){
+							$(".help-block").html('');
+							$(".control-group").removeClass("error");
+					}
+					else{
+						$.each( response, function(field,info){
+							if((field != "message") && (field != "success")){
+								$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
+								$($("#options_" + field)).closest('.control-group').addClass("error");
+							}		
+						});
+					}
+					$(".update-info").html(response.message).show().delay(10000).fadeOut();   
 				});
             });
         });
