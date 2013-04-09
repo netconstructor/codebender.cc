@@ -172,7 +172,8 @@
 			var value = ($("#" + id)).val();
             if (((value).length > 6) && (emailReg.test(value)) ) {
 				$(".mail").removeClass("error")
-						  .removeClass("success");
+						  .removeClass("success")
+						  .removeClass("warning");
 				$(".mail-icon").removeClass("icon-remove")
 							   .removeClass("icon-ok")
 							   .removeClass("icon-question-sign")
@@ -214,25 +215,21 @@
 				$("#loading").show();
                 $.post("{{ url('AceUserBundle_options') }}", $('#options_form').serializeArray(),
                 function (response) {
-					$("#loading").hide();
 					var response = $.parseJSON(response);
-					if(response.success){
-							$(".help-block").html('');
-							$(".control-group").removeClass("error");
-					}
-					else{
-						$.each( response, function(field,info){
-							if((field != "message") && (field != "success")){
-								$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
-								$($("#options_" + field)).closest('.control-group').addClass("error");
-							}		
-						});
-					}
+					$(".help-block").html('');
+					$(".control-group").removeClass("error");
+					console.log(response);
+					$.each( response, function(field,info){
+						if(field != "message"){
+							$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
+							$($("#options_" + field)).closest('.control-group').addClass("error");
+						}		
+					});
+					$("#loading").hide();
 					$(".update-info").html(response.message).show().delay(10000).fadeOut();   
 				});
             });
         });
-
     </script>
 
 {% endblock %}
@@ -269,7 +266,7 @@
     </div>
 
 	{% form_theme form 'AceUserBundle:Form:labels.html.twig' %}
-    <form name="form" id="options_form" action="{{ path('AceUserBundle_options') }}" method="POST">
+    <form name="form" id="options_form" action="{{ url('AceUserBundle_options') }}" method="POST">
     <div class="row-fluid">
         <div class="span4">
             <div class="control-group">

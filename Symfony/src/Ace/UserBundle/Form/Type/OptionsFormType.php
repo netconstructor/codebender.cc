@@ -43,6 +43,7 @@ class OptionsFormType extends AbstractType
 														'attr'=> array(
 																'onkeyup' => 'preCheck(id)',
 																'onblur' => 'validation(id)',
+																'max_length' => 255,
 																'placeholder'=> 'Type your current password',
 																'class' => 'option-form-input')))
             ->add('plainPassword', 'repeated', array(
