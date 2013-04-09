@@ -30,7 +30,8 @@ class OptionsFormType extends AbstractType
 													'onkeyup' => 'validation(id)',
 													'class' => 'option-form-input')))
             ->add('email', 'email', array('attr' => array(
-													'onkeyup' => 'validation(id)',
+													'onkeyup' => 'preCheck(id)',
+													'onblur' => 'validation(id)',
 													'class' => 'option-form-input'),
 											))
             ->add('twitter', 'text', array('required' => false,
@@ -40,7 +41,7 @@ class OptionsFormType extends AbstractType
 														'label' => 'Current Password',
 														'required' => false,
 														'attr'=> array(
-																'onkeyup' => 'oldpasscheck(id)',
+																'onkeyup' => 'preCheck(id)',
 																'onblur' => 'validation(id)',
 																'placeholder'=> 'Type your current password',
 																'class' => 'option-form-input')))

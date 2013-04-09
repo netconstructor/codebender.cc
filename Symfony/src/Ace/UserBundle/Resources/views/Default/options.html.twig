@@ -33,35 +33,55 @@
     <script src={{ asset("validation/passvalidation.js") }} type="text/javascript"></script>
     <script type="text/javascript" charset="utf-8">
 
-     function oldpasscheck(id) {
-            var len = $("#" + id).val().length;
-            if (len != 0) {
-                if (len > 5 && len < 255)//reduce validation overhead
-                {
-                    $(".currentPassword-info").html('');
-                    if (passvalid(id) == 1) {
-                        $(".currentPassword").removeClass("error").removeClass("success").addClass("warning");
-                        $(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
-                        $(".currentPassword-info").html('<i>Valid, type your Password and press Tab key</i>');
-                        //setInterval(validation(id),100000);
-                    }
-                    else {
-                        $(".currentPassword-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
-                    }
-
-                }
-                else {
-                    $(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
-                    $(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
-                    $(".currentPassword-info").html('<i>Sorry, Password needs to be at least 6 characters long</i>');
-                }
-            }
-            else {
-                $(".currentPassword").removeClass("error").removeClass("success").removeClass("warning");
-                $(".password_old").removeClass("icon-remove").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-exclamation-sign");
-                $(".currentPassword-info").html('');
-            }
-        }
+	function preCheck(id) {
+		if(id == "options_currentPassword"){
+			var len = $("#" + id).val().length;
+			if (len != 0) {
+				if (len > 5 && len < 255){ //reduce validation overhead
+					$(".currentPassword-info").html('');
+					if (passvalid(id) == 1) {
+						$(".currentPassword").removeClass("error").removeClass("success").addClass("warning");
+						$(".password_old").removeClass("icon-remove").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-question-sign");
+						$(".currentPassword-info").html('<i>Valid, type your Password and press Tab key</i>');
+						//setInterval(validation(id),100000);
+					}
+					else
+						$(".currentPassword-info").html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
+				}
+				else{
+					$(".currentPassword").removeClass("warning").removeClass("success").addClass("error");
+					$(".password_old").removeClass("icon-exclamation-sign").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-remove");
+					$(".currentPassword-info").html('<i>Sorry, Password needs to be at least 6 characters long</i>');
+				}
+			}
+			else{
+				$(".currentPassword").removeClass("error").removeClass("success").removeClass("warning");
+				$(".password_old").removeClass("icon-remove").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-exclamation-sign");
+				$(".currentPassword-info").html('');
+			}
+		}
+		
+		if(id == "options_email"){
+			if ($("#" + id).val().length > 6){
+				if (emailReg.test($("#" + id).val())) {
+					$(".mail").removeClass("error").removeClass("success").addClass("warning");
+                    $(".mail-icon").removeClass("icon-remove").removeClass("icon-envelope").removeClass("icon-question-sign").removeClass("icon-ok").addClass("icon-question-sign");
+                    $(".email-info").html('<i>Valid, type your Email and press Tab key</i>');
+				}
+				else{
+					$(".mail").removeClass("success").addClass("error");
+					$(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").removeClass("icon-question-sign").addClass("icon-remove");
+					$(".email-info").html('<i>Sorry, this is an invalid email address</i>');
+				}
+			}
+			else{
+				$(".mail").removeClass("error").removeClass("success");
+				$(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").removeClass("icon-question-sign").addClass("icon-envelope");
+				$(".email-info").html('');
+			}
+		}
+		
+	}
 
     function validation(id) {
         if (id == "options_plainPassword_new" || id == "options_plainPassword_confirm") {
@@ -148,40 +168,36 @@
             }
         }
 		
-		else if (id == "options_email") //using type="email" instead
-        {
-            if ($("#" + id).val().length > 6) {
-                if (emailReg.test($("#" + id).val())) {
-                    $.post("{{ url('AceUserBundle_isemailavailable') }}", { email:$("#" + id).val() },
-                            function (response) {
-								if (response.valid == "available") {
-                                    $(".mail").removeClass("error").addClass("success");
-                                    $(".mail-icon").removeClass("icon-remove").removeClass("icon-envelope").addClass("icon-ok");
-                                    $(".email-info").html('');
-                                }
-                                else if (response.valid == "inUse") {
-                                    $(".mail").removeClass("success").addClass("error");
-                                    $(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
-                                    $(".email-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
-                                }
-                                else { //response.valid == "own"
-                                    $(".mail").removeClass("error").removeClass("success");
-                                    $(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-envelope");
-                                    $(".email-info").html('');
-                                }
-                            });
-                }
-                else {
-                    $(".mail").removeClass("success").addClass("error");
-                    $(".mail-icon").removeClass("icon-ok").removeClass("icon-envelope").addClass("icon-remove");
-                    $(".email-info").html('<i>Sorry, this is an invalid email address</i>');
-                }
-            }
-            else {
-                $(".mail").removeClass("error").removeClass("success");
-                $(".mail-icon").removeClass("icon-remove").removeClass("icon-ok").addClass("icon-envelope");
-                $(".email-info").html('');
-            }
+		else if (id == "options_email"){ //using type="email" instead
+			var value = ($("#" + id)).val();
+            if (((value).length > 6) && (emailReg.test(value)) ) {
+				$(".mail").removeClass("error")
+						  .removeClass("success");
+				$(".mail-icon").removeClass("icon-remove")
+							   .removeClass("icon-ok")
+							   .removeClass("icon-question-sign")
+							   .addClass("icon-envelope");
+				$(".email-info").html('');
+				
+				$.post("{{ url('AceUserBundle_isemailavailable') }}", { email:value },
+				function (response) {
+					if (response.valid == "available") {
+						$(".mail").addClass("success");
+						$(".mail-icon").addClass("icon-ok");
+						$(".email-info").html('');
+					}
+					else if (response.valid == "inUse") {
+						$(".mail").addClass("error");
+						$(".mail-icon").addClass("icon-remove");
+						$(".email-info").html('<i>Sorry, this E-mail is already in use by another member</i>');
+					}
+					else { //response.valid == "own"
+						//$(".mail").removeClass("error").removeClass("success");
+						$(".mail-icon").addClass("icon-envelope");
+						$(".email-info").html('');
+					}
+				});
+			}
         }
 
         else {
