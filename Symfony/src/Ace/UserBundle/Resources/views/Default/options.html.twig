@@ -101,7 +101,7 @@
                     $(".plainPassword-info").html('');
                 }
                 else {
-                    if ($("#options_plainPassword_confirm").val().length != 0) {
+                    if ($("#options_plainPassword_confirm").val().length >= 0) {
                         //options_plainPassword_confirm != options_plainPassword_new, options_plainPassword_confirm set to error
                         $(".passwords").removeClass("success").addClass("error");
                         $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
@@ -217,10 +217,14 @@
                 function (response) {
 					var response = $.parseJSON(response);
 					$(".help-block").html('');
-					$(".control-group").removeClass("error");
+					$(".control-group").removeClass("error").removeClass("success");
+					$("#options_currentPassword").val('');
+					$($("#options_currentPassword")).siblings('span.add-on').children().removeClass("icon-ok").addClass("icon-exclamation-sign");
 					console.log(response);
 					$.each( response, function(field,info){
 						if(field != "message"){
+							if(field == "plainPassword")
+								$('.passwords').addClass("error");
 							$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
 							$($("#options_" + field)).closest('.control-group').addClass("error");
 						}		

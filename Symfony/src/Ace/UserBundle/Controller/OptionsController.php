@@ -85,13 +85,17 @@ class OptionsController extends Controller
 			// Check if user wants to change his password and if it's valid
 			$plainPassword = $form->get('plainPassword')->get('new')->getData();
 			$passChange = false;
-			if($authenticated){
-				$passwordConstraint = new PasswordConstraint();
-				$error = $this->get('validator')->validateValue($plainPassword,	$passwordConstraint);
-				if(count($error) == 0)
-					$passChange = true;
+			if(strlen($plainPassword) != 0){
+				if($authenticated){
+					$passwordConstraint = new PasswordConstraint();
+					$error = $this->get('validator')->validateValue($plainPassword,	$passwordConstraint);
+					if(count($error) == 0)
+						$passChange = true;
+					else
+						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
+				}
 				else
-					$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
+					$plainPasswordError = "Please provide your Current Password along with your New one.";
 			}
 		
 			if ($form->isValid())
@@ -163,10 +167,12 @@ class OptionsController extends Controller
 			$response = $this->getErrorMessages($form);
 			$response["message"] = $message;
 			
-			if(isset($emailError))
-				$response["email"] = $emailError;
-			if(isset($currentPasswordError))
-				$response["currentPassword"] = $currentPasswordError;
+			// transfer error from plainPassword key to plainPasswordError variable
+			//if(isset($response["plainPassword"])){
+			//	$plainPasswordError = $response["plainPassword_"];
+			//	unset($response["plainPassword"]);
+			//}
+			// add custom error message to response
 			if(isset($plainPasswordError))
 				$response["plainPassword"] = $plainPasswordError;
 			
