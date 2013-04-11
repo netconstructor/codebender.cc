@@ -110,6 +110,7 @@ class OptionsController extends Controller
 				}
 				
 				$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile Updated!';
+				$success = true;
 				
 				// check if new password is valid and update user password 
 				$newPassConstraint = new PasswordConstraint();
@@ -121,12 +122,14 @@ class OptionsController extends Controller
 					if(count($error)!=0){
 						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
 						$message = '<span style="color:orange; font-weight:bold"><i class="icon-warning-sign icon-large"></i> WARNING:</span> Profile Updated but your Password was <strong>NOT Changed!</strong>. Please fix the errors and try again.';
+						$success = false;
 					}
 					else{
 						$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
 						$this->um->updatePassword($currentUser);
 						$updated = true;
 						$message = '<span style="color:green; font-weight:bold"><i class="icon-ok-sign icon-large"></i> SUCCESS:</span> Profile and Password Updated Sucessfully!';
+						$success = true;
 					}
 				}
 				
@@ -140,15 +143,16 @@ class OptionsController extends Controller
 					$this->um->reloadUser($currentUser);
 				}				
 			}
-			else
+			else{
 				$message = '<span style="color:red; font-weight:bold"><i class="icon-remove-sign icon-large"></i> ERROR:</span> Your Profile was <strong>NOT updated</strong>, please fix the errors and try again.';
-			
+				$success = false;
+			}
 			//get errors from fields and store them in an assosiative array
-			$content = array();
-			$content = $this->getErrorMessages($form);
-			$content['message'] = $message;
+			$response = $this->getErrorMessages($form);
+			$response["message"] = $message;
+			$response["success"] = $success;
 			
-			return new Response(json_encode($content));
+			return new Response(json_encode($response));
         }
         else
 			return new Response($this->templating->render('AceUserBundle:Default:options.html.twig', array('form' => $form->createView(), 'image' => $image, "user" => $currentUser)));
