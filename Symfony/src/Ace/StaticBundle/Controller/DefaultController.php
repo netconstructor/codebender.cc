@@ -86,7 +86,7 @@ class DefaultController extends Controller
 		$baltas_name = "Alexandros Baltas";
 		$baltas_title = "teh artist";
 		$baltas_avatar = $dev_images_dir."baltas.png";
-		$baltas_desc = "Guess what. I'm also a CEID graduate. And a drummer. When I'm not being chased by crazy chicks and generally being a diva, I can be found contributing to codebender and saying 'kamena asteia' (burned jokes) to the rest of the team.";
+		$baltas_desc = "Guess what. I'm also a CEID undergraduate. And a drummer. When I'm not eating lots of food, I'm drinking lots of coffee and I can be found coding for codebender while distracting the rest of the team with my 'jokes'.";
 		$baltas = new developer($baltas_name, $baltas_title, $baltas_avatar, $baltas_desc);
 
 		$developers = array($tzikis, $amaxilatis, $orfanos, $christidis, $baltas);
