@@ -12,16 +12,20 @@
         else
         {
             var plugin_found = false;
-            for (i = 0; i < navigator.plugins.length; i++)
-                if (navigator.plugins[i].name == "Codebender.cc" || navigator.plugins[i].name == "Codebendercc")
-                    plugin_found = true;
-            if (!plugin_found)
-            {
-                var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
-                show_alert(alert, "alertupdatediv");
-                return;
+            //load it anyway on ie
+            if(navigator.userAgent.toLowerCase().indexOf('msie') == -1){
+                for (i = 0; i < navigator.plugins.length; i++)
+                    if (navigator.plugins[i].name == "Codebender.cc" || navigator.plugins[i].name == "Codebendercc")
+                        plugin_found = true;
+                if (!plugin_found)
+                {
+                    var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
+                    show_alert(alert, "alertupdatediv");
+                    return;
+                }
             }
-            $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0"></object>');
+            $("#plugin_div").html($("#plugin_div").html() + '<object id="plugin0" type="application/x-codebendercc" width="0" height="0" xmlns="http://www.w3.org/1999/html"></object>');
+
             setTimeout(function(){
                 window.plugin = document.getElementById('plugin0');
 
@@ -71,8 +75,10 @@
         {
             var alert = browserSpecificPluginInstall("You need to update the Codebender Plugin. ");
             show_alert(alert, "alertupdatediv");
-        }
-        else
+        } else if (window.plugin.version == null){
+            var alert = browserSpecificPluginInstall("You need to enable or install the Codebender Plugin. ");
+            show_alert(alert, "alertupdatediv");
+        } else
             enableUSB();
     }
 
@@ -168,7 +174,7 @@
         }
         else if(navigator.userAgent.toLowerCase().indexOf('msie') != -1)
         {
-            alert+= 'IE not supported.';
+            alert+= '<a id="msi-download-url" href = "{{ 'http://' ~ app.request.host ~ asset('Codebendercc.msi') }}" >Add to Windows.</a>';
         }
         else
         {
@@ -246,11 +252,18 @@
     }
 
     function checkPermissions() {
-        if ((navigator.appVersion.indexOf("X11") == -1) && (navigator.appVersion.indexOf("Linux") == -1)) return;
-        var group = window.plugin.checkPermissions($("#ports option:selected").text());
-        if (group != "") {
-            var message = "<small>You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again from your computer to reload user permissions.</small>";
-            show_alert(message);
+        if ((navigator.appVersion.indexOf("X11") != -1) || (navigator.appVersion.indexOf("Linux") != -1)) {
+            var group = window.plugin.checkPermissions($("#ports option:selected").text());
+            if (group != "") {
+                var message = "<small>You do not have the required <span style=\"color:red\">permissions<\/span> to communicate with Arduino Devices. To fix this add yourself to the <span style=\"color:red\">" + group.replace('\n', '') + "<\/span> group running \"<span style=\"color:red\">gpasswd -a username " + group.replace('\n', '') + " <\/span>\" with root permissions. Then <span style=\"color:red\">log-out<\/span> and <span style=\"color:red\">log-in<\/span> again from your computer to reload user permissions.</small>";
+                show_alert(message);
+            }
+        } else if (navigator.appVersion.indexOf("MSIE") != -1 ){
+            var protectedModeEnabled = window.plugin.checkPermissions("");
+            if (protectedModeEnabled == "1"){
+                var message = "<small>You need to disable the <span style=\"color:red\">Protected Mode</span> to communicate with Arduino Devices. <a target=\"_blank\" href=\"https://codebender.uservoice.com/knowledgebase/articles/188530-running-the-codebender-plugin-on-internet-explorer\">Learn More</a></small>";
+                show_alert(message);
+            }
         }
     }
 
