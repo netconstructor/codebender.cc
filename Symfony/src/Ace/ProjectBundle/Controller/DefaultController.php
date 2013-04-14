@@ -12,6 +12,9 @@ class DefaultController extends Controller
 {
     protected $em;
 	protected $mfc;
+    protected $dfc;
+    protected $sl;
+
 
 	public function createprojectAction($user_id, $project_name, $code)
 	{
@@ -59,9 +62,23 @@ class DefaultController extends Controller
 	    $project->setDescription($description);
 	    $project->setIsPublic(true);
 	
-		$project->setType("mongo");
-		$mongo = $this->mfc;
-		$response = json_decode($mongo->createAction(), true);
+		if($this->sl == "mongo")
+        {
+            $project->setType("mongo");
+            $mongo = $this->mfc;
+            $response = json_decode($mongo->createAction(), true);
+        }
+        else if($this->sl == "disk")
+        {
+            $project->setType("disk");
+            $disk = $this->dfc;
+            $response = json_decode($disk->createAction(), true);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
+
 		if($response["success"])
 		{
 			$id = $response["id"];
@@ -80,8 +97,21 @@ class DefaultController extends Controller
 	public function deleteAction($id)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$deletion = json_decode($mongo->deleteAction($project->getProjectfilesId()), true);
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $deletion = json_decode($mongo->deleteAction($project->getProjectfilesId()), true);
+        }
+        else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $deletion = json_decode($disk->deleteAction($project->getProjectfilesId()), true);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
+
 		if($deletion["success"] == true)
 		{
 		    $em = $this->em;
@@ -107,10 +137,25 @@ class DefaultController extends Controller
 	    $new_project->setIsPublic(true);
 		$new_project->setParent($id);
 
-		$new_project->setType("mongo");
-		$mongo = $this->mfc;
-		// die(var_dump($project->getProjectfilesId()));
-		$response = $mongo->cloneAction($project->getProjectfilesId());
+        if($this->sl == "mongo")
+        {
+            $new_project->setType("mongo");
+            $mongo = $this->mfc;
+            // die(var_dump($project->getProjectfilesId()));
+            $response = $mongo->cloneAction($project->getProjectfilesId());
+        }
+        else if($this->sl == "disk")
+        {
+            $new_project->setType("disk");
+            $disk = $this->dfc;
+            // die(var_dump($project->getProjectfilesId()));
+            $response = $disk->cloneAction($project->getProjectfilesId());
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
+
 		$response = json_decode($response, true);
 		if($response["success"] == true)
 		{
@@ -129,44 +174,81 @@ class DefaultController extends Controller
 
 	}
 
-	public function renameAction($id, $new_name)
-	{
-		$validName = json_decode($this->nameIsValid($new_name), true);
-		if(!$validName["success"])
-			return new Response(json_encode($validName));
+    public function renameAction($id, $new_name)
+    {
+        $validName = json_decode($this->nameIsValid($new_name), true);
+        if(!$validName["success"])
+            return new Response(json_encode($validName));
 
-		$output = array("success" => true);
+        $output = array("success" => true);
 
-		$project = $this->getProjectById($id);
-		$name = $project->getName();
+        $project = $this->getProjectById($id);
+        $name = $project->getName();
 
-		$mongo = $this->mfc;
-		$filename = $name.".ino";
-		$response1 = json_decode($mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_name.".ino.bkp"), true);
-		if($response1["success"])
-		{
-			$response2 = json_decode($mongo->renameFileAction($project->getProjectfilesId(), $new_name.".ino.bkp", $new_name.".ino"), true);
-			if($response2["success"])
-			{
-				$project->setName($new_name);
-			    $em = $this->em;
-			    $em->persist($project);
-			    $em->flush();
-			}
-			else
-			{
-				$output = $response2;
-				$output["error"] = "backup file ".$new_name.".ino.bkp"." could not be renamed. ".$output["error"];
-			}
-		}
-		else
-		{
-			$output = $response1;
-			$output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
-		}
+        $filename = $name.".ino";
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $response1 = json_decode($mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_name.".ino.bkp"), true);
+            if($response1["success"])
+            {
+                $response2 = json_decode($mongo->renameFileAction($project->getProjectfilesId(), $new_name.".ino.bkp", $new_name.".ino"), true);
+                if($response2["success"])
+                {
+                    $project->setName($new_name);
+                    $em = $this->em;
+                    $em->persist($project);
+                    $em->flush();
+                }
+                else
+                {
+                    $output = $response2;
+                    $output["error"] = "backup file ".$new_name.".ino.bkp"." could not be renamed. ".$output["error"];
+                }
+            }
+            else
+            {
+                $output = $response1;
+                $output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
+            }
 
-		return new Response(json_encode($output));
-	}
+            return new Response(json_encode($output));
+        }
+
+        else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $response1 = json_decode($disk->renameFileAction($project->getProjectfilesId(), $filename, $new_name.".ino.bkp"), true);
+            if($response1["success"])
+            {
+                $response2 = json_decode($disk->renameFileAction($project->getProjectfilesId(), $new_name.".ino.bkp", $new_name.".ino"), true);
+                if($response2["success"])
+                {
+                    $project->setName($new_name);
+                    $em = $this->em;
+                    $em->persist($project);
+                    $em->flush();
+                }
+                else
+                {
+                    $output = $response2;
+                    $output["error"] = "backup file ".$new_name.".ino.bkp"." could not be renamed. ".$output["error"];
+                }
+            }
+            else
+            {
+                $output = $response1;
+                $output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
+            }
+
+            return new Response(json_encode($output));
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
+
+    }
 
 	public function getNameAction($id)
 	{
@@ -221,24 +303,61 @@ class DefaultController extends Controller
 	public function listFilesAction($id)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$list = $mongo->listFilesAction($project->getProjectfilesId());
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $list = $mongo->listFilesAction($project->getProjectfilesId());
+        }
+        else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $list = $disk->listFilesAction($project->getProjectfilesId());
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
 		return new Response($list);
 	}
 
 	public function createFileAction($id, $filename, $code)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$create = $mongo->createFileAction($project->getProjectfilesId(), $filename, $code);
-		return new Response($create);
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $create = $mongo->createFileAction($project->getProjectfilesId(), $filename, $code);
+        }
+        else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $create = $disk->createFileAction($project->getProjectfilesId(), $filename, $code);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
+
+        return new Response($create);
 	}
 	
 	public function getFileAction($id, $filename)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$get = $mongo->getFileAction($project->getProjectfilesId(), $filename);
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $get = $mongo->getFileAction($project->getProjectfilesId(), $filename);
+        }
+        else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $get = $disk->getFileAction($project->getProjectfilesId(), $filename);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
 		return new Response($get);
 		
 	}
@@ -246,8 +365,20 @@ class DefaultController extends Controller
 	public function setFileAction($id, $filename, $code)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$set = $mongo->setFileAction($project->getProjectfilesId(), $filename, $code);
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $set = $mongo->setFileAction($project->getProjectfilesId(), $filename, $code);
+        }
+		else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $set = $disk->setFileAction($project->getProjectfilesId(), $filename, $code);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
 		return new Response($set);
 		
 	}
@@ -255,16 +386,40 @@ class DefaultController extends Controller
 	public function deleteFileAction($id, $filename)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$delete = $mongo->deleteFileAction($project->getProjectfilesId(), $filename);
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $delete = $mongo->deleteFileAction($project->getProjectfilesId(), $filename);
+        }
+        else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $delete = $disk->deleteFileAction($project->getProjectfilesId(), $filename);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
 		return new Response($delete);
 	}
 
 	public function renameFileAction($id, $filename, $new_filename)
 	{
 		$project = $this->getProjectById($id);
-		$mongo = $this->mfc;
-		$delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
+        if($this->sl == "mongo")
+        {
+            $mongo = $this->mfc;
+            $delete = $mongo->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
+        }
+		else if($this->sl == "disk")
+        {
+            $disk = $this->dfc;
+            $delete = $disk->renameFileAction($project->getProjectfilesId(), $filename, $new_filename);
+        }
+        else
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
 		return new Response($delete);
 	}
 
@@ -339,9 +494,15 @@ class DefaultController extends Controller
 			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
-	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController)
+	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, $storageLayer)
 	{
 	    $this->em = $entityManager;
 		$this->mfc = $mongoFilesController;
+        $this->dfc = $diskFilesController;
+        $this->sl = $storageLayer;
+        if(!($this->sl == "disk" || $this->sl == "mongo"))
+        {
+            throw new \Exception('Invalid Storage Layer');
+        }
 	}
 }
