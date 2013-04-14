@@ -106,10 +106,10 @@
 
     function webserialHudAppend(line) {
         if (isNaN(line)) {
-            webserialHudWrite($("#webserial_hud").html() + line + "<br>");
+            webserialHudWrite($("#webserial_hud").html() + line);
         } else {
             if (line == "13")    return;
-            if (line == "10")    webserialHudWrite($("#webserial_hud").html() + "<br>");
+            if (line == "10")    webserialHudWrite($("#webserial_hud").html());
             else webserialHudWrite($("#webserial_hud").html() + line.toString());
         }
     }
