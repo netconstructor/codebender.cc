@@ -8,7 +8,7 @@ use Ace\ProjectBundle\Entity\Project as Project;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
 
-class DefaultController extends Controller
+class ProjectsController extends Controller
 {
     protected $em;
 	protected $fc;
