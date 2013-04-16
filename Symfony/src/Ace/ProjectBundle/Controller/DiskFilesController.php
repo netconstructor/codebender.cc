@@ -42,7 +42,7 @@ class DiskFilesController extends Controller
         $new_id = json_decode($this->createAction(), true);
         $new_id = $new_id["id"];
         $list = $this->listFiles($id);
-        $new_dir = $this->dir.$id."/files/";
+        $new_dir = $this->dir.$new_id."/files/";
         foreach($list as $file)
         {
             file_put_contents($new_dir.$file["filename"],$file["code"]);
