@@ -99,28 +99,31 @@ class DefaultController extends Controller
 
 	public function cloneAction($owner, $id)
 	{
-		$project = $this->getProjectById($id);
-		$new_project = new Project();
-		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
-		$new_project->setOwner($user);
-	    $new_project->setName($project->getName());
-	    $new_project->setDescription($project->getDescription());
-	    $new_project->setIsPublic(true);
-		$new_project->setParent($id);
-        $new_project->setType($this->sl);
+        $project = $this->getProjectById($id);
+        $new_name=$project->getName();
+        $nameExists = json_decode($this->nameExists($owner,$new_name), true);
+        while($nameExists["success"])
+        {
+            $new_name = $new_name." copy";
+            $nameExists = json_decode($this->nameExists($owner,$new_name), true);
+        }
+        $response = json_decode($this->createAction($owner,$new_name,$project->getDescription())->getContent(),true);
 
-        $response = $this->fc->cloneAction($project->getProjectfilesId());
-
-		$response = json_decode($response, true);
 		if($response["success"] == true)
 		{
-			$new_project->setProjectfilesId($response["id"]);
-
-		    $em = $this->em;
-		    $em->persist($new_project);
-		    $em->flush();
-
-		    return new Response(json_encode(array("success" => true, "id" => $new_project->getId())));
+            $list = json_decode($this->listFilesAction($project->getId())->getContent(), true);
+            foreach($list["list"] as $file)
+            {
+                if(pathinfo($file["filename"], PATHINFO_EXTENSION)== "ino")
+                {
+                    $this->createFileAction($response["id"],$new_name.".ino",$file["code"]);
+                }
+                else
+                {
+                $this->createFileAction($response["id"],$file["filename"],$file["code"]);
+                }
+            }
+		    return new Response(json_encode(array("success" => true, "id" => $response["id"])));
 		}
 		else
 		{
@@ -232,8 +235,17 @@ class DefaultController extends Controller
 	{
 		$project = $this->getProjectById($id);
 
-        $create = $this->fc->createFileAction($project->getProjectfilesId(), $filename, $code);
-        return new Response($create);
+        $canCreate = json_decode($this->canCreateFile($project->getId(), $filename), true);
+        if($canCreate["success"])
+        {
+            $create = $this->fc->createFileAction($project->getProjectfilesId(), $filename, $code);
+            $retval = $create;
+        }
+        else
+        {
+            $retval = json_encode($canCreate);
+        }
+        return new Response($retval);
 	}
 	
 	public function getFileAction($id, $filename)
@@ -332,6 +344,34 @@ class DefaultController extends Controller
 		return $project;
 	}
 
+
+    private function inoExists($id)
+    {
+        $list = json_decode($this->listFilesAction($id)->getContent(), true);
+        if($list["success"])
+        {
+            foreach($list["list"] as $file)
+            {
+               if(pathinfo($file["filename"], PATHINFO_EXTENSION)=="ino")
+                   return json_encode(array("success" => true));
+            }
+        }
+        return json_encode(array("success" => false, "error" => ".ino file does not exist."));
+    }
+
+    private function canCreateFile($id, $filename)
+    {
+        if(pathinfo($filename, PATHINFO_EXTENSION)== "ino")
+        {
+            $inoExists = json_decode($this->inoExists($id), true);
+            if($inoExists["success"])
+                return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "Cannot create second .ino file in the same project"));
+        }
+
+        return json_encode(array("success" => true));
+    }
+
+
 	private function nameIsValid($name)
 	{
 		$project_name = str_replace(".", "", trim(basename(stripslashes($name)), ".\x00..\x20"));
@@ -341,6 +381,19 @@ class DefaultController extends Controller
 			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
+    private function nameExists($owner, $name)
+    {
+        $userProjects = json_decode($this->listAction($owner)->getContent(),true);
+
+        foreach($userProjects as $p)
+        {
+            if ($p["name"] == $name)
+            {
+                return json_encode(array("success" => true));
+            }
+        }
+        return json_encode(array("success" => false));
+    }
 	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, $storageLayer)
 	{
 	    $this->em = $entityManager;

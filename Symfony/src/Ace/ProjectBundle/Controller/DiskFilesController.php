@@ -6,9 +6,7 @@ namespace Ace\ProjectBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-
-
-class DiskFilesController extends Controller
+class DiskFilesController extends FilesController
 {
     protected $dir;
 
@@ -31,23 +29,6 @@ class DiskFilesController extends Controller
             return json_encode(array("success" => true));
         else
             return json_encode(array("success" => false, "error" => "No projectfiles found with id: ".$id));
-    }
-
-    public function cloneAction($id)
-    {
-        if(!is_dir($this->dir.$id))
-        {
-            throw $this->createNotFoundException('No projectfiles found with id: '.$id);
-        }
-        $new_id = json_decode($this->createAction(), true);
-        $new_id = $new_id["id"];
-        $list = $this->listFiles($id);
-        $new_dir = $this->dir.$new_id."/files/";
-        foreach($list as $file)
-        {
-            file_put_contents($new_dir.$file["filename"],$file["code"]);
-        }
-        return json_encode(array("success" => true, "id" => $new_id));
     }
 
     public function listFilesAction($id)
@@ -118,7 +99,7 @@ class DiskFilesController extends Controller
     }
 
 
-    private function listFiles($id)
+    protected function listFiles($id)
     {
         $dir = $this->dir.$id."/files/";
         $list = array();
@@ -135,47 +116,6 @@ class DiskFilesController extends Controller
         return $list;
     }
 
-    private function fileExists($id, $filename)
-    {
-        $list = $this->listFiles($id);
-        foreach($list as $file)
-        {
-            if($file["filename"] == $filename)
-                return json_encode(array("success" => true));
-        }
-        return json_encode(array("success" => false, "filename" => $filename, "error" => "File ".$filename." does not exist."));
-    }
-
-    private function canCreateFile($id, $filename)
-    {
-        $validName = json_decode($this->nameIsValid($filename), true);
-        if(!$validName["success"])
-            return json_encode($validName);
-
-        $list = $this->listFiles($id);
-        $is_ino = false;
-        if(strrpos($filename, ".ino") !== false)
-        {
-            $is_ino = strlen($filename) - strrpos($filename, ".ino") == 4;
-        }
-        foreach($list as $file)
-        {
-            if($file["filename"] == $filename)
-                return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "This file already exists"));
-            if($is_ino && (strlen($file["filename"]) - strrpos($file["filename"], ".ino") == 4))
-                return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "Cannot create second .ino file in the same project"));
-        }
-        return json_encode(array("success" => true));
-    }
-
-    private function nameIsValid($name)
-    {
-        $project_name = trim(basename(stripslashes($name)), ".\x00..\x20");
-        if($project_name == $name)
-            return json_encode(array("success" => true));
-        else
-            return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
-    }
 
     private function deleteDirectory($dir)
     {
@@ -198,6 +138,8 @@ class DiskFilesController extends Controller
 
     public function __construct($directory)
     {
+        if(!(substr_compare($directory, '/', 1, 1) === 0))
+            $directory = $directory.'/';
         $this->dir = $directory;
     }
 }
