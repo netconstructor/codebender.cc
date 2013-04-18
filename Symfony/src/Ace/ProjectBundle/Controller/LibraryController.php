@@ -15,21 +15,6 @@ class LibraryController extends ProjectController
     protected $sl;
 
 
-
-//    public function createprojectAction($user_id, $project_name, $code)
-//
-//
-//    public function cloneAction($owner, $id)
-//
-//
-//    public function renameAction($id, $new_name)
-//
-//
-//    protected function canCreateFile($id, $filename)
-//
-
-
-
     public function createprojectAction($user_id, $project_name, $code)
 	{
         $retval;
