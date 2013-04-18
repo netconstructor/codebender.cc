@@ -6,10 +6,13 @@ services:
 #        class: %ace_project.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
 
-    ace_project.diskfilecontroller:
+    ace_project.sketchdiskfilecontroller:
         class:        Ace\ProjectBundle\Controller\DiskFilesController
         arguments:
             directory:    "%disk.directory%"
+            type: "sketches"
+            securitycontext: "@security.context"
+
 
     ace_project.mongofilecontroller:
         class:        Ace\ProjectBundle\Controller\MongoFilesController
@@ -21,5 +24,5 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@ace_project.mongofilecontroller"
-            diskfilecontroller: "@ace_project.diskfilecontroller"
+            diskfilecontroller: "@ace_project.sketchdiskfilecontroller"
             storagelayer: "%storagelayer%"

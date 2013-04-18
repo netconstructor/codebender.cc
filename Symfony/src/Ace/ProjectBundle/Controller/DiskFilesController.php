@@ -5,26 +5,43 @@ namespace Ace\ProjectBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class DiskFilesController extends FilesController
 {
     protected $dir;
+    protected $type;
+    protected $sc;
+
 
     public function createAction()
     {
+
         $projects = scandir($this->dir);
         do
         {
             $id = uniqid($more_entropy=true);
         } while(in_array($id, $projects));
-        mkdir($this->dir.$id);
-        mkdir($this->dir.$id."/files");
+        if(!is_dir($this->dir.$this->type))
+        {
+            mkdir($this->dir.$this->type);
+        }
+        $current_user = $this->sc->getToken()->getUser();
+        $name = $current_user->getUsername();
+        if(!is_dir($this->dir.$this->type."/".$name))
+        {
+            mkdir($this->dir.$this->type."/".$name);
+        }
+        if(!is_dir($this->getDir($id)))
+        {
+            mkdir($this->getDir($id));
+        }
         return json_encode(array("success" => true, "id" => $id));
     }
 
     public function deleteAction($id)
     {
-        $dir = $this->dir.$id;
+        $dir = $this->getDir($id);
         if($this->deleteDirectory($dir))
             return json_encode(array("success" => true));
         else
@@ -43,7 +60,7 @@ class DiskFilesController extends FilesController
         $canCreateFile = json_decode($this->canCreateFile($id, $filename), true);
         if(!$canCreateFile["success"])
             return json_encode($canCreateFile);
-        $dir = $this->dir."/".$id."/files";
+        $dir = $this->getDir($id);
         file_put_contents($dir."/".$filename,$code);
 
         return json_encode(array("success" => true));
@@ -63,7 +80,7 @@ class DiskFilesController extends FilesController
 
     public function setFileAction($id, $filename, $code)
     {
-        $dir = $this->dir.$id."/files/";
+        $dir = $this->getDir($id);
         if($this->fileExists($id,$dir.$filename))
         {
             file_put_contents($dir.$filename,$code);
@@ -78,7 +95,7 @@ class DiskFilesController extends FilesController
         $fileExists = json_decode($this->fileExists($id, $filename), true);
         if(!$fileExists["success"])
             return json_encode($fileExists);
-        $dir = $this->dir.$id."/files/";
+        $dir = $this->getDir($id);
         unlink($dir.$filename);
         return json_encode(array("success" => true));
     }
@@ -92,7 +109,7 @@ class DiskFilesController extends FilesController
         $canCreateFile = json_decode($this->canCreateFile($id, $new_filename), true);
         if($canCreateFile["success"])
         {
-            $dir = $this->dir.$id."/files/";
+            $dir = $this->getDir($id);
             rename($dir.$filename, $dir.$new_filename);
         }
         return json_encode($canCreateFile);
@@ -101,7 +118,7 @@ class DiskFilesController extends FilesController
 
     protected function listFiles($id)
     {
-        $dir = $this->dir.$id."/files/";
+        $dir = $this->getDir($id);
         $list = array();
         $objects = scandir($dir);
         foreach ($objects as $object)
@@ -136,11 +153,22 @@ class DiskFilesController extends FilesController
         else return false;
     }
 
-    public function __construct($directory)
+
+    private function getDir($id)
+    {
+        $current_user = $this->sc->getToken()->getUser();
+
+        $name = $current_user->getUsername();
+        return $this->dir.$this->type."/".$name."/".$id."/";
+    }
+
+    public function __construct($directory, $type, SecurityContext $sc)
     {
         if(!(substr_compare($directory, '/', 1, 1) === 0))
             $directory = $directory.'/';
         $this->dir = $directory;
+        $this->type = $type;
+        $this->sc = $sc;
     }
 }
 
