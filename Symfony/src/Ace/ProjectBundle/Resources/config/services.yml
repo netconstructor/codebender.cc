@@ -13,6 +13,12 @@ services:
             type: "sketches"
             securitycontext: "@security.context"
 
+    ace_project.libdiskfilecontroller:
+        class:        Ace\ProjectBundle\Controller\DiskFilesController
+        arguments:
+            directory:    "%disk.directory%"
+            type: "libs"
+            securitycontext: "@security.context"
 
     ace_project.mongofilecontroller:
         class:        Ace\ProjectBundle\Controller\MongoFilesController
@@ -27,3 +33,10 @@ services:
             diskfilecontroller: "@ace_project.sketchdiskfilecontroller"
             securitycontext: "@security.context"
             storagelayer: "%storagelayer%"
+
+    ace_project.librarymanager:
+            class:        Ace\ProjectBundle\Controller\LibraryController
+            arguments:
+                entityManager: "@doctrine.orm.entity_manager"
+                diskfilecontroller: "@ace_project.libdiskfilecontroller"
+
