@@ -41,7 +41,7 @@ class DefaultController extends Controller
 			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error'=> "There is no such user."));
 		}
 
-		$projectmanager = $this->get('ace_project.projectmanager');
+		$projectmanager = $this->get('ace_project.sketchmanager');
 		$projects = $projectmanager->listAction($user["id"])->getContent();
 		$projects = json_decode($projects, true);
 
@@ -56,11 +56,11 @@ class DefaultController extends Controller
 		$image = $utilities->get_gravatar($user["email"],120);
 		return $this->render('AceGenericBundle:Default:user.html.twig', array( 'user' => $user, 'projects' => $projects, 'lastTweet'=>$lastTweet, 'image'=>$image ));
 	}
-	
+
 	public function projectAction($id, $embed = false)
 	{
 
-		$projectmanager = $this->get('ace_project.projectmanager');
+		$projectmanager = $this->get('ace_project.sketchmanager');
 		$projects = NULL;
 		
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
@@ -118,7 +118,7 @@ class DefaultController extends Controller
 
 		$id = $this->getRequest()->request->get('project_id');
 
-		$projectmanager = $this->get('ace_project.projectmanager');
+		$projectmanager = $this->get('ace_project.sketchgmanager');
 		$projects = NULL;
 
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);

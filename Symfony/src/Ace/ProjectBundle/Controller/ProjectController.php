@@ -8,33 +8,20 @@ use Ace\ProjectBundle\Entity\Project as Project;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
 
-class ProjectsController extends Controller
+class ProjectController extends Controller
 {
     protected $em;
 	protected $fc;
-    protected $sl;
+
 
 
 	public function createprojectAction($user_id, $project_name, $code)
 	{
-		$retval;
+
 		$response = $this->createAction($user_id, $project_name, "")->getContent();
 		$response=json_decode($response, true);
-		if($response["success"])
-		{
-			$response2 = $this->createFileAction($response["id"], $project_name.".ino", $code)->getContent();
-			$response2=json_decode($response2, true);
-			if($response2["success"])
-			{
-				$retval = array("success" => true, "id" => $response["id"]);
-			}
-			else
-				$retval = $response2;
-		}
-		else
-			$retval = $response;
 
-		return new Response(json_encode($retval));
+		return new Response(json_encode($response));
 	}
 
 	public function listAction($owner)
@@ -112,18 +99,7 @@ class ProjectsController extends Controller
 		if($response["success"] == true)
 		{
             $list = json_decode($this->listFilesAction($project->getId())->getContent(), true);
-            foreach($list["list"] as $file)
-            {
-                if(pathinfo($file["filename"], PATHINFO_EXTENSION)== "ino")
-                {
-                    $this->createFileAction($response["id"],$new_name.".ino",$file["code"]);
-                }
-                else
-                {
-                $this->createFileAction($response["id"],$file["filename"],$file["code"]);
-                }
-            }
-		    return new Response(json_encode(array("success" => true, "id" => $response["id"])));
+		    return new Response(json_encode(array("success" => true, "id" => $response["id"], "list" => $list["list"], "name" => $new_name)));
 		}
 		else
 		{
@@ -135,42 +111,16 @@ class ProjectsController extends Controller
     public function renameAction($id, $new_name)
     {
         $validName = json_decode($this->nameIsValid($new_name), true);
-        if(!$validName["success"])
-            return new Response(json_encode($validName));
-
-        $output = array("success" => true);
-
-        $project = $this->getProjectById($id);
-        $name = $project->getName();
-
-        $filename = $name.".ino";
-
-        $response1 = json_decode($this->fc->renameFileAction($project->getProjectfilesId(), $filename, $new_name.".ino.bkp"), true);
-        if($response1["success"])
+        if($validName["success"])
         {
-            $response2 = json_decode($this->fc->renameFileAction($project->getProjectfilesId(), $new_name.".ino.bkp", $new_name.".ino"), true);
-            if($response2["success"])
-            {
-                $project->setName($new_name);
-                $em = $this->em;
-                $em->persist($project);
-                $em->flush();
-            }
-            else
-            {
-                $output = $response2;
-                $output["error"] = "backup file ".$new_name.".ino.bkp"." could not be renamed. ".$output["error"];
-            }
+            $project = $this->getProjectById($id);
+            $list = json_decode($this->listFilesAction($project->getId())->getContent(), true);
+            return new Response(json_encode(array("success" => true, "list" => $list["list"])));
         }
         else
         {
-            $output = $response1;
-            $output["error"] = "old file ".$filename." could not be renamed. ".$output["error"];
+        return new Response(json_encode($validName));
         }
-
-        return new Response(json_encode($output));
-
-
     }
 
 	public function getNameAction($id)
@@ -222,7 +172,7 @@ class ProjectsController extends Controller
 	    $em->flush();
 		return new Response(json_encode(array("success" => true)));
 	}
-	
+
 	public function listFilesAction($id)
 	{
 		$project = $this->getProjectById($id);
@@ -344,35 +294,12 @@ class ProjectsController extends Controller
 		return $project;
 	}
 
-
-    private function inoExists($id)
+    protected function canCreateFile($id, $filename)
     {
-        $list = json_decode($this->listFilesAction($id)->getContent(), true);
-        if($list["success"])
-        {
-            foreach($list["list"] as $file)
-            {
-               if(pathinfo($file["filename"], PATHINFO_EXTENSION)=="ino")
-                   return json_encode(array("success" => true));
-            }
-        }
-        return json_encode(array("success" => false, "error" => ".ino file does not exist."));
-    }
-
-    private function canCreateFile($id, $filename)
-    {
-        if(pathinfo($filename, PATHINFO_EXTENSION)== "ino")
-        {
-            $inoExists = json_decode($this->inoExists($id), true);
-            if($inoExists["success"])
-                return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "Cannot create second .ino file in the same project"));
-        }
-
         return json_encode(array("success" => true));
     }
 
-
-	private function nameIsValid($name)
+	protected  function nameIsValid($name)
 	{
 		$project_name = str_replace(".", "", trim(basename(stripslashes($name)), ".\x00..\x20"));
 		if($project_name == $name)
@@ -381,7 +308,7 @@ class ProjectsController extends Controller
 			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
-    private function nameExists($owner, $name)
+    protected  function nameExists($owner, $name)
     {
         $userProjects = json_decode($this->listAction($owner)->getContent(),true);
 
@@ -394,21 +321,4 @@ class ProjectsController extends Controller
         }
         return json_encode(array("success" => false));
     }
-	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, $storageLayer)
-	{
-	    $this->em = $entityManager;
-        $this->sl = $storageLayer;
-        if($this->sl == "disk")
-        {
-            $this->fc = $diskFilesController;
-        }
-        else if ($this->sl == "mongo")
-        {
-            $this->fc = $mongoFilesController;
-        }
-        else
-        {
-            throw new \Exception('Invalid Storage Layer');
-        }
-	}
 }

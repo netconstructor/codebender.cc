@@ -16,8 +16,8 @@ services:
         arguments:
             documentManager: "@doctrine.odm.mongodb.document_manager"
 
-    ace_project.projectmanager:
-        class:        Ace\ProjectBundle\Controller\ProjectsController
+    ace_project.sketchmanager:
+        class:        Ace\ProjectBundle\Controller\SketchController
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             mongofilecontroller: "@ace_project.mongofilecontroller"
