@@ -72,7 +72,8 @@ class OptionsController extends Controller
 			// Check if email is changed and if it's available
 			$email = $form->get('email')->getData();
 			$emailChange = false;
-			if($this->get('ace_user.usercontroller')->emailExistsAction($email) == "true"){
+			$emailExists = json_decode($this->get('ace_user.usercontroller')->emailExistsAction($email)->getContent(), true);
+			if($emailExists == "true"){
 				if($email != $currentUser->getEmail())
 					$form->get('email')->addError(new FormError("This Email address is already in use by another member"));
 			}
@@ -137,27 +138,28 @@ class OptionsController extends Controller
 				
 				$updateEmail = false;
 				$updatePass = false;
-				if($emailChange || $passChange){
-					if($authenticated){
-						if($emailChange){
-							$merge_vars["EMAIL"] = $email;
-							$api->listUpdateMember($this->listid, $currentUser->getEmail(), $merge_vars, false); //update newsletter info BEFORE updating user
-							$currentUser->setEmail($email);
-							$updateEmail = true;
-						}
-						if($passChange){
-							$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
-							$this->um->updatePassword($currentUser);
-							$updatePass = true;
-						}
+				
+				if($authenticated){
+					if($emailChange){
+						$merge_vars["EMAIL"] = $email;
+						$api->listUpdateMember($this->listid, $currentUser->getEmail(), $merge_vars, false); //update newsletter info BEFORE updating user
+						$currentUser->setEmail($email);
+						$updateEmail = true;
 					}
-					else
+					if($passChange){
+						$currentUser->setPlainPassword($form->get('plainPassword')->get('new')->getData());
+						$this->um->updatePassword($currentUser);
+						$updatePass = true;
+					}
+				}
+				else{
+					if($emailChange || $passChange)
 						$message = '<span style="color:orange; font-weight:bold"><i class="icon-warning-sign icon-large"></i> WARNING:</span> Your Profile was updated <strong>except the fields that contain errors</strong>, please fix the errors and try again to update them too.';				
-				}	
+				}
 				if($updateNonSensitive || $updateEmail || $updatePass){
 					// update user db
 					$this->em->flush();
-					$this->um->reloadUser($currentUser);
+					$this->um->reloadUser($currentUser); //necessary to avoid problems with the security layer if user updates his password
 				}
 			}
 			else
@@ -167,12 +169,7 @@ class OptionsController extends Controller
 			$response = $this->getErrorMessages($form);
 			$response["message"] = $message;
 			
-			// transfer error from plainPassword key to plainPasswordError variable
-			//if(isset($response["plainPassword"])){
-			//	$plainPasswordError = $response["plainPassword_"];
-			//	unset($response["plainPassword"]);
-			//}
-			// add custom error message to response
+			// add custom error message to response array
 			if(isset($plainPasswordError))
 				$response["plainPassword"] = $plainPasswordError;
 			
@@ -218,9 +215,8 @@ class OptionsController extends Controller
 			$currentUser = $this->sc->getToken()->getUser();
 			$email = $this->request->get('email');
 			
-			// TODO: find out why $this->get('ace_user.usercontroller')->emailExistsAction($email) doesn't work
-			$exists = $this->em->getRepository('AceUserBundle:User')->findOneByEmail($email);
-			if($exists){
+			$emailExists = json_decode($this->get('ace_user.usercontroller')->emailExistsAction($email)->getContent(), true);
+			if($emailExists){
 					if($email !== $currentUser->getEmail())
 						$return = 'inUse'; //in use by another member
 					else
