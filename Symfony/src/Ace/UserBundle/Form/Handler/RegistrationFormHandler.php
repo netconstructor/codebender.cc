@@ -96,7 +96,7 @@ void loop()
 		$response = $this->projectmanager->createprojectAction($user["id"], "Serial Comm Example", $second_code)->getContent();
 
 	    if($user["referrer_username"])
-	        $referrer = json_decode($this->usercontroller->getUserAction()->getContent(), true);
+	        $referrer = json_decode($this->usercontroller->getUserAction($user["referrer_username"])->getContent(), true);
 
 	    if($user["referral_code"])
 		    $referral_code = json_decode($this->referralcontroller->useCodeAction($user["referral_code"])->getContent(), true);
