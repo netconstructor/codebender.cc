@@ -10,7 +10,7 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Mailer\MailerInterface;
 use Ace\UserBundle\Entity\User;
 use Ace\UserBundle\Controller\DefaultController as UserController;
-use Ace\ProjectBundle\Controller\DefaultController as ProjectManager;
+use Ace\ProjectBundle\Controller\SketchController as ProjectManager;
 use Ace\UtilitiesBundle\Controller\ReferralCodeController;
 use MCAPI;
 
