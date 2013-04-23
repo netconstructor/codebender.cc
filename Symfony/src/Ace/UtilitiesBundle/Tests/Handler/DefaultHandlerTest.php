@@ -43,6 +43,8 @@ class DefaultHandlerTest extends \PHPUnit_Framework_TestCase
 
 	public function testDefault_text()
 	{
+		chdir("web/");
+
 		$handler = new DefaultHandler();
 
 		//Check for wrong URL
