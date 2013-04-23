@@ -76,10 +76,10 @@ class SketchController extends ProjectController
 
             $filename = $name.".ino";
 
-            $response1 = json_decode($this->renameFileAction($id, $filename, $new_name.".ino.bkp"), true);
+            $response1 = json_decode($this->renameFileAction($id, $filename, $new_name.".ino.bkp")->getContent(), true);
             if($response1["success"])
             {
-                $response2 = json_decode($this->renameFileAction($id, $new_name.".ino.bkp", $new_name.".ino"), true);
+                $response2 = json_decode($this->renameFileAction($id, $new_name.".ino.bkp", $new_name.".ino")->getContent(), true);
                 if($response2["success"])
                 {
                     $project->setName($new_name);

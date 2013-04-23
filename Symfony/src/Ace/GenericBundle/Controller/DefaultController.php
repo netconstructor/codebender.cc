@@ -118,7 +118,7 @@ class DefaultController extends Controller
 
 		$id = $this->getRequest()->request->get('project_id');
 
-		$projectmanager = $this->get('ace_project.sketchgmanager');
+		$projectmanager = $this->get('ace_project.sketchmanager');
 		$projects = NULL;
 
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
