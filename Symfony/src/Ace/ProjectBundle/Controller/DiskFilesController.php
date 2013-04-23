@@ -18,16 +18,16 @@ class DiskFilesController extends FilesController
     {
 
         $projects = scandir($this->dir);
+        $current_user = $this->sc->getToken()->getUser();
+        $name = $current_user->getUsername();
         do
         {
-            $id = uniqid($more_entropy=true);
+            $id = $name."/".uniqid($more_entropy=true);
         } while(in_array($id, $projects));
         if(!is_dir($this->dir.$this->type))
         {
             mkdir($this->dir.$this->type);
         }
-        $current_user = $this->sc->getToken()->getUser();
-        $name = $current_user->getUsername();
         if(!is_dir($this->dir.$this->type."/".$name))
         {
             mkdir($this->dir.$this->type."/".$name);
@@ -156,10 +156,7 @@ class DiskFilesController extends FilesController
 
     private function getDir($id)
     {
-        $current_user = $this->sc->getToken()->getUser();
-
-        $name = $current_user->getUsername();
-        return $this->dir.$this->type."/".$name."/".$id."/";
+        return $this->dir.$this->type."/".$id."/";
     }
 
     public function __construct($directory, $type, SecurityContext $sc)
