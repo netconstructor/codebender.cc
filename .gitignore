@@ -8,4 +8,6 @@ Symfony/jlog.xml
 Symfony/app/config/parameters.ini
 Symfony/web/update.rdf
 .idea/workspace.xml
+Symfony/app/junit.xml
+Symfony/app/testdox.html
 
