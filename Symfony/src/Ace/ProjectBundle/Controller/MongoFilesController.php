@@ -8,7 +8,7 @@ use Ace\ProjectBundle\Document\ProjectFiles;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
-class MongoFilesController extends Controller
+class MongoFilesController extends FilesController
 {
     protected $dm;
 
@@ -35,21 +35,6 @@ class MongoFilesController extends Controller
 		return json_encode(array("success" => true));
 	}
 
-	public function cloneAction($id)
-	{
-		$pf = $this->getProjectById($id);
-		$new_id = json_decode($this->createAction(), true);
-		$new_id = $new_id["id"];
-		$new_pf = $this->getProjectById($new_id);
-		$new_pf->setFiles($pf->getFiles());
-		$new_pf->setFilesTimestamp($pf->getFilesTimestamp());
-		$new_pf->setImages($pf->getImages());
-		$new_pf->setSketches($pf->getSketches());
-		$dm = $this->dm;
-		$dm->persist($new_pf);
-		$dm->flush();
-		return json_encode(array("success" => true, "id" => $new_id));
-	}
 	
 	public function listFilesAction($id)
 	{
@@ -163,54 +148,12 @@ class MongoFilesController extends Controller
 	    $dm->flush();
 	}
 
-	private function listFiles($id)
+	protected function listFiles($id)
 	{
 		$pf = $this->getProjectById($id);
 
 		$list = $pf->getFiles();
 		return $list;
-	}
-
-	private function fileExists($id, $filename)
-	{
-		$list = $this->listFiles($id);
-		foreach($list as $file)
-		{
-			if($file["filename"] == $filename)
-				return json_encode(array("success" => true));
-		}
-		return json_encode(array("success" => false, "filename" => $filename, "error" => "File ".$filename." does not exist."));
-	}
-
-	private function canCreateFile($id, $filename)
-	{
-		$validName = json_decode($this->nameIsValid($filename), true);
-		if(!$validName["success"])
-			return json_encode($validName);
-
-		$list = $this->listFiles($id);
-		$is_ino = false;
-		if(strrpos($filename, ".ino") !== false)
-		{
-			$is_ino = strlen($filename) - strrpos($filename, ".ino") == 4;
-		}
-		foreach($list as $file)
-		{
-			if($file["filename"] == $filename)
-				return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "This file already exists"));
-			if($is_ino && (strlen($file["filename"]) - strrpos($file["filename"], ".ino") == 4))
-				return json_encode(array("success" => false, "id" => $id, "filename" => $filename, "error" => "Cannot create second .ino file in the same project"));
-		}
-		return json_encode(array("success" => true));
-	}
-
-	private function nameIsValid($name)
-	{
-		$project_name = trim(basename(stripslashes($name)), ".\x00..\x20");
-		if($project_name == $name)
-			return json_encode(array("success" => true));
-		else
-			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
 	public function __construct(DocumentManager $documentManager)
