@@ -164,7 +164,7 @@
 
     function browserSpecificPluginInstall(alert)
     {
-        if(navigator.userAgent.toLowerCase().indexOf('chrome') != -1)
+        if(navigator.userAgent.toLowerCase().indexOf('chrome') != -1 && navigator.userAgent.toLowerCase().indexOf('nt 6.2') == -1)
         {
             alert += "<a href='https://chrome.google.com/webstore/detail/codebendercc-extension/fkjidelplakiboijmadcpcbpboihkmee' target='_blank'>Add to Chrome</a>";
         }
@@ -172,7 +172,7 @@
         {
             alert+= '<a id="xpi-download-url" href = "{{ 'http://' ~ app.request.host ~ asset('codebender.xpi') }}" >Add to Firefox.</a>';
         }
-        else if(navigator.userAgent.toLowerCase().indexOf('msie') != -1)
+        else if(navigator.userAgent.toLowerCase().indexOf('msie') != -1 || navigator.userAgent.toLowerCase().indexOf('nt 6.2') != -1 )
         {
             alert+= '<a id="msi-download-url" href = "{{ 'http://' ~ app.request.host ~ asset('Codebendercc.msi') }}" >Add to Windows.</a>';
         }

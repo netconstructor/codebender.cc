@@ -27,41 +27,40 @@
             }());
 
 
-            if (os.isLinux) {
-                window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
-            }
-            else
-            {
 
-	            window.setInterval(function(){
-                    if($("#install_drivers_button").css("display") == "none")
-                    {
-	                    if (window.plugin.checkForDrivers(""))
-		                    window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
-	                    else
-	                    {
-		                    $("#step_output_text").hide(1000);
-		                    $("#install_drivers_button").show();
-		                    if (os.isXP || os.isMac)
-		                    {
-			                    $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(0);");
-		                    }
-
-		                    if (os.isVista || os.isWin7 || os.isWin8)
-		                    {
-			                    $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(1);");
-		                    }
-	                    }
+            window.setInterval(function(){
+                if($("#install_drivers_button").css("display") == "none")
+                {
+                    if (os.isLinux) {
+                        if (window.plugin.checkForDrivers("/dev/ttyS0"))
+                            window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
                     }
-		            else
+                    else
                     {
-	                    if ($("#operation_output:contains(Drivers Installed Successfully.)").length > 0)
-		                    window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
+                        if (window.plugin.checkForDrivers(""))
+                            window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
+                        else
+                        {
+                            $("#step_output_text").hide(1000);
+                            $("#install_drivers_button").show();
+                            if (os.isXP || os.isMac)
+                            {
+                                $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(0);");
+                            }
+
+                            if (os.isVista || os.isWin7 || os.isWin8)
+                            {
+                                $("#install_drivers_button").attr("onclick", "javascript:window.plugin.installDrivers(1);");
+                            }
+                        }
                     }
-                }, 5000);
-
-
-            }
+                }
+                else
+                {
+                    if ($("#operation_output:contains(Drivers Installed Successfully.)").length > 0)
+                        window.location.replace("{{ path("AceStaticBundle_walkthrough", {"page":page+1}) }}");
+                }
+            }, 5000);
         });
     </script>
 {% endblock %}

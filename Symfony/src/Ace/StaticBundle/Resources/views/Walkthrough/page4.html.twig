@@ -26,7 +26,13 @@
             $("#start_button").hide(1000);
             if (window.selectedBoard["name"].indexOf("Digispark") === -1)
             {
-                $("#step_output_text").hide(200).html("<p>Please connect your device to your computer. If you have already connected your device, please disconnect it, wait a few seconds, and then connect it again.</p>").show(1000);
+                displayMessage="<p>Please connect your device to your computer. If you have already connected your device, please disconnect it, wait a few seconds, and then connect it again.</p>";
+                if (navigator.userAgent.toLowerCase().indexOf("windows")!==-1){
+                        displayMessage+="<p>Your device should now show up under the \"Ports (COM & LPT)\" section of the Device Manager List. If not, it is listed under Other Devices and you need to use Update Driver Software to configure it correctly.</p>";
+                        window.plugin.deviceManager();
+                }
+                $("#step_output_text").hide(200).html(displayMessage).show(1000);
+
                 window.files = {"Arduino Generic Blink.ino":"void setup() { pinMode(13, OUTPUT); pinMode(9, OUTPUT); } void loop() { digitalWrite(13, HIGH); digitalWrite(9, HIGH); delay(1000); digitalWrite(13, LOW); digitalWrite(9, LOW); delay(1000); }"}
                 if(typeof portsAvail === "undefined")
                     portsAvail = [""];
@@ -122,8 +128,8 @@
 
 {% block page_content %}
     <h3>Testing the device</h3>
-    <p>You should now have all the necessary requirements to actually talk to your device. We will now make sure your
-        computer can talk to your device.</p>
+    <p>You should now have all the necessary requirements to actually talk to your device.
+        We will now make sure your computer can talk to your device.</p>
     <div id="step_output_text"><p>Please select your board from the list below and then click on 'Start'</p></div>
     <div id="cb_cf" data-sections="usbflash"></div>
     <button id="start_button" onclick="start();" class="huge-button">Start</button>
