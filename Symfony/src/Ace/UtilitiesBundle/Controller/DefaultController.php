@@ -18,6 +18,7 @@ class DefaultController extends Controller
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$project_name = $this->getRequest()->request->get('project_name');
+        $is_public = true;
 
 		$text = "";
 		if($this->getRequest()->request->get('code'))
@@ -30,7 +31,7 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text)->getContent();
+		$response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text, $is_public)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{

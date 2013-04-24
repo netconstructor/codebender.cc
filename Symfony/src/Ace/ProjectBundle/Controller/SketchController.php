@@ -7,18 +7,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Ace\ProjectBundle\Entity\Project as Project;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class SketchController extends ProjectController
 {
     protected $em;
 	protected $fc;
+    protected $sc;
     protected $sl;
 
 
-	public function createprojectAction($user_id, $project_name, $code)
+	public function createprojectAction($user_id, $project_name, $code, $isPublic)
 	{
 		$retval;
-		$response = parent::createprojectAction($user_id, $project_name, $code)->getContent();
+		$response = parent::createprojectAction($user_id, $project_name, $code, $isPublic)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
 		{
@@ -141,10 +143,11 @@ class SketchController extends ProjectController
         return json_encode(array("success" => false, "error" => ".ino file does not exist."));
     }
 
-	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, $storageLayer)
+	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, SecurityContext $securitycontext, $storageLayer)
 	{
 	    $this->em = $entityManager;
         $this->sl = $storageLayer;
+        $this->sc = $securitycontext;
         if($this->sl == "disk")
         {
             $this->fc = $diskFilesController;
