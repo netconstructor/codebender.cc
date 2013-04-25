@@ -56,6 +56,44 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), 'false');
 	}
 
+	public function testEmailExistsAction_EmailExists()
+	{
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByEmail"))
+			->getMock();
+
+		$repo->expects($this->once())->method('findOneByEmail')->with($this->equalTo("iamfake"))->will($this->returnValue($user));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->emailExistsAction("iamfake");
+		$this->assertEquals($response->getContent(), 'true');
+	}
+
+	public function testEmailExistsAction_NoEmail()
+	{
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByEmail"))
+			->getMock();
+
+		$repo->expects($this->once())->method('findOneByEmail')->with($this->equalTo("idontexist"))->will($this->returnValue(null));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->emailExistsAction("idontexist");
+		$this->assertEquals($response->getContent(), 'false');
+	}
+
 	public function testGetUserAction_UserExists()
 	{
 		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
