@@ -63,7 +63,6 @@ class DefaultController extends Controller
 
 	public function getCurrentUserAction()
 	{
-		$response = array("success" => false);
 		$current_user = $this->sc->getToken()->getUser();
 		if($current_user !== "anon.")
 		{
@@ -71,9 +70,13 @@ class DefaultController extends Controller
 			$data = json_decode($this->getUserAction($name)->getContent(), true);
 			if ($data["success"] === false)
 			{
-				throw $this->createNotFoundException('No user found with id '.$name);
+				throw $this->createNotFoundException('No user found with username '.$name);
 			}
 			$response = $data;
+		}
+		else
+		{
+			$response = array("success" => false);
 		}
 		return new Response(json_encode($response));
 
