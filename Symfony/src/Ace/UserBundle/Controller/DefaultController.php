@@ -141,17 +141,22 @@ class DefaultController extends Controller
 
 		/** @var User $user */
 		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
-		/** @var User $referrer */
-		$referrer = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($referrer_username);
-
-		if($referrer != NULL)
+		if ($user != NULL)
 		{
-			$referrer->setReferrals($referrer->getReferrals()+1);
-			$referrer->setKarma($referrer->getKarma()+20);
-			$referrer->setPoints($referrer->getPoints() + 20);
-			$user->setReferrer($referrer);
-			$this->em->flush();
-			return new Response(json_encode(array("success" => true)));
+			/** @var User $referrer */
+			$referrer = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($referrer_username);
+
+			if($referrer != NULL)
+			{
+				$referrer->setReferrals($referrer->getReferrals() + 1);
+				$referrer->setKarma($referrer->getKarma() + 20);
+				$referrer->setPoints($referrer->getPoints() + 20);
+				$user->setReferrer($referrer);
+				$this->em->flush();
+				return new Response(json_encode(array("success" => true)));
+			}
+			return new Response(json_encode(array("success" => false)));
+
 		}
 
 		return new Response(json_encode(array("success" => false)));
