@@ -275,6 +275,79 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), "[]");
 	}
 
+	public function testSetReferrerAction_Success()
+	{
+		$referrer = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+		$referrer->expects($this->once())->method('getReferrals')->will($this->returnValue(5));
+		$referrer->expects($this->once())->method('setReferrals')->with($this->equalTo(6));
+		$referrer->expects($this->once())->method('getKarma')->will($this->returnValue(50));
+		$referrer->expects($this->once())->method('setKarma')->with($this->equalTo(70));
+		$referrer->expects($this->once())->method('getPoints')->will($this->returnValue(60));
+		$referrer->expects($this->once())->method('setPoints')->with($this->equalTo(80));
+
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+		$user->expects($this->once())->method('setReferrer')->with($this->equalTo($referrer));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+
+		$repo->expects($this->at(0))->method('findOneByUsername')->with($this->equalTo("fakeuser"))->will($this->returnValue($user));
+		$repo->expects($this->at(1))->method('findOneByUsername')->with($this->equalTo("idontexist"))->will($this->returnValue($referrer));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->exactly(2))->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+		$em->expects($this->once())->method('flush');
+
+		$response = $controller->setReferrerAction("fakeuser", "idontexist");
+		$this->assertEquals($response->getContent(), '{"success":true}');
+	}
+
+	public function testSetReferrerAction_NoUser()
+	{
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+
+		$repo->expects($this->once())->method('findOneByUsername')->with($this->equalTo("idontexist"))->will($this->returnValue(null));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->setReferrerAction("idontexist", "areferrer");
+		$this->assertEquals($response->getContent(), '{"success":false}');
+	}
+
+	public function testSetReferrerAction_NoReferrer()
+	{
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+
+		$repo->expects($this->at(0))->method('findOneByUsername')->with($this->equalTo("fakeuser"))->will($this->returnValue($user));
+		$repo->expects($this->at(1))->method('findOneByUsername')->with($this->equalTo("idontexist"))->will($this->returnValue(null));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->exactly(2))->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->setReferrerAction("fakeuser", "idontexist");
+		$this->assertEquals($response->getContent(), '{"success":false}');
+	}
+
 	private function initArguments(&$templating, &$security, &$em, &$container)
 	{
 		$em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
