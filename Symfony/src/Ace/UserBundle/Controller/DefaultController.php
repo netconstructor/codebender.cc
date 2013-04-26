@@ -179,11 +179,13 @@ class DefaultController extends Controller
 	{
 		$user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($username);
 
-		//update object - no checks atm
-		$user->setPoints(intval($points));
-		$this->em->flush();
-
-		return new Response(json_encode(array("success" => true)));
+		if($user != NULL)
+		{
+			$user->setPoints(intval($points));
+			$this->em->flush();
+			return new Response(json_encode(array("success" => true)));
+		}
+		return new Response(json_encode(array("success" => false)));
 	}
 
 	public function setWalkthroughStatusAction($status)

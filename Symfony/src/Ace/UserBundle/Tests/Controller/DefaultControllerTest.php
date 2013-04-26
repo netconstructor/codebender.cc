@@ -386,6 +386,44 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), '{"success":false}');
 	}
 
+	public function testSetPointsAction_Success()
+	{
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+		$user->expects($this->once())->method('setPoints')->with($this->equalTo(50));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+		$repo->expects($this->once())->method('findOneByUsername')->with($this->equalTo("iamfake"))->will($this->returnValue($user));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+		$em->expects($this->once())->method('flush');
+
+		$response = $controller->setPointsAction("iamfake", 50);
+		$this->assertEquals($response->getContent(), '{"success":true}');
+	}
+
+	public function testSetPointsAction_NoUser()
+	{
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+		$repo->expects($this->once())->method('findOneByUsername')->with($this->equalTo("idontexist"))->will($this->returnValue(null));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->setPointsAction("idontexist", 50);
+		$this->assertEquals($response->getContent(), '{"success":false}');
+	}
+
 	private function initArguments(&$templating, &$security, &$em, &$container)
 	{
 		$em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
