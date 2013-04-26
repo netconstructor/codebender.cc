@@ -187,6 +187,94 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), '{"success":false}');
 	}
 
+	public function testSearchAction_NameExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"search_string","lastname":"alastname","username":"ausername","karma":50}}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"search_string","lastname":"alastname","username":"ausername","karma":50}}');
+	}
+
+	public function testSearchAction_UsernameExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"afirstname","lastname":"alastname","username":"search_string","karma":50}}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"afirstname","lastname":"alastname","username":"search_string","karma":50}}');
+	}
+
+	public function testSearchAction_TwitterExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}');
+	}
+
+	public function testSearchAction_NameUsernameExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"search_string","lastname":"alastname","username":"ausername","karma":50}}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"2":{"firstname":"afirstname","lastname":"alastname","username":"search_string","karma":50}}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"search_string","lastname":"alastname","username":"ausername","karma":50},"2":{"firstname":"afirstname","lastname":"alastname","username":"search_string","karma":50}}');
+	}
+
+	public function testSearchAction_NameTwitterExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"search_string","lastname":"alastname","username":"ausername","karma":50}}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"2":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"search_string","lastname":"alastname","username":"ausername","karma":50},"2":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}');
+	}
+
+	public function testSearchAction_UsernameTwitterExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"search_string","lastname":"alastname","username":"search_string","karma":50}}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"2":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"search_string","lastname":"alastname","username":"search_string","karma":50},"2":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}');
+	}
+
+	public function testSearchAction_AllExist()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"search_string","lastname":"alastname","username":"search_string","karma":50}}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"1":{"firstname":"search_string","lastname":"alastname","username":"search_string","karma":50}}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"2":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"search_string","lastname":"alastname","username":"search_string","karma":50},"2":{"firstname":"afirstname","lastname":"alastname","username":"ausername","karma":50}}');
+	}
+
+	public function testSearchAction_NoneExists()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("searchNameAction", "searchUsernameAction", "searchTwitterAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchUsernameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$controller->expects($this->once())->method('searchTwitterAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{}')));
+		$response = $controller->searchAction("search_string");
+		$this->assertEquals($response->getContent(), "[]");
+	}
+
 	private function initArguments(&$templating, &$security, &$em, &$container)
 	{
 		$em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
