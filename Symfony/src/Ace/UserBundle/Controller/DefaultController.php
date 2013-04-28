@@ -190,19 +190,21 @@ class DefaultController extends Controller
 
 	public function setWalkthroughStatusAction($status)
 	{
-		/** @var User $current_user */
-		$current_user = $this->sc->getToken()->getUser();
-		if ($current_user !== "anon.")
+		$response = json_decode($this->getCurrentUserAction()->getContent(), true);
+		if($response["success"] === true)
 		{
+			/** @var User $current_user */
+			$current_user = $this->em->getRepository('AceUserBundle:User')->findOneByUsername($response["username"]);
 			if ($current_user->getWalkthroughStatus() < $status)
 			{
-				if($status == 5)
+				if ($status == 5)
 					$current_user->setPoints($current_user->getPoints() + 50);
 				$current_user->setWalkthroughStatus($status);
+				$this->em->flush();
 			}
+			return new Response(json_encode(array("success" => true)));
 		}
-		$this->em->flush();
-		return new Response(json_encode(array("success" => true)));
+		return new Response(json_encode(array("success" => false)));
 	}
 
 	public function enabledAction()
