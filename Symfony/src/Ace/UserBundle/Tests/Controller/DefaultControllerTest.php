@@ -408,6 +408,93 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), '{"success":true}');
 	}
 
+	public function testSetWalkthroughStatusAction_userLoggedIn_StatusSmallerThanExisting()
+	{
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+		$user->expects($this->once())->method('getWalkthroughStatus')->will($this->returnValue(3));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+		$repo->expects($this->once())->method('findOneByUsername')->with($this->equalTo("iamfake"))->will($this->returnValue($user));
+
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('getCurrentUserAction')->will($this->returnValue(new Response('{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0}')));
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->setWalkthroughStatusAction(3);
+		$this->assertEquals($response->getContent(), '{"success":true}');
+	}
+
+	public function testSetWalkthroughStatusAction_userLoggedIn_SuccessNotCompleted()
+	{
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+		$user->expects($this->once())->method('getWalkthroughStatus')->will($this->returnValue(3));
+		$user->expects($this->once())->method('setWalkthroughStatus')->with($this->equalTo(4));
+		$user->expects($this->never())->method('getPoints');
+		$user->expects($this->never())->method('setPoints');
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+		$repo->expects($this->once())->method('findOneByUsername')->with($this->equalTo("iamfake"))->will($this->returnValue($user));
+
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('getCurrentUserAction')->will($this->returnValue(new Response('{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0}')));
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+		$em->expects($this->once())->method('flush');
+
+		$response = $controller->setWalkthroughStatusAction(4);
+		$this->assertEquals($response->getContent(), '{"success":true}');
+	}
+
+	public function testSetWalkthroughStatusAction_userLoggedIn_CompleteSuccess()
+	{
+		$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+			->disableOriginalConstructor()
+			->getMock();
+		$user->expects($this->once())->method('getWalkthroughStatus')->will($this->returnValue(4));
+		$user->expects($this->once())->method('setWalkthroughStatus')->with($this->equalTo(5));
+		$user->expects($this->once())->method('getPoints')->will($this->returnValue(50));
+		$user->expects($this->once())->method('setPoints')->with($this->equalTo(100));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("findOneByUsername"))
+			->getMock();
+		$repo->expects($this->once())->method('findOneByUsername')->with($this->equalTo("iamfake"))->will($this->returnValue($user));
+
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('getCurrentUserAction')->will($this->returnValue(new Response('{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0}')));
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+		$em->expects($this->once())->method('flush');
+
+		$response = $controller->setWalkthroughStatusAction(5);
+		$this->assertEquals($response->getContent(), '{"success":true}');
+	}
+
+	public function testSetWalkthroughStatusAction_userAnonymous()
+	{
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->once())->method('getCurrentUserAction')->will($this->returnValue(new Response('{"success":false}')));
+
+		$response = $controller->setWalkthroughStatusAction(5);
+		$this->assertEquals($response->getContent(), '{"success":false}');
+	}
+
 	public function testSetPointsAction_NoUser()
 	{
 		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
