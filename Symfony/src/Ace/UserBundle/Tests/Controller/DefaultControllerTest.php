@@ -546,6 +546,26 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), 5);
 	}
 
+	public function testInlineRegisterAction()
+	{
+		$form = $this->getMockBuilder('Symfony\Component\Form\Form')
+			->disableOriginalConstructor()
+			->setMethods(array("createView"))
+			->getMock();
+		$form->expects($this->once())->method("createView")->will($this->returnValue(null));
+
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
+
+		$container->expects($this->once())->method('get')->with($this->equalTo('fos_user.registration.form'))->will($this->returnValue($form));
+		$container->expects($this->once())->method("getParameter")->with($this->equalTo('fos_user.template.theme'))->will($this->returnValue(null));
+
+		$templating->expects($this->once())->method("render")->will($this->returnValue("this is the registration form view"));
+
+		$response = $controller->inlineRegisterAction();
+		$this->assertEquals($response->getContent(), "this is the registration form view");
+	}
+
 	private function initArguments(&$templating, &$security, &$em, &$container)
 	{
 		$em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
@@ -553,7 +573,6 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 			->getMock();
 
 		$templating = $this->getMockBuilder('Symfony\Bundle\TwigBundle\TwigEngine')
-			->setMethods(null)
 			->disableOriginalConstructor()
 			->getMock();
 
