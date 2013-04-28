@@ -353,6 +353,83 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), '[{"1":{"firstname":"search_string","lastname":"alastname0","username":"ausername0","karma":50}},{"2":{"firstname":"search_string","lastname":"alastname1","username":"ausername1","karma":50}}]');
 	}
 
+	public function testSearchUsernameAction_NoneExists()
+	{
+		$users = array();
+
+		$query = $this->getMockBuilder('MyQuery')
+			->disableOriginalConstructor()
+			->setMethods(array("getResult"))
+			->getMock();
+		$query->expects($this->once())->method('getResult')->will($this->returnValue($users));
+
+		$qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+			->disableOriginalConstructor()
+			->setMethods(array("where", "getQuery", "setParameter"))
+			->getMock();
+		$qb->expects($this->once())->method('where')->with($this->equalTo('u.username LIKE :name'))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('setParameter')->with($this->equalTo('name'), $this->equalTo('%search_string%'))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('getQuery')->will($this->returnValue($query));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("createQueryBuilder"))
+			->getMock();
+		$repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('u'))->will($this->returnValue($qb));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->searchUsernameAction("search_string");
+		$this->assertEquals($response->getContent(), '[]');
+	}
+
+	public function testSearchUsernameAction_TwoExist()
+	{
+		$users = array();
+		for ($i = 0; $i < 2; $i++)
+		{
+			$user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+				->disableOriginalConstructor()
+				->getMock();
+
+			$user->expects($this->once())->method('getId')->will($this->returnValue($i + 1));
+			$user->expects($this->once())->method('getFirstname')->will($this->returnValue("afirstname".$i));
+			$user->expects($this->once())->method('getLastname')->will($this->returnValue("alastname".$i));
+			$user->expects($this->once())->method('getUsername')->will($this->returnValue("search_string".$i));
+			$user->expects($this->once())->method('getKarma')->will($this->returnValue(50));
+			$users[] = $user;
+		}
+
+		$query = $this->getMockBuilder('MyQuery')
+			->disableOriginalConstructor()
+			->setMethods(array("getResult"))
+			->getMock();
+		$query->expects($this->once())->method('getResult')->will($this->returnValue($users));
+
+		$qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+			->disableOriginalConstructor()
+			->setMethods(array("where", "getQuery", "setParameter"))
+			->getMock();
+		$qb->expects($this->once())->method('where')->with($this->equalTo('u.username LIKE :name'))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('setParameter')->with($this->equalTo('name'), $this->equalTo('%search_string%'))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('getQuery')->will($this->returnValue($query));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("createQueryBuilder"))
+			->getMock();
+		$repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('u'))->will($this->returnValue($qb));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->searchUsernameAction("search_string");
+		$this->assertEquals($response->getContent(), '[{"1":{"firstname":"afirstname0","lastname":"alastname0","username":"search_string0","karma":50}},{"2":{"firstname":"afirstname1","lastname":"alastname1","username":"search_string1","karma":50}}]');
+	}
+
 	public function testSetReferrerAction_Success()
 	{
 		$referrer = $this->getMockBuilder('Ace\UserBundle\Entity\User')
