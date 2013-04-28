@@ -655,6 +655,47 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
 	}
 
+	public function testGetTopUsersAction()
+	{
+		$users = array();
+		for ($i = 0; $i < 5; $i++)
+		{
+			$user = new User();
+			$user->setKarma($i*10);
+			$user->setUsername("iamfake");
+			$users[] = $user;
+		}
+
+		$query = $this->getMockBuilder('MyQuery')
+			->disableOriginalConstructor()
+			->setMethods(array("getResult"))
+			->getMock();
+		$query->expects($this->once())->method('getResult')->will($this->returnValue($users));
+
+		$qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+			->disableOriginalConstructor()
+			->setMethods(array("orderBy","setMaxResults", "getQuery"))
+			->getMock();
+		$qb->expects($this->once())->method('orderBy')->with($this->equalTo('u.karma'), $this->equalTo('DESC'))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('setMaxResults')->with($this->equalTo(5))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('getQuery')->will($this->returnValue($query));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("createQueryBuilder"))
+			->getMock();
+		$repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('u'))->will($this->returnValue($qb));
+
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getUserAction"), array($templating, $security, $em, $container));
+		$controller->expects($this->exactly(5))->method('getUserAction')->with($this->equalTo("iamfake"))->will($this->returnValue(new Response('{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0}')));
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->getTopUsersAction(5);
+		$this->assertEquals($response->getContent(), '{"success":true,"list":[{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0},{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0},{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0},{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0},{"success":true,"id":1,"email":"a@fake.email","username":"iamfake","firstname":"fake","lastname":"basterd","twitter":"atwitteraccount","karma":150,"points":150,"referrals":5,"referrer_username":null,"referral_code":null,"walkthrough_status":0}]}');
+	}
+
 	private function setUpController(&$templating, &$security, &$em, &$container)
 		{
 			$this->initArguments($templating, $security, $em, $container);
