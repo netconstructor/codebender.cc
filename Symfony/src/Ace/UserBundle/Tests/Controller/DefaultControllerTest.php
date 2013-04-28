@@ -512,7 +512,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), '{"success":false}');
 	}
 
-	public function testSetEnabledAction()
+	public function testEnabledAction()
 	{
 		$users = array();
 		for($i = 0; $i < 5; $i++)
