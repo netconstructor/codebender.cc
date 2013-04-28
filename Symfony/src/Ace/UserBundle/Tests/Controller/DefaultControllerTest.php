@@ -2,7 +2,8 @@
 
 namespace Ace\UserBundle\Tests\Controller;
 use Ace\UserBundle\Controller\DefaultController;
-use Doctrine\ORM\Query;
+use Ace\UserBundle\Entity\User;
+use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultControllerTest extends \PHPUnit_Framework_TestCase
@@ -511,6 +512,40 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), '{"success":false}');
 	}
 
+	public function testSetEnabledAction()
+	{
+		$users = array();
+		for($i = 0; $i < 5; $i++)
+		{
+			$users[] = new User();
+		}
+		$query = $this->getMockBuilder('MyQuery')
+			->disableOriginalConstructor()
+			->setMethods(array("getResult"))
+			->getMock();
+		$query->expects($this->once())->method('getResult')->will($this->returnValue($users));
+
+		$qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+			->disableOriginalConstructor()
+			->setMethods(array("where", "getQuery"))
+			->getMock();
+		$qb->expects($this->once())->method('where')->with($this->equalTo('u.enabled = 1'))->will($this->returnValue($qb));
+		$qb->expects($this->once())->method('getQuery')->will($this->returnValue($query));
+
+		$repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+			->disableOriginalConstructor()
+			->setMethods(array("createQueryBuilder"))
+			->getMock();
+		$repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('u'))->will($this->returnValue($qb));
+
+		$controller = $this->setUpController($templating, $security, $em, $container);
+
+		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+
+		$response = $controller->enabledAction();
+		$this->assertEquals($response->getContent(), 5);
+	}
+
 	private function initArguments(&$templating, &$security, &$em, &$container)
 	{
 		$em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
@@ -535,4 +570,15 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 			$controller = new DefaultController($templating, $security, $em, $container);
 			return $controller;
 		}
+}
+
+class MyQuery extends AbstractQuery
+{
+	public function getSQL(){}
+
+	public function _doExecute(){}
+	public function getResult()
+	{
+		return "hello";
+	}
 }
