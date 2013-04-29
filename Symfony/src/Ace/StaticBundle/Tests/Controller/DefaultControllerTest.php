@@ -57,6 +57,19 @@ class DefaultControllerTest extends WebTestCase
 		$this->assertGreaterThanOrEqual(12, $crawler->filter('h4')->count());
 	}
 
+	public function testTutorialsAction()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/tutorials');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("Learn how to use codebender")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Walkthrough Video!")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Plugin Tutorial!")')->count());
+		$this->assertGreaterThanOrEqual(1, $crawler->filter('h1')->count());
+		$this->assertGreaterThanOrEqual(2, $crawler->filter('h3')->count());
+	}
+
 	public function testTeamAction()
 	{
 		$client = static::createClient();
