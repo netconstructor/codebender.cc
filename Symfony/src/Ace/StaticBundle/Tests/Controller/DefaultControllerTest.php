@@ -102,4 +102,30 @@ class DefaultControllerTest extends WebTestCase
 		$this->assertGreaterThanOrEqual(1, $crawler->filter('h1')->count());
 		$this->assertGreaterThanOrEqual(3, $crawler->filter('h3')->count());
 	}
+
+	public function testPartnerAction_Digispark()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/partner/digispark');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("The micro-sized, Arduino enabled, usb development board - cheap enough to leave in any project!")')->count());
+	}
+
+	public function testPartnerAction_Arno()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/partner/arno');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("Learning the basics of electronics and programming is challenging")')->count());
+	}
+
+	public function testPartnerAction_Invalid()
+	{
+//		$client = static::createClient();
+//
+//		$crawler = $client->request('GET', '/static/plugin');
+		$this->assertTrue(false);
+	}
 }
