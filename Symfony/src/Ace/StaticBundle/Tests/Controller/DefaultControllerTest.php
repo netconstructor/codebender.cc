@@ -6,6 +6,40 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
+	public function testAboutAction_Generic()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/about');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("we help you write and share code")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("State of the art editor. Awesome compiler.")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Hassle-free. USB cable or the cloud. It doesn\'t matter.")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("From DIY to DIT. Share and Collaborate.")')->count());
+		$this->assertGreaterThanOrEqual(3, $crawler->filter('h3')->count());
+		$this->assertGreaterThanOrEqual(3, $crawler->filter('h4')->count());
+	}
+
+	public function testAboutAction_LoggedIn()
+	{
+//		$client = static::createClient();
+//
+//		$crawler = $client->request('GET', '/static/about');
+		$this->assertTrue(false);
+	}
+
+	public function testAboutAction_Anonymous()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/about');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("Sign Up")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Start coding in minutes.")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Hi! Why don\'t you sign up for a codebender account?")')->count());
+		$this->assertEquals(1, $crawler->filter('input[value=Register]')->count());
+	}
+
 	public function testTeamAction()
 	{
 		$client = static::createClient();
