@@ -159,7 +159,10 @@ class DefaultController extends Controller
 
 	public function partnerAction($name)
 	{
-		return $this->render('AceStaticBundle:Partner:'.$name.'.html.twig');
+		if(file_exists(__DIR__."/../Resources/views/Partner/".$name.".html.twig"))
+			return $this->render('AceStaticBundle:Partner:'.$name.'.html.twig');
+
+		return $this->redirect($this->generateUrl("AceGenericBundle_index"));
 	}
 
 	public function infoPointsAction()
