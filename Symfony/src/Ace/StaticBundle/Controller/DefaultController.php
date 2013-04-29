@@ -5,7 +5,7 @@ namespace Ace\StaticBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Ace\StaticBundle\Entity\BlogPost;
-use Ace\StaticBundle\Entity\Contact;
+//use Ace\StaticBundle\Entity\Contact;
 use Ace\StaticBundle\Entity\Prereg;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
