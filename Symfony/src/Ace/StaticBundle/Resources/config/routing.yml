@@ -18,13 +18,13 @@ AceStaticBundle_walkthrough:
     pattern:  /walkthrough/page/{page}
     defaults: { _controller: AceStaticBundle:Default:walkthrough }
 
-AceStaticBundle_contact:
-    pattern:  /contact
-    defaults: { _controller: AceStaticBundle:Default:contact }
-
-AceStaticBundle_contact_new:
-    pattern:  /contact_new
-    defaults: { _controller: AceStaticBundle:Default:contact }
+#AceStaticBundle_contact:
+#    pattern:  /contact
+#    defaults: { _controller: AceStaticBundle:Default:contact }
+#
+#AceStaticBundle_contact_new:
+#    pattern:  /contact_new
+#    defaults: { _controller: AceStaticBundle:Default:contact }
 
 AceStaticBundle_plugin:
     pattern:  /plugin
