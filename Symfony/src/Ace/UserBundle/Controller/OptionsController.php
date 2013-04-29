@@ -96,7 +96,7 @@ class OptionsController extends Controller
 						$form->get('plainPassword')->addError(new FormError($error[0]->getMessage()));
 				}
 				else
-					$plainPasswordError = "Please provide your Current Password along with your New one.";
+					$form->get('plainPassword')->addError(new FormError("Please provide your Current Password along with your New one."));									
 			}
 		
 			if ($form->isValid())
@@ -169,9 +169,15 @@ class OptionsController extends Controller
 			$response = $this->getErrorMessages($form);
 			$response["message"] = $message;
 			
-			// add custom error message to response array
-			if(isset($plainPasswordError))
-				$response["plainPassword"] = $plainPasswordError;
+			/* Validation returns a "plainPassword" key for repeated's field errors
+			 * but there is no field with id "options_plainPassword". We set the key
+			 * to "plainPassword_confirm" so that js can display the error message in
+			 * "options_plainPassword_confirm" help block as it should. 
+			 */ 
+			if(isset($response["plainPassword"])){
+				$response["plainPassword_confirm"] = $response["plainPassword"];
+				unset($response["plainPassword"]);
+			}
 			
 			return new Response(json_encode($response));
         }

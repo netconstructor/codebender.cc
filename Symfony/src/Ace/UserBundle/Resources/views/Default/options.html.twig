@@ -33,213 +33,256 @@
     <script src={{ asset("validation/passvalidation.js") }} type="text/javascript"></script>
     <script type="text/javascript" charset="utf-8">
 
-	function preCheck(id) {
-		
-		var group = $("#"+id).closest('.control-group').removeClass().addClass("control-group");
-		var icon = $("#"+id).siblings('span.add-on').children().removeClass();
-        var info = $("#"+id).siblings('span.help-block');
-		
-		if(id == "options_currentPassword"){
-			var len = $("#" + id).val().length;
-			if (len != 0) {
-				if (len > 5 && len < 255){ //reduce validation overhead
-					info.html('');
-					if (passvalid(id) == 1) {
-						group.addClass("warning");
-						icon.addClass("icon-question-sign");
-						info.html('<i>Valid, type your Password and press Tab key</i>');
-						//setInterval(validation(id),100000);
-					}
-					else{
-						group.addClass("error");
-						icon.addClass("icon-remove");
-						info.html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
-					}
-				}
-				else{
-					group.addClass("error");
-					icon.addClass("icon-remove");
-					info.html('<i>Sorry, Password needs to be at least 6 characters long</i>');
-				}
+    function newPassValidation() {
+
+		var group			= $(".passwords").removeClass().addClass("control-group passwords");
+		var iconNew			= $(".iconPassNew").removeClass().addClass("iconPassNew");
+		var iconConfirm		= $(".iconPassConfirm").removeClass().addClass("iconPassConfirm");
+		var valueNew		= $("#options_plainPassword_new").val();
+		var valueConfirm	= $("#options_plainPassword_confirm").val();
+		var info			= $("#options_plainPassword_confirm").siblings('span.help-block').html('');
+			
+		var s = passvalid("options_plainPassword_new");
+
+		if (s == "valid") //New Password is valid
+		{
+			//set New to success/OK
+			iconNew.addClass("icon-ok");
+			if (valueNew == valueConfirm) //New and Confirm match
+			{
+				//set Confirm to success/OK
+				group.addClass("success");
+				iconConfirm.addClass("icon-ok");
 			}
-			else{
-				icon.addClass("icon-exclamation-sign");
-				info.html('');
+			else //Confirm and New(which is valid) do not match, set Confirm to error
+			{
+				if (valueConfirm.length >= 0)
+				{
+					group.addClass("error");
+					iconConfirm.addClass("icon-remove");
+					info.html('<i>Sorry, Passwords do not match!</i>');
+				}
 			}
 		}
-		
-		if(id == "options_email"){
-			if ($("#" + id).val().length > 6){
-				if (emailReg.test($("#" + id).val())) {
-					group.addClass("warning");
-                    icon.addClass("icon-question-sign");
-                    info.html('<i>Valid, type your Email and press Tab key</i>');
-				}
-				else{
-					group.addClass("error");
-					icon.addClass("icon-remove");
-					info.html('<i>Sorry, this is an invalid email address</i>');
-				}
+		else if (s == "empty") //New Password is empty
+		{
+			if (valueNew == valueConfirm) //both New and Confirm empty
+			{
+				//bring Group,New,Confirm to normal
+				group.removeClass("error success");
+				iconNew.addClass("icon-exclamation-sign");
+				iconConfirm.addClass("icon-exclamation-sign");
 			}
-			else{
-				icon.addClass("icon-envelope");
-				info.html('');
+			else    //Confirm not empty and different than New
+			{
+				//set Group,New,Confirm to error
+				group.addClass("error");
+				iconNew.addClass("icon-remove");
+				iconConfirm.addClass("icon-remove");
+				info.html('<i>Sorry, Passwords do not match!</i>');
 			}
 		}
-		
+		else //New Password out of limits or not complex enough
+		{
+			//set password group to error
+			group.addClass("error");
+			iconNew.addClass("icon-remove");
+			iconConfirm.addClass("icon-remove");
+			if (s == "outOfLimits")
+				info.html('<i>Sorry, your Password needs to be at least 6 characters long</i>');
+			else
+				info.html('<i>Sorry, your New Password is <b>too simple</b>, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
+		}
 	}
-
-    function validation(id) {
 		
-		var group = $("#"+id).closest('.control-group').removeClass().addClass("control-group");
-		var icon = $("#"+id).siblings('span.add-on').children().removeClass();
-        var info = $("#"+id).siblings('span.help-block');
-        
-        if (id == "options_plainPassword_new" || id == "options_plainPassword_confirm") {
-            var s = passvalid("options_plainPassword_new");
-
-            if (s == 1) //options_plainPassword_new valid
-            {
-                //options_plainPassword_new set OK
-                icon.addClass("icon-ok");
-                info.html('');
-
-                if ($("#options_plainPassword_new").val() == $("#options_plainPassword_confirm").val()) //passwords match
-                {
-                    //options_plainPassword_confirm set OK
-                    $(".passwords").removeClass("error").addClass("success");
-                    $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-remove").addClass("icon-ok");
-                    $(".plainPassword-info").html('');
-                }
-                else {
-                    if ($("#options_plainPassword_confirm").val().length >= 0) {
-                        //options_plainPassword_confirm != options_plainPassword_new, options_plainPassword_confirm set to error
-                        $(".passwords").removeClass("success").addClass("error");
-                        $(".password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-                        $(".plainPassword-info").html('<i>Sorry, Passwords do not match!</i>');
-                    }
-                }
-            }
-            else if (s == 2) //options_plainPassword_new is empty
-            {
-                //bring options_plainPassword_new to normal
-                $(".password_signs").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
-                $(".plainPassword-info").html('');
-
-                if ($("#options_plainPassword_new").val() == $("#options_plainPassword_confirm").val()) //both empty
-                {
-                    //bring options_plainPassword_confirm to normal
-                    $(".passwords").removeClass("error").removeClass("success");
-                    $(".password_confirm").removeClass("icon-ok").removeClass("icon-remove").addClass("icon-exclamation-sign");
-                    $(".plainPassword-info").html('');
-                }
-                else    //options_plainPassword_confirm not empty
-                {
-                    //set options_plainPassword_confirm to error
-                    $(".passwords").removeClass("success").addClass("error");
-                    $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-                    $(".plainPassword-info").html('<i>Sorry, Passwords do not match!</i>');
-                }
-            }
-            else //options_plainPassword_new not in range or not enough charsets
-            {
-                //set passwords to error
-                $(".passwords").removeClass("success").addClass("error");
-                $(".password_signs, .password_confirm").removeClass("icon-exclamation-sign").removeClass("icon-ok").addClass("icon-remove");
-
-                if (s == 3)
-                    $(".plainPassword-info").html('<i>Sorry, your Password needs to be at least 6 characters long</i>');
-                else
-                    $(".plainPassword-info").html('<i>Sorry, your New Password is too simple, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
-
-               // $(".plainPassword-info").html('');
-            }
-        }
-
-        else if (id == "options_currentPassword") {
-            if ($("#" + id).val().length != 0) {
-                group.addClass("warning");
-                icon.addClass("icon-question-sign");
-                info.html('<i>Checking Password</i>');
-                $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:$("#" + id).val() },
-                        function (response) {
-                            if (response.valid) {
-                                group.addClass("success");
-                                icon.addClass("icon-ok");
-                                info.html('');
-                            }
-                            else {
-                                group.addClass("error");
-                                icon.addClass("icon-remove");
-                                info.html('<i>Sorry, this is not your Current Password, give it another try</i>');
-                            }
-                        }).error(function () {
-                            alert("error");
-                        });
-            }
-        }
+	function currentPassValidation(el)
+	{
+		resetElements(el);
+			
+		if(window.passPost){window.passPost.abort();} // abort previous post request if present
+		var value = $(el).val();
+		var len = value.length;
 		
-		else if (id == "options_email"){ //using type="email" instead
-			var value = ($("#" + id)).val();
-            if (((value).length > 6) && (emailReg.test(value)) ) {
-
-				icon.removeClass().addClass("icon-refresh icon-spin");
-				info.html('');
-				
-				$.post("{{ url('AceUserBundle_isemailavailable') }}", { email:value },
-				function (response) {
-					icon.removeClass();
-					if (response.valid == "available") {
-						group.addClass("success");
-						icon.addClass("icon-ok");
-						info.html('');
-					}
-					else if (response.valid == "inUse") {
-						group.addClass("error");
-						icon.addClass("icon-remove");
-						info.html('<i>Sorry, this E-mail is already in use by another member</i>');
-					}
-					else { //response.valid == "own"
-						icon.addClass("icon-envelope");
-						info.html('');
-					}
-				});
+		if (len != 0) {
+			if (len > 5 && len < 255){ //reduce validation overhead
+				if (isvalidpass(el.id))
+				{
+					group.addClass("warning");
+					icon.addClass("icon-question-sign");
+					
+					clearTimeout(window.passTimer); // Clear the passTimer to avoid duplicates.
+					
+					// check password 1000ms after user stopped typing
+					window.passTimer = setTimeout(function()
+					{ 
+						group.removeClass("warning"); 
+						icon.removeClass().addClass("icon-refresh icon-spin");
+							
+						window.passPost = $.post("{{ url('AceUserBundle_iscurrentpassword') }}", { currentPassword:value },
+						function (response)
+						{
+							icon.removeClass();
+							if (response.valid)
+							{
+								group.addClass("success");
+								icon.addClass("icon-ok");
+							}
+							else
+							{
+								group.addClass("error");
+								icon.addClass("icon-remove");
+								info.html('<i>Sorry, this is not your Current Password, give it another try</i>');
+							}
+						});
+					}, 1000); // inactivity timer 1000ms	
+				}
+				else
+				{
+					group.addClass("error");
+					icon.addClass("icon-remove");
+					info.html('<i>Sorry, the Password you typed is not correct, give it another try</i>');
+				}
 			}
-        }
-
-        else {
-        }
-
-    }
+			else
+			{
+				group.addClass("error");
+				icon.addClass("icon-remove");
+				info.html('<i>Sorry, your Password is at least 6 characters long</i>');
+			}
+		}
+		else
+			icon.addClass("icon-exclamation-sign");
+	}
+ 
+	function emailValidation(el)
+	{
+		resetElements(el);
+		
+		if(window.emailPost){window.emailPost.abort();} // abort previous post request if present
+		var value = $(el).val();
+		if (value.length > 4) //assuming minimum valid email format a@b.c
+		{
+			if (emailReg.test(value))
+			{
+				group.addClass("warning");
+				icon.addClass("icon-question-sign");
+                   
+				clearTimeout(window.emailTimer); // Clear the emailTimer to avoid duplicates.
+                   
+				// check email availability 1000ms after user stopped typing
+				window.emailTimer = setTimeout(function()
+				{ 
+					group.removeClass("warning"); 
+					icon.removeClass().addClass("icon-refresh icon-spin");
+					
+					window.emailPost = $.post("{{ url('AceUserBundle_isemailavailable') }}", { email:value },
+					function (response)
+					{
+						icon.removeClass();
+						if (response.valid == "available")
+						{
+							group.addClass("success");
+							icon.addClass("icon-ok");
+						}
+						else if (response.valid == "inUse")
+						{
+							group.addClass("error");
+							icon.addClass("icon-remove");
+							info.html('<i>Sorry, this E-mail is already in use by another member</i>');
+						}
+						else //response.valid == "own"
+							icon.addClass("icon-envelope");
+					});
+				}, 1000); // inactivity timer 1000ms
+			}
+			else
+			{
+				group.addClass("error");
+				icon.addClass("icon-remove");
+				info.html('<i>Sorry, this is an invalid email address</i>');
+			}
+		}
+		else
+			icon.addClass("icon-envelope");
+	}
+	
+	function nameValidation(el)
+	{
+		resetElements(el);
+		icon.addClass("icon-user");
+		var value = $(el).val();
+		if(value.length != 0){
+			if(!nameReg.test(value))
+			{
+				group.addClass("error");
+				icon.addClass("icon-remove");
+				info.html('<i>Sorry, only letters,spaces and \' - _ are allowed in your name.</i>');
+			}
+			else
+			{
+				group.addClass("success");
+				icon.addClass("icon-ok");
+			}
+		}
+	}
+    
+    // reset and cache fields' group, icon and info div/i/span elements
+	// global variables cause otherwise other functions cannot have access to them
+    function resetElements(el)
+    {
+		group = $(el).closest('.control-group').removeClass().addClass("control-group");
+		icon = $(el).siblings('span.add-on').children().removeClass();
+		info = $(el).siblings('span.help-block').html('');
+	}
+    
     </script>
 
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function () {
 			$("#loading").hide();
-            $("#modify").click(function (e) {
+			
+			// bind keyup event to the corresponding live validation functions
+			//"this" in this context points to the active field DOM element
+			$("#options_firstname, #options_lastname").keyup(function () {
+				nameValidation(this);});
+				 
+			$("#options_email").keyup(function () {
+				emailValidation(this);});
+				
+			$("#options_currentPassword").keyup(function () {
+				currentPassValidation(this);});
+			
+			$("#options_plainPassword_new, #options_plainPassword_confirm").keyup(newPassValidation);
+			
+			$("#modify").click(function (e) {
 				e.preventDefault();
 				$("#loading").show();
                 $.post("{{ url('AceUserBundle_options') }}", $('#options_form').serializeArray(),
                 function (response) {
 					var response = $.parseJSON(response);
+					var currentPassword = $("#options_currentPassword");
 					$(".help-block").html('');
-					$(".control-group").removeClass("error").removeClass("success");
-					$("#options_currentPassword").val('');
-					$($("#options_currentPassword")).siblings('span.add-on').children().removeClass("icon-ok").addClass("icon-exclamation-sign");
-					//REMEMBER TO REMOVE NEXT LINE
-					//REMEMBER TO REMOVE NEXT LINE
-					//REMEMBER TO REMOVE NEXT LINE
-					console.log(response);
+					$(".control-group").removeClass("error success");					
+					currentPassword.val('');
+					
+					//change Current Password field icon, only if it was entered correctly, otherwise leave it as is 
+					currentPassword.siblings('span.add-on').children('i.icon-ok').removeClass().addClass("icon-exclamation-sign");
+					
+					// traverse response object and display errors(if any) in fields
 					$.each( response, function(field,info){
 						if(field != "message"){
-							if(field == "plainPassword")
+							var el = $("#options_" + field);
+							if(field == "plainPassword_confirm")
+							{
 								$('.passwords').addClass("error");
-							$("." + field + "-info").html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
-							$($("#options_" + field)).closest('.control-group').addClass("error");
+								currentPassword.closest('.control-group').addClass("error");
+							}
+							el.closest('.control-group').addClass("error");
+							el.siblings('span.help-block').html("<i class=\"icon-exclamation-sign \"></i> <i>"+info[0]+"</i>");
 						}
 					});
 					$("#loading").hide();
-					$(".update-info").html(response.message).show().delay(10000).fadeOut();
+					$(".update-info").html(response.message).show().delay(10000).fadeOut(); //TODO: don't push it to default fx queue
 				});
             });
         });
@@ -298,7 +341,7 @@
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-user"></i></span>
                         {{ form_widget(form.firstname) }}
-                        <span class="help-block firstname-info">{{ form_errors(form.firstname) }}</span>
+                        <span class="help-block">{{ form_errors(form.firstname) }}</span>
                     </div>
                 </div>
             </div>
@@ -308,19 +351,19 @@
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-user"></i></span>
                         {{ form_widget(form.lastname) }}
-                        <span class="help-block lastname-info">{{ form_errors(form.lastname) }}</span>
+                        <span class="help-block">{{ form_errors(form.lastname) }}</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="span4">
-            <div class="mail control-group">
+            <div class="control-group">
                 {{ form_label(form.email) }}
                 <div class="controls">
                     <div class="input-prepend">
-                        <span class="add-on"><i class="icon-envelope mail-icon"></i></span>
+                        <span class="add-on"><i class="icon-envelope"></i></span>
 							{{ form_widget(form.email) }}
-                        <span class="help-block email-info">{{ form_errors(form.email) }}</span>
+                        <span class="help-block">{{ form_errors(form.email) }}</span>
                     </div>
                 </div>
             </div>
@@ -335,16 +378,16 @@
             </div>
         </div>
         <div class="span4">
-			<div class="currentPassword control-group">
+			<div class="control-group">
                 {{ form_label(form.currentPassword) }}
                 <div class="controls">
                     <div class="input-prepend">
-                        <span class="add-on"><i class="icon-exclamation-sign password_old"></i></span>
+                        <span class="add-on"><i class="icon-exclamation-sign"></i></span>
                         {{ form_widget(form.currentPassword) }}
                         <a href="{{ url('fos_user_resetting_request') }}" tabindex="-1">
                             <i><span style="padding-left:20px">Forgot your password? Get a new one!</span></i>
                         </a>
-                        <span class="help-block currentPassword-info">{{ form_errors(form.currentPassword) }}</span>
+                        <span class="help-block">{{ form_errors(form.currentPassword) }}</span>
                     </div>
                 </div>
             </div>
@@ -352,7 +395,7 @@
                 {{ form_label(form.plainPassword.new, 'New Password') }}
                 <div class="controls">
                     <div class="input-prepend">
-                        <span class="add-on"><i class="icon-exclamation-sign password_signs"></i></span>
+                        <span class="add-on"><i class="icon-exclamation-sign iconPassNew"></i></span>
                         {{ form_widget(form.plainPassword.new) }}
                         <span class="help-block"></span>
                     </div>
@@ -362,13 +405,13 @@
                 {{ form_label(form.plainPassword.confirm, 'Confirm New Password') }}
                 <div class="controls">
                     <div class="input-prepend">
-                        <span class="add-on"><i class="icon-exclamation-sign password_confirm"></i></span>
+                        <span class="add-on"><i class="icon-exclamation-sign iconPassConfirm"></i></span>
                         {{ form_widget(form.plainPassword.confirm) }}
-                        <span class="help-block plainPassword-info">{{form_errors(form.plainPassword)}}</span>
+                        <span class="help-block">{{form_errors(form.plainPassword)}}</span>
                     </div>
                 </div>
             </div>
-			<span class="help-block form-info">{{ form_errors(form) }}</span>
+			<span class="help-block">{{ form_errors(form) }}</span>
 			<div style="display:none">
 				{{form_rest(form)}}
 			</div>
