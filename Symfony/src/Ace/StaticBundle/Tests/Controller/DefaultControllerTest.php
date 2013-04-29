@@ -40,6 +40,23 @@ class DefaultControllerTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('input[value=Register]')->count());
 	}
 
+	public function testTechAction()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/tech');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("Cloud IDE")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Makers\' Hub")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Documentation and Suggestions")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("under the hood")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Open Source")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Ariadne Bootloader")')->count());
+		$this->assertGreaterThanOrEqual(2, $crawler->filter('h1')->count());
+		$this->assertGreaterThanOrEqual(11, $crawler->filter('h3')->count());
+		$this->assertGreaterThanOrEqual(12, $crawler->filter('h4')->count());
+	}
+
 	public function testTeamAction()
 	{
 		$client = static::createClient();
