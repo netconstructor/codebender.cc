@@ -403,4 +403,11 @@ class ProjectController extends Controller
         }
         return json_encode(array("success" => false));
     }
+
+    public function __construct(EntityManager $entityManager, FilesController $filesController, SecurityContext $securitycontext)
+    {
+        $this->em = $entityManager;
+        $this->sc = $securitycontext;
+        $this->fc = $filesController;
+    }
 }
