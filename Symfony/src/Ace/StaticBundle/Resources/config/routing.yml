@@ -26,10 +26,6 @@ AceStaticBundle_contact_new:
     pattern:  /contact_new
     defaults: { _controller: AceStaticBundle:Default:contact }
 
-AceStaticBundle_notify:
-    pattern:  /notify
-    defaults: { _controller: AceStaticBundle:Default:notify }
-
 AceStaticBundle_plugin:
     pattern:  /plugin
     defaults: { _controller: AceStaticBundle:Default:plugin }

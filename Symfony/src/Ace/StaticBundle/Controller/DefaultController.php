@@ -152,21 +152,6 @@ class DefaultController extends Controller
         ));
 	}
 
-	public function notifyAction()
-	{
-		$msg = $this->getRequest()->query->get('message');
-		if($msg)
-		{
-			$email_addr = $this->container->getParameter('email.addr');
-			$message = \Swift_Message::newInstance()
-		        ->setSubject('[codebender][notification] Java Notification')
-		        ->setFrom($email_addr)
-		        ->setTo("amaxilatis@codebender.cc")
-		        ->setBody($msg);
-		    $this->get('mailer')->send($message);
-		}
-		return new Response("OK");
-	}
 	public function pluginAction()
 	{
 		return $this->render('AceStaticBundle:Default:plugin.html.twig', array());
