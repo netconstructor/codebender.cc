@@ -22,10 +22,14 @@ class DefaultControllerTest extends WebTestCase
 
 	public function testAboutAction_LoggedIn()
 	{
-//		$client = static::createClient();
-//
-//		$crawler = $client->request('GET', '/static/about');
-		$this->assertTrue(false);
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'tester',
+			'PHP_AUTH_PW' => 'testerPASS',
+		));
+
+		$crawler = $client->request('GET', '/static/about');
+		$this->assertEquals(1, $crawler->filter('html:contains("we help you write and share code")')->count());
+		$this->assertEquals(0, $crawler->filter('input[value=Register]')->count());
 	}
 
 	public function testAboutAction_Anonymous()
@@ -119,10 +123,14 @@ class DefaultControllerTest extends WebTestCase
 
 	public function testWalkthroughAction_LandingPageLoggedIn()
 	{
-//		$client = static::createClient();
-//
-//		$crawler = $client->request('GET', '/static/walkthrough/page/5');
-		$this->assertTrue(false);
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'tester',
+			'PHP_AUTH_PW' => 'testerPASS',
+		));
+
+		$crawler = $client->request('GET', '/static/walkthrough/page/5');
+		$this->assertEquals(1, $crawler->filter('html:contains("Page 5 of")')->count());
+		$this->assertEquals(0, $crawler->filter('input[value=Register]')->count());
 	}
 
 	public function testWalkthroughAction_LandingPageAnonymous()
