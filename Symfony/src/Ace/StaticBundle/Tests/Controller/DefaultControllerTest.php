@@ -88,6 +88,65 @@ class DefaultControllerTest extends WebTestCase
 		$this->assertGreaterThanOrEqual(2, $crawler->filter('h3')->count());
 	}
 
+	public function testWalkthroughAction_ValidPages()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/walkthrough/page/1');
+		$this->assertEquals(1, $crawler->filter('html:contains("Feel the magic!")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Page 1 of")')->count());
+
+		//TODO: Make this more interactive. i.e. pressing the button instead of moving to the next page
+		$crawler = $client->request('GET', '/static/walkthrough/page/2');
+		$this->assertEquals(1, $crawler->filter('html:contains("Page 2 of")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Please wait")')->count());
+
+		$crawler = $client->request('GET', '/static/walkthrough/page/3');
+		$this->assertEquals(1, $crawler->filter('html:contains("Page 3 of")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Please wait")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("We strongly encourage you to install")')->count());
+
+		$crawler = $client->request('GET', '/static/walkthrough/page/4');
+		$this->assertEquals(1, $crawler->filter('html:contains("Page 4 of")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Start")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("You should now have all the necessary")')->count());
+
+		$crawler = $client->request('GET', '/static/walkthrough/page/5');
+		$this->assertEquals(1, $crawler->filter('html:contains("Page 5 of")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Congratulations!")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Congratulations, you just completed the")')->count());
+	}
+
+	public function testWalkthroughAction_LandingPageLoggedIn()
+	{
+//		$client = static::createClient();
+//
+//		$crawler = $client->request('GET', '/static/walkthrough/page/5');
+		$this->assertTrue(false);
+	}
+
+	public function testWalkthroughAction_LandingPageAnonymous()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/walkthrough/page/5');
+		$this->assertEquals(1, $crawler->filter('html:contains("Sign Up")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Start coding in minutes.")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Hi! Why don\'t you sign up for a codebender account?")')->count());
+		$this->assertEquals(1, $crawler->filter('input[value=Register]')->count());
+	}
+
+	public function testWalkthroughAction_Invalid()
+	{
+		$client = static::createClient();
+
+		$client->request('GET', '/static/walkthrough/page/0');
+		$this->assertTrue($client->getResponse()->isRedirect());
+
+		$client->request('GET', '/static/walkthrough/page/6');
+		$this->assertTrue($client->getResponse()->isRedirect());
+	}
+
 	public function testPluginAction()
 	{
 		$client = static::createClient();
