@@ -128,4 +128,14 @@ class DefaultControllerTest extends WebTestCase
 //		$crawler = $client->request('GET', '/static/plugin');
 		$this->assertTrue(false);
 	}
+
+	public function testInfoKarmaAction()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/static/info/karma');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("What is karma?")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Karma in codebender")')->count());
+	}
 }
