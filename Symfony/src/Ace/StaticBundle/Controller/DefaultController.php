@@ -102,10 +102,12 @@ class DefaultController extends Controller
 
 	public function walkthroughAction($page)
 	{
-		if(intval($page) >= 0 && intval($page)< 6)
-			$this->get('ace_user.usercontroller')->setWalkthroughStatusAction(intval($page));
+		if (file_exists(__DIR__."/../Resources/views/Walkthrough/page".intval($page).".html.twig"))
+		{
+			return $this->render('AceStaticBundle:Walkthrough:page'.intval($page).'.html.twig', array("page" => intval($page)));
+		}
 
-		return $this->render('AceStaticBundle:Walkthrough:page'.$page.'.html.twig', array("page" => $page));
+		return $this->redirect($this->generateUrl("AceGenericBundle_index"));
 	}
 
 //	public function contactAction(Request $request)
