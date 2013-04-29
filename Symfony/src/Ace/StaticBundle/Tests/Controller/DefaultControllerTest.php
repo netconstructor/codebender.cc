@@ -123,10 +123,10 @@ class DefaultControllerTest extends WebTestCase
 
 	public function testPartnerAction_Invalid()
 	{
-//		$client = static::createClient();
-//
-//		$crawler = $client->request('GET', '/static/plugin');
-		$this->assertTrue(false);
+		$client = static::createClient();
+
+		$client->request('GET', '/static/partner/invalid');
+		$this->assertTrue($client->getResponse()->isRedirect());
 	}
 
 	public function testInfoKarmaAction()
