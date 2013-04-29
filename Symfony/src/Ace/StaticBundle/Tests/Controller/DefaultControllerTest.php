@@ -196,6 +196,18 @@ class DefaultControllerTest extends WebTestCase
 		$this->assertTrue($client->getResponse()->isRedirect());
 	}
 
+	public function testInfoPointsAction()
+	{
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'tester',
+			'PHP_AUTH_PW' => 'testerPASS',
+		));
+
+		$crawler = $client->request('GET', '/static/info/points');
+		$this->assertEquals(1, $crawler->filter('html:contains("/register/?referrer=tester")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("Do good. Get T-Shirts!")')->count());
+	}
+
 	public function testInfoKarmaAction()
 	{
 		$client = static::createClient();
