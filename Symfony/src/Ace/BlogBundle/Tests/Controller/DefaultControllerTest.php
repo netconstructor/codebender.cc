@@ -96,9 +96,4 @@ class DefaultControllerTest extends WebTestCase
 
 		$this->assertCount(1, $crawler->filter('#post'));
 	}
-
-	public function testUnitTested()
-	{
-		$this->assertTrue(false);
-	}
 }
