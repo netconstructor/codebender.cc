@@ -6,96 +6,99 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testBlog()   // Test wether each page has 5 posts or less.
-    {
-//        $client = static::createClient();
-//
-//		$crawler = $client->request('GET', '/blog');
-//			$pages = $crawler->filter('.pagination')->children()->children()->count();
-//			//echo $pages;
-//
-//		for($i = 1;$i <= $pages-2;$i++){
-//        $crawler = $client->request('GET', '/blog/'.$i);
-//		$this->assertLessThanOrEqual(5, ($crawler->filter('#posts')->children()->count() - 1)); }
-		$this->assertTrue(false);
-    }
-
-	public function testPostLink() // Test post title link
+	public function testBlogAction_Generic() // Test wether each page has 5 posts or less.
 	{
-//		$client = static::createClient();
-//		$crawler = $client->request('GET', '/blog');
-//
-//		$link = $crawler->filter('#posts')->children()->children()->filter('div > a')->link();
-//		$crawler = $client->click($link);
-//
-//		$matcher = array('id' => 'post');
-//		$this->assertTag($matcher, $client->getResponse());
-//		$this->assertCount(1,$crawler->filter('#post'));
-		$this->assertTrue(false);
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/blog');
+
+		$posts = $crawler->filter('.post')->children()->count();
+		$this->assertLessThanOrEqual(5, $posts);
 	}
 
-
-	public function testRss() // Test rss feed
+	public function testBlogAction_Admin() // Test new blog post
 	{
-//		$client = static::createClient();
-//
-//		$crawler = $client->request('GET', '/misc/blog/rss');
-//		$this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/rss+xml'));
-//
-//		$crawler = $client->request('GET', '/blog/rss');
-//		$this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/rss+xml'));
-		$this->assertTrue(false);
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'tester',
+			'PHP_AUTH_PW' => 'testerPASS',
+		));
+
+		$crawler = $client->request('GET', '/blog');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("New Post!")')->count());
 	}
 
-	public function testNewPost()   // Test new blog post
+	public function testBlogAction_UserOrAnonymous() // Test new blog post
 	{
-//		$client = static::createClient();
-//		$crawler = $client->request('GET', '/');
-//
-//		$client->followRedirects();
-//
-//		$link = $crawler->selectLink('Log In')->link();
-//		$crawler = $client->click($link);
-//
-//		$this->assertGreaterThan(0, $crawler->filter('html:contains("Username")')->count());
-//
-//		$buttonCrawlerNode = $crawler->selectButton('Login');
-//
-//		$form = $buttonCrawlerNode->form();
-//
-//
-//		$form['_username'] = 'DiMmiOuS';
-//		$form['_password'] = 'Dimakopoulos87';
-//
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/blog');
+
+		$this->assertEquals(0, $crawler->filter('html:contains("New Post!")')->count());
+	}
+
+	public function testRssAction() // Test rss feed
+	{
+		$client = static::createClient();
+
+		$client->request('GET', '/misc/blog/rss');
+		$this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/rss+xml'));
+
+		$client->request('GET', '/blog/rss');
+		$this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/rss+xml'));
+	}
+
+	public function testClickPostAction() // Test post title link
+	{
+		$client = static::createClient();
+		$crawler = $client->request('GET', '/blog');
+
+		$link = $crawler->filter('#posts')->children()->children()->filter('div > a')->link();
+		$crawler = $client->click($link);
+
+		$matcher = array('id' => 'post');
+		$this->assertTag($matcher, $client->getResponse());
+		$this->assertCount(1, $crawler->filter('#post'));
+	}
+
+	public function testNewPostAction()   // Test new blog post
+	{
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'tester',
+			'PHP_AUTH_PW' => 'testerPASS',
+		));
+
+		$client->followRedirects();
+		$crawler = $client->request('GET', '/blog');
+
+		$link = $crawler->selectLink('New Post!')->link();
+		$crawler = $client->click($link);
+
+		$buttonCrawlerNode = $crawler->selectButton('New Post!');
+
+		$form = $buttonCrawlerNode->form();
+
+		$title = (string) mt_rand();
+		$form['title'] = $title;
+		$form['msgpost'] = 'function testing...';
+
 //		print_r($form->getValues());
-//		$crawler = $client->submit($form);
-//
-//		$this->assertGreaterThan(0, $crawler->filter('html:contains("Hello DiMmiOuS!")')->count());
-//
-//		$link = $crawler->selectLink('Blog')->link();
-//		$crawler = $client->click($link);
-//
-//		//$this->assertGreaterThan(0, $crawler->filter('html:contains("Text Editing Tools")')->count());  probable problem with iframe
-//
-//		$link = $crawler->selectLink('New Post!')->link();
-//		$crawler = $client->click($link);
-//
-//		$buttonCrawlerNode = $crawler->selectButton('New Post!');
-//
-//		$form = $buttonCrawlerNode->form();
-//
-//		$form['title'] = (string)mt_rand();
-//		$form['msgpost'] = 'unit testing sucks...';
-//
-//		print_r($form->getValues());
-//
-//		$client->submit($form);
-//
-//		$matcher = array('tag'   => 'h3','content' => $form['title']->getValue());
-//		$this->assertTag($matcher, $client->getResponse()->getContent());
-//
-		$this->assertTrue(false);
+
+		$crawler = $client->submit($form);
+
+		$this->assertEquals(1, $crawler->filter('h3:contains("'.$title.'")')->count());
 	}
 
-	
+	public function testViewpostAction() // Test post title link
+	{
+		$client = static::createClient();
+		$crawler = $client->request('GET', '/blog/viewpost/1');
+
+		$this->assertCount(1, $crawler->filter('#post'));
+	}
+
+	public function testUnitTested()
+	{
+		$this->assertTrue(false);
+	}
 }
