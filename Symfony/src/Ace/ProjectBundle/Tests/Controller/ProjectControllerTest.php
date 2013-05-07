@@ -257,6 +257,42 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    //---createFileAction
+    public function testCreateFileAction_canCreate()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'canCreateFile'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $this->project->expects($this->once())->method('getId')->will($this->returnValue(1));
+
+        $controller->expects($this->once())->method('canCreateFile')->with($this->equalTo(1), $this->equalTo('filename'))->will($this->returnValue('{"success":true}'));
+
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+
+        $fc->expects($this->once())->method('createFileAction')->with($this->equalTo(1234567890), $this->equalTo('filename'), $this->equalTo('void setup(){}'))->will($this->returnValue('{"success":true}'));
+
+        $response = $controller->createFileAction(1, 'filename', 'void setup(){}');
+
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+
+    public function testCreateFileAction_cannotCreate()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'canCreateFile'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $this->project->expects($this->once())->method('getId')->will($this->returnValue(1));
+
+        $controller->expects($this->once())->method('canCreateFile')->with($this->equalTo(1), $this->equalTo('filename'))->will($this->returnValue('{"success":false}'));
+
+        $response = $controller->createFileAction(1, 'filename', 'void setup(){}');
+
+        $this->assertEquals($response->getContent(), '{"success":false}');
+    }
+
 
     protected function setUp()
     {
