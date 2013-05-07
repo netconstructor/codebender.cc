@@ -11,6 +11,45 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 
     protected $project;
 
+    //---createprojectAction
+    public function testCreateprojectAction_CanCreatePrivate()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("canCreatePrivateProject", "createAction"));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1),$this->equalTo("projectName"),$this->equalTo(""),$this->equalTo(false))->will($this->returnValue( new Response('{"success":true,"id":1}')));
+
+        $response = $controller->createprojectAction(1,"projectName", "", false);
+        $this->assertEquals($response->getContent(), '{"success":true,"id":1}');
+    }
+
+    public function testCreateprojectAction_CannotCreatePrivate()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("canCreatePrivateProject", "createAction"));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"error":"Cannot create private project."}'));
+
+
+        $response = $controller->createprojectAction(1,"projectName", "", false);
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"Cannot create private project."}');
+    }
+
+    public function testCreateprojectAction_CanCreatePublic()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("createAction"));
+        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1),$this->equalTo("projectName"),$this->equalTo(""),$this->equalTo(true))->will($this->returnValue( new Response('{"success":true,"id":1}')));
+
+        $response = $controller->createprojectAction(1,"projectName", "", true);
+        $this->assertEquals($response->getContent(), '{"success":true,"id":1}');
+    }
+
+    public function testCreateprojectAction_CannotCreatePublic()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("createAction"));
+        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1),$this->equalTo("projectName"),$this->equalTo(""),$this->equalTo(true))->will($this->returnValue( new Response('{"success":false,"owner_id":1,"name":"projectName"}')));
+
+        $response = $controller->createprojectAction(1,"projectName", "", true);
+        $this->assertEquals($response->getContent(), '{"success":false,"owner_id":1,"name":"projectName"}');
+    }
+
 
     protected function setUp()
     {
