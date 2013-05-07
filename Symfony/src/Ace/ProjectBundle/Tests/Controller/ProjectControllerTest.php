@@ -498,7 +498,21 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response,'{"success":true}');
 
     }
+    //---nameIsValid
+    public function testNameIsValid_Yes()
+    {
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+        $response = $controller->call_nameIsValid("Valid Project Name");
+        $this->assertEquals($response,'{"success":true}');
 
+    }
+    public function testNameIsValid_No()
+    {
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+        $response = $controller->call_nameIsValid("Invalid/ Project/ Name");
+        $this->assertEquals($response,'{"success":false,"error":"Invalid Name. Please enter a new one."}');
+
+    }
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
