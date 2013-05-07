@@ -50,7 +50,39 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false,"owner_id":1,"name":"projectName"}');
     }
 
+    //---deleteAction
+    public function testDeleteAction_CanDelete()
+    {
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
 
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $fc->expects($this->once())->method('deleteAction')->with($this->equalTo(1234567890))->will($this->returnValue('{"success":true}'));
+        $em->expects($this->once())->method('remove')->with($this->equalTo($this->project ));
+        $em->expects($this->once())->method('flush');
+
+
+        $response = $controller->deleteAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testDeleteAction_CannotDelete()
+    {
+
+
+        $this->project->expects($this->exactly(2))->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $fc->expects($this->once())->method('deleteAction')->with($this->equalTo(1234567890))->will($this->returnValue('{"success":false,"error":"No projectfiles found with id: 1234567890"}'));
+
+        $response = $controller->deleteAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"id":1234567890}');
+    }
+    
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
