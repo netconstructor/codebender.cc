@@ -613,7 +613,26 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response, '{"success":false}');
 
     }
+    //---nameExists
+    public function testNameExists_Yes()
+    {
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('listAction'));
+        $controller->expects($this->once())->method('listAction')->with($this->equalTo(1))->will($this->returnValue(new Response('[{"id":1,"name":"name 1","description":"desc","is_public":true},{"id":2,"name":"name 2","description":"des","is_public":false}]')));
 
+        $response = $controller->call_nameExists(1, "name 1");
+        $this->assertEquals($response,'{"success":true}');
+
+    }
+
+    public function testNameExists_No()
+    {
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('listAction'));
+        $controller->expects($this->once())->method('listAction')->with($this->equalTo(1))->will($this->returnValue(new Response('[{"id":1,"name":"name 1","description":"desc","is_public":true},{"id":2,"name":"name 2","description":"des","is_public":false}]')));
+
+        $response = $controller->call_nameExists(1, "name 3");
+        $this->assertEquals($response,'{"success":false}');
+
+    }
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
