@@ -292,6 +292,52 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($response->getContent(), '{"success":false}');
     }
+    //---getFileAction
+    public function testGetFileAction_canGet()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('getFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'))->will($this->returnValue('{"success":false}'));
+        $response = $controller->getFileAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":false}');
+    }
+
+    public function testGetFileAction_cannotGet()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('getFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'))->will($this->returnValue('{"success":true,"code":"void setup(){}"}'));
+        $response = $controller->getFileAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":true,"code":"void setup(){}"}');
+    }
+
+    //---setFileAction
+    public function testSetFileAction_canSet()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('setFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'),$this->equalTo('void setup(){}'))->will($this->returnValue('{"success":true}'));
+        $response = $controller->setFileAction(1, 'name', 'void setup(){}');
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testSetFileAction_cannotSet()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('setFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'),$this->equalTo('void setup(){}'))->will($this->returnValue('{"success":false}'));
+        $response = $controller->setFileAction(1, 'name', 'void setup(){}');
+        $this->assertEquals($response->getContent(), '{"success":false}');
+    }
+
 
 
     protected function setUp()
