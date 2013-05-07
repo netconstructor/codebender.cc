@@ -107,6 +107,41 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
     }
 
+    //---getNameAction
+    public function testGetNameAction_Exists()
+    {
+
+        $this->project->expects($this->once())->method('getName')->will($this->returnValue("projectName"));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $response = $controller->getNameAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true,"response":"projectName"}');
+
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+
+    public function testGetNameAction_DoesNotExist()
+    {
+        $project = NULL;
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+        $controller->getNameAction(1);
+
+    }
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
