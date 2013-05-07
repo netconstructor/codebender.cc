@@ -338,7 +338,28 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false}');
     }
 
+    //---deleteFileAction
+    public function testDeleteFileAction_canDelete()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('deleteFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $response = $controller->deleteFileAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testDeleteFileAction_cannotDelete()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('deleteFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'))->will($this->returnValue('{"success":false,"filename":"name","error":"File name does not exist}'));
+        $response = $controller->deleteFileAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":false,"filename":"name","error":"File name does not exist}');
+    }
 
     protected function setUp()
     {
