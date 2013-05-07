@@ -5,6 +5,33 @@ namespace Ace\ProjectBundle\Tests\Controller;
 use Ace\ProjectBundle\Controller\ProjectController;
 use Symfony\Component\HttpFoundation\Response;
 
+class ProjectControllerPrivateTester extends ProjectController
+{
+    public function call_canCreatePrivateProject($owner)
+    {
+        return $this->canCreatePrivateProject($owner);
+    }
+
+    public function call_canCreateFile($id, $filename)
+    {
+        return $this->canCreateFile($id, $filename);
+    }
+
+    public function call_nameIsValid($name)
+    {
+        return $this->nameIsValid($name);
+    }
+
+    public function call_checkProjectPermissions($id)
+    {
+        return $this->checkProjectPermissions($id);
+    }
+    public function call_nameExists($owner, $name)
+    {
+        return $this->nameExists($owner,$name);
+    }
+
+}
 
 class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -487,6 +514,23 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
 
         $controller = $this->getMock('Ace\ProjectBundle\Controller\ProjectController', $methods = $m, $arguments = array($em, $fc, $security));
+        return $controller;
+    }
+    private function setUpPrivateTesterController(&$em, &$fc, &$security, $m)
+    {
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $security = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $fc = $this->getMockBuilder('Ace\ProjectBundle\Controller\FilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $controller = $this->getMock('Ace\ProjectBundle\Tests\Controller\ProjectControllerPrivateTester', $methods = $m, $arguments = array($em, $fc, $security));
         return $controller;
     }
 
