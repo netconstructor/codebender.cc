@@ -421,6 +421,50 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), json_encode(array("success" => false)));
 
     }
+    //---getProjectById
+    public function testGetProjectById_Exists()
+    {
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+
+        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+        $response = $controller->getProjectById(1);
+        $this->assertEquals($response, $this->project);
+
+
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function testGetProjectById_DoesNotExist()
+    {
+        $project = NULL;
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+
+        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+        $controller->getProjectById(1);
+
+    }
+
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
