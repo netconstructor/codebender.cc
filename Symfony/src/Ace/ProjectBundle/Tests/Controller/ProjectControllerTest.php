@@ -197,6 +197,34 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->getOwnerAction(1);
         $this->assertEquals($response->getContent(), '{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}');
     }
+    //---getDescriptionAction
+    public function testGetDescriptionAction()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getDescription')->will($this->returnValue("description"));
+        $respone = $controller->getDescriptionAction(1);
+        $this->assertEquals($respone->getContent(), '{"success":true,"response":"description"}');
+
+    }
+    //---setDescriptionAction
+    public function testSetDescriptionAction()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('setDescription')->with($this->equalTo("newDescription"));
+
+        $em->expects($this->once())->method('persist')->with($this->equalTo($this->project ));
+        $em->expects($this->once())->method('flush');
+
+        $respone = $controller->setDescriptionAction(1, 'newDescription');
+        $this->assertEquals($respone->getContent(), '{"success":true}');
+
+    }
 
 
     protected function setUp()
