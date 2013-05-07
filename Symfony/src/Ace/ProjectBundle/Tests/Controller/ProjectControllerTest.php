@@ -382,6 +382,45 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->renameFileAction(1, 'old', 'new');
         $this->assertEquals($response->getContent(), '{"success":false,"filename":"old","error":"File old does not exist}');
     }
+    //---checkExistsAction
+    public function testCheckExistsAction_Exists()
+    {
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($this->project));
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+
+        $em->expects($this->exactly(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+        $response = $controller->checkExistsAction(1);
+        $this->assertEquals($response->getContent(), json_encode(array("success" => true)));
+
+    }
+
+    public function testCheckExistsAction_DoesNotExist()
+    {
+        $project = NULL;
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+
+        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+        $response = $controller->checkExistsAction(1);
+        $this->assertEquals($response->getContent(), json_encode(array("success" => false)));
+
+    }
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
