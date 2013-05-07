@@ -82,7 +82,31 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->deleteAction(1);
         $this->assertEquals($response->getContent(), '{"success":false,"id":1234567890}');
     }
-    
+    //---renameAction
+    public function testRenameAction_validName()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction"));
+
+        $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('valid name'))->will($this->returnValue('{"success":true}'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"private.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}')));
+
+        $response = $controller->renameAction(1, 'valid name');
+        $this->assertEquals($response->getContent(), '{"success":true,"list":[{"filename":"private.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}');
+    }
+
+    public function testRenameAction_invalidName()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
+
+        $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('invalid/name'))->will($this->returnValue('{"success":false,"error":"Invalid Name. Please enter a new one."}'));
+
+        $response = $controller->renameAction(1, 'invalid/name');
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
+    }
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
