@@ -225,6 +225,37 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($respone->getContent(), '{"success":true}');
 
     }
+    //---listFilesAction
+    public function testListFilesAction_HasPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkProjectPermissions'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+
+        $fc->expects($this->once())->method('listFilesAction')->with($this->equalTo(1234567890))->will($this->returnValue('{"success":true,"list":[{"filename":"private.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}'));
+
+        $response = $controller->listFilesAction(1);
+
+        $this->assertEquals($response->getContent(), '{"success":true,"list":[{"filename":"private.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}');
+
+    }
+
+    public function testListFilesAction_HasNoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkProjectPermissions'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+
+
+        $response = $controller->listFilesAction(1);
+
+        $this->assertEquals($response->getContent(), '{"success":false}');
+
+    }
 
 
     protected function setUp()
