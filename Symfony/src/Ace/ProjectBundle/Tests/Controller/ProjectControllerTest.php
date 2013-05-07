@@ -177,6 +177,28 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":true,"response":{"id":2,"owner":"mthrfck","name":"projectName"}}');
     }
 
+    //---getOwnerAction
+    public function testGetOwnerAction()
+    {
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getId')->will($this->returnValue('1'));
+        $user->expects($this->once())->method('getUsername')->will($this->returnValue('mthrfck'));
+        $user->expects($this->once())->method('getFirstname')->will($this->returnValue('John'));
+        $user->expects($this->once())->method('getLastname')->will($this->returnValue('Doe'));
+        $response = $controller->getOwnerAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}');
+    }
+
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
