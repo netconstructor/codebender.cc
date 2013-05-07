@@ -360,7 +360,28 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->deleteFileAction(1, 'name');
         $this->assertEquals($response->getContent(), '{"success":false,"filename":"name","error":"File name does not exist}');
     }
+    //---renameFileAction
+    public function testRenameFileAction_canRename()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('renameFileAction')->with($this->equalTo(1234567890),$this->equalTo('old'),$this->equalTo('new'))->will($this->returnValue('{"success":true}'));
+        $response = $controller->renameFileAction(1, 'old', 'new');
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testRenameFileAction_cannotRename()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
+        $fc->expects($this->once())->method('renameFileAction')->with($this->equalTo(1234567890),$this->equalTo('old'),$this->equalTo('new'))->will($this->returnValue('{"success":false,"filename":"old","error":"File old does not exist}'));
+        $response = $controller->renameFileAction(1, 'old', 'new');
+        $this->assertEquals($response->getContent(), '{"success":false,"filename":"old","error":"File old does not exist}');
+    }
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
