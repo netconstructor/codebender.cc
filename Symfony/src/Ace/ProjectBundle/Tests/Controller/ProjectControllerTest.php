@@ -513,6 +513,107 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response,'{"success":false,"error":"Invalid Name. Please enter a new one."}');
 
     }
+
+    //---checkProjectPermissions
+    public function testcheckProjectPermissions_Public()
+    {
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+        $response = $controller->call_checkProjectPermissions(1);
+        $this->assertEquals($response, '{"success":true}');
+
+    }
+
+    public function testcheckProjectPermissions_Yes()
+    {
+        $currentUser = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($currentUser));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+        $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(1));
+        $currentUser->expects($this->once())->method('getID')->will($this->returnValue(1));
+        $response = $controller->call_checkProjectPermissions(1);
+        $this->assertEquals($response, '{"success":true}');
+
+    }
+
+    public function testcheckProjectPermissions_No()
+    {
+
+        $currentUser = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($currentUser));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+        $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(1));
+        $currentUser->expects($this->once())->method('getID')->will($this->returnValue(2));
+        $response = $controller->call_checkProjectPermissions(1);
+        $this->assertEquals($response, '{"success":false}');
+
+    }
+
+    public function testcheckProjectPermissions_NotLoggedIn()
+    {
+
+        $currentUser = ".anon";
+
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($currentUser));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $response = $controller->call_checkProjectPermissions(1);
+        $this->assertEquals($response, '{"success":false}');
+
+    }
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
