@@ -490,7 +490,14 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $controller->getProjectById(1);
 
     }
+    //---canCreateFile
+    public function testCanCreateFile()
+    {
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+        $response = $controller->call_canCreateFile(1,"filename");
+        $this->assertEquals($response,'{"success":true}');
 
+    }
 
     protected function setUp()
     {
