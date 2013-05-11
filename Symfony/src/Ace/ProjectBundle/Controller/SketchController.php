@@ -17,7 +17,7 @@ class SketchController extends ProjectController
     protected $sl;
 
 
-	public function createprojectAction($user_id, $project_name, $code, $isPublic)
+	public function createprojectAction($user_id, $project_name, $code, $isPublic = true)
 	{
 		$retval;
 		$response = parent::createprojectAction($user_id, $project_name, $code, $isPublic)->getContent();
