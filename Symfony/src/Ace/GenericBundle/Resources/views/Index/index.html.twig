@@ -107,7 +107,7 @@
 {% endblock %}
 
 {% block fluidcontainer %}
-	{% render 'ace_user.usercontroller:inlineRegisterAction' %}
+	{% render 'ace_user.usercontroller:inlineRegisterAction' with { 'referrer' : app.request.query.get('referrer'), 'referral_code' : app.request.query.get('referral_code')} %}
 
 	<hr style="margin-top: 10px;" class="soften">
 	<div class="row-fluid">

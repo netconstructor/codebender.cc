@@ -233,10 +233,12 @@ class DefaultController extends Controller
 
 	}
 
-	public function inlineRegisterAction()
+	public function inlineRegisterAction($referrer=null, $referral_code=null)
 	{
-        $form = $this->container->get('fos_user.registration.form');
-	    return new Response($this->templating->render('AceUserBundle:Registration:register_inline.html.twig', array(
+		/** @var \Ace\UserBundle\Form\Handler\RegistrationFormHandler $formHandler */
+		$formHandler = $this->container->get('fos_user.registration.form.handler');
+		$form = $formHandler->generateReferrals($referrer, $referral_code);
+		return new Response($this->templating->render('AceUserBundle:Registration:register_inline.html.twig', array(
 	            'form' => $form->createView(),
 	            'theme' => $this->container->getParameter('fos_user.template.theme'),
 	        )));
