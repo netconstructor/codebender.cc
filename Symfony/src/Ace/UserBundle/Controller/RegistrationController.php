@@ -32,7 +32,9 @@ class RegistrationController extends BaseController
 		}
 
 		//THIS IS WHAT WE CHANGED
-		$form = $formHandler->generateReferrals();
+		$user = $form->getData();
+		if($user->getUsername() === null)
+			$form = $formHandler->generateReferrals();
 		//CHANGES END HERE
 
 		return $this->container->get('templating')->renderResponse('FOSUserBundle:Registration:register.html.'.$this->getEngine(), array(
