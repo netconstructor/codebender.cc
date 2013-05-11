@@ -33,12 +33,17 @@ class RegistrationFormHandler extends BaseHandler
 		$this->listid = $listid;
     }
 
-	public function generateReferrals()
+	public function generateReferrals($referrer = null, $referral_code = null)
 	{
+		if($referrer == null)
+			$referrer = $this->request->query->get('referrer');
+		if($referral_code == null)
+			$referral_code = $this->request->query->get('referral_code');
+
 		$user = new User();
 
-		$user->setReferrerUsername($this->request->query->get('referrer'));
-		$user->setReferralCode($this->request->query->get('referral_code'));
+		$user->setReferrerUsername($referrer);
+		$user->setReferralCode($referral_code);
 		$this->form->setData($user);
 		return $this->form;
 	}
