@@ -97,7 +97,11 @@
 			</div>
 			<div class="row-fluid">
 				<div class="span2 offset5">
-					<a href="{{ path("AceStaticBundle_about") }}" class="btn btn-success btn-block">
+					<a href=
+					   "{{ path("AceStaticBundle_about")
+					   ~ "?referrer=" ~ app.request.query.get('referrer')
+					   ~ "&referral_code=" ~ app.request.query.get('referral_code') }}"
+					   class="btn btn-success btn-block">
 						Learn More
 					</a>
 				</div>
