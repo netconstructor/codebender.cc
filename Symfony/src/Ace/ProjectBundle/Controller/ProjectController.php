@@ -171,9 +171,14 @@ class ProjectController extends Controller
 		$parent = $project->getParent();
 		if($parent != NULL)
 		{
-            $parent = $this->getProjectById($parent);
-            $response = array("id" => $parent->getId(), "owner" => $project->getOwner()->getUsername(), "name" => $project->getName());
-            return new Response(json_encode(array("success" => true, "response" => $response)));
+            $exists = $this->checkExistsAction($parent)->getContent();
+            $exists = json_decode($exists,true);
+            if($exists["success"])
+            {
+
+                $response = array("id" => $parent, "owner" => $project->getOwner()->getUsername(), "name" => $project->getName());
+                return new Response(json_encode(array("success" => true, "response" => $response)));
+            }
 		}
 
 		return new Response(json_encode(array("success" => false)));

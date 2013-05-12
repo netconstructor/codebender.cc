@@ -249,23 +249,30 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testGetParentAction_HasBeenDeleted()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkExistsAction'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getParent')->will($this->returnValue(2));
+        $controller->expects($this->once())->method('checkExistsAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":false}')));
+        $response = $controller->getParentAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false}');
+
+    }
     public function testGetParentAction_Exists()
     {
 
-        $parent = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
         $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkExistsAction'));
 
-        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getParent')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(2))->will($this->returnValue($parent));
+        $controller->expects($this->once())->method('checkExistsAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true}')));
 
-        $parent->expects($this->once())->method('getId')->will($this->returnValue(2));
         $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
         $user->expects($this->once())->method('getUsername')->will($this->returnValue('mthrfck'));
         $this->project->expects($this->once())->method('getName')->will($this->returnValue('projectName'));
