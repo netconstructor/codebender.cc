@@ -8,6 +8,6 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
 	public function testUnitTested()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 }

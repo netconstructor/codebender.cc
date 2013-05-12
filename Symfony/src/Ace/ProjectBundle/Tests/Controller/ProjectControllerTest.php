@@ -80,13 +80,13 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 	//---listAction
 	public function testListAction()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
 	//---createAction
 	public function testCreateAction()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
 	//---deleteAction
@@ -125,7 +125,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 	//---cloneAction
 	public function testCloneAction()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
     //---renameAction
@@ -438,19 +438,19 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 	//---searchAction
 	public function testSearchAction()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
 	//---searchNameAction
 	public function testSearchNameAction()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
 	//---searchDescriptionAction
 	public function testSearchDescriptionAction()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
 	//---checkExistsAction
@@ -539,7 +539,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 	//---canCreatePrivateProject
 	public function testCanCreatePrivateProject()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not unit tested yet.');
 	}
 
 	//---canCreateFile

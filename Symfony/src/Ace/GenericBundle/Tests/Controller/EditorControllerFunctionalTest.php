@@ -9,6 +9,6 @@ class EditorControllerFunctionalTest extends WebTestCase
 {
 	public function testFunctionalTested()
 	{
-		$this->assertTrue(false);
+		$this->markTestIncomplete('Not functional tested yet.');
 	}
 }
