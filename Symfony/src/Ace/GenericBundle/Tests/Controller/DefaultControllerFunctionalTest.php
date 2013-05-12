@@ -5,7 +5,7 @@ namespace Ace\GenericBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerFunctionalTest extends WebTestCase
 {
 	public function testIndexAction() // Test homepage and redirection bug
 	{
@@ -60,6 +60,11 @@ class DefaultControllerTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("Request Library")')->count());
 
 		//TODO: check for existing libraries (needs internet connection)
+		$this->assertTrue(false);
+	}
+
+	public function testFunctionalTested()
+	{
 		$this->assertTrue(false);
 	}
 }
