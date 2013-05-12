@@ -642,10 +642,95 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	//---searchNameAction
-	public function testSearchNameAction()
+	public function testSearchNameAction_NoneExists()
 	{
-		$this->markTestIncomplete('Not unit tested yet.');
+        $projects = array();
+
+        $query = $this->getMockBuilder('MyQuery')
+            ->disableOriginalConstructor()
+            ->setMethods(array("getResult"))
+            ->getMock();
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("createQueryBuilder"))
+            ->getMock();
+
+        $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+            ->disableOriginalConstructor()
+            ->setMethods(array("where", "getQuery", "setParameter"))
+            ->getMock();
+
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+
+        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+
+        $repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('p'))->will($this->returnValue($qb));
+        $qb->expects($this->once())->method('where')->with($this->equalTo('p.name LIKE :token'))->will($this->returnValue($qb));
+        $qb->expects($this->once())->method('setParameter')->with($this->equalTo('token'), $this->equalTo('%search_string%'))->will($this->returnValue($qb));
+        $qb->expects($this->once())->method('getQuery')->will($this->returnValue($query));
+        $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
+
+
+        $response = $controller->searchNameAction("search_string");
+        $this->assertEquals($response->getContent(), '[]');
 	}
+
+    public function testSearchNameAction_TwoExistOneAccessible()
+    {
+        $notAccessible = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $accessible = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $projects = array($notAccessible, $accessible);
+
+        $query = $this->getMockBuilder('MyQuery')
+            ->disableOriginalConstructor()
+            ->setMethods(array("getResult"))
+            ->getMock();
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("createQueryBuilder"))
+            ->getMock();
+
+        $qb = $this->getMockBuilder('Doctrine\ORM\QueryBuilder')
+            ->disableOriginalConstructor()
+            ->setMethods(array("where", "getQuery", "setParameter"))
+            ->getMock();
+
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions', 'getOwnerAction'));
+
+        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+
+
+        $repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('p'))->will($this->returnValue($qb));
+        $qb->expects($this->once())->method('where')->with($this->equalTo('p.name LIKE :token'))->will($this->returnValue($qb));
+        $qb->expects($this->once())->method('setParameter')->with($this->equalTo('token'), $this->equalTo('%search_string%'))->will($this->returnValue($qb));
+        $qb->expects($this->once())->method('getQuery')->will($this->returnValue($query));
+        $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
+
+        $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $controller->expects($this->at(0))->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+
+        $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
+        $controller->expects($this->at(1))->method('checkProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+
+        $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
+
+        $accessible->expects($this->once())->method('getName')->will($this->returnValue('Name'));
+        $accessible->expects($this->once())->method('getDescription')->will($this->returnValue('Description'));
+
+        $response = $controller->searchNameAction("search_string");
+        $this->assertEquals($response->getContent(), '[{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}]');
+    }
 
 	//---searchDescriptionAction
 	public function testSearchDescriptionAction()

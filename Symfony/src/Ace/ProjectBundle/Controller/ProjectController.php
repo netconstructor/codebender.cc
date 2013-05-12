@@ -285,7 +285,6 @@ class ProjectController extends Controller
 	{
 		$em = $this->em;
 		$repository = $this->em->getRepository('AceProjectBundle:Project');
-		$qb = $em->createQueryBuilder();
 		$projects = $repository->createQueryBuilder('p')->where('p.name LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
 		$result = array();
 		foreach($projects as $project)
