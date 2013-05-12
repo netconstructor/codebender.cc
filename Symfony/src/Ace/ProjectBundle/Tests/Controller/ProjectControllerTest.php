@@ -77,7 +77,19 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false,"owner_id":1,"name":"projectName"}');
     }
 
-    //---deleteAction
+	//---listAction
+	public function testListAction()
+	{
+		$this->assertTrue(false);
+	}
+
+	//---createAction
+	public function testCreateAction()
+	{
+		$this->assertTrue(false);
+	}
+
+	//---deleteAction
     public function testDeleteAction_CanDelete()
     {
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
@@ -109,6 +121,13 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->deleteAction(1);
         $this->assertEquals($response->getContent(), '{"success":false,"id":1234567890}');
     }
+
+	//---cloneAction
+	public function testCloneAction()
+	{
+		$this->assertTrue(false);
+	}
+
     //---renameAction
     public function testRenameAction_validName()
     {
@@ -168,6 +187,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $controller->getNameAction(1);
 
     }
+
     //---getParentAction
     public function testGetParentAction_DoesNotExist()
     {
@@ -224,6 +244,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->getOwnerAction(1);
         $this->assertEquals($response->getContent(), '{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}');
     }
+
     //---getDescriptionAction
     public function testGetDescriptionAction()
     {
@@ -236,6 +257,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($respone->getContent(), '{"success":true,"response":"description"}');
 
     }
+
     //---setDescriptionAction
     public function testSetDescriptionAction()
     {
@@ -252,6 +274,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($respone->getContent(), '{"success":true}');
 
     }
+
     //---listFilesAction
     public function testListFilesAction_HasPermissions()
     {
@@ -319,6 +342,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($response->getContent(), '{"success":false}');
     }
+
     //---getFileAction
     public function testGetFileAction_canGet()
     {
@@ -387,6 +411,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->deleteFileAction(1, 'name');
         $this->assertEquals($response->getContent(), '{"success":false,"filename":"name","error":"File name does not exist}');
     }
+
     //---renameFileAction
     public function testRenameFileAction_canRename()
     {
@@ -409,7 +434,26 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $response = $controller->renameFileAction(1, 'old', 'new');
         $this->assertEquals($response->getContent(), '{"success":false,"filename":"old","error":"File old does not exist}');
     }
-    //---checkExistsAction
+
+	//---searchAction
+	public function testSearchAction()
+	{
+		$this->assertTrue(false);
+	}
+
+	//---searchNameAction
+	public function testSearchNameAction()
+	{
+		$this->assertTrue(false);
+	}
+
+	//---searchDescriptionAction
+	public function testSearchDescriptionAction()
+	{
+		$this->assertTrue(false);
+	}
+
+	//---checkExistsAction
     public function testCheckExistsAction_Exists()
     {
 
@@ -448,6 +492,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), json_encode(array("success" => false)));
 
     }
+
     //---getProjectById
     public function testGetProjectById_Exists()
     {
@@ -490,7 +535,14 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $controller->getProjectById(1);
 
     }
-    //---canCreateFile
+
+	//---canCreatePrivateProject
+	public function testCanCreatePrivateProject()
+	{
+		$this->assertTrue(false);
+	}
+
+	//---canCreateFile
     public function testCanCreateFile()
     {
         $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
@@ -498,6 +550,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response,'{"success":true}');
 
     }
+
     //---nameIsValid
     public function testNameIsValid_Yes()
     {
@@ -613,6 +666,7 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response, '{"success":false}');
 
     }
+
     //---nameExists
     public function testNameExists_Yes()
     {
@@ -633,6 +687,8 @@ class ProjectControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response,'{"success":false}');
 
     }
+
+	//useful functions
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
