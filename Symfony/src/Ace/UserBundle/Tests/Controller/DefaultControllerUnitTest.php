@@ -350,7 +350,7 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase
 		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
 
 		$response = $controller->searchNameAction("search_string");
-		$this->assertEquals($response->getContent(), '[{"1":{"firstname":"search_string","lastname":"alastname0","username":"ausername0","karma":50}},{"2":{"firstname":"search_string","lastname":"alastname1","username":"ausername1","karma":50}}]');
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"search_string","lastname":"alastname0","username":"ausername0","karma":50},"2":{"firstname":"search_string","lastname":"alastname1","username":"ausername1","karma":50}}');
 	}
 
 	public function testSearchUsernameAction_NoneExists()
@@ -427,7 +427,7 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase
 		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
 
 		$response = $controller->searchUsernameAction("search_string");
-		$this->assertEquals($response->getContent(), '[{"1":{"firstname":"afirstname0","lastname":"alastname0","username":"search_string0","karma":50}},{"2":{"firstname":"afirstname1","lastname":"alastname1","username":"search_string1","karma":50}}]');
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"afirstname0","lastname":"alastname0","username":"search_string0","karma":50},"2":{"firstname":"afirstname1","lastname":"alastname1","username":"search_string1","karma":50}}');
 	}
 
 	public function testSearchTwitterAction_NoneExists()
@@ -504,7 +504,7 @@ class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase
 		$em->expects($this->once())->method('getRepository')->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
 
 		$response = $controller->searchTwitterAction("search_string");
-		$this->assertEquals($response->getContent(), '[{"1":{"firstname":"afirstname0","lastname":"alastname0","username":"ausername0","karma":50}},{"2":{"firstname":"afirstname1","lastname":"alastname1","username":"ausername1","karma":50}}]');
+		$this->assertEquals($response->getContent(), '{"1":{"firstname":"afirstname0","lastname":"alastname0","username":"ausername0","karma":50},"2":{"firstname":"afirstname1","lastname":"alastname1","username":"ausername1","karma":50}}');
 	}
 
 	public function testSetReferrerAction_Success()
