@@ -93,7 +93,11 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 	public function testExampleAction()
 	{
-		$this->markTestIncomplete('Not functional tested yet.');
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/example/01.Basics/Blink/http%3A//libs.codebender.cc/get%3Ffile%3D01.Basics/Blink/Blink.ino');
+		$this->assertEquals(1, $crawler->filter('h1:contains("01.Basics : Blink")')->count());
+		$this->assertEquals(1, $crawler->filter('h2:contains("Blink.ino")')->count());
 	}
 
 	public function testBoardsAction()
