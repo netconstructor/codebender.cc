@@ -98,6 +98,18 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 	public function testBoardsAction()
 	{
-		$this->markTestIncomplete('Not functional tested yet.');
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/boards');
+//		$this->assertEquals(1, $crawler->filter('html:contains("codebender boards")')->count());
+//		$this->assertEquals(1, $crawler->filter('html:contains("Request Board")')->count());
+//
+//		$this->assertEquals(1, $crawler->filter('h4:contains("Arduino Uno")')->count());
+//		$this->assertEquals(1, $crawler->filter('h4:contains("Digispark (Tiny Core)")')->count());
+//		$this->assertEquals(1, $crawler->filter('h4:contains("Arno")')->count());
+
+		$this->assertEquals(1, $crawler->filter('html:contains("Cannot modify header information")')->count());
+		//TODO: Fix header information problem.
+		$this->markTestIncomplete('Fix header information problem.');
 	}
 }
