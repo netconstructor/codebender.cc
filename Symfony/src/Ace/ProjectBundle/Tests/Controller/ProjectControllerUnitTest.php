@@ -33,7 +33,7 @@ class ProjectControllerPrivateTester extends ProjectController
 
 }
 
-class ProjectControllerTest extends \PHPUnit_Framework_TestCase
+class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
 
     protected $project;

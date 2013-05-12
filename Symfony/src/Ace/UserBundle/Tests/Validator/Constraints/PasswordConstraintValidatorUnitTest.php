@@ -7,7 +7,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Ace\UserBundle\Validator\Constraints\PasswordConstraint;
 use Ace\UserBundle\Validator\Constraints\PasswordConstraintValidator;
  
-class PasswordConstraintValidatorTest extends \PHPUnit_Framework_TestCase
+class PasswordConstraintValidatorUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers PasswordConstraintValidator::isValidPasswordConstraint

@@ -6,7 +6,7 @@ use Ace\UserBundle\Entity\User;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\HttpFoundation\Response;
 
-class DefaultControllerTest extends \PHPUnit_Framework_TestCase
+class DefaultControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
 	public function testExistsAction_Exists()
 	{
