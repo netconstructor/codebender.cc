@@ -51,12 +51,10 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 		$client->followRedirects();
 
-		$link = $crawler->filter('#user_projects')->children()->eq(1)->children()->children()->children()->link();
+		$link = $crawler->selectLink("test_project")->link();
 		$crawler = $client->click($link);
 
-//		$matcher = array('id'   => 'code-container');
-//		$this->assertTag($matcher, $client->getResponse()->getContent());
-		$this->assertEquals(1, $crawler->filter('h2:contains("Codebender Project")')->count());
+		$this->assertEquals(1, $crawler->filter('h1:contains("Codebender Project")')->count());
 	}
 
 	public function testLibraries()
