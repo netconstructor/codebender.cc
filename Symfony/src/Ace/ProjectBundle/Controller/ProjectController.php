@@ -285,7 +285,6 @@ class ProjectController extends Controller
 	{
 		$em = $this->em;
 		$repository = $this->em->getRepository('AceProjectBundle:Project');
-		$qb = $em->createQueryBuilder();
 		$projects = $repository->createQueryBuilder('p')->where('p.name LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
 		$result = array();
 		foreach($projects as $project)
@@ -296,7 +295,7 @@ class ProjectController extends Controller
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
                 $owner = $owner["response"];
                 $proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
-                $result[] = array($project->getId() => $proj);
+                $result[$project->getId()] =$proj;
             }
 		}
 		return new Response(json_encode($result));
@@ -317,7 +316,7 @@ class ProjectController extends Controller
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
                 $owner = $owner["response"];
                 $proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
-                $result[] = array($project->getId() => $proj);
+                $result[$project->getId()] =$proj;
             }
 		}
 		return new Response(json_encode($result));
@@ -342,6 +341,18 @@ class ProjectController extends Controller
 		
 		return $project;
 	}
+
+    public function checkWriteProjectPermissionsAction($id)
+    {
+        $perm = $this->checkWriteProjectPermissions($id);
+        new Response($perm);
+    }
+
+    public function checkReadProjectPermissionsAction($id)
+    {
+        $perm = $this->checkProjectPermissions($id);
+        new Response($perm);
+    }
 
     protected function canCreatePrivateProject($owner)
     {
@@ -391,7 +402,19 @@ class ProjectController extends Controller
         $current_user = $this->sc->getToken()->getUser();
 
         if( $project->getIsPublic() ||
-           ($current_user !== ".anon" && $current_user->getID() === $project->getOwner()->getID()))
+           ($current_user !== "anon." && $current_user->getID() === $project->getOwner()->getID()))
+            return json_encode(array("success" => true));
+        else
+            return json_encode(array("success" => false));
+
+    }
+
+    protected function checkWriteProjectPermissions($id)
+    {
+        $project = $this->getProjectById($id);
+        $current_user = $this->sc->getToken()->getUser();
+
+        if(($current_user !== "anon." && $current_user->getID() === $project->getOwner()->getID()))
             return json_encode(array("success" => true));
         else
             return json_encode(array("success" => false));
