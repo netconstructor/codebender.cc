@@ -43,13 +43,4 @@ class EditorController extends Controller
 
 		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards));
 	}
-
-	public function embeddedCompilerFlasherJavascriptAction()
-	{
-		$response = $this->render('AceGenericBundle:CompilerFlasher:compilerflasher.js.twig');
-		$response->headers->set('Content-Type', 'text/javascript');
-
-		return $response;
-	}
-
 }

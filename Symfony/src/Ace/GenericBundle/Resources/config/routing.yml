@@ -36,4 +36,4 @@ AceGenericBundle_boards:
 
 AceGenericBundle_embedded_compilerflasher_js:
     pattern:  /embed/compilerflasher.js
-    defaults: { _controller: AceGenericBundle:Editor:embeddedCompilerFlasherJavascript }
+    defaults: { _controller: AceGenericBundle:Default:embeddedCompilerFlasherJavascript }

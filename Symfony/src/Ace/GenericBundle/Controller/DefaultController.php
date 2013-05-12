@@ -174,4 +174,13 @@ class DefaultController extends Controller
 		$boards = json_decode($boardcontroller->listAction()->getContent(), true);
 		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
 	}
+
+
+	public function embeddedCompilerFlasherJavascriptAction()
+	{
+		$response = $this->render('AceGenericBundle:CompilerFlasher:compilerflasher.js.twig');
+		$response->headers->set('Content-Type', 'text/javascript');
+
+		return $response;
+	}
 }
