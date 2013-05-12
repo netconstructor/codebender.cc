@@ -78,11 +78,155 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
 	//---listAction
-	public function testListAction()
+	public function testListAction_Empty()
 	{
-		$this->markTestIncomplete('Not unit tested yet.');
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = 'anon.';
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+
+        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array()));
+        $response = $controller->listAction(1);
+        $this->assertEquals($response->getContent(), "[]");
 	}
 
+    public function testListAction_NotLoggedIn()
+    {
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = 'anon.';
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+
+        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array($private,$public)));
+
+        $public->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(true));
+        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $public->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $public->expects($this->once())->method('getName')->will($this->returnValue("name"));
+        $public->expects($this->once())->method('getDescription')->will($this->returnValue("description"));
+
+        $response = $controller->listAction(1);
+        $this->assertEquals($response->getContent(), '[{"id":1,"name":"name","description":"description","is_public":true}]');
+    }
+
+    public function testListAction_NotOwner()
+    {
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(2));
+
+        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array($private,$public)));
+
+        $public->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(true));
+        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $public->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $public->expects($this->once())->method('getName')->will($this->returnValue("name"));
+        $public->expects($this->once())->method('getDescription')->will($this->returnValue("description"));
+
+        $response = $controller->listAction(1);
+        $this->assertEquals($response->getContent(), '[{"id":1,"name":"name","description":"description","is_public":true}]');
+    }
+
+    public function testListAction_Owner()
+    {
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(1));
+
+        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array($private,$public)));
+
+        $public->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(true));
+        $private->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(false));
+
+        $public->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $public->expects($this->once())->method('getName')->will($this->returnValue("name"));
+        $public->expects($this->once())->method('getDescription')->will($this->returnValue("description"));
+
+        $public->expects($this->once())->method('getId')->will($this->returnValue(2));
+        $public->expects($this->once())->method('getName')->will($this->returnValue("prvName"));
+        $public->expects($this->once())->method('getDescription')->will($this->returnValue("prvDescription"));
+
+        $response = $controller->listAction(1);
+        $this->assertEquals($response->getContent(),'[{"id":null,"name":null,"description":null,"is_public":false},{"id":1,"name":"name","description":"description","is_public":true}]');
+    }
 	//---createAction
     public function testCreateAction_Yes()
     {
