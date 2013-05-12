@@ -100,9 +100,4 @@ class DefaultControllerFunctionalTest extends WebTestCase
 	{
 		$this->markTestIncomplete('Not functional tested yet.');
 	}
-
-	public function testBoardslistAction()
-	{
-		$this->markTestIncomplete('Not functional tested yet.');
-	}
 }
