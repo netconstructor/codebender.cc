@@ -342,6 +342,18 @@ class ProjectController extends Controller
 		return $project;
 	}
 
+    public function checkWriteProjectPermissionsAction($id)
+    {
+        $perm = $this->checkWriteProjectPermissions($id);
+        new Response($perm);
+    }
+
+    public function checkReadProjectPermissionsAction($id)
+    {
+        $perm = $this->checkProjectPermissions($id);
+        new Response($perm);
+    }
+
     protected function canCreatePrivateProject($owner)
     {
         $projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
@@ -391,6 +403,18 @@ class ProjectController extends Controller
 
         if( $project->getIsPublic() ||
            ($current_user !== "anon." && $current_user->getID() === $project->getOwner()->getID()))
+            return json_encode(array("success" => true));
+        else
+            return json_encode(array("success" => false));
+
+    }
+
+    protected function checkWriteProjectPermissions($id)
+    {
+        $project = $this->getProjectById($id);
+        $current_user = $this->sc->getToken()->getUser();
+
+        if(($current_user !== "anon." && $current_user->getID() === $project->getOwner()->getID()))
             return json_encode(array("success" => true));
         else
             return json_encode(array("success" => false));
