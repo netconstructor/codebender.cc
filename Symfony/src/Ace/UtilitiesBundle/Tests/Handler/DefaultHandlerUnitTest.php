@@ -10,15 +10,14 @@ class DefaultHandlerUnitTest extends \PHPUnit_Framework_TestCase
 	{
 		$handler = new DefaultHandler();
 
-		//Check for wrong URL
-		$result = $handler->get_data("http://codebender.cc\\/","", "");
-		$this->assertNotEmpty($result);
-		$this->assertStringMatchesFormat('%a400 Bad Request%a', $result);
-
 		//Check for No Data
 		$result = $handler->get_data("http://codebender.cc/","", "");
 		$this->assertNotEmpty($result);
 		$this->assertStringMatchesFormat('%a<html>%a</html>%a', $result);
+
+		//Check for wrong URL
+		$result = $handler->get_data("http://codebender.cc\\/", "", "");
+		$this->assertFalse($result);
 
 		//Check for POST Data
 		$result = $handler->get_data("http://www.htmlcodetutorial.com/cgi-bin/mycgi.pl","data", "test");
@@ -30,15 +29,14 @@ class DefaultHandlerUnitTest extends \PHPUnit_Framework_TestCase
 	{
 		$handler = new DefaultHandler();
 
-		//Check for wrong URL
-		$result = $handler->get("http://codebender.cc\\/");
-		$this->assertNotEmpty($result);
-		$this->assertStringMatchesFormat('%a400 Bad Request%a', $result);
-
 		//Check for No Data
 		$result = $handler->get("http://codebender.cc/");
 		$this->assertNotEmpty($result);
 		$this->assertStringMatchesFormat('%a<html>%a</html>%a', $result);
+
+		//Check for wrong URL
+		$result = $handler->get("http://codebender");
+		$this->assertFalse($result);
 	}
 
 	public function testDefault_text()

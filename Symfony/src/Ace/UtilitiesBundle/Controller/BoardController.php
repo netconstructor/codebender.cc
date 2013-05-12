@@ -12,6 +12,8 @@ class BoardController extends Controller
 
 	public function listAction()
 	{
+		header('Access-Control-Allow-Origin: *');
+
 		$boards = array();
 
 		$db_boards = $this->em->getRepository('AceUtilitiesBundle:Board')->findAll();
