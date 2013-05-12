@@ -3,6 +3,7 @@
 namespace Ace\BlogBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultControllerTest extends WebTestCase
 {
@@ -42,12 +43,12 @@ class DefaultControllerTest extends WebTestCase
 		$client = static::createClient();
 
 		$client->request('GET', '/misc/blog/rss');
-		/** @var $response Symfony\Component\HttpFoundation\Response */
+		/** @var $response Response */
 		$response = $client->getResponse();
 		$this->assertTrue($response->headers->contains('Content-Type', 'application/rss+xml'));
 
 		$client->request('GET', '/blog/rss');
-		/** @var $response Symfony\Component\HttpFoundation\Response */
+		/** @var $response Response */
 		$response = $client->getResponse();
 		$this->assertTrue($response->headers->contains('Content-Type', 'application/rss+xml'));
 	}
