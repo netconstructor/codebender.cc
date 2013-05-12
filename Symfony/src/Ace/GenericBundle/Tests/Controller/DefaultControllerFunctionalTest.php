@@ -80,6 +80,12 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 	public function testProjectfilesAction()
 	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/embed/sketch:1');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("test_project.ino")')->count());
+
 		//TODO: Use selenium to make sure this works fine.
 		$this->markTestIncomplete('Use selenium to make sure this works fine.');
 	}
