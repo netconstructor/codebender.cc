@@ -729,7 +729,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $accessible->expects($this->once())->method('getDescription')->will($this->returnValue('Description'));
 
         $response = $controller->searchNameAction("search_string");
-        $this->assertEquals($response->getContent(), '[{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}]');
+        $this->assertEquals($response->getContent(), '{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}');
     }
 
 	//---searchDescriptionAction
@@ -820,7 +820,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $accessible->expects($this->once())->method('getDescription')->will($this->returnValue('Description'));
 
         $response = $controller->searchDescriptionAction("search_string");
-        $this->assertEquals($response->getContent(), '[{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}]');
+        $this->assertEquals($response->getContent(), '{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}');
     }
 
     //---checkExistsAction
