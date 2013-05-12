@@ -84,10 +84,59 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	//---createAction
-	public function testCreateAction()
-	{
-		$this->markTestIncomplete('Not unit tested yet.');
-	}
+    public function testCreateAction_Yes()
+    {
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
+        $controller->expects($this->once())->method("nameIsValid")->with($this->equalTo("projectName"))->will($this->returnValue('{"success":true}'));
+
+        $em->expects($this->once())->method("getRepository")->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($user));
+        $fc->expects($this->once())->method('createAction')->will($this->returnValue('{"success":true,"id":1234567890}'));
+        $em->expects($this->once())->method('persist');
+        $em->expects($this->once())->method('flush');
+
+        $response = $controller->createAction(1,'projectName','des',true);
+        $this->assertEquals($response->getContent(), '{"success":true,"id":null}');
+    }
+    public function testCreateAction_No()
+    {
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->setMethods(array("getId"))
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
+        $controller->expects($this->once())->method("nameIsValid")->with($this->equalTo("projectName"))->will($this->returnValue('{"success":true}'));
+
+        $em->expects($this->once())->method("getRepository")->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($user));
+        $fc->expects($this->once())->method('createAction')->will($this->returnValue('{"success":false}'));
+        $user->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $response = $controller->createAction(1,'projectName','des',true);
+        $this->assertEquals($response->getContent(), '{"success":false,"owner_id":1,"name":"projectName"}');
+    }
+    public function testCreateAction_InvalidName()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
+        $controller->expects($this->once())->method("nameIsValid")->with($this->equalTo("projectName"))->will($this->returnValue('{"success":false,"error":"Invalid Name. Please enter a new one."}'));
+
+        $response = $controller->createAction(1,'projectName','des',true);
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
+    }
+
 
 	//---deleteAction
     public function testDeleteAction_CanDelete()
