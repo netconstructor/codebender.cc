@@ -76,7 +76,8 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 	public function testProjectfilesAction()
 	{
-		$this->markTestIncomplete('Not functional tested yet.');
+		//TODO: Use selenium to make sure this works fine.
+		$this->markTestIncomplete('Use selenium to make sure this works fine.');
 	}
 
 	public function testLibraries()
