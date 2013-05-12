@@ -42,10 +42,14 @@ class DefaultControllerTest extends WebTestCase
 		$client = static::createClient();
 
 		$client->request('GET', '/misc/blog/rss');
-		$this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/rss+xml'));
+		/** @var $response Symfony\Component\HttpFoundation\Response */
+		$response = $client->getResponse();
+		$this->assertTrue($response->headers->contains('Content-Type', 'application/rss+xml'));
 
 		$client->request('GET', '/blog/rss');
-		$this->assertTrue($client->getResponse()->headers->contains('Content-Type', 'application/rss+xml'));
+		/** @var $response Symfony\Component\HttpFoundation\Response */
+		$response = $client->getResponse();
+		$this->assertTrue($response->headers->contains('Content-Type', 'application/rss+xml'));
 	}
 
 	public function testClickPostAction() // Test post title link
