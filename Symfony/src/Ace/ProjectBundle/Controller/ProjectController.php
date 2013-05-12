@@ -295,7 +295,7 @@ class ProjectController extends Controller
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
                 $owner = $owner["response"];
                 $proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
-                $result[] = array($project->getId() => $proj);
+                $result[$project->getId()] =$proj;
             }
 		}
 		return new Response(json_encode($result));
@@ -316,7 +316,7 @@ class ProjectController extends Controller
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
                 $owner = $owner["response"];
                 $proj = array("name" => $project->getName(), "description" => $project->getDescription(), "owner" => $owner);
-                $result[] = array($project->getId() => $proj);
+                $result[$project->getId()] =$proj;
             }
 		}
 		return new Response(json_encode($result));
