@@ -48,7 +48,7 @@ class DefaultControllerFunctionalTest extends WebTestCase
 //		$matcher = array('id'   => 'code-container');
 //		$this->assertTag($matcher, $client->getResponse()->getContent());
 		//TODO: check for real project (needs internet connection)
-		$this->fail();
+		$this->markTestIncomplete('Not functional tested yet.');
 	}
 
 	public function testLibraries()
@@ -60,7 +60,7 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("Request Library")')->count());
 
 		//TODO: check for existing libraries (needs internet connection)
-		$this->fail();
+		$this->markTestIncomplete('Not functional tested yet.');
 	}
 
 	public function testFunctionalTested()
