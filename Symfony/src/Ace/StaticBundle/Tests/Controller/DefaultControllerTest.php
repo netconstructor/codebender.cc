@@ -204,7 +204,7 @@ class DefaultControllerTest extends WebTestCase
 		));
 
 		$crawler = $client->request('GET', '/static/info/points');
-		$this->assertEquals(1, $crawler->filter('html:contains("/register/?referrer=tester")')->count());
+		$this->assertEquals(1, $crawler->filter('html:contains("?referrer=tester")')->count());
 		$this->assertEquals(1, $crawler->filter('html:contains("Do good. Get T-Shirts!")')->count());
 	}
 
