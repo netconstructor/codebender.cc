@@ -849,7 +849,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($response->getContent(), 2);
 	}
 
-	public function testInlineRegisterAction()
+	public function testInlineRegisterAction_NullArgs()
 	{
 		$form = $this->getMockBuilder('Symfony\Component\Form\Form')
 			->disableOriginalConstructor()
@@ -857,15 +857,47 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
 			->getMock();
 		$form->expects($this->once())->method("createView")->will($this->returnValue(null));
 
+		$formHandler = $this->getMockBuilder('Ace\UserBundle\Form\Handler\RegistrationFormHandler')
+			->disableOriginalConstructor()
+			->setMethods(array("generateReferrals"))
+			->getMock();
+		$formHandler->expects($this->once())->method("generateReferrals")->with($this->equalTo(null), $this->equalTo(null))->will($this->returnValue($form));
+
 		$this->initArguments($templating, $security, $em, $container);
 		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
 
-		$container->expects($this->once())->method('get')->with($this->equalTo('fos_user.registration.form'))->will($this->returnValue($form));
+		$container->expects($this->once())->method('get')->with($this->equalTo('fos_user.registration.form.handler'))->will($this->returnValue($formHandler));
 		$container->expects($this->once())->method("getParameter")->with($this->equalTo('fos_user.template.theme'))->will($this->returnValue(null));
 
 		$templating->expects($this->once())->method("render")->will($this->returnValue("this is the registration form view"));
 
 		$response = $controller->inlineRegisterAction();
+		$this->assertEquals($response->getContent(), "this is the registration form view");
+	}
+
+	public function testInlineRegisterAction_WithArguments()
+	{
+		$form = $this->getMockBuilder('Symfony\Component\Form\Form')
+			->disableOriginalConstructor()
+			->setMethods(array("createView"))
+			->getMock();
+		$form->expects($this->once())->method("createView")->will($this->returnValue(null));
+
+		$formHandler = $this->getMockBuilder('Ace\UserBundle\Form\Handler\RegistrationFormHandler')
+			->disableOriginalConstructor()
+			->setMethods(array("generateReferrals"))
+			->getMock();
+		$formHandler->expects($this->once())->method("generateReferrals")->with($this->equalTo("bender"), $this->equalTo("abcdefg"))->will($this->returnValue($form));
+
+		$this->initArguments($templating, $security, $em, $container);
+		$controller = $this->getMock("Ace\UserBundle\Controller\DefaultController", array("getCurrentUserAction"), array($templating, $security, $em, $container));
+
+		$container->expects($this->once())->method('get')->with($this->equalTo('fos_user.registration.form.handler'))->will($this->returnValue($formHandler));
+		$container->expects($this->once())->method("getParameter")->with($this->equalTo('fos_user.template.theme'))->will($this->returnValue(null));
+
+		$templating->expects($this->once())->method("render")->will($this->returnValue("this is the registration form view"));
+
+		$response = $controller->inlineRegisterAction("bender", "abcdefg");
 		$this->assertEquals($response->getContent(), "this is the registration form view");
 	}
 
