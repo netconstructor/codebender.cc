@@ -4,7 +4,7 @@ namespace Ace\UtilitiesBundle\Tests\Handler;
 
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
 
-class DefaultHandlerTest extends \PHPUnit_Framework_TestCase
+class DefaultHandlerUnitTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGet_data()
 	{
