@@ -636,10 +636,44 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
 	//---searchAction
-	public function testSearchAction()
-	{
-		$this->markTestIncomplete('Not unit tested yet.');
-	}
+	public function testSearchAction_NameOnly()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('searchNameAction', 'searchDescriptionAction'));
+
+
+        $controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response( '{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}')));
+        $controller->expects($this->once())->method('searchDescriptionAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response( '[]')));
+
+        $response = $controller->searchAction("search_string");
+        $this->assertEquals($response->getContent(), '{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}'
+        );
+    }
+
+    public function testSearchAction_DescriptionOnly()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('searchNameAction', 'searchDescriptionAction'));
+
+
+        $controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response( '[]')));
+        $controller->expects($this->once())->method('searchDescriptionAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}')));
+
+        $response = $controller->searchAction("search_string");
+        $this->assertEquals($response->getContent(), '{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}'
+        );
+    }
+
+    public function testSearchAction_NameAndDescription()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('searchNameAction', 'searchDescriptionAction'));
+
+
+        $controller->expects($this->once())->method('searchNameAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"7":{"name":"project","description":"awesome","owner":{"id":"2","username":"me","firstname":"Morgan","lastname":"Freeman"}}}')));
+        $controller->expects($this->once())->method('searchDescriptionAction')->with($this->equalTo("search_string"))->will($this->returnValue(new Response('{"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}},"7":{"name":"project","description":"awesome","owner":{"id":"2","username":"me","firstname":"Morgan","lastname":"Freeman"}}}')));
+
+        $response = $controller->searchAction("search_string");
+        $this->assertEquals($response->getContent(), '{"7":{"name":"project","description":"awesome","owner":{"id":"2","username":"me","firstname":"Morgan","lastname":"Freeman"}},"2":{"name":"Name","description":"Description","owner":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}}'
+        );
+    }
 
 	//---searchNameAction
 	public function testSearchNameAction_NoneExists()
