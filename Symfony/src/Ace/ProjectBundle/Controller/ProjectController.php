@@ -126,6 +126,12 @@ class ProjectController extends Controller
 
 		if($response["success"] == true)
 		{
+            $new_project = $this->getProjectById($response["id"]);
+            $new_project->setParent($project->getId());
+            $em = $this->em;
+            $em->persist($new_project);
+            $em->flush();
+
             $list = json_decode($this->listFilesAction($project->getId())->getContent(), true);
 		    return new Response(json_encode(array("success" => true, "id" => $response["id"], "list" => $list["list"], "name" => $new_name)));
 		}
