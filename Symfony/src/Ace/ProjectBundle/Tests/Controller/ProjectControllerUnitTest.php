@@ -849,7 +849,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     public function testcheckProjectPermissions_NotLoggedIn()
     {
 
-        $currentUser = ".anon";
+        $currentUser = "anon.";
 
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
             ->disableOriginalConstructor()

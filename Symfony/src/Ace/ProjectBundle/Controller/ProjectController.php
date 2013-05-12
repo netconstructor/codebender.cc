@@ -391,7 +391,7 @@ class ProjectController extends Controller
         $current_user = $this->sc->getToken()->getUser();
 
         if( $project->getIsPublic() ||
-           ($current_user !== ".anon" && $current_user->getID() === $project->getOwner()->getID()))
+           ($current_user !== "anon." && $current_user->getID() === $project->getOwner()->getID()))
             return json_encode(array("success" => true));
         else
             return json_encode(array("success" => false));
