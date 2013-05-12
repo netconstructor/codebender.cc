@@ -66,6 +66,16 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('h1:contains("Codebender Project")')->count());
 	}
 
+	public function testProjectAction()
+	{
+		$this->markTestIncomplete('Not functional tested yet.');
+	}
+
+	public function testProjectfilesAction()
+	{
+		$this->markTestIncomplete('Not functional tested yet.');
+	}
+
 	public function testLibraries()
 	{
 		$client = static::createClient();
@@ -81,7 +91,17 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("01.Basics")')->count());
 	}
 
-	public function testFunctionalTested()
+	public function testExampleAction()
+	{
+		$this->markTestIncomplete('Not functional tested yet.');
+	}
+
+	public function testBoardsAction()
+	{
+		$this->markTestIncomplete('Not functional tested yet.');
+	}
+
+	public function testBoardslistAction()
 	{
 		$this->markTestIncomplete('Not functional tested yet.');
 	}
