@@ -345,13 +345,13 @@ class ProjectController extends Controller
     public function checkWriteProjectPermissionsAction($id)
     {
         $perm = $this->checkWriteProjectPermissions($id);
-        new Response($perm);
+        return new Response($perm);
     }
 
     public function checkReadProjectPermissionsAction($id)
     {
         $perm = $this->checkProjectPermissions($id);
-        new Response($perm);
+        return new Response($perm);
     }
 
     protected function canCreatePrivateProject($owner)
