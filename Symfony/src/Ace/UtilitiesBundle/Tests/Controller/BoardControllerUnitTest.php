@@ -4,10 +4,7 @@ namespace Ace\UtilitiesBundle\Tests\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ace\UtilitiesBundle\Controller\BoardController;
 
-//use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-//class BoardControllerTest extends WebTestCase
-class BoardControllerTest extends \PHPUnit_Framework_TestCase
+class BoardControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
 	public function testListBoards()
 	{

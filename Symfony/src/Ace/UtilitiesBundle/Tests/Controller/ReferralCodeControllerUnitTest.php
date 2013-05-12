@@ -4,7 +4,7 @@ namespace Ace\UtilitiesBundle\Tests\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Ace\UtilitiesBundle\Controller\ReferralCodeController;
 
-class ReferralCodeControllerTest extends \PHPUnit_Framework_TestCase
+class ReferralCodeControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
 	public function testValidCode()
 	{
