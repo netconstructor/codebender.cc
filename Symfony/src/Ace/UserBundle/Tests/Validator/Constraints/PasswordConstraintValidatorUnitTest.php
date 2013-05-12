@@ -118,5 +118,9 @@ class PasswordConstraintValidatorUnitTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($this->validator->isValid(null, new PasswordConstraint()));
 		$this->assertEquals($constraint->message, $this->validator->getMessageTemplate()); 
     }
-  
+
+	public function testUnitTested()
+	{
+		$this->markTestIncomplete('Not unit tested yet.');
+	}
 }
