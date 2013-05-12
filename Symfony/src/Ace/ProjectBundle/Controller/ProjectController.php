@@ -18,6 +18,7 @@ class ProjectController extends Controller
     protected $em;
 	protected $fc;
     protected $sc;
+    protected $sl = "unknown";
 
 
 	public function createprojectAction($user_id, $project_name, $code, $isPublic)
