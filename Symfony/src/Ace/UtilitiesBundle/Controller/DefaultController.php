@@ -265,7 +265,6 @@ class DefaultController extends Controller
 		return $this->render('AceUtilitiesBundle:Default:image.html.twig', array('user' => $user["username"],'image' => $image));
 	}
 
-
 	public function uploadAction()
 	{
 
