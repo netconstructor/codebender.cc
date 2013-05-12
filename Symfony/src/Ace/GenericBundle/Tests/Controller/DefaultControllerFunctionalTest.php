@@ -43,22 +43,20 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertTag($matcher, $client->getResponse()->getContent());
 	}
 
-
 	public function testUserActionLinksToSketchView_SketchViewWorks() // Test project page
 	{
-//		$client = static::createClient();
-//
-//		$crawler = $client->request('GET', '/user/tester');
-//
-//		$client->followRedirects();
-//
-//		$link = $crawler->filter('#user_projects')->children()->eq(1)->children()->children()->children()->link();
-//		$crawler = $client->click($link);
-//
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/user/tester');
+
+		$client->followRedirects();
+
+		$link = $crawler->filter('#user_projects')->children()->eq(1)->children()->children()->children()->link();
+		$crawler = $client->click($link);
+
 //		$matcher = array('id'   => 'code-container');
 //		$this->assertTag($matcher, $client->getResponse()->getContent());
-		//TODO: check for real project (needs internet connection)
-		$this->markTestIncomplete('Not functional tested yet.');
+		$this->assertEquals(1, $crawler->filter('h2:contains("Codebender Project")')->count());
 	}
 
 	public function testLibraries()
