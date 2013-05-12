@@ -29,7 +29,7 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('h3:contains("New Project")')->count());
 	}
 
-	public function testUserAction() // Test user page
+	public function testUserAction_UserExists() // Test user page
 	{
 		$client = static::createClient();
 
@@ -41,6 +41,15 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 		$matcher = array('id'   => 'user_projects');
 		$this->assertTag($matcher, $client->getResponse()->getContent());
+	}
+
+	public function testUserAction_UserUnknown() // Test user page
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/user/unknown_user');
+
+		$this->assertEquals(1, $crawler->filter('h3:contains("There is no such user.")')->count());
 	}
 
 	public function testUserActionLinksToSketchView_SketchViewWorks() // Test project page
