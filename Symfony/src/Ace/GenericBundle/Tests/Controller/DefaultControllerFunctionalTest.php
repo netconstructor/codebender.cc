@@ -69,8 +69,11 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("codebender libraries")')->count());
 		$this->assertEquals(1, $crawler->filter('html:contains("Request Library")')->count());
 
-		//TODO: check for existing libraries (needs internet connection)
-		$this->markTestIncomplete('Not functional tested yet.');
+		$this->assertEquals(1, $crawler->filter('h2:contains("Examples")')->count());
+		$this->assertEquals(1, $crawler->filter('h2:contains("Builtin Libraries")')->count());
+		$this->assertEquals(1, $crawler->filter('h2:contains("External Libraries")')->count());
+
+		$this->assertEquals(1, $crawler->filter('html:contains("01.Basics")')->count());
 	}
 
 	public function testFunctionalTested()
