@@ -941,12 +941,239 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
 	//---canCreatePrivateProject
-	public function testCanCreatePrivateProject()
+	public function testCanCreatePrivateProject_YesFromValid()
 	{
-		$this->markTestIncomplete('Not unit tested yet.');
+        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $valid = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $prv = array($expired, $valid);
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+
+        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
+        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($private,$public)));
+        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
+        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue($prv));
+
+        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
+
+        $valid->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $valid->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('3102-01-01')));
+        $valid->expects($this->once())->method('getNumber')->will($this->returnValue(2));
+
+        $response = $controller->call_canCreatePrivateProject(1);
+        $this->assertEquals($response, '{"success":true}');
 	}
 
-	//---canCreateFile
+    public function testCanCreatePrivateProject_YesFromValidThatNeverExpires()
+    {
+        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $valid = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $prv = array($expired, $valid);
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+
+        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
+        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($private,$public)));
+        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
+        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue($prv));
+
+        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
+
+        $valid->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $valid->expects($this->once())->method('getExpires')->will($this->returnValue(NULL));
+        $valid->expects($this->once())->method('getNumber')->will($this->returnValue(2));
+
+        $response = $controller->call_canCreatePrivateProject(1);
+        $this->assertEquals($response, '{"success":true}');
+    }
+
+    public function testCanCreatePrivateProject_NoHaveNoPrivate()
+    {
+
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+
+        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
+        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($public)));
+        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+
+
+        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
+        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array()));
+
+        $response = $controller->call_canCreatePrivateProject(1);
+        $this->assertEquals($response, '{"success":false,"error":"Cannot create private project."}');
+    }
+
+    public function testCanCreatePrivateProject_NoExpired()
+    {
+
+
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+
+        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
+        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($public)));
+        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+
+
+        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
+        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($expired)));
+
+        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
+
+        $response = $controller->call_canCreatePrivateProject(1);
+        $this->assertEquals($response, '{"success":false,"error":"Cannot create private project."}'
+        );
+    }
+
+    public function testCanCreatePrivateProject_AlreadyHasMany()
+    {
+        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array('findByOwner'))
+            ->getMock();
+
+        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $valid = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $prv = array($expired, $valid);
+
+        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+
+        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
+        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($private,$public)));
+        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
+        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue($prv));
+
+        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
+
+        $valid->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
+        $valid->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('3102-01-01')));
+        $valid->expects($this->once())->method('getNumber')->will($this->returnValue(1));
+
+        $response = $controller->call_canCreatePrivateProject(1);
+        $this->assertEquals($response, '{"success":false,"error":"Cannot create private project."}');
+    }
+
+
+    //---canCreateFile
     public function testCanCreateFile()
     {
         $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
