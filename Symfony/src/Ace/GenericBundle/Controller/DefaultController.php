@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints\Regex;
 use Ace\UtilitiesBundle\Handler\DefaultHandler;
+use Ace\ProjectBundle\Controller\SketchController;
 
 
 class DefaultController extends Controller
@@ -63,6 +64,7 @@ class DefaultController extends Controller
 	public function projectAction($id, $embed = false)
 	{
 
+		/** @var SketchController $projectmanager */
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$projects = NULL;
 
@@ -72,19 +74,21 @@ class DefaultController extends Controller
 			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "There is no such project!"));
 		}
 
+		$permissions = json_decode($projectmanager->checkWriteProjectPermissionsAction($id)->getContent(), true);
+		if ($permissions["success"])
+		{
+			return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id));
+		}
+
+		$permissions = json_decode($projectmanager->checkReadProjectPermissionsAction($id)->getContent(), true);
+		if (!$permissions["success"])
+		{
+			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "You do not have permission to access tha project!"));
+		}
+
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
 		$owner = json_decode($owner, true);
 		$owner = $owner["response"];
-
-		if (!$embed && $this->get('security.context')->isGranted('ROLE_USER'))
-		{
-			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
-			if ($owner["id"] == $user["id"])
-			{
-				return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id));
-			}
-		}
 
 		$name = $projectmanager->getNameAction($id)->getContent();
 		$name = json_decode($name, true);
@@ -115,10 +119,6 @@ class DefaultController extends Controller
 			if ($embed)
 				return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));
 			return $this->render('AceGenericBundle:Default:project.html.twig', array('project_name' => $name, 'owner' => $owner, 'files' => $files, "project_id" => $id, "parent" => $parent, "json" => $json));
-		}
-		else
-		{
-			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "There is no such project!"));
 		}
 	}
 

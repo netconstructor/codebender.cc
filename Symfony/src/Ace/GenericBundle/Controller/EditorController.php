@@ -3,24 +3,17 @@
 namespace Ace\GenericBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Ace\ProjectBundle\Controller\SketchController;
 
 class EditorController extends Controller
 {		
 	public function editAction($id)
 	{
-		if (!$this->get('security.context')->isGranted('ROLE_USER'))
-		{
-			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
-		}
-
-		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
+		/** @var SketchController $projectmanager */
 		$projectmanager = $this->get('ace_project.sketchmanager');
-		$owner = $projectmanager->getOwnerAction($id)->getContent();
-		$owner = json_decode($owner, true);
-		$owner = $owner["response"];
 
-		if($owner["id"] != $user["id"])
+		$permissions = json_decode($projectmanager->checkWriteProjectPermissionsAction($id)->getContent(), true);
+		if(!$permissions["success"])
 		{
 			return $this->forward('AceGenericBundle:Default:project', array("id"=> $id));
 		}
