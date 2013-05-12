@@ -66,10 +66,14 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('h1:contains("Codebender Project")')->count());
 	}
 
-	//see above. it would be inherently difficult to check a direct project based on its ID
 	public function testProjectAction()
 	{
-		$this->assertTrue(true);
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/sketch:1');
+
+		$this->assertEquals(1, $crawler->filter('html:contains("a project used to test the search function")')->count());
+
 		//TODO: Use selenium to make sure this works fine.
 		$this->markTestIncomplete('Use selenium to make sure this works fine.');
 	}
