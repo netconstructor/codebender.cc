@@ -32,7 +32,7 @@ class PrivateProjects
     /**
      * @ORM\Column(type="date")
      */
-    protected  $stars ;
+    protected  $starts ;
 
     /**
      * @ORM\Column(type="date", nullable=true)
