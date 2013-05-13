@@ -133,6 +133,24 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response, '{"success":false}');
     }
 
+    public function testSetFilesById()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+
+        $controller = $this->setUpController($dm, array('getProjectById'));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1234))->will($this->returnValue($this->pf));
+        $this->pf->expects($this->once())->method('setFiles')->with($this->equalTo($list));
+        $this->pf->expects($this->once())->method('setFilesTimestamp');
+        $dm->expects($this->once())->method('persist')->with($this->equalTo($this->pf));
+        $dm->expects($this->once())->method('flush');
+
+        $controller->setFilesById(1234, $list);
+
+
+    }
+
 
     protected function setUp()
     {
