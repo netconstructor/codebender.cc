@@ -307,7 +307,6 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     public function testDeleteAction_CannotDelete()
     {
 
-
         $this->project->expects($this->exactly(2))->method('getProjectfilesId')->will($this->returnValue(1234567890));
         $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
 
@@ -320,10 +319,53 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
 	//---cloneAction
-	public function testCloneAction()
+	public function testCloneAction_Yes()
 	{
-		$this->markTestIncomplete('Not unit tested yet.');
+        $new_project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->setMethods(array('setParent'))
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction"));
+        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getName')->will($this->returnValue("name"));
+        $controller->expects($this->at(1))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
+
+        $this->project->expects($this->once())->method('getDescription')->will($this->returnValue('des'));
+        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1), $this->equalTo('name copy'), $this->equalTo('des'), $this->equalTo(true))->will($this->returnValue(new Response( '{"success":true,"id":2}')));
+
+        $controller->expects($this->at(4))->method('getProjectById')->with($this->equalTo(2))->will($this->returnValue($new_project));
+        $this->project->expects($this->exactly(2))->method('getId')->will($this->returnValue(1));
+
+        $new_project->expects($this->once())->method('setParent')->with($this->equalTo(1));
+        $em->expects($this->once())->method('persist')->with($this->equalTo($new_project));
+        $em->expects($this->once())->method('flush');
+
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"name copy.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}')));
+        $response = $controller->cloneAction(1,1);
+        $this->assertEquals($response->getContent(), '{"success":true,"id":2,"list":[{"filename":"name copy.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}],"name":"name copy"}');
 	}
+
+    public function testCloneAction_No()
+    {
+        $new_project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->setMethods(array('setParent'))
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction"));
+        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getName')->will($this->returnValue("name"));
+        $controller->expects($this->at(1))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
+
+        $this->project->expects($this->once())->method('getDescription')->will($this->returnValue('des'));
+        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1), $this->equalTo('name copy'), $this->equalTo('des'), $this->equalTo(true))->will($this->returnValue(new Response( '{"success":false,"owner_id":1,"name":"name copy"}')));
+
+       $response = $controller->cloneAction(1,1);
+        $this->assertEquals($response->getContent(),'{"success":false,"id":1}');
+    }
 
     //---renameAction
     public function testRenameAction_validName()
