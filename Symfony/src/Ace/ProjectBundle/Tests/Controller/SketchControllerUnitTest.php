@@ -4,6 +4,7 @@ namespace Ace\ProjectBundle\Tests\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Ace\ProjectBundle\Controller\SketchController;
+use Symfony\Component\Security\Acl\Exception\Exception;
 
 class SketchControllerPrivateTester extends SketchController
 {
@@ -191,6 +192,38 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response, '{"success":false,"error":"Cannot access list of project files."}');
     }
 
+
+    public function testConstructorInvalidStorageLayer()
+    {
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $security = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $fc = $this->getMockBuilder('Ace\ProjectBundle\Controller\FilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $mfc = $this->getMockBuilder('Ace\ProjectBundle\Controller\MongoFilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $ffc = $this->getMockBuilder('Ace\ProjectBundle\Controller\DiskFilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+        try
+        {
+        $controller = $this->getMock('Ace\ProjectBundle\Controller\SketchController', $methods = NULL, $arguments = array($em, $mfc, $ffc, $security, 'invalid'));
+        }
+        catch(\Exception $e)
+        {
+            $this->assertEquals($e->getMessage(), 'Invalid Storage Layer');
+        }
+    }
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
@@ -248,7 +281,7 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMockForAbstractClass();
 
 
-        $controller = $this->getMock('Ace\ProjectBundle\Tests\Controller\SketchControllerPrivateTester', $methods = $m, $arguments = array($em, $mfc, $ffc, $security, 'disk'));
+        $controller = $this->getMock('Ace\ProjectBundle\Tests\Controller\SketchControllerPrivateTester', $methods = $m, $arguments = array($em, $mfc, $ffc, $security, 'mongo'));
         return $controller;
     }
 }
