@@ -1005,7 +1005,24 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    //---checkReadProjectPermissionsAction
+    public function testCheckReadProjectPermissionsAction_Yes()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions'));
+        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $response = $controller->checkReadProjectPermissionsAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true}');
 
+    }
+
+    public function testCheckReadProjectPermissionsAction_No()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions'));
+        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $response = $controller->checkReadProjectPermissionsAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false}');
+
+    }
 
     //---canCreatePrivateProject
 	public function testCanCreatePrivateProject_YesFromValid()
