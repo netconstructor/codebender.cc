@@ -158,6 +158,45 @@ class ProjectController extends Controller
         }
     }
 
+    public function setProjectPublicAction($id)
+    {
+        $project = $this->getProjectById($id);
+        if($project->getIsPublic())
+        {
+            return new Response(json_encode(array("success" => false, "error" => "This project is already public.")));
+        }
+        else
+        {
+            $project->setIsPublic(true);
+            $this->em->persist($project);
+            $this->em->flush();
+            return new Response(json_encode(array("success" => true)));
+        }
+
+    }
+
+    public function setProjectPrivateAction($id)
+    {
+        $current_user_id = $this->sc->getToken()->getUser()->getID();
+        $canCreate = json_decode($this->canCreatePrivateProject($current_user_id), true);
+        if(!$canCreate['success'])
+            return new Response(json_encode($canCreate));
+
+        $project = $this->getProjectById($id);
+        if(!$project->getIsPublic())
+        {
+            return new Response(json_encode(array("success" => false, "error" => "This project is already private.")));
+        }
+        else
+        {
+            $project->setIsPublic(false);
+            $this->em->persist($project);
+            $this->em->flush();
+            return new Response(json_encode(array("success" => true)));
+        }
+
+    }
+
 	public function getNameAction($id)
 	{
 		$project = $this->getProjectById($id);

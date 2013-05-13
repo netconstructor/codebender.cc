@@ -342,9 +342,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $em->expects($this->once())->method('persist')->with($this->equalTo($new_project));
         $em->expects($this->once())->method('flush');
 
-        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"name copy.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}')));
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"name.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}')));
         $response = $controller->cloneAction(1,1);
-        $this->assertEquals($response->getContent(), '{"success":true,"id":2,"list":[{"filename":"name copy.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}],"name":"name copy"}');
+        $this->assertEquals($response->getContent(), '{"success":true,"id":2,"list":[{"filename":"name.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}],"name":"name copy"}');
 	}
 
     public function testCloneAction_No()
@@ -390,6 +390,109 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $response = $controller->renameAction(1, 'invalid/name');
         $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
+    }
+
+    //---setProjectPublic
+    public function testSetProjectPublicAction_OK()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+        $this->project->expects($this->once())->method('setIsPublic')->with($this->equalTo(true));
+        $em->expects($this->once())->method('persist')->with($this->equalTo($this->project));
+        $em->expects($this->once())->method('flush');
+
+        $response = $controller->setProjectPublicAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testSetProjectPublicAction_AlreadyPublic()
+    {
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+
+        $response = $controller->setProjectPublicAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"This project is already public."}');
+    }
+
+    //---setProjectPrivate
+    public function testSetProjectPrivateAction_OK()
+    {
+
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject"));
+
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(1));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+        $this->project->expects($this->once())->method('setIsPublic')->with($this->equalTo(false));
+        $em->expects($this->once())->method('persist')->with($this->equalTo($this->project));
+        $em->expects($this->once())->method('flush');
+
+        $response = $controller->setProjectPrivateAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testSetProjectPrivateAction_AlreadyPrivate()
+    {
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject"));
+
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(1));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+
+        $response = $controller->setProjectPrivateAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"This project is already private."}');
+    }
+
+    public function testSetProjectPrivateAction_CannotCreatePrivate()
+    {
+        $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject"));
+
+        $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
+        $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
+        $user->expects($this->once())->method('getID')->will($this->returnValue(1));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"error":"Cannot create private project"}'));
+
+        $response = $controller->setProjectPrivateAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"Cannot create private project"}');
     }
 
     //---getNameAction

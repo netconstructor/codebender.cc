@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Ace\ProjectBundle\Entity\Project as Project;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
+use Symfony\Component\Security\Acl\Exception\Exception;
 use Symfony\Component\Security\Core\SecurityContext;
 
 class SketchController extends ProjectController
@@ -125,11 +126,11 @@ class SketchController extends ProjectController
             return json_encode(array("success" => true));
         }
         else
-            return json_encode($parentCreate);
+            throw new \Exception('This should never happen');
 
     }
 
-    private function inoExists($id)
+    protected function inoExists($id)
     {
         $list = json_decode($this->listFilesAction($id)->getContent(), true);
         if($list["success"])
@@ -139,6 +140,10 @@ class SketchController extends ProjectController
                 if(pathinfo($file["filename"], PATHINFO_EXTENSION)=="ino")
                     return json_encode(array("success" => true));
             }
+        }
+        else
+        {
+            return json_encode(array("success" => false, "error" => "Cannot access list of project files."));
         }
         return json_encode(array("success" => false, "error" => ".ino file does not exist."));
     }
