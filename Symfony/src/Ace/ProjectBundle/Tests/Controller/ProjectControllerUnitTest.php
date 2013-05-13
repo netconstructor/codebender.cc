@@ -342,9 +342,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $em->expects($this->once())->method('persist')->with($this->equalTo($new_project));
         $em->expects($this->once())->method('flush');
 
-        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"name copy.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}')));
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"name.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}]}')));
         $response = $controller->cloneAction(1,1);
-        $this->assertEquals($response->getContent(), '{"success":true,"id":2,"list":[{"filename":"name copy.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}],"name":"name copy"}');
+        $this->assertEquals($response->getContent(), '{"success":true,"id":2,"list":[{"filename":"name.ino","code":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}],"name":"name copy"}');
 	}
 
     public function testCloneAction_No()
