@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Local Testing" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
     <CommandLine workingDirectory="$PROJECT_DIR$/Symfony" />
-    <TestRunner configuration_file="$PROJECT_DIR$/Symfony/app/phpunit.xml" scope="XML" use_alternative_configuration_file="true" />
+    <TestRunner configuration_file="$PROJECT_DIR$/Symfony/app/phpunit.xml" scope="XML" options="--stderr" use_alternative_configuration_file="true" />
     <RunnerSettings RunnerId="PhpRunner" />
     <RunnerSettings RunnerId="PhpUnitCoverageRunner" />
     <ConfigurationWrapper RunnerId="PhpRunner" />
