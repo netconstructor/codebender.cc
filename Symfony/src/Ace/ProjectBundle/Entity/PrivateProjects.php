@@ -88,7 +88,7 @@ class PrivateProjects
      */
     public function setStarts($starts)
     {
-        $this->stars = $starts;
+        $this->starts = $starts;
     }
 
     /**
@@ -98,7 +98,7 @@ class PrivateProjects
      */
     public function getStarts()
     {
-        return $this->stars;
+        return $this->starts;
     }
 
     /**
