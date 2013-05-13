@@ -28,6 +28,18 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testListFilesAction()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+        $controller = $this->setUpController($dm,array('listFiles'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+        $response = $controller->listFilesAction(1234);
+        $this->assertEquals($response, '{"success":true,"list":[{"filename":"project.ino","code":"void setup(){}"},{"filename":"header.h","code":"void function(){}"}]}'
+        );
+    }
+
 
     protected function setUp()
     {
