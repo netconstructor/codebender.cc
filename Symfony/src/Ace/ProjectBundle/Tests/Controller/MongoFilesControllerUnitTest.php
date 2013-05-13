@@ -160,6 +160,40 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testGetProjectById_Exists()
+    {
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $controller = $this->setUpController($dm, NULL);
+
+        $dm->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:ProjectFiles'))->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1234))->will($this->returnValue($this->pf));
+        $response = $controller->getProjectById(1234);
+        $this->assertEquals($response, $this->pf);
+
+    }
+
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function testGetProjectById_DoesNotExist()
+    {
+        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+            ->disableOriginalConstructor()
+            ->setMethods(array("find"))
+            ->getMock();
+
+        $controller = $this->setUpController($dm, NULL);
+
+        $dm->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:ProjectFiles'))->will($this->returnValue($repo));
+        $repo->expects($this->once())->method('find')->with($this->equalTo(1234))->will($this->returnValue(NULL));
+        $controller->getProjectById(1234);
+
+    }
+
     public function testListFiles()
     {
         $list = array();
