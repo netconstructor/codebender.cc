@@ -135,4 +135,20 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('h4:contains("Digispark (Tiny Core)")')->count());
 		$this->assertEquals(1, $crawler->filter('h4:contains("Arno")')->count());
 	}
+
+	public function testEmbeddedCompilerFlasherAction()
+	{
+		$client = static::createClient();
+
+		$crawler = $client->request('GET', '/embed/compilerflasher.js');
+		/** @var $response Response */
+		$response = $client->getResponse();
+		// Assert that the "Content-Type" header is "application/json"
+		$this->assertTrue(
+			$response->headers->contains(
+				'Content-Type',
+				'text/javascript'
+			)
+		);
+	}
 }
