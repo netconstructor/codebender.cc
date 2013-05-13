@@ -87,7 +87,7 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("There is no such project")')->count());
 	}
 
-	public function testProjectfilesAction()
+	public function testProjectAction_embedded()
 	{
 		$client = static::createClient();
 
@@ -97,6 +97,11 @@ class DefaultControllerFunctionalTest extends WebTestCase
 
 		//TODO: Use selenium to make sure this works fine.
 		$this->markTestIncomplete('Use selenium to make sure this works fine.');
+	}
+
+	public function testProjectfilesAction()
+	{
+		$this->markTestIncomplete('Not functional tested yet.');
 	}
 
 	public function testLibraries()
