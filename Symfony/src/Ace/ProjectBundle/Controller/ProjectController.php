@@ -393,6 +393,13 @@ class ProjectController extends Controller
         return new Response($perm);
     }
 
+    public function canCreatePrivateProjectAction($owner)
+    {
+        $canCreate = $this->canCreatePrivateProject($owner);
+        return new Response($canCreate);
+    }
+
+
     protected function canCreatePrivateProject($owner)
     {
         $projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
@@ -417,7 +424,7 @@ class ProjectController extends Controller
         if($currentPrivate >= $maxPrivate)
             return json_encode(array("success" => false, "error" => "Cannot create private project."));
         else
-            return json_encode(array("success" => true));
+            return json_encode(array("success" => true, "available" => $maxPrivate - $currentPrivate));
 
     }
 
