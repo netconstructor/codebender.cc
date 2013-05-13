@@ -16,6 +16,19 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testDeleteAction()
+    {
+        $controller = $this->setUpController($dm,array('getProjectById'));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1234))->will($this->returnValue($this->pf));
+        $dm->expects($this->once())->method("remove")->with($this->equalTo($this->pf));
+        $dm->expects($this->once())->method('flush');
+
+        $response = $controller->deleteAction(1234);
+        $this->assertEquals($response, '{"success":true}');
+
+    }
+
+
     protected function setUp()
     {
         $this->pf = $this->getMockBuilder('Ace\ProjectBundle\Document\ProjectFiles')
