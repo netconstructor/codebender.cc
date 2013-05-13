@@ -46,17 +46,17 @@ class DefaultController extends Controller
 		$projects = $projectmanager->listAction($user["id"])->getContent();
 		$projects = json_decode($projects, true);
 
-		$result = @file_get_contents("http://api.twitter.com/1/statuses/user_timeline/".$user["twitter"].".json");
-		if ($result != false)
+		$utilities = $this->get('ace_utilities.handler');
+
+		$result = json_decode($utilities->get("http://api.twitter.com/1/statuses/user_timeline/".$user["twitter"].".json"), true);
+		if (!isset($result["errors"]))
 		{
-			$tweet = json_decode($result); // get tweets and decode them into a variable
-			$lastTweet = $tweet[0]->text; // show latest tweet
+			$lastTweet = $result[0]["text"]; // show latest tweet
 		}
 		else
 		{
-			$lastTweet = 0;
+			$lastTweet = false;
 		}
-		$utilities = $this->get('ace_utilities.handler');
 		$image = $utilities->get_gravatar($user["email"], 120);
 		return $this->render('AceGenericBundle:Default:user.html.twig', array('user' => $user, 'projects' => $projects, 'lastTweet' => $lastTweet, 'image' => $image));
 	}
