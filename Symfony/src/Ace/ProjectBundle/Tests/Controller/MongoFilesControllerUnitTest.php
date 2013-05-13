@@ -174,6 +174,44 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testRenameFileAction_Yes()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+        $controller = $this->setUpController($dm, array('fileExists', 'canCreateFile', 'listFiles', 'setFilesById'));
+        $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1234), $this->equalTo('header.h'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('canCreateFile')->with($this->equalTo(1234), $this->equalTo('newheader.h'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+        $list[1]["filename"]='newheader.h';
+        $controller->expects($this->once())->method('setFilesById')->with($this->equalTo(1234), $this->equalTo($list));
+        $response = $controller->renameFileAction(1234, 'header.h', 'newheader.h');
+        $this->assertEquals($response, '{"success":true}');
+    }
+
+    public function testRenameFileAction_DoesNotExist()
+    {
+
+        $controller = $this->setUpController($dm, array('fileExists'));
+        $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1234), $this->equalTo('header.h'))->will($this->returnValue('{"success":false,"filename":"header2.h","error":"File header2.h does not exist."}'));
+        $response = $controller->renameFileAction(1234, 'header.h', 'newheader.h');
+        $this->assertEquals($response, '{"success":false,"filename":"header2.h","error":"File header2.h does not exist."}');
+    }
+
+    public function testRenameFileAction_CannotCreateFile()
+    {
+
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+        $controller = $this->setUpController($dm, array('fileExists', 'canCreateFile'));
+        $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1234), $this->equalTo('header.h'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('canCreateFile')->with($this->equalTo(1234), $this->equalTo('newheader.h'))->will($this->returnValue('{"success":false,"id":1,"filename":"newheader.h","error":"This file already exists"}'));
+
+        $response = $controller->renameFileAction(1234, 'header.h', 'newheader.h');
+        $this->assertEquals($response,'{"success":false,"id":1,"filename":"newheader.h","error":"This file already exists","old_filename":"header.h"}');
+    }
+
     public function testSetFilesById()
     {
         $list = array();
