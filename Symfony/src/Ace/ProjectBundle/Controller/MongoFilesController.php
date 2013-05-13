@@ -99,7 +99,7 @@ class MongoFilesController extends FilesController
 				return json_encode(array("success" => true));
 			}
 		}
-		return json_encode(array("success" => false, "id" => $id, "filename" => $filename));
+        throw $this->createNotFoundException("This should never happen. fileExist is incosistent with listFiles");
 	}
 
 	public function renameFileAction($id, $filename, $new_filename)

@@ -174,6 +174,27 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function testDeleteFileAction_Exception()
+    {
+
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header1.h", "code" => "void function(){}");
+
+        $controller = $this->setUpController($dm, array('fileExists', 'listFiles', 'setFilesById'));
+
+        $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1234), $this->equalTo('header.h'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+
+
+        $response = $controller->deleteFileAction(1234,'header.h');
+
+
+    }
+
     public function testRenameFileAction_Yes()
     {
         $list = array();
