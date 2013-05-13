@@ -986,7 +986,28 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
-	//---canCreatePrivateProject
+    //---checkWriteProjectPermissionsAction
+    public function testCheckWriteProjectPermissionsAction_Yes()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $response = $controller->checkWriteProjectPermissionsAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true}');
+
+    }
+
+    public function testCheckWriteProjectPermissionsAction_No()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $response = $controller->checkWriteProjectPermissionsAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false}');
+
+    }
+
+
+
+    //---canCreatePrivateProject
 	public function testCanCreatePrivateProject_YesFromValid()
 	{
         $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
