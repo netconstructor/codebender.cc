@@ -99,9 +99,22 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->markTestIncomplete('Use selenium to make sure this works fine.');
 	}
 
-	public function testProjectfilesAction()
+	public function testProjectfilesAction_Success_test_project()
 	{
-		$this->markTestIncomplete('Not functional tested yet.');
+		$client = static::createClient();
+
+		// Directly submit a form
+		$client->request('POST', '/files', array('project_id' => '1'));
+		$this->assertEquals($client->getResponse()->getContent(), '{"test_project.ino":"void setup()\n{\n\t\n}\n\nvoid loop()\n{\n\t\n}\n"}');
+	}
+
+	public function testProjectfilesAction_ProjectNotFound()
+	{
+		$client = static::createClient();
+
+		// Directly submit a form
+		$crawler = $client->request('POST', '/files', array('project_id' => '99999'));
+		$this->assertEquals($client->getResponse()->getContent(), 'Project Not Found');
 	}
 
 	public function testLibraries()
