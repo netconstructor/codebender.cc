@@ -140,6 +140,89 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(),'{"success":false,"id":1}');
     }
 
+    //---renameAction
+    public function testRenameAction_validName()
+    {
+        $project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction"));
+
+        $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('newproject'))->will($this->returnValue('{"success":true}'));
+
+        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $project->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
+        $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
+
+        $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
+        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":true}')));
+
+
+
+        $project->expects($this->once())->method('setName')->with($this->equalTo('newproject'));
+
+        $em->expects($this->once())->method('persist')->with($this->equalTo($project));
+        $em->expects($this->once())->method('flush');
+        $response = $controller->renameAction(1, 'newproject');
+        $this->assertEquals($response->getContent(), '{"success":true}');
+    }
+
+    public function testRenameAction_NoInvalidName()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
+
+        $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('invalid/name'))->will($this->returnValue('{"success":false,"error":"Invalid Name. Please enter a new one."}'));
+
+        $response = $controller->renameAction(1, 'invalid/name');
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
+    }
+
+    public function testRenameAction_NoOldFile()
+{
+    $project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+        ->disableOriginalConstructor()
+        ->getMock();
+
+    $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction"));
+
+    $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('newproject'))->will($this->returnValue('{"success":true}'));
+
+    $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+    $project->expects($this->once())->method('getId')->will($this->returnValue(1));
+    $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
+    $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+    $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
+
+    $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":false}')));
+    $response = $controller->renameAction(1, 'newproject');
+    $this->assertEquals($response->getContent(), '{"success":false,"error":"old file project.ino could not be renamed. "}');
+}
+
+    public function testRenameAction_NoBackupFile()
+    {
+        $project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction"));
+
+        $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('newproject'))->will($this->returnValue('{"success":true}'));
+
+        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $project->expects($this->once())->method('getId')->will($this->returnValue(1));
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
+        $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
+
+        $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
+        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":false}')));
+        $response = $controller->renameAction(1, 'newproject');
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"backup file newproject.ino.bkp could not be renamed. "}');
+    }
+
     public function testCanCreateFile_YesIno()
     {
         $controller = $this->setUpTesterController($em, $fc, $security, array("inoExists"));
