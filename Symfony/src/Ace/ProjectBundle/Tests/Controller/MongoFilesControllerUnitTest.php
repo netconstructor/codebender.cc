@@ -75,7 +75,35 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testGetFileAction_Yes()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
 
+        $controller = $this->setUpController($dm, array('listFiles'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+
+        $response = $controller->getFileAction(1234, 'header.h');
+        $this->assertEquals($response, '{"success":true,"code":"void function(){}"}'
+
+        );
+    }
+
+    public function testGetFileAction_No()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+
+        $controller = $this->setUpController($dm, array('listFiles'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+
+        $response = $controller->getFileAction(1234, 'header2.h');
+        $this->assertEquals($response, '{"success":false}'
+
+        );
+    }
     protected function setUp()
     {
         $this->pf = $this->getMockBuilder('Ace\ProjectBundle\Document\ProjectFiles')
