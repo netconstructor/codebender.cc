@@ -142,6 +142,38 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response, '{"success":false}');
     }
 
+    public function testDeleteFileAction_Exists()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+
+        $controller = $this->setUpController($dm, array('fileExists', 'listFiles', 'setFilesById'));
+
+        $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1234), $this->equalTo('header.h'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+
+        $controller->expects($this->once())->method('setFilesById')->with($this->equalTo(1234), $this->equalTo($list));
+
+        $response = $controller->deleteFileAction(1234,'header.h');
+        $this->assertEquals($response, '{"success":true}');
+
+    }
+    public function testDeleteFileAction_DoesNotExist()
+    {
+
+        $controller = $this->setUpController($dm, array('fileExists', 'listFiles', 'setFilesById'));
+
+        $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1234), $this->equalTo('header2.h'))->will($this->returnValue('{"success":false,"filename":"header2.h","error":"File header2.h does not exist."}'));
+
+        $response = $controller->deleteFileAction(1234,'header2.h');
+        $this->assertEquals($response, '{"success":false,"filename":"header2.h","error":"File header2.h does not exist."}');
+
+    }
+
     public function testSetFilesById()
     {
         $list = array();
