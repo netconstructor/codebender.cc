@@ -2,6 +2,15 @@
 
 namespace Ace\ProjectBundle\Tests\Controller;
 
+use Ace\ProjectBundle\Controller\MongoFilesController;
+
+class MongoFilesControllerTester extends MongoFilesController
+{
+    public function call_listFiles($id)
+    {
+       return $this->listFiles($id);
+    }
+}
 class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
     protected $pf;
@@ -151,7 +160,20 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testListFiles()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
 
+        $controller = $this->setUpTesterController($dm, array('getProjectById'));
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1234))->will($this->returnValue($this->pf));
+        $this->pf->expects($this->once())->method('getFiles')->will($this->returnValue($list));
+
+        $response = $controller->call_listFiles(1234);
+        $this->assertEquals($response, $list);
+
+    }
     protected function setUp()
     {
         $this->pf = $this->getMockBuilder('Ace\ProjectBundle\Document\ProjectFiles')
@@ -166,6 +188,16 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $controller = $this->getMock('Ace\ProjectBundle\Controller\MongoFilesController', $methods = $m, $arguments = array($dm));
+        return $controller;
+    }
+
+    private function setUpTesterController(&$dm, $m)
+    {
+        $dm = $this->getMockBuilder('Doctrine\ODM\MongoDB\DocumentManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $controller = $this->getMock('Ace\ProjectBundle\Tests\Controller\MongoFilesControllerTester', $methods = $m, $arguments = array($dm));
         return $controller;
     }
 }
