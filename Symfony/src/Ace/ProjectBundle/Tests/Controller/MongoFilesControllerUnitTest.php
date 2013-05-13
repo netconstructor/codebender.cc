@@ -40,6 +40,41 @@ class MongoFilesControllerUnitTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testCreateFileAction_Yes()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+
+        $controller = $this->setUpController($dm, array('listFiles', 'canCreateFile', 'setFilesById'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+        $list[] = array("filename" => "header2.h", "code" => "void function2(){}");
+        $controller->expects($this->once())->method('canCreateFile')->with($this->equalTo(1234), $this->equalTo('header2.h'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('setFilesById')->with($this->equalTo(1234), $this->equalTo($list));
+        $response = $controller->createFileAction(1234, 'header2.h', 'void function2(){}');
+        $this->assertEquals($response, '{"success":true}'
+        );
+
+    }
+
+    public function testCreateFileAction_No()
+    {
+        $list = array();
+        $list[] = array("filename" => "project.ino", "code" => "void setup(){}");
+        $list[] = array("filename" => "header.h", "code" => "void function(){}");
+
+        $controller = $this->setUpController($dm, array('listFiles', 'canCreateFile'));
+        $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1234))->will($this->returnValue($list));
+
+        $controller->expects($this->once())->method('canCreateFile')->with($this->equalTo(1234), $this->equalTo('header.h'))->will($this->returnValue('{"success":false,"id":1,"filename":"header1.h","error":"This file already exists"}'));
+
+        $response = $controller->createFileAction(1234, 'header.h', 'void function2(){}');
+        $this->assertEquals($response, '{"success":false,"id":1,"filename":"header1.h","error":"This file already exists"}'
+
+        );
+
+    }
+
 
     protected function setUp()
     {
