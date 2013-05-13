@@ -196,9 +196,9 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
     $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
     $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
 
-    $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":false}')));
+    $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":false, "error": "fake_error"}')));
     $response = $controller->renameAction(1, 'newproject');
-    $this->assertEquals($response->getContent(), '{"success":false,"error":"old file project.ino could not be renamed. "}');
+    $this->assertEquals($response->getContent(), '{"success":false,"error":"old file project.ino could not be renamed. fake_error"}');
 }
 
     public function testRenameAction_NoBackupFile()
@@ -218,9 +218,9 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
         $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
 
         $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
-        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":false}')));
+        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":false, "error": "fake_error"}')));
         $response = $controller->renameAction(1, 'newproject');
-        $this->assertEquals($response->getContent(), '{"success":false,"error":"backup file newproject.ino.bkp could not be renamed. "}');
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"backup file newproject.ino.bkp could not be renamed. fake_error"}');
     }
 
     public function testCanCreateFile_YesIno()
