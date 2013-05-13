@@ -19,7 +19,7 @@ function warnDeleteProject(deletion_path)
    	{% if files%}
 	    {% for file in files %}
 	        <li>
-				<a rel="popover" data-delay=1500 class="project_link" data-trigger="hover" data-html="true"
+				<a rel="popover" data-delay=1500 class="project_link {% if file['is_public'] %}public_project{% else %}private_project{% endif %}" data-trigger="hover" data-html="true"
 				   style="overflow: hidden; text-overflow: ellipsis; width: 60%; width: -moz-calc(100% - 59px);
 				   width: -webkit-calc(100% - 59px); width: calc(100% - 59px);"
 				   data-placement="right" data-content="
