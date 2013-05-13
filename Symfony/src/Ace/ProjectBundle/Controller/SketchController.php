@@ -126,8 +126,9 @@ class SketchController extends ProjectController
             return json_encode(array("success" => true));
         }
         else
+            // @codeCoverageIgnoreStart
             throw new \Exception('This should never happen');
-
+            // @codeCoverageIgnoreEnd
     }
 
     protected function inoExists($id)

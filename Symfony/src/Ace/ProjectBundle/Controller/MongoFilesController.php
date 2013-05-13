@@ -121,7 +121,9 @@ class MongoFilesController extends FilesController
 					return json_encode(array("success" => true));
 				}
 			}
+        // @codeCoverageIgnoreStart
 		}
+        // @codeCoverageIgnoreEnd
 		$canCreateFile["old_filename"] = $filename;
 		return json_encode($canCreateFile);
 	}
