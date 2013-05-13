@@ -292,19 +292,24 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $mfc = $this->getMockBuilder('Ace\ProjectBundle\Controller\MongoFilesController')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $ffc = $this->getMockBuilder('Ace\ProjectBundle\Controller\DiskFilesController')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
+
+        $thrown = false;
         try
         {
         $controller = $this->getMock('Ace\ProjectBundle\Controller\SketchController', $methods = NULL, $arguments = array($em, $mfc, $ffc, $security, 'invalid'));
         }
         catch(\Exception $e)
         {
-            $this->assertEquals($e->getMessage(), 'Invalid Storage Layer');
+           if($e->getMessage() == 'Invalid Storage Layer')
+           $thrown = true;
         }
+
+        $this->assertEquals($thrown, true);
     }
 
     protected function setUp()
@@ -357,11 +362,11 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $mfc = $this->getMockBuilder('Ace\ProjectBundle\Controller\MongoFilesController')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $ffc = $this->getMockBuilder('Ace\ProjectBundle\Controller\DiskFilesController')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
 
 
         $controller = $this->getMock('Ace\ProjectBundle\Tests\Controller\SketchControllerPrivateTester', $methods = $m, $arguments = array($em, $mfc, $ffc, $security, 'mongo'));
