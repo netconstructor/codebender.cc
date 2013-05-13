@@ -12,9 +12,9 @@ class SketchControllerPrivateTester extends SketchController
         return $this->canCreateFile($id, $filename);
     }
 
-    public function call_inoExists($owner, $name)
+    public function call_inoExists($id)
     {
-        return $this->inoExists($owner,$name);
+        return $this->inoExists($id);
     }
 }
 
@@ -162,6 +162,33 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
         $controller->expects($this->once())->method('inoExists')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
         $response = $controller->call_canCreateFile(1, 'filename.ino');
         $this->assertEquals($response, '{"success":false,"id":1,"filename":"filename.ino","error":"Cannot create second .ino file in the same project"}');
+    }
+
+    public function testInoExists_No()
+    {
+        $controller = $this->setUpTesterController($em, $fc, $security, array("listFilesAction"));
+
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"header1.h","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
+        $response = $controller->call_inoExists(1);
+        $this->assertEquals($response, '{"success":false,"error":".ino file does not exist."}');
+    }
+
+    public function testInoExists_Yes()
+    {
+        $controller = $this->setUpTesterController($em, $fc, $security, array("listFilesAction"));
+
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
+        $response = $controller->call_inoExists(1);
+        $this->assertEquals($response, '{"success":true}');
+    }
+
+    public function testInoExists_NoPermission()
+    {
+        $controller = $this->setUpTesterController($em, $fc, $security, array("listFilesAction"));
+
+        $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":false}')));
+        $response = $controller->call_inoExists(1);
+        $this->assertEquals($response, '{"success":false,"error":"Cannot access list of project files."}');
     }
 
     protected function setUp()

@@ -130,7 +130,7 @@ class SketchController extends ProjectController
 
     }
 
-    private function inoExists($id)
+    protected function inoExists($id)
     {
         $list = json_decode($this->listFilesAction($id)->getContent(), true);
         if($list["success"])
@@ -140,6 +140,10 @@ class SketchController extends ProjectController
                 if(pathinfo($file["filename"], PATHINFO_EXTENSION)=="ino")
                     return json_encode(array("success" => true));
             }
+        }
+        else
+        {
+            return json_encode(array("success" => false, "error" => "Cannot access list of project files."));
         }
         return json_encode(array("success" => false, "error" => ".ino file does not exist."));
     }
