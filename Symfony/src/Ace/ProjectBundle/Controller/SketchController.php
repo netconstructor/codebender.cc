@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Ace\ProjectBundle\Entity\Project as Project;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
+use Symfony\Component\Security\Acl\Exception\Exception;
 use Symfony\Component\Security\Core\SecurityContext;
 
 class SketchController extends ProjectController
@@ -125,7 +126,7 @@ class SketchController extends ProjectController
             return json_encode(array("success" => true));
         }
         else
-            return json_encode($parentCreate);
+            throw new \Exception('This should never happen');
 
     }
 

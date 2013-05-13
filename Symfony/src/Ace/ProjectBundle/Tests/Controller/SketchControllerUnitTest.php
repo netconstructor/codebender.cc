@@ -3,13 +3,24 @@
 namespace Ace\ProjectBundle\Tests\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Ace\ProjectBundle\Controller\SketchController;
+
+class SketchControllerPrivateTester extends SketchController
+{
+    public function call_canCreateFile($id, $filename)
+    {
+        return $this->canCreateFile($id, $filename);
+    }
+
+    public function call_inoExists($owner, $name)
+    {
+        return $this->inoExists($owner,$name);
+    }
+}
 
 class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
     protected $project;
-
-    //useful functions
-
 
     //---createprojectAction
     public function testCreateprojectAction_CanCreatePrivate()
@@ -128,6 +139,31 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(),'{"success":false,"id":1}');
     }
 
+    public function testCanCreateFile_YesIno()
+    {
+        $controller = $this->setUpTesterController($em, $fc, $security, array("inoExists"));
+
+        $controller->expects($this->once())->method('inoExists')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"error":".ino file does not exists"}'));
+        $response = $controller->call_canCreateFile(1, 'filename.ino');
+        $this->assertEquals($response, '{"success":true}');
+    }
+
+    public function testCanCreateFile_YesNotIno()
+    {
+        $controller = $this->setUpTesterController($em, $fc, $security, array("inoExists"));
+        $response = $controller->call_canCreateFile(1, 'filename.h');
+        $this->assertEquals($response, '{"success":true}');
+    }
+
+    public function testCanCreateFile_No()
+    {
+        $controller = $this->setUpTesterController($em, $fc, $security, array("inoExists"));
+
+        $controller->expects($this->once())->method('inoExists')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $response = $controller->call_canCreateFile(1, 'filename.ino');
+        $this->assertEquals($response, '{"success":false,"id":1,"filename":"filename.ino","error":"Cannot create second .ino file in the same project"}');
+    }
+
     protected function setUp()
     {
         $this->project = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
@@ -159,6 +195,33 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
 
 
         $controller = $this->getMock('Ace\ProjectBundle\Controller\SketchController', $methods = $m, $arguments = array($em, $mfc, $ffc, $security, 'disk'));
+        return $controller;
+    }
+
+    private function setUpTesterController(&$em, &$fc, &$security, $m)
+    {
+        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $security = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $fc = $this->getMockBuilder('Ace\ProjectBundle\Controller\FilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $mfc = $this->getMockBuilder('Ace\ProjectBundle\Controller\MongoFilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        $ffc = $this->getMockBuilder('Ace\ProjectBundle\Controller\DiskFilesController')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+
+        $controller = $this->getMock('Ace\ProjectBundle\Tests\Controller\SketchControllerPrivateTester', $methods = $m, $arguments = array($em, $mfc, $ffc, $security, 'disk'));
         return $controller;
     }
 }
