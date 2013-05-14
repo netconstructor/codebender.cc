@@ -83,7 +83,7 @@ class DefaultController extends Controller
 		$permissions = json_decode($projectmanager->checkReadProjectPermissionsAction($id)->getContent(), true);
 		if (!$permissions["success"])
 		{
-			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "You do not have permission to access tha project!"));
+			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "You do not have permission to access this project!"));
 		}
 
 		$owner = $projectmanager->getOwnerAction($id)->getContent();
