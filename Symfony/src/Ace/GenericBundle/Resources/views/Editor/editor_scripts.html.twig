@@ -275,6 +275,14 @@ function deleteFile(filename) {
     });
 }
 
+function changePrivacy()
+{
+	$.post("{{ path('AceUtilitiesBundle_changeprivacy', {'id':project_id} ) }}", {data: null}, function (data)
+	{
+		handleResponse(data);
+	});
+}
+
 function editDescription()
 {
     $("#description").replaceWith("<textarea id='description' style='resize: none; width:100%;' rows=4>" + $("#description").text() + "</textarea>");
