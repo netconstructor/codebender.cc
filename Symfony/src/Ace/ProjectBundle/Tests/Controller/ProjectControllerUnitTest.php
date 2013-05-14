@@ -22,9 +22,9 @@ class ProjectControllerPrivateTester extends ProjectController
         return $this->nameIsValid($name);
     }
 
-    public function call_checkProjectPermissions($id)
+    public function call_checkReadProjectPermissions($id)
     {
-        return $this->checkProjectPermissions($id);
+        return $this->checkReadProjectPermissions($id);
     }
     public function call_checkWriteProjectPermissions($id)
     {
@@ -648,10 +648,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     //---listFilesAction
     public function testListFilesAction_HasPermissions()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkProjectPermissions'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
 
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
 
@@ -665,10 +665,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testListFilesAction_HasNoPermissions()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkProjectPermissions'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
 
         $response = $controller->listFilesAction(1);
@@ -910,7 +910,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions', 'getOwnerAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction'));
 
         $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
 
@@ -922,10 +922,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
 
         $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $controller->expects($this->at(0))->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(0))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
         $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('checkProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
 
@@ -1001,7 +1001,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions', 'getOwnerAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction'));
 
         $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
 
@@ -1013,10 +1013,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
 
         $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $controller->expects($this->at(0))->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(0))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
         $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('checkProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
 
@@ -1132,8 +1132,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     //---checkReadProjectPermissionsAction
     public function testCheckReadProjectPermissionsAction_Yes()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions'));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
         $response = $controller->checkReadProjectPermissionsAction(1);
         $this->assertEquals($response->getContent(), '{"success":true}');
 
@@ -1141,8 +1141,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testCheckReadProjectPermissionsAction_No()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions'));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
         $response = $controller->checkReadProjectPermissionsAction(1);
         $this->assertEquals($response->getContent(), '{"success":false}');
 
@@ -1425,8 +1425,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    //---checkProjectPermissions
-    public function testcheckProjectPermissions_Public()
+    //---checkReadProjectPermissions
+    public function testcheckReadProjectPermissions_Public()
     {
         $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
             ->disableOriginalConstructor()
@@ -1442,12 +1442,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-        $response = $controller->call_checkProjectPermissions(1);
+        $response = $controller->call_checkReadProjectPermissions(1);
         $this->assertEquals($response, '{"success":true}');
 
     }
 
-    public function testcheckProjectPermissions_Yes()
+    public function testcheckReadProjectPermissions_Yes()
     {
         $currentUser = $this->getMockBuilder('Ace\UserBundle\Entity\User')
             ->disableOriginalConstructor()
@@ -1470,12 +1470,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
         $currentUser->expects($this->once())->method('getID')->will($this->returnValue(1));
-        $response = $controller->call_checkProjectPermissions(1);
+        $response = $controller->call_checkReadProjectPermissions(1);
         $this->assertEquals($response, '{"success":true}');
 
     }
 
-    public function testcheckProjectPermissions_No()
+    public function testcheckReadProjectPermissions_No()
     {
 
         $currentUser = $this->getMockBuilder('Ace\UserBundle\Entity\User')
@@ -1499,12 +1499,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
         $currentUser->expects($this->once())->method('getID')->will($this->returnValue(2));
-        $response = $controller->call_checkProjectPermissions(1);
+        $response = $controller->call_checkReadProjectPermissions(1);
         $this->assertEquals($response, '{"success":false}');
 
     }
 
-    public function testcheckProjectPermissions_NotLoggedIn()
+    public function testcheckReadProjectPermissions_NotLoggedIn()
     {
 
         $currentUser = "anon.";
@@ -1520,7 +1520,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $token->expects($this->once())->method('getUser')->will($this->returnValue($currentUser));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
 
-        $response = $controller->call_checkProjectPermissions(1);
+        $response = $controller->call_checkReadProjectPermissions(1);
         $this->assertEquals($response, '{"success":false}');
 
     }

@@ -258,7 +258,7 @@ class ProjectController extends Controller
 	public function listFilesAction($id)
 	{
         $project = $this->getProjectById($id);
-        $permissions = json_decode($this->checkProjectPermissions($id),true);
+        $permissions = json_decode($this->checkReadProjectPermissions($id),true);
         if($permissions["success"])
         {
             $list = $this->fc->listFilesAction($project->getProjectfilesId());
@@ -335,7 +335,7 @@ class ProjectController extends Controller
 		$result = array();
 		foreach($projects as $project)
 		{
-            $permission = json_decode($this->checkProjectPermissions($project->getId()),true);
+            $permission = json_decode($this->checkReadProjectPermissions($project->getId()),true);
             if($permission["success"])
             {
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
@@ -356,7 +356,7 @@ class ProjectController extends Controller
 		$result = array();
 		foreach($projects as $project)
 		{
-            $permission = json_decode($this->checkProjectPermissions($project->getId()),true);
+            $permission = json_decode($this->checkReadProjectPermissions($project->getId()),true);
             if($permission["success"])
             {
                 $owner = json_decode($this->getOwnerAction($project->getId())->getContent(), true);
@@ -396,7 +396,7 @@ class ProjectController extends Controller
 
     public function checkReadProjectPermissionsAction($id)
     {
-        $perm = $this->checkProjectPermissions($id);
+        $perm = $this->checkReadProjectPermissions($id);
         return new Response($perm);
     }
 
@@ -449,7 +449,7 @@ class ProjectController extends Controller
 			return json_encode(array("success" => false, "error" => "Invalid Name. Please enter a new one."));
 	}
 
-    protected function checkProjectPermissions($id)
+    protected function checkReadProjectPermissions($id)
     {
         $project = $this->getProjectById($id);
         $current_user = $this->sc->getToken()->getUser();
