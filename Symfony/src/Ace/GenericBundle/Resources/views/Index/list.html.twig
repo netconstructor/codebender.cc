@@ -95,6 +95,9 @@
 			    <a href="{{ path("AceStaticBundle_info_karma") }}">
 				    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
 			    </a>
+			    <a href="javascript:void(0)">
+				    {% include "AceUtilitiesBundle:Default:codebender_priv_proj_avail.html.twig" with {"priv_proj_avail": avail_priv_proj["available"]} %}
+			    </a>
 		    </h2>
 
 	    </div>
