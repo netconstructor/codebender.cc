@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 12, 2013 at 08:04 PM
+-- Generation Time: May 14, 2013 at 06:49 PM
 -- Server version: 5.1.44
 -- PHP Version: 5.3.1
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `Project` (
   `parent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_E00EE9727E3C61F9` (`owner_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `Project`
@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS `Project` (
 
 INSERT INTO `Project` (`id`, `owner_id`, `name`, `description`, `is_public`, `type`, `projectfiles_id`, `parent`) VALUES
 (1, 1, 'test_project', 'a project used to test the search function', 1, 'disk', 'tester/1517ed236831cd', NULL),
-(2, 1, 'aproject', '', 1, 'disk', 'tester/1517ed2896cf41', NULL);
+(2, 1, 'aproject', '', 1, 'disk', 'tester/1517ed2896cf41', NULL),
+(3, 2, 'myproj', '', 1, 'disk', 'tzikis/1516c558248054', NULL);
 
 --
 -- Constraints for dumped tables
