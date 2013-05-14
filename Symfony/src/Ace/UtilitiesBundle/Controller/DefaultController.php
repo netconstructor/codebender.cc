@@ -92,6 +92,7 @@ class DefaultController extends Controller
 		return new Response($response);
 	}
 
+    //TODO fix Response
 	public function getDescriptionAction($id)
 	{
 		$projectmanager = $this->get('ace_project.sketchmanager');
@@ -112,7 +113,7 @@ class DefaultController extends Controller
 
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
-		return new Response("hehe");
+        return new Response(json_encode($response));
 	}
 
 	public function setNameAction($id)
@@ -263,9 +264,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
 		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
+		return new Response(json_encode($response));
 	}
 
 	public function deleteFileAction($id)
@@ -278,9 +277,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
+        return new Response(json_encode($response));
 	}
 
 	public function imageAction()
