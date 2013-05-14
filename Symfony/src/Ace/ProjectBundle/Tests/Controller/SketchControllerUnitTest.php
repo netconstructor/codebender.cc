@@ -95,16 +95,17 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('setParent'))
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction", "createFileAction"));
-        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction", "createFileAction", "checkReadProjectPermissions"));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
+        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getName')->will($this->returnValue("name"));
-        $controller->expects($this->at(1))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
-        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(3))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
 
         $this->project->expects($this->once())->method('getDescription')->will($this->returnValue('des'));
         $controller->expects($this->once())->method('createAction')->with($this->equalTo(1), $this->equalTo('name copy'), $this->equalTo('des'), $this->equalTo(true))->will($this->returnValue(new Response( '{"success":true,"id":2}')));
 
-        $controller->expects($this->at(4))->method('getProjectById')->with($this->equalTo(2))->will($this->returnValue($new_project));
+        $controller->expects($this->at(5))->method('getProjectById')->with($this->equalTo(2))->will($this->returnValue($new_project));
         $this->project->expects($this->exactly(2))->method('getId')->will($this->returnValue(1));
 
         $new_project->expects($this->once())->method('setParent')->with($this->equalTo(1));
@@ -113,8 +114,8 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"name.ino","code":"void setup(){}void loop(){}"},{"filename":"header.h","code":"function f(){}"}]}')));
 
-        $controller->expects($this->at(6))->method('createFileAction')->with($this->equalTo(2), $this->equalTo("name copy.ino"), $this->equalTo("void setup(){}void loop(){}"));
-        $controller->expects($this->at(7))->method('createFileAction')->with($this->equalTo(2), $this->equalTo("header.h"), $this->equalTo("function f(){}"));
+        $controller->expects($this->at(7))->method('createFileAction')->with($this->equalTo(2), $this->equalTo("name copy.ino"), $this->equalTo("void setup(){}void loop(){}"));
+        $controller->expects($this->at(8))->method('createFileAction')->with($this->equalTo(2), $this->equalTo("header.h"), $this->equalTo("function f(){}"));
         $response = $controller->cloneAction(1,1);
         $this->assertEquals($response->getContent(), '{"success":true,"id":2}');
 
@@ -127,17 +128,26 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('setParent'))
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction"));
-        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction", 'checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
+        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getName')->will($this->returnValue("name"));
-        $controller->expects($this->at(1))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
-        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(3))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
 
         $this->project->expects($this->once())->method('getDescription')->will($this->returnValue('des'));
         $controller->expects($this->once())->method('createAction')->with($this->equalTo(1), $this->equalTo('name copy'), $this->equalTo('des'), $this->equalTo(true))->will($this->returnValue(new Response( '{"success":false,"owner_id":1,"name":"name copy"}')));
 
         $response = $controller->cloneAction(1,1);
         $this->assertEquals($response->getContent(),'{"success":false,"id":1}');
+    }
+
+    public function testCloneAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->cloneAction(1,1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
     }
 
     //---renameAction
@@ -147,18 +157,18 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction"));
-
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction",'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('newproject'))->will($this->returnValue('{"success":true}'));
 
-        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $controller->expects($this->at(2))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
         $project->expects($this->once())->method('getId')->will($this->returnValue(1));
         $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
-        $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $controller->expects($this->at(4))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
         $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
 
-        $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
-        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":true}')));
+        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
+        $controller->expects($this->at(6))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":true}')));
 
 
 
@@ -172,8 +182,8 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testRenameAction_NoInvalidName()
     {
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
-
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid",'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('invalid/name'))->will($this->returnValue('{"success":false,"error":"Invalid Name. Please enter a new one."}'));
 
         $response = $controller->renameAction(1, 'invalid/name');
@@ -186,17 +196,17 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
         ->disableOriginalConstructor()
         ->getMock();
 
-    $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction"));
-
+    $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction",'checkWriteProjectPermissions'));
+    $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
     $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('newproject'))->will($this->returnValue('{"success":true}'));
 
-    $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+    $controller->expects($this->at(2))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
     $project->expects($this->once())->method('getId')->will($this->returnValue(1));
     $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
-    $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+    $controller->expects($this->at(4))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
     $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
 
-    $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":false, "error": "fake_error"}')));
+    $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":false, "error": "fake_error"}')));
     $response = $controller->renameAction(1, 'newproject');
     $this->assertEquals($response->getContent(), '{"success":false,"error":"old file project.ino could not be renamed. fake_error"}');
 }
@@ -207,20 +217,29 @@ class SketchControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction"));
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction", "renameFileAction",'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
 
         $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('newproject'))->will($this->returnValue('{"success":true}'));
 
-        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $controller->expects($this->at(2))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
         $project->expects($this->once())->method('getId')->will($this->returnValue(1));
         $controller->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true,"list":[{"filename":"project.ino","code":"void function1(){}"},{"filename":"header2.h","code":"function2(){}"}]}')));
-        $controller->expects($this->at(3))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
+        $controller->expects($this->at(4))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($project));
         $project->expects($this->once())->method('getName')->will($this->returnValue('project'));
 
-        $controller->expects($this->at(4))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
-        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":false, "error": "fake_error"}')));
+        $controller->expects($this->at(5))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('project.ino'), $this->equalTo('newproject.ino.bkp'))->will($this->returnValue(new Response('{"success":true}')));
+        $controller->expects($this->at(6))->method('renameFileAction')->with($this->equalTo(1), $this->equalTo('newproject.ino.bkp'), $this->equalTo('newproject.ino'))->will($this->returnValue(new Response('{"success":false, "error": "fake_error"}')));
         $response = $controller->renameAction(1, 'newproject');
         $this->assertEquals($response->getContent(), '{"success":false,"error":"backup file newproject.ino.bkp could not be renamed. fake_error"}');
+    }
+
+    public function testRenameAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->renameAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
     }
 
     public function testCanCreateFile_YesIno()
