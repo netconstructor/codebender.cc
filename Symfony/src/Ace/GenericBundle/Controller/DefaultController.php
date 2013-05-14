@@ -26,7 +26,15 @@ class DefaultController extends Controller
 				else
 					unset($popular_users);
 
-				return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user, "popular_users" => $popular_users));
+				//TODO: Test this code!
+				$projectmanager = $this->get('ace_project.sketchmanager');
+				$priv_proj_avail = json_decode($projectmanager->canCreatePrivateProjectAction($user["id"])->getContent(), true);
+				if(!$priv_proj_avail["success"])
+				{
+					$priv_proj_avail["available"] = 0;
+				}
+
+				return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user, "popular_users" => $popular_users, "avail_priv_proj" => $priv_proj_avail));
 			}
 		}
 
@@ -83,7 +91,7 @@ class DefaultController extends Controller
 		$permissions = json_decode($projectmanager->checkReadProjectPermissionsAction($id)->getContent(), true);
 		if (!$permissions["success"])
 		{
-			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "You do not have permission to access tha project!"));
+			return $this->render('AceGenericBundle:Default:minor_error.html.twig', array('error' => "You do not have permission to access this project!"));
 		}
 
 		$owner = $projectmanager->getOwnerAction($id)->getContent();

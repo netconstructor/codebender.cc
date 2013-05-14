@@ -22,6 +22,9 @@ class EditorController extends Controller
 		$name = json_decode($name, true);
 		$name = $name["response"];
 
+		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
+		$is_public = $is_public["response"];
+
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files = json_decode($files, true);
 		$files = $files["list"];
@@ -34,6 +37,6 @@ class EditorController extends Controller
 		$boardcontroller = $this->get('ace_utilities.boardcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public));
 	}
 }

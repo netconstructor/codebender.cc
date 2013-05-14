@@ -20,6 +20,11 @@ class DefaultController extends Controller
 		$project_name = $this->getRequest()->request->get('project_name');
         $is_public = true;
 
+		if($this->getRequest()->request->get('isPublic') !== null)
+		{
+			$is_public = $this->getRequest()->request->get('isPublic') === 'true' ? true : false;
+		}
+
 		$text = "";
 		if($this->getRequest()->request->get('code'))
 		{
@@ -70,6 +75,21 @@ class DefaultController extends Controller
 		}
 
 		return $this->render('AceUtilitiesBundle:Default:list_filenames.html.twig', array('files' => $files));
+	}
+
+	public function changePrivacyAction($id)
+	{
+		$projectmanager = $this->get('ace_project.sketchmanager');
+
+		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
+		$is_public = $is_public["response"];
+
+		if($is_public)
+			$response = $projectmanager->setProjectPrivateAction($id)->getContent();
+		else
+			$response = $projectmanager->setProjectPublicAction($id)->getContent();
+
+		return new Response($response);
 	}
 
 	public function getDescriptionAction($id)

@@ -95,6 +95,9 @@
 			    <a href="{{ path("AceStaticBundle_info_karma") }}">
 				    {% include "AceUtilitiesBundle:Default:codebender_karma.html.twig" with {"karma": user["karma"]} %}
 			    </a>
+			    <a href="javascript:void(0)">
+				    {% include "AceUtilitiesBundle:Default:codebender_priv_proj_avail.html.twig" with {"priv_proj_avail": avail_priv_proj["available"]} %}
+			    </a>
 		    </h2>
 
 	    </div>
@@ -108,11 +111,30 @@
 		<div class="span6">
 			<h3>New Project</h3>
 			<form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject') }}' style="max-width:80%;">
-				<div class="input-prepend input-append" style="max-width:80%;">
-					<span class="add-on">Name:</span>
-					<input type="text" name='project_name' style="max-width:80%;">
-					<button type="submit" class="btn">Create</button>
+				<div class="row-fluid">
+					<div class="span12">
+						<div class="input-prepend input-append" style="max-width:80%;">
+							<span class="add-on">Name:</span>
+							<input type="text" name='project_name' style="max-width:80%;">
+							<button type="submit" class="btn">Create</button>
+						</div>
+					</div>
 				</div>
+				{% if avail_priv_proj["success"] %}
+					<div class="row-fluid" style="margin-top: 5px;">
+						<div class="span12">
+							<span class="help-inline" style="margin-top: 5px; margin-right: 10px;">
+								Project Type:
+							</span>
+							<label class="radio inline">
+								<input type="radio" name="isPublic" value="true" checked="">Public
+							</label>
+							<label class="radio inline"><input type="radio" name="isPublic" value="false">
+								Private
+							</label>
+						</div>
+					</div>
+				{% endif %}
 			</form>
 			<p>Or upload your existing projects:
 				<a data-toggle="modal" href="javascript:toggleUpload();" style="display: inline-block;" id="uploadLink">

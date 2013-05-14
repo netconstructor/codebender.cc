@@ -19,7 +19,10 @@ function handleResponse(response) {
     if (response["success"])
         location.reload();
     else
-        setOperationOutput(response["error"]);
+    {
+	    setOperationOutput(response["error"]);
+	    $(".modal").modal('hide');
+    }
 }
 
 function setOperationProgress(newprogress) {
@@ -270,6 +273,14 @@ function deleteFile(filename) {
     $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
         handleResponse(data);
     });
+}
+
+function changePrivacy()
+{
+	$.post("{{ path('AceUtilitiesBundle_changeprivacy', {'id':project_id} ) }}", {data: null}, function (data)
+	{
+		handleResponse(data);
+	});
 }
 
 function editDescription()

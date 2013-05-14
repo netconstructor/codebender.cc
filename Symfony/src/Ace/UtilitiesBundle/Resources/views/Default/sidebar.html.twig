@@ -23,11 +23,16 @@ function warnDeleteProject(deletion_path)
 				   style="overflow: hidden; text-overflow: ellipsis; width: 60%; width: -moz-calc(100% - 59px);
 				   width: -webkit-calc(100% - 59px); width: calc(100% - 59px);"
 				   data-placement="right" data-content="
+<p>
+{% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": file['is_public'], "verbose": true} %}
+</p>
 <h6>Description:</h6>
 <p>{% render "AceUtilitiesBundle:Default:getDescription" with {'id':file['id']} %}</p>
 <h6>Files:</h6>
-<p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p>"
+<p>{% render "AceUtilitiesBundle:Default:listFilenames" with {'id':file['id'], 'show_ino':1} %}</p>
+"
 				data-original-title="{{ file['name'] }}" href="{{ path('AceGenericBundle_project', { 'id': file['id'] }) }}">
+					{% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": file['is_public'], "verbose": false} %}
 					{{ file['name'] }}
 				</a>
 		        <button style=" float: right; margin-top: -25px; margin-right: 22px; padding: 0px;"
