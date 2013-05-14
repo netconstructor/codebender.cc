@@ -20,6 +20,11 @@ class DefaultController extends Controller
 		$project_name = $this->getRequest()->request->get('project_name');
         $is_public = true;
 
+		if($this->getRequest()->request->get('isPublic') !== null)
+		{
+			$is_public = $this->getRequest()->request->get('isPublic') === 'true' ? true : false;
+		}
+
 		$text = "";
 		if($this->getRequest()->request->get('code'))
 		{
