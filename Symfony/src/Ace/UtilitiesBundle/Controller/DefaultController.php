@@ -219,7 +219,7 @@ class DefaultController extends Controller
 
 		$files = $this->getRequest()->request->get('data');
 		$files = json_decode($files, true);
-
+        $response;
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		foreach($files as $key => $file)
 		{
@@ -228,7 +228,7 @@ class DefaultController extends Controller
 			if($response["success"] ==  false)
 				return new Response(json_encode($response));
 		}
-		return new Response(json_encode(array("success"=>true)));
+        return new Response(json_encode($response));
 	}
 
 	public function cloneAction($id)
