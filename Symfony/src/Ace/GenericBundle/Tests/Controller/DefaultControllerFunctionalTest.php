@@ -16,6 +16,27 @@ class DefaultControllerFunctionalTest extends WebTestCase
 		$this->assertEquals(1, $crawler->filter('html:contains("online development & collaboration ")')->count());
 	}
 
+	public function testIndexAction_PrivateProjectCreation() // Test homepage redirection for logged in users
+	{
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'tester',
+			'PHP_AUTH_PW' => 'testerPASS',
+		));
+
+		$crawler = $client->request('GET', '/');
+
+		$this->assertEquals(1, $crawler->filter('span:contains("Project Type:")')->count());
+
+		$client = static::createClient(array(), array(
+			'PHP_AUTH_USER' => 'testacc',
+			'PHP_AUTH_PW' => 'testaccPWD',
+		));
+
+		$crawler = $client->request('GET', '/');
+
+		$this->assertEquals(0, $crawler->filter('span:contains("Project Type:")')->count());
+	}
+
 	public function testIndexAction_LoggedIn() // Test homepage redirection for logged in users
 	{
 		$client = static::createClient(array(), array(

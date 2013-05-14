@@ -28,9 +28,10 @@ class EditorControllerUnitTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->initParameters($em, $mf, $df, $sc);
 		/** @var SketchController $projectmanager */
-		$projectmanager = $this->getMock("Ace\ProjectBundle\Controller\SketchController", array("checkWriteProjectPermissionsAction", "getNameAction", "listFilesAction"), array($em, $mf, $df, $sc, "disk"));
+		$projectmanager = $this->getMock("Ace\ProjectBundle\Controller\SketchController", array("checkWriteProjectPermissionsAction", "getNameAction", "getPrivacyAction", "listFilesAction"), array($em, $mf, $df, $sc, "disk"));
 		$projectmanager->expects($this->once())->method('checkWriteProjectPermissionsAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true}')));
 		$projectmanager->expects($this->once())->method('getNameAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true, "response": "test_project"}')));
+		$projectmanager->expects($this->once())->method('getPrivacyAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true, "response": true}')));
 		$projectmanager->expects($this->once())->method('listFilesAction')->with($this->equalTo(1))->will($this->returnValue(new Response('{"success":true, "list":[{"filename":"test_project.ino", "code":"nothing"}]}')));
 
 		/** @var BoardController $projectmanager */
@@ -41,7 +42,7 @@ class EditorControllerUnitTest extends \PHPUnit_Framework_TestCase
 		$controller = $this->getMock("Ace\GenericBundle\Controller\EditorController", array("get", "forward", "render"));
 		$controller->expects($this->at(0))->method('get')->with($this->equalTo("ace_project.sketchmanager"))->will($this->returnValue($projectmanager));
 		$controller->expects($this->at(1))->method('get')->with($this->equalTo("ace_utilities.boardcontroller"))->will($this->returnValue($boardcontroller));
-		$controller->expects($this->once())->method('render')->with($this->equalTo('AceGenericBundle:Editor:editor.html.twig'), $this->equalTo(array('project_id' => 1, 'project_name' => "test_project", 'files' => array(array("filename" => "test_project.ino", "code" => "nothing")), 'boards' => "fake_boards_list")))->will($this->returnValue(new Response("excellent")));
+		$controller->expects($this->once())->method('render')->with($this->equalTo('AceGenericBundle:Editor:editor.html.twig'), $this->equalTo(array('project_id' => 1, 'project_name' => "test_project", 'files' => array(array("filename" => "test_project.ino", "code" => "nothing")), 'boards' => "fake_boards_list", 'is_public' => true)))->will($this->returnValue(new Response("excellent")));
 
 		$response = $controller->editAction(1);
 		$this->assertEquals($response->getContent(), "excellent");
