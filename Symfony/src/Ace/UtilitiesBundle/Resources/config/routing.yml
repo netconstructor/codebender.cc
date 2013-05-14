@@ -12,6 +12,12 @@ AceUtilitiesBundle_listfilenames:
    pattern:  /listfilenames/{id}/{show_ino}
    defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
 
+AceUtilitiesBundle_changeprivacy:
+   pattern:  /changeprivacy/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:changePrivacy }
+   requirements:
+      _method:  POST
+
 AceUtilitiesBundle_getprojectdescription:
    pattern:  /getprojectdescription/{id}
    defaults: { _controller: AceUtilitiesBundle:Default:getDescription }
