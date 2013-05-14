@@ -45,7 +45,7 @@ class FilesControllerUnitTest extends \PHPUnit_Framework_TestCase
         $controller = $this->setUpController(array('listFiles'));
         $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1))->will($this->returnValue($list));
         $response = $controller->call_fileExists(1, 'header.h');
-        $this->assertEquals($response, '{"success":true}');
+        $this->assertEquals($response, '{"success":true,"message":"File exists"}');
     }
     public function testFileExists_No()
     {
@@ -55,7 +55,7 @@ class FilesControllerUnitTest extends \PHPUnit_Framework_TestCase
         $controller = $this->setUpController(array('listFiles'));
         $controller->expects($this->once())->method('listFiles')->with($this->equalTo(1))->will($this->returnValue($list));
         $response = $controller->call_fileExists(1, 'header2.h');
-        $this->assertEquals($response, '{"success":false,"filename":"header2.h","error":"File header2.h does not exist."}');
+        $this->assertEquals($response, '{"success":false,"message":"File does not exist","filename":"header2.h","error":"File header2.h does not exist."}');
     }
 
     public function testCanCreateFile_Yes()
@@ -63,14 +63,14 @@ class FilesControllerUnitTest extends \PHPUnit_Framework_TestCase
         $controller = $this->setUpController(array('fileExists'));
         $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1), $this->equalTo('header1.h'))->will($this->returnValue('{"success":false}'));
         $response = $controller->call_canCreateFile(1, 'header1.h');
-        $this->assertEquals($response, '{"success":true}');
+        $this->assertEquals($response, '{"success":true,"message":"File can be created"}');
     }
     public function testCanCreateFile_No()
     {
         $controller = $this->setUpController(array('fileExists'));
         $controller->expects($this->once())->method('fileExists')->with($this->equalTo(1), $this->equalTo('header1.h'))->will($this->returnValue('{"success":true}'));
         $response = $controller->call_canCreateFile(1, 'header1.h');
-        $this->assertEquals($response, '{"success":false,"id":1,"filename":"header1.h","error":"This file already exists"}');
+        $this->assertEquals($response, '{"success":false,"message":"File cannot be created","id":1,"filename":"header1.h","error":"This file already exists"}');
     }
     private function setUpController($m)
     {
