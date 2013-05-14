@@ -607,6 +607,27 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    //---getPrivacyAction
+    public function testGetPrivacyAction_public()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
+        $respone = $controller->getPrivacyAction(1);
+        $this->assertEquals($respone->getContent(), '{"success":true,"response":true}');
+    }
+
+    public function testGetPrivacyAction_private()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+
+        $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
+        $respone = $controller->getPrivacyAction(1);
+        $this->assertEquals($respone->getContent(), '{"success":true,"response":false}');
+    }
+
     //---setDescriptionAction
     public function testSetDescriptionAction()
     {
