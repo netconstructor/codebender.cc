@@ -1177,7 +1177,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $valid->expects($this->once())->method('getNumber')->will($this->returnValue(2));
 
         $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":true}');
+        $this->assertEquals($response, '{"success":true,"available":1}');
 	}
 
     public function testCanCreatePrivateProject_YesFromValidThatNeverExpires()
@@ -1229,7 +1229,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $valid->expects($this->once())->method('getNumber')->will($this->returnValue(2));
 
         $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":true}');
+        $this->assertEquals($response, '{"success":true,"available":1}');
     }
 
     public function testCanCreatePrivateProject_NoHaveNoPrivate()
