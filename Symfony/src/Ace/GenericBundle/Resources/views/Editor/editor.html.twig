@@ -264,7 +264,8 @@
 
 				<div id="container_left">
 					<h4>
-                        {{ project_name }}
+						{% include "AceUtilitiesBundle:Default:project_privacy_view.html.twig" with {"is_public": is_public, "verbose": false} %}
+						{{ project_name }}
                         <a href="{{ path('AceUtilitiesBundle_clone',{'id':project_id}) }}" style="float: right; margin-right: 10px;">
                             <i class="icon-copy" style="margin-top: 6px; margin-right: -4px;"></i>
                             <small>Clone Project</small>
