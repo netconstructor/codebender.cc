@@ -1148,6 +1148,25 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    //---canCreatePrivateProjectAction
+    public function testCanCreatePrivateProjectAction_Yes()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('canCreatePrivateProject'));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"availiable":1}'));
+        $response = $controller->canCreatePrivateProjectAction(1);
+        $this->assertEquals($response->getContent(), '{"success":true,"availiable":1}');
+    }
+
+    //---canCreatePrivateProjectAction
+    public function testCanCreatePrivateProjectAction_No()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('canCreatePrivateProject'));
+        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"error":"Cannot create private project."}'));
+        $response = $controller->canCreatePrivateProjectAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"error":"Cannot create private project."}'
+        );
+    }
+
     //---canCreatePrivateProject
 	public function testCanCreatePrivateProject_YesFromValid()
 	{
