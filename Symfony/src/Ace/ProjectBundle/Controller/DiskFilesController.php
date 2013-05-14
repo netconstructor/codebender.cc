@@ -6,6 +6,7 @@ namespace Ace\ProjectBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
+use Ace\ProjectBundle\Helper\ProjectErrorsHelper;
 
 class DiskFilesController extends FilesController
 {
@@ -36,16 +37,16 @@ class DiskFilesController extends FilesController
         {
             mkdir($this->getDir($id));
         }
-        return json_encode(array("success" => true, "id" => $id));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_PROJ_MSG, array("id" => $id));
     }
 
     public function deleteAction($id)
     {
         $dir = $this->getDir($id);
         if($this->deleteDirectory($dir))
-            return json_encode(array("success" => true));
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_PROJ_MSG);
         else
-            return json_encode(array("success" => false, "error" => "No projectfiles found with id: ".$id));
+            return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_DELETE_PROJ_MSG, array("error" => "No projectfiles found with id: ".$id));
     }
 
     public function listFilesAction($id)
@@ -63,7 +64,7 @@ class DiskFilesController extends FilesController
         $dir = $this->getDir($id);
         file_put_contents($dir."/".$filename,$code);
 
-        return json_encode(array("success" => true));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CREATE_FILE_MSG);
     }
 
     public function getFileAction($id, $filename)
@@ -84,9 +85,9 @@ class DiskFilesController extends FilesController
         if($this->fileExists($id,$dir.$filename))
         {
             file_put_contents($dir.$filename,$code);
-            return json_encode(array("success" => true));
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_SAVE_MSG);
         }
-        return json_encode(array("success" => false));
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_SAVE_MSG, array("id" => $id, "filename" => $filename));
 
     }
 
@@ -97,7 +98,7 @@ class DiskFilesController extends FilesController
             return json_encode($fileExists);
         $dir = $this->getDir($id);
         unlink($dir.$filename);
-        return json_encode(array("success" => true));
+        return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_DELETE_FILE_MSG);
     }
 
     public function renameFileAction($id, $filename, $new_filename)
@@ -111,8 +112,9 @@ class DiskFilesController extends FilesController
         {
             $dir = $this->getDir($id);
             rename($dir.$filename, $dir.$new_filename);
+            return ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_RENAME_FILE_MSG);
         }
-        return json_encode($canCreateFile);
+        return ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_RENAME_FILE_MSG, array("id" => $id, "filename" => $new_filename, "error" => "This file already exists.", "old_filename" => $filename));
     }
 
 
