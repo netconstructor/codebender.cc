@@ -19,7 +19,10 @@ function handleResponse(response) {
     if (response["success"])
         location.reload();
     else
-        setOperationOutput(response["error"]);
+    {
+	    setOperationOutput(response["error"]);
+	    $(".modal").modal('hide');
+    }
 }
 
 function setOperationProgress(newprogress) {
