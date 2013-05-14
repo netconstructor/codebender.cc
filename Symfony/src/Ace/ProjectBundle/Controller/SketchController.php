@@ -62,7 +62,7 @@ class SketchController extends ProjectController
 		}
 		else
 		{
-			return new Response(json_encode(array("success" => false, "id" => $id)));
+			return new Response(json_encode($response));
 		}
 
 	}

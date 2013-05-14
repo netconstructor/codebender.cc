@@ -92,6 +92,7 @@ class DefaultController extends Controller
 		return new Response($response);
 	}
 
+    //TODO fix Response
 	public function getDescriptionAction($id)
 	{
 		$projectmanager = $this->get('ace_project.sketchmanager');
@@ -112,7 +113,7 @@ class DefaultController extends Controller
 
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
-		return new Response("hehe");
+        return new Response(json_encode($response));
 	}
 
 	public function setNameAction($id)
@@ -219,7 +220,7 @@ class DefaultController extends Controller
 
 		$files = $this->getRequest()->request->get('data');
 		$files = json_decode($files, true);
-
+        $response;
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		foreach($files as $key => $file)
 		{
@@ -228,7 +229,7 @@ class DefaultController extends Controller
 			if($response["success"] ==  false)
 				return new Response(json_encode($response));
 		}
-		return new Response(json_encode(array("success"=>true)));
+        return new Response(json_encode($response));
 	}
 
 	public function cloneAction($id)
@@ -242,7 +243,15 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->cloneAction($user["id"], $id)->getContent();
 		$response = json_decode($response, true);
-		return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+        if($response['success'])
+        {
+            return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+        }
+		else
+        {
+            $this->get('session')->setFlash('error', "Error: ".$response['error']);
+            return $this->redirect($this->generateUrl('AceGenericBundle_index'));
+        }
 	}
 
 	public function createFileAction($id)
@@ -255,9 +264,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
 		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
+		return new Response(json_encode($response));
 	}
 
 	public function deleteFileAction($id)
@@ -270,9 +277,7 @@ class DefaultController extends Controller
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
-		if($response["success"] ==  false)
-			return new Response(json_encode($response));
-		return new Response(json_encode(array("success"=>true)));
+        return new Response(json_encode($response));
 	}
 
 	public function imageAction()

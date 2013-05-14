@@ -22,9 +22,9 @@ class ProjectControllerPrivateTester extends ProjectController
         return $this->nameIsValid($name);
     }
 
-    public function call_checkProjectPermissions($id)
+    public function call_checkReadProjectPermissions($id)
     {
-        return $this->checkProjectPermissions($id);
+        return $this->checkReadProjectPermissions($id);
     }
     public function call_checkWriteProjectPermissions($id)
     {
@@ -289,9 +289,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 	//---deleteAction
     public function testDeleteAction_CanDelete()
     {
+
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", 'checkWriteProjectPermissions'));
+
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
@@ -307,8 +310,11 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     public function testDeleteAction_CannotDelete()
     {
 
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", 'checkWriteProjectPermissions'));
+
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $this->project->expects($this->exactly(2))->method('getProjectfilesId')->will($this->returnValue(1234567890));
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
@@ -316,6 +322,14 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $response = $controller->deleteAction(1);
         $this->assertEquals($response->getContent(), '{"success":false,"id":1234567890}');
+    }
+
+    public function testDeleteAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->deleteAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
     }
 
 	//---cloneAction
@@ -326,16 +340,17 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('setParent'))
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction"));
-        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction","checkReadProjectPermissions"));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
+        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getName')->will($this->returnValue("name"));
-        $controller->expects($this->at(1))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
-        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(3))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
 
         $this->project->expects($this->once())->method('getDescription')->will($this->returnValue('des'));
         $controller->expects($this->once())->method('createAction')->with($this->equalTo(1), $this->equalTo('name copy'), $this->equalTo('des'), $this->equalTo(true))->will($this->returnValue(new Response( '{"success":true,"id":2}')));
 
-        $controller->expects($this->at(4))->method('getProjectById')->with($this->equalTo(2))->will($this->returnValue($new_project));
+        $controller->expects($this->at(5))->method('getProjectById')->with($this->equalTo(2))->will($this->returnValue($new_project));
         $this->project->expects($this->exactly(2))->method('getId')->will($this->returnValue(1));
 
         $new_project->expects($this->once())->method('setParent')->with($this->equalTo(1));
@@ -354,11 +369,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('setParent'))
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction"));
-        $controller->expects($this->at(0))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","nameExists","createAction","listFilesAction","checkReadProjectPermissions"));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
+        $controller->expects($this->at(1))->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getName')->will($this->returnValue("name"));
-        $controller->expects($this->at(1))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
-        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(2))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name'))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(3))->method('nameExists')->with($this->equalTo(1), $this->equalTo('name copy'))->will($this->returnValue('{"success":false}'));
 
         $this->project->expects($this->once())->method('getDescription')->will($this->returnValue('des'));
         $controller->expects($this->once())->method('createAction')->with($this->equalTo(1), $this->equalTo('name copy'), $this->equalTo('des'), $this->equalTo(true))->will($this->returnValue(new Response( '{"success":false,"owner_id":1,"name":"name copy"}')));
@@ -367,11 +383,19 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(),'{"success":false,"id":1}');
     }
 
+    public function testCloneAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->cloneAction(1,1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
+
     //---renameAction
     public function testRenameAction_validName()
     {
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction"));
-
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid", "getProjectById", "listFilesAction","checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('valid name'))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
@@ -384,18 +408,27 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testRenameAction_invalidName()
     {
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
-
+        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid","checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('nameIsValid')->with($this->equalTo('invalid/name'))->will($this->returnValue('{"success":false,"error":"Invalid Name. Please enter a new one."}'));
 
         $response = $controller->renameAction(1, 'invalid/name');
         $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
     }
 
+    public function testRenameAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->renameAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
+
     //---setProjectPublic
     public function testSetProjectPublicAction_OK()
     {
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
         $this->project->expects($this->once())->method('setIsPublic')->with($this->equalTo(true));
@@ -413,12 +446,21 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById"));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById","checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
 
         $response = $controller->setProjectPublicAction(1);
         $this->assertEquals($response->getContent(), '{"success":false,"error":"This project is already public."}');
+    }
+
+    public function testSetProjectPublicAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->setProjectPublicAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
     }
 
     //---setProjectPrivate
@@ -433,8 +475,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject"));
-
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject", "checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
@@ -460,8 +502,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject"));
-
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject", "checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
@@ -484,7 +526,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject"));
+        $controller = $this->setUpController($em, $fc, $security, array("getProjectById", "canCreatePrivateProject", "checkWriteProjectPermissions"));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
 
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
@@ -495,12 +538,21 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false,"error":"Cannot create private project"}');
     }
 
+    public function testSetProjectPrivateAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->setProjectPrivateAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
+
     //---getNameAction
     public function testGetNameAction_Exists()
     {
 
         $this->project->expects($this->once())->method('getName')->will($this->returnValue("projectName"));
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
         $response = $controller->getNameAction(1);
@@ -523,17 +575,28 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
 
         $controller->getNameAction(1);
 
     }
 
+    public function testGetNameAction_NoPermissions()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->getNameAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
+
     //---getParentAction
     public function testGetParentAction_DoesNotExist()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getParent')->will($this->returnValue(NULL));
@@ -544,7 +607,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetParentAction_HasBeenDeleted()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkExistsAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkExistsAction','checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getParent')->will($this->returnValue(2));
@@ -560,7 +624,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkExistsAction'));
+
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkExistsAction','checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getParent')->will($this->returnValue(2));
@@ -573,6 +639,14 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":true,"response":{"id":2,"owner":"mthrfck","name":"projectName"}}');
     }
 
+    public function testGetParentAction_NoPermissions()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->getParentAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
     //---getOwnerAction
     public function testGetOwnerAction()
     {
@@ -582,8 +656,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
         $user->expects($this->once())->method('getId')->will($this->returnValue('1'));
@@ -594,24 +668,41 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}');
     }
 
+    public function testGetOwnerAction_NoPermissions()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->getOwnerAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
+
     //---getDescriptionAction
     public function testGetDescriptionAction()
     {
 
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getDescription')->will($this->returnValue("description"));
         $respone = $controller->getDescriptionAction(1);
         $this->assertEquals($respone->getContent(), '{"success":true,"response":"description"}');
 
     }
+    public function testGetDescriptionAction_NoPermissions()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->getDescriptionAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
 
     //---getPrivacyAction
     public function testGetPrivacyAction_public()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
         $respone = $controller->getPrivacyAction(1);
@@ -620,20 +711,30 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetPrivacyAction_private()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
         $respone = $controller->getPrivacyAction(1);
         $this->assertEquals($respone->getContent(), '{"success":true,"response":false}');
     }
 
+    public function testGetPrivacyAction_NoPermissions()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->getPrivacyAction(1);
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
+
+
     //---setDescriptionAction
     public function testSetDescriptionAction()
     {
 
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById','checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('setDescription')->with($this->equalTo("newDescription"));
 
@@ -645,13 +746,21 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testSetDescriptionAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->setDescriptionAction(1, 'newDescription');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
+
     //---listFilesAction
     public function testListFilesAction_HasPermissions()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkProjectPermissions'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
 
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
 
@@ -665,10 +774,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testListFilesAction_HasNoPermissions()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkProjectPermissions'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
 
         $response = $controller->listFilesAction(1);
@@ -680,8 +789,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     //---createFileAction
     public function testCreateFileAction_canCreate()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'canCreateFile'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'canCreateFile', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
         $this->project->expects($this->once())->method('getId')->will($this->returnValue(1));
@@ -700,8 +809,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateFileAction_cannotCreate()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'canCreateFile'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'canCreateFile', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
         $this->project->expects($this->once())->method('getId')->will($this->returnValue(1));
@@ -713,11 +822,19 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false}');
     }
 
+    public function testCreateFileAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->createFileAction(1, 'filename', 'void setup(){}');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
+
     //---getFileAction
     public function testGetFileAction_canGet()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
         $fc->expects($this->once())->method('getFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'))->will($this->returnValue('{"success":false}'));
@@ -727,7 +844,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFileAction_cannotGet()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
@@ -735,12 +853,20 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $response = $controller->getFileAction(1, 'name');
         $this->assertEquals($response->getContent(), '{"success":true,"code":"void setup(){}"}');
     }
+    public function testGetFileAction_NoPermissions()
+    {
+
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}'));
+        $response = $controller->getFileAction(1, 'name');;
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read Permissions Not Granted.","error":"You have no read permissions for this project.","id":1}');
+    }
 
     //---setFileAction
     public function testSetFileAction_canSet()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
         $fc->expects($this->once())->method('setFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'),$this->equalTo('void setup(){}'))->will($this->returnValue('{"success":true}'));
@@ -750,20 +876,27 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testSetFileAction_cannotSet()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
         $fc->expects($this->once())->method('setFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'),$this->equalTo('void setup(){}'))->will($this->returnValue('{"success":false}'));
         $response = $controller->setFileAction(1, 'name', 'void setup(){}');
         $this->assertEquals($response->getContent(), '{"success":false}');
     }
+    public function testSetFileAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->setFileAction(1, 'name', 'void setup(){}');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
 
     //---deleteFileAction
     public function testDeleteFileAction_canDelete()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
-
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
         $fc->expects($this->once())->method('deleteFileAction')->with($this->equalTo(1234567890),$this->equalTo('name'))->will($this->returnValue('{"success":true}'));
@@ -773,7 +906,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteFileAction_cannotDelete()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
@@ -781,11 +915,19 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $response = $controller->deleteFileAction(1, 'name');
         $this->assertEquals($response->getContent(), '{"success":false,"filename":"name","error":"File name does not exist}');
     }
+    public function testDeleteFileAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->deleteFileAction(1, 'name');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
 
     //---renameFileAction
     public function testRenameFileAction_canRename()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
@@ -796,7 +938,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testRenameFileAction_cannotRename()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById', 'checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write Permissions Granted."}'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $this->project->expects($this->once())->method('getProjectfilesId')->will($this->returnValue(1234567890));
@@ -805,7 +948,16 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($response->getContent(), '{"success":false,"filename":"old","error":"File old does not exist}');
     }
 
-	//---searchAction
+    public function testRenameFileAction_NoPermissions()
+    {
+        $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}'));
+        $response = $controller->renameFileAction(1, 'old', 'new');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write Permissions Not Granted.","error":"You have no write permissions for this project.","id":1}');
+    }
+
+
+    //---searchAction
 	public function testSearchAction_NameOnly()
     {
         $controller = $this->setUpController($em, $fc, $security, array('searchNameAction', 'searchDescriptionAction'));
@@ -910,7 +1062,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions', 'getOwnerAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction'));
 
         $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
 
@@ -922,10 +1074,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
 
         $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $controller->expects($this->at(0))->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(0))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
         $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('checkProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
 
@@ -1001,7 +1153,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions', 'getOwnerAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction'));
 
         $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
 
@@ -1013,10 +1165,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
 
         $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $controller->expects($this->at(0))->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(0))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
         $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('checkProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
 
@@ -1114,37 +1266,37 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     public function testCheckWriteProjectPermissionsAction_Yes()
     {
         $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
-        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Write permissions granted."}'));
         $response = $controller->checkWriteProjectPermissionsAction(1);
-        $this->assertEquals($response->getContent(), '{"success":true}');
+        $this->assertEquals($response->getContent(), '{"success":true,"message":"Write permissions granted."}');
 
     }
 
     public function testCheckWriteProjectPermissionsAction_No()
     {
         $controller = $this->setUpController($em, $fc, $security, array('checkWriteProjectPermissions'));
-        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->once())->method('checkWriteProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Write permissions not granted.","error":"You have no write permissions for this project.","id":1}'));
         $response = $controller->checkWriteProjectPermissionsAction(1);
-        $this->assertEquals($response->getContent(), '{"success":false}');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Write permissions not granted.","error":"You have no write permissions for this project.","id":1}');
 
     }
 
     //---checkReadProjectPermissionsAction
     public function testCheckReadProjectPermissionsAction_Yes()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions'));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read permissions granted."}'));
         $response = $controller->checkReadProjectPermissionsAction(1);
-        $this->assertEquals($response->getContent(), '{"success":true}');
+        $this->assertEquals($response->getContent(), '{"success":true,"message":"Read permissions granted."}');
 
     }
 
     public function testCheckReadProjectPermissionsAction_No()
     {
-        $controller = $this->setUpController($em, $fc, $security, array('checkProjectPermissions'));
-        $controller->expects($this->once())->method('checkProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"message":"Read permissions not granted.","error":"You have no read permissions for this project.","id":1}'));
         $response = $controller->checkReadProjectPermissionsAction(1);
-        $this->assertEquals($response->getContent(), '{"success":false}');
+        $this->assertEquals($response->getContent(), '{"success":false,"message":"Read permissions not granted.","error":"You have no read permissions for this project.","id":1}');
 
     }
 
@@ -1425,8 +1577,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    //---checkProjectPermissions
-    public function testcheckProjectPermissions_Public()
+    //---checkReadProjectPermissions
+    public function testcheckReadProjectPermissions_Public()
     {
         $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
             ->disableOriginalConstructor()
@@ -1442,12 +1594,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-        $response = $controller->call_checkProjectPermissions(1);
-        $this->assertEquals($response, '{"success":true}');
+        $response = $controller->call_checkReadProjectPermissions(1);
+        $this->assertEquals($response, '{"success":true,"message":"Read permissions granted."}');
 
     }
 
-    public function testcheckProjectPermissions_Yes()
+    public function testcheckReadProjectPermissions_Yes()
     {
         $currentUser = $this->getMockBuilder('Ace\UserBundle\Entity\User')
             ->disableOriginalConstructor()
@@ -1470,12 +1622,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
         $currentUser->expects($this->once())->method('getID')->will($this->returnValue(1));
-        $response = $controller->call_checkProjectPermissions(1);
-        $this->assertEquals($response, '{"success":true}');
+        $response = $controller->call_checkReadProjectPermissions(1);
+        $this->assertEquals($response, '{"success":true,"message":"Read permissions granted."}');
 
     }
 
-    public function testcheckProjectPermissions_No()
+    public function testcheckReadProjectPermissions_No()
     {
 
         $currentUser = $this->getMockBuilder('Ace\UserBundle\Entity\User')
@@ -1499,12 +1651,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $this->project->expects($this->once())->method('getOwner')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
         $currentUser->expects($this->once())->method('getID')->will($this->returnValue(2));
-        $response = $controller->call_checkProjectPermissions(1);
-        $this->assertEquals($response, '{"success":false}');
+        $response = $controller->call_checkReadProjectPermissions(1);
+        $this->assertEquals($response, '{"success":false,"message":"Read permissions not granted.","error":"You have no read permissions for this project.","id":1}');
 
     }
 
-    public function testcheckProjectPermissions_NotLoggedIn()
+    public function testcheckReadProjectPermissions_NotLoggedIn()
     {
 
         $currentUser = "anon.";
@@ -1520,8 +1672,8 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $token->expects($this->once())->method('getUser')->will($this->returnValue($currentUser));
         $this->project->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
 
-        $response = $controller->call_checkProjectPermissions(1);
-        $this->assertEquals($response, '{"success":false}');
+        $response = $controller->call_checkReadProjectPermissions(1);
+        $this->assertEquals($response, '{"success":false,"message":"Read permissions not granted.","error":"You have no read permissions for this project.","id":1}');
 
     }
 
@@ -1548,7 +1700,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
         $currentUser->expects($this->once())->method('getID')->will($this->returnValue(1));
         $response = $controller->call_checkWriteProjectPermissions(1);
-        $this->assertEquals($response, '{"success":true}');
+        $this->assertEquals($response, '{"success":true,"message":"Write permissions granted."}');
 
     }
 
@@ -1576,7 +1728,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
         $currentUser->expects($this->once())->method('getID')->will($this->returnValue(2));
         $response = $controller->call_checkWriteProjectPermissions(1);
-        $this->assertEquals($response, '{"success":false}');
+        $this->assertEquals($response, '{"success":false,"message":"Write permissions not granted.","error":"You have no write permissions for this project.","id":1}');
 
     }
 
@@ -1596,7 +1748,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $token->expects($this->once())->method('getUser')->will($this->returnValue($currentUser));
 
         $response = $controller->call_checkWriteProjectPermissions(1);
-        $this->assertEquals($response, '{"success":false}');
+        $this->assertEquals($response, '{"success":false,"message":"Write permissions not granted.","error":"You have no write permissions for this project.","id":1}');
 
     }
 
@@ -1665,5 +1817,3 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
 }
-
-

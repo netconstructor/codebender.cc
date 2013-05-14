@@ -59,7 +59,8 @@ function save() {
     $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
-        setOperationOutput("Saved successfuly.");
+        data = JSON.parse(data);
+        setOperationOutput(data['message']);
         window.setTimeout(function () {
             $("#save").removeClass("btn-success");
             $("#save_icon").removeClass("icon-white");
