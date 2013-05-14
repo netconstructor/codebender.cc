@@ -26,7 +26,15 @@ class DefaultController extends Controller
 				else
 					unset($popular_users);
 
-				return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user, "popular_users" => $popular_users));
+				//TODO: Test this code!
+				$projectmanager = $this->get('ace_project.sketchmanager');
+				$priv_proj_avail = json_decode($projectmanager->canCreatePrivateProjectAction($user["id"])->getContent(), true);
+				if(!$priv_proj_avail["success"])
+				{
+					$priv_proj_avail["available"] = 0;
+				}
+
+				return $this->render('AceGenericBundle:Index:list.html.twig', array('user' => $user, "popular_users" => $popular_users, "avail_priv_proj" => $priv_proj_avail));
 			}
 		}
 
