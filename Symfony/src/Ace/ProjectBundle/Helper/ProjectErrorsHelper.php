@@ -20,7 +20,7 @@ class ProjectErrorsHelper {
     const FAIL_DELETE_PROJ_MSG = "Project could not be deleted.";
     const SUCC_DELETE_FILE_MSG = "File deleted successfully.";
     const FAIL_DELETE_FILE_MSG = "File could not be deleted.";
-    const SUCC_CREATE_PROJ_MSG = "Project created successfully";
+    const SUCC_CREATE_PROJ_MSG = "Project created successfully.";
 
     const SUCC_CREATE_FILE_MSG = "File created successfully.";
 
