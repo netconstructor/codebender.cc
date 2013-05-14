@@ -238,6 +238,13 @@ class ProjectController extends Controller
 		return new Response(json_encode(array("success" => true, "response" => $response)));
 	}
 
+    public function getPrivacyAction($id)
+    {
+        $project = $this->getProjectById($id);
+        $response = $project->getIsPublic();
+        return new Response(json_encode(array("success" => true, "response" => $response)));
+    }
+
 	public function setDescriptionAction($id, $description)
 	{
 		$project = $this->getProjectById($id);
