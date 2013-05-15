@@ -39,9 +39,11 @@ class ProjectErrorsHelper {
     const SUCC_WRITE_PERM_MSG = "Write permissions granted.";
     const FAIL_WRITE_PERM_MSG = "Write permissions not granted.";
 
+	const SUCC_CUR_USER_PRIV_PROJ_RECORDS_MSG = "User records retreived successfuly.";
+	const FAIL_CUR_USER_PRIV_PROJ_RECORDS_MSG = "User not logged in";
 
 
-    public static function success($msg, $info = array())
+	public static function success($msg, $info = array())
     {
         $toReturn = array("success" => true, "message" => $msg) + $info;
         return json_encode($toReturn);

@@ -176,4 +176,14 @@ class DefaultController extends Controller
 	{
 		return $this->render('AceStaticBundle:Default:info_karma.html.twig', array());
 	}
+
+	public function infoPrivateProjectsAction()
+	{
+		/** @var SketchController $projectmanager */
+		$projectmanager = $this->get('ace_project.sketchmanager');
+
+		$records = json_decode($projectmanager->currentPrivateProjectRecordsAction()->getContent(), true);
+
+		return $this->render('AceStaticBundle:Default:info_private_projects.html.twig', array("records" => $records));
+	}
 }

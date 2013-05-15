@@ -41,3 +41,7 @@ AceStaticBundle_info_points:
 AceStaticBundle_info_karma:
     pattern:  /info/karma
     defaults: { _controller: AceStaticBundle:Default:infoKarma }
+
+AceStaticBundle_info_private_projects:
+    pattern:  /info/private_projects
+    defaults: { _controller: AceStaticBundle:Default:infoPrivateProjects }
