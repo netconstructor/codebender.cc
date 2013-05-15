@@ -24,4 +24,30 @@
 			</p>
 		</div>
 	</div>
+	{% if records["success"] %}
+		<div class="row-fluid">
+			<div class="span12">
+				<h4>Currently Available</h4>
+				<p style="text-align: justify">
+					Below is a list of your current records. Here you can see a list of your subscriptions, promotions,
+					etc, and generally get a view of how many private projects are currently available to you and why.
+				</p>
+
+				<table class="table">
+					<tr><th>Description</th><th>Ending Date:</th><th>Private Projects #</th></tr>
+					{% for record in records["list"] %}
+						<tr>
+							<td>{{ record["description"] }}</td>
+							{% if not record["expires"] %}
+								<td>never</td>
+							{% else %}
+								<td>{{ record["expires"] }}</td>
+							{% endif %}
+							<td>{{ record["number"] }}</td>
+						</tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
+	{% endif %}
 {% endblock %}

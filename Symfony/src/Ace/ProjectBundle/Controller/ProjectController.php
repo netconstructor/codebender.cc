@@ -481,7 +481,30 @@ class ProjectController extends Controller
         return new Response($perm);
     }
 
-    public function canCreatePrivateProjectAction($owner)
+	public function currentPrivateProjectRecordsAction()
+	{
+		$current_user = $this->sc->getToken()->getUser();
+
+		if ($current_user !== "anon.")
+		{
+			$prv = $this->em->getRepository('AceProjectBundle:PrivateProjects')->findByOwner($current_user->getId());
+			$records = array();
+			foreach ($prv as $p)
+			{
+				$now = new \DateTime("now");
+				if ($now >= $p->getStarts() && ($p->getExpires() == NULL || $now < $p->getExpires()))
+					$records[] = array("description" => $p->getDescription(),
+						"expires" => $p->getExpires(),
+						"number" => $p->getNumber());
+			}
+			return new Response(ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CUR_USER_PRIV_PROJ_RECORDS_MSG, array("list" => $records)));
+		}
+		else
+			return new Response(ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_CUR_USER_PRIV_PROJ_RECORDS_MSG));
+
+	}
+
+	public function canCreatePrivateProjectAction($owner)
     {
         $canCreate = $this->canCreatePrivateProject($owner);
         return new Response($canCreate);
