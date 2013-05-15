@@ -12,7 +12,28 @@
 	    <h4>{% if board["personal"] %}<i class="icon-star-empty"></i> {% endif %}{{board["name"]}}</h4>
 		<p>{{board["description"]}}</p>
 	{% endfor %}
-
+    {% if is_granted('ROLE_USER') %}
+    <div class="row-fluid">
+        <h2>Add Personal Board</h2>
+        <form class="form-search" method='post' enctype="multipart/form-data" action='{{ path('AceBoardBundle_newboard') }}' style="max-width:80%;">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="input-prepend input-append" >
+                        <input type="file" name="boards">
+                        <button type="submit" class="btn btn-success">Upload</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% else %}
+    <div class="row-fluid">
+        <h2>Unlock Personal Boards</h2>
+        <p style='text-align: justify'>
+            If you are interested in adding your boards to codebender, please send us an email at
+            <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject "Personal Boards".
+        </p>
+        <div>
+            {% endif %}
 	<div class="row-fluid">
 		<h2>Request Board</h2>
 		<p>The above list is by no means complete. It consists of boards we use often and boards that someone requested. If you would like us to include a <strong>commonly-used</strong> board, please send us an email at girder at codebender dot cc with the subject "Please support the following board", and we will do our best to include it as soon as possible if we find that it has value for other users as well. Thank you for your understanding. We hope you appreciate our hard work.</p>
