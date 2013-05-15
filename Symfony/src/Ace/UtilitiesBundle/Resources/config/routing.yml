@@ -70,9 +70,6 @@ AceUtilitiesBundle_deletefile:
   requirements:
     _method:  POST
 
-AceUtilitiesBundle_listboards:
-  pattern:  /listboards
-  defaults: { _controller: ace_utilities.boardcontroller:listAction }
  
 AceUtilitiesBundle_upload:
     pattern: /upload/

@@ -41,7 +41,7 @@ class EditorControllerUnitTest extends \PHPUnit_Framework_TestCase
 		/** @var EditorController $controller */
 		$controller = $this->getMock("Ace\GenericBundle\Controller\EditorController", array("get", "forward", "render"));
 		$controller->expects($this->at(0))->method('get')->with($this->equalTo("ace_project.sketchmanager"))->will($this->returnValue($projectmanager));
-		$controller->expects($this->at(1))->method('get')->with($this->equalTo("ace_utilities.boardcontroller"))->will($this->returnValue($boardcontroller));
+		$controller->expects($this->at(1))->method('get')->with($this->equalTo("ace_board.defaultcontroller"))->will($this->returnValue($boardcontroller));
 		$controller->expects($this->once())->method('render')->with($this->equalTo('AceGenericBundle:Editor:editor.html.twig'), $this->equalTo(array('project_id' => 1, 'project_name' => "test_project", 'files' => array(array("filename" => "test_project.ino", "code" => "nothing")), 'boards' => "fake_boards_list", 'is_public' => true)))->will($this->returnValue(new Response("excellent")));
 
 		$response = $controller->editAction(1);

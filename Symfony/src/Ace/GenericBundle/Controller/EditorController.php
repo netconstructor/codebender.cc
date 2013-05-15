@@ -34,7 +34,7 @@ class EditorController extends Controller
 			$files[$key]["code"] = htmlspecialchars($file["code"]);
 		}
 
-		$boardcontroller = $this->get('ace_utilities.boardcontroller');
+		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
 		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public));

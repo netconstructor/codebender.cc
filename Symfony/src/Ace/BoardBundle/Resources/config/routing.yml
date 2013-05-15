@@ -1,3 +1,5 @@
-AceBoardBundle_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: AceBoardBundle:Default:index }
+
+AceBoardBundle_listboards:
+  pattern:  /listboards
+  defaults: { _controller: ace_board.defaultcontroller:listAction }
+

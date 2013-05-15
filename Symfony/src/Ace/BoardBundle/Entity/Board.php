@@ -1,7 +1,7 @@
 <?php
 // src/Ace/ProjectBundle/Entity/Board.php
 
-namespace Ace\UtilitiesBundle\Entity;
+namespace Ace\BoardBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

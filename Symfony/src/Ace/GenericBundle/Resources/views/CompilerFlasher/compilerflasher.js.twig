@@ -17,7 +17,7 @@ $(document).ready(function () {
             $("#verify_div").html($("#verify_div").html() + '{% filter escape('js') %}{% include 'AceGenericBundle:CompilerFlasher:verify_section.html.twig'%}{% endfilter %}');
 
 
-        $.getJSON("{{ url('AceUtilitiesBundle_listboards') }}", function (data) {
+        $.getJSON("{{ url('AceBoardBundle_listboards') }}", function (data) {
         window.boards_list = data;
 
 	        if ($("#cb_cf").data().board){
