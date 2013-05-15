@@ -16,28 +16,49 @@ class DefaultController extends Controller
     protected $sc;
     protected $container;
 
-    public function listAction()
-    {
-        header('Access-Control-Allow-Origin: *');
+	public function listAction()
+	{
+		header('Access-Control-Allow-Origin: *');
 
-        $boards = array();
+		$boards = array();
 
-        $db_boards = $this->em->getRepository('AceBoardBundle:Board')->findAll();
+		$db_boards = $this->em->getRepository('AceBoardBundle:Board')->findBy(array("owner" => null));
 
-        foreach($db_boards as $key => $board)
-        {
-            $boards[] = array(
-                "name" => $board->getName(),
-                "upload" => json_decode($board->getUpload(), true),
-                "bootloader" => json_decode($board->getBootloader(), true),
-                "build" => json_decode($board->getBuild(), true),
-                "description" => $board->getDescription()
-            );
-        }
-        return new Response(json_encode($boards));
-    }
+		foreach ($db_boards as $board)
+		{
+			$boards[] = array(
+				"name" => $board->getName(),
+				"upload" => json_decode($board->getUpload(), true),
+				"bootloader" => json_decode($board->getBootloader(), true),
+				"build" => json_decode($board->getBuild(), true),
+				"description" => $board->getDescription(),
+				"personal" => false
+			);
+		}
 
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, ContainerInterface $container)
+		if ($this->get('security.context')->isGranted('ROLE_USER'))
+		{
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+			$db_boards = $this->em->getRepository('AceBoardBundle:Board')->findByOwner($user["id"]);
+
+			foreach ($db_boards as $board)
+			{
+				$boards[] = array(
+					"name" => $board->getName(),
+					"upload" => json_decode($board->getUpload(), true),
+					"bootloader" => json_decode($board->getBootloader(), true),
+					"build" => json_decode($board->getBuild(), true),
+					"description" => $board->getDescription(),
+					"personal" => true
+				);
+			}
+		}
+
+		return new Response(json_encode($boards));
+	}
+
+	public function __construct(EntityManager $entityManager, SecurityContext $securityContext, ContainerInterface $container)
     {
         $this->em = $entityManager;
         $this->sc = $securityContext;

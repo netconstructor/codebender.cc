@@ -9,7 +9,7 @@
 	<hr class="soften">
 
 	{% for board in boards %}
-	    <h4>{{board["name"]}}</h4>
+	    <h4>{% if board["personal"] %}<i class="icon-star-empty"></i> {% endif %}{{board["name"]}}</h4>
 		<p>{{board["description"]}}</p>
 	{% endfor %}
 
