@@ -10,3 +10,5 @@ services:
         class:        Ace\BoardBundle\Controller\DefaultController
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
+            securitycontext: "@security.context"
+            container: "@service_container"

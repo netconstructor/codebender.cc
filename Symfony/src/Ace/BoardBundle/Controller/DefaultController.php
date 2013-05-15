@@ -5,12 +5,16 @@ namespace Ace\BoardBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class DefaultController extends Controller
 {
 
     protected $em;
+    protected $sc;
+    protected $container;
 
     public function listAction()
     {
@@ -33,8 +37,10 @@ class DefaultController extends Controller
         return new Response(json_encode($boards));
     }
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, ContainerInterface $container)
     {
         $this->em = $entityManager;
+        $this->sc = $securityContext;
+        $this->container = $container;
     }
 }
