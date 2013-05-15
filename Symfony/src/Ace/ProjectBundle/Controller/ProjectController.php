@@ -494,7 +494,7 @@ class ProjectController extends Controller
 				$now = new \DateTime("now");
 				if ($now >= $p->getStarts() && ($p->getExpires() == NULL || $now < $p->getExpires()))
 					$records[] = array("description" => $p->getDescription(),
-						"expires" => $p->getExpires(),
+						"expires" => $p->getExpires() === null? $p->getExpires() : $p->getExpires()->format('Y-m-d'),
 						"number" => $p->getNumber());
 			}
 			return new Response(ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CUR_USER_PRIV_PROJ_RECORDS_MSG, array("list" => $records)));
