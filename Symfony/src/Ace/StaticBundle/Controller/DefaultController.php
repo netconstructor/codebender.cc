@@ -176,4 +176,9 @@ class DefaultController extends Controller
 	{
 		return $this->render('AceStaticBundle:Default:info_karma.html.twig', array());
 	}
+
+	public function infoPrivateProjectsAction()
+	{
+		return $this->render('AceStaticBundle:Default:info_private_projects.html.twig', array());
+	}
 }

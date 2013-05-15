@@ -1,0 +1,27 @@
+{% extends '::container.html.twig' %}
+{% block title "codebender - private projects" %}
+
+{% block mainspan %}
+	<div class="page-header">
+		<h1>Private Projects</h1>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span3">
+			<a href="{{ asset("images/door-lock.jpg") }}" rel="lightbox" title="door lock">
+				<img class="img-screenshot" src="{{ asset("images/door-lock.jpg") }}">
+			</a>
+			<p>
+				Photo by <a href="http://www.fotopedia.com/users/rzYpIaDgM3w" target="_blank">Tijs Zwinkels</a>
+			</p>
+		</div>
+		<div class="span9">
+			<p style="text-align: justify">
+				We're really excited to announce our first premium feature, private projects! We are all open source
+				advocates, but sometimes you just want to keep something to yourself. If you are interested, please
+				shoot us an email at <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject
+				"Private Projects", to learn more about pricing and request a quote.
+			</p>
+		</div>
+	</div>
+{% endblock %}
