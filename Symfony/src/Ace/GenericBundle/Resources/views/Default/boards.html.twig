@@ -10,8 +10,8 @@
 
     {% if is_granted('ROLE_USER') %}
     <div class="row-fluid">
-        <h2>Add Personal Board</h2>
-        <form class="form-search" method='post' enctype="multipart/form-data" action='{{ path('AceBoardBundle_newboard') }}' style="max-width:80%;">
+        <h2>Add Personal Boards</h2>
+        <form class="form-search" method='post' enctype="multipart/form-data" action='{{ path('AceUtilitiesBundle_addboard') }}' >
             <div class="row-fluid">
                 <div class="span12">
                     <div class="input-prepend input-append" >
@@ -20,6 +20,7 @@
                     </div>
                 </div>
             </div>
+        </form>
     </div>
     {% else %}
     <div class="row-fluid">

@@ -88,3 +88,8 @@ AceUtilitiesBundle_filecreate:
   defaults: { _controller: AceUtilitiesBundle:Default:filecreate }
   requirements:
     _method:  POST
+
+AceUtilitiesBundle_addboard:
+  pattern:  /addboard
+  defaults: { _controller: AceUtilitiesBundle:Default:addBoard }
+

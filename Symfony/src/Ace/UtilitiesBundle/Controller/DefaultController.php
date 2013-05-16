@@ -254,6 +254,70 @@ class DefaultController extends Controller
         }
 	}
 
+    public function addBoardAction()
+    {
+        $boardsmanager = $this->get('ace_board.defaultcontroller');
+
+        if($_FILES["boards"]["error"]>0)
+        {
+            $this->container->get('session')->setFlash("error","Error: Upload failed with error code ".$_FILES["boards"]["error"].".");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+        if($_FILES["boards"]["type"]!== "text/plain")
+        {
+            $this->container->get('session')->setFlash("error","Error: File type should be .txt.");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+        $current_user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+        $canAdd = json_decode($boardsmanager->canAddPersonalBoardAction($current_user['id'])->getContent(), true);
+
+        if(!$canAdd["success"])
+        {
+            $this->container->get('session')->setFlash("error","Error: Cannot add personal board.");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+
+        $available = $canAdd["available"];
+        $parsed = json_decode($boardsmanager->parsePropertiesFileAction(file_get_contents( $_FILES["boards"]["tmp_name"]))->getContent(), true);
+        if(!$parsed["success"])
+       {
+            $this->container->get('session')->setFlash("error","Error: Could not read Board Properties File.");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+
+        $boards = $parsed['boards'];
+
+        if(count($boards)>$available)
+        {
+            $this->container->get('session')->setFlash("error","Error: You can add up to ".$available." boards (tried to add ".count($boards).").");
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+
+        foreach ($boards as $b)
+        {
+            $isBoard = json_decode($boardsmanager->isValidBoardAction($b)->getContent(), true);
+            if(!$isBoard["success"])
+            {
+                $this->container->get('session')->setFlash("error","Error: File does not have the required structure.");
+                return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+            }
+        }
+
+        foreach ($boards as $b)
+        {
+            $added = json_decode($boardsmanager->addBoardAction($b, $current_user['id'])->getContent(), true);
+            if(!$added["success"])
+            {
+                $this->container->get('session')->setFlash("error","Error: Could not add board '".$b["name"]."'. Process stopped.");
+                return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+            }
+        }
+        $this->container->get('session')->setFlash("notice",count($boards)." boards were successfully added.");
+        return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+
+    }
+
 	public function createFileAction($id)
 	{
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);

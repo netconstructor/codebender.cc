@@ -62,64 +62,44 @@ class DefaultController extends Controller
 		return new Response(json_encode($boards));
 	}
 
-    public function addBoardAction()
+
+    public function addBoardAction($b, $user_id)
     {
-        if($_FILES["boards"]["error"]>0)
-        {
-            $this->container->get('session')->setFlash("error","Error: Upload failed with error code ".$_FILES["boards"]["error"].".");
-            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
-        }
-        if($_FILES["boards"]["type"]!== "text/plain")
-        {
-            $this->container->get('session')->setFlash("error","Error: File type should be .txt.");
-            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
-        }
-        $current_user = $this->sc->getToken()->getUser();
-        $canAdd = json_decode($this->canAddPersonalBoard($current_user->getId()), true);
-        if(!$canAdd["success"])
-        {
-            $this->container->get('session')->setFlash("error","Error: Cannot add personal board.");
-            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
-        }
+        $owner = $this->em->getRepository('AceUserBundle:User')->find($user_id);
 
-        $available = $canAdd["available"];
-        $boards = $this->parse_properties(file_get_contents( $_FILES["boards"]["tmp_name"]));
+        $board = new Board();
+        $board->setName($b["name"]);
+        $board->setUpload(json_encode($b["upload"]));
+        $board->setBootloader(json_encode($b["bootloader"]));
+        $board->setBuild(json_encode($b["build"]));
+        $board->setOwner($owner);
+        $board->setDescription("Personal Board");
 
-        if(count($boards)>$available)
-        {
-            $this->container->get('session')->setFlash("error","Error: You can add up to ".$available." boards (tried to add ".count($boards).").");
-            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
-        }
-
-        foreach ($boards as $b)
-        {
-            if(!(isset($b['name']) && isset($b["upload"]) && isset($b["bootloader"]) && isset($b["build"])))
-            {
-                $this->container->get('session')->setFlash("error","Error: File does not have the required structure.");
-                return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
-            }
-            $board = new Board();
-            $board->setName($b["name"]);
-            $board->setUpload(json_encode($b["upload"]));
-            $board->setBootloader(json_encode($b["bootloader"]));
-            $board->setBuild(json_encode($b["build"]));
-            $board->setOwner($current_user);
-            $board->setDescription("Personal Board");
-
-            $this->em->persist($board);
-
-        }
+        $this->em->persist($board);
         $this->em->flush();
-        $this->container->get('session')->setFlash("notice",count($boards)." boards were successfully added.");
-        return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        return new Response(json_encode(array("success" => true)));
+
     }
 
-    public function canAddPersonalBoardAction($owner)
+    public function isValidBoardAction($b)
     {
-        return new Response($this->canAddPersonalBoard($owner));
+        if(isset($b['name']) && isset($b["upload"]) && isset($b["bootloader"]) && isset($b["build"]))
+        {
+            return new Response(json_encode(array("success" => true)));
+        }
+        else
+        {
+            return new Response(json_encode(array("success" => false)));
+
+        }
     }
 
-    protected function parse_properties($txtProperties) {
+    public function canAddPersonalBoardAction($user_id)
+    {
+        return new Response($this->canAddPersonalBoard($user_id));
+    }
+
+    public function parsePropertiesFileAction($txtProperties) {
         $result = array();
         $lines = explode("\n", $txtProperties);
         $key = "";
@@ -156,16 +136,16 @@ class DefaultController extends Controller
             unset($lines[$i]);
         }
 
-        return $result;
+        return new Response(json_encode(array("success" => true, "boards" => $result)));
     }
 
-    protected function canAddPersonalBoard($owner)
+    protected function canAddPersonalBoard($user_id)
     {
-        $boards = $this->em->getRepository('AceBoardBundle:Board')->findByOwner($owner);
+        $boards = $this->em->getRepository('AceBoardBundle:Board')->findByOwner($user_id);
         $currentPersonal = count($boards);
 
 
-        $prs= $this->em->getRepository('AceBoardBundle:PersonalBoards')->findByOwner($owner);
+        $prs= $this->em->getRepository('AceBoardBundle:PersonalBoards')->findByOwner($user_id);
         $maxPersonal = 0;
         foreach ($prs as $p)
         {
