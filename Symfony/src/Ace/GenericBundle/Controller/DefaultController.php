@@ -180,7 +180,22 @@ class DefaultController extends Controller
 	{
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = json_decode($boardcontroller->listAction()->getContent(), true);
-		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards));
+
+		$available_boards = array("success" => false);
+		if ($this->get('security.context')->isGranted('ROLE_USER'))
+		{
+			// Load user content here
+			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+			{
+				$available_boards = json_decode($boardcontroller->canAddPersonalBoardAction($user["id"])->getContent(), true);
+			}
+		}
+		if (!$available_boards["success"])
+		{
+			$available_boards["available"] = 0;
+		}
+
+		return $this->render('AceGenericBundle:Default:boards.html.twig', array('boards' => $boards, 'available_boards' => $available_boards));
 	}
 
 

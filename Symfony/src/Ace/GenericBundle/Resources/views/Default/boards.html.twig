@@ -46,27 +46,31 @@
 	<hr class="soften">
 
     {% if is_granted('ROLE_USER') %}
-	    <div class="row-fluid">
-	        <h3>Add Personal Boards</h3>
-	        <form class="form-search" method='post' enctype="multipart/form-data" action='{{ path('AceUtilitiesBundle_addboard') }}' >
-	            <div class="row-fluid">
-	                <div class="span12">
-	                    <div>
-		                    <input type="file" name="boards" class="filestyle" data-classButton="btn">
-		                    <button type="submit" class="btn btn-success">Upload</button>
-	                    </div>
-	                </div>
-	            </div>
-	        </form>
-	    </div>
-    {% else %}
-	    <div class="row-fluid">
-	        <h2>Unlock Personal Boards</h2>
-	        <p style='text-align: justify'>
-	            If you are interested in adding your boards to codebender, please send us an email at
-	            <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject "Personal Boards".
-	        </p>
-        </div>
+	    {% if available_boards["success"] %}
+		    <div class="row-fluid">
+			    <h3>Add Personal Boards - {{ available_boards["available"] }} available</h3>
+
+			    <form class="form-search" method='post' enctype="multipart/form-data" action='{{ path('AceUtilitiesBundle_addboard') }}'>
+				    <div class="row-fluid">
+					    <div class="span12">
+						    <div>
+							    <input type="file" name="boards" class="filestyle" data-classButton="btn">
+							    <button type="submit" class="btn btn-success">Upload</button>
+						    </div>
+					    </div>
+				    </div>
+			    </form>
+		    </div>
+	    {% else %}
+		    <div class="row-fluid">
+			    <h3>Request Personal Boards</h3>
+			    <p style='text-align: justify'>
+				    Looks like you have no available private boards. If you would like to use your personal boards in
+				    codebender, please send us an email at
+				    <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject "Personal Boards".
+			    </p>
+		    </div>
+	    {% endif %}
     {% endif %}
 	{% for board in boards %}
 	    <h4>{% if board["personal"] %}
