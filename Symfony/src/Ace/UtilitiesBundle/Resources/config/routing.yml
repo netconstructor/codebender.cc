@@ -93,3 +93,12 @@ AceUtilitiesBundle_addboard:
   pattern:  /addboard
   defaults: { _controller: AceUtilitiesBundle:Default:addBoard }
 
+AceUtilitiesBundle_deleteboard:
+  pattern:  /deleteboard/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:deleteBoard }
+
+AceUtilitiesBundle_editBoard:
+  pattern: /setboarddescription
+  defaults: { _controller: AceUtilitiesBundle:Default:editBoard }
+  requirements:
+    _method: POST

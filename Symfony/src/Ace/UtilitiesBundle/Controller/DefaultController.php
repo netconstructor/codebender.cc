@@ -318,6 +318,36 @@ class DefaultController extends Controller
 
     }
 
+    public function deleteBoardAction($id)
+    {
+        $boardsmanager = $this->get('ace_board.defaultcontroller');
+        $response = $boardsmanager->deleteBoardAction($id)->getContent();
+        $response = json_decode($response, true);
+        if($response['success'])
+        {
+            $this->container->get('session')->setFlash("notice",$response['message']);
+            return $this->redirect($this->generateUrl("AceGenericBundle_boards"));
+        }
+        else
+        {
+            $this->get('session')->setFlash('error', "Error: ".$response['message']);
+            return $this->redirect($this->generateUrl('AceGenericBundle_boards'));
+        }
+
+    }
+
+    public function editBoardAction()
+    {
+
+        $id = $this->getRequest()->request->get('id');
+        $description = $this->getRequest()->request->get('desc');
+        $name = $this->getRequest()->request->get('name');
+        $boardsmanager = $this->get('ace_board.defaultcontroller');
+
+        $response = json_decode($boardsmanager->editAction($id, $name, $description)->getContent(), true);
+        return new Response(json_encode($response));
+    }
+
 	public function createFileAction($id)
 	{
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);

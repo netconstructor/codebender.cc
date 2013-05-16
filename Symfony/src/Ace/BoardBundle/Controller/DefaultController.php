@@ -62,6 +62,53 @@ class DefaultController extends Controller
 		return new Response(json_encode($boards));
 	}
 
+    public function editAction($id, $name, $description)
+    {
+        $board = $this->getBoardById($id);
+        $perm = json_decode($this->checkBoardPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode(array("success" => false, "message" => "Cannot edit board '".$board->getName()."'.")));
+        }
+        $board->setName($name);
+        $board->setDescription($description);
+
+        $em = $this->em;
+        $em->persist($board);
+        $em->flush();
+
+        return new Response(json_encode(array("success" => true, "new_name" => $name, "new_desc" => $description)));
+    }
+
+    public function setNameAction($id, $name)
+    {
+        $board = $this->getBoardById($id);
+        $perm = json_decode($this->checkBoardPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode(array("success" => false, "message" => "Cannot set name for board '".$board->getName()."'.")));
+        }
+        $board->setName($name);
+        $em = $this->em;
+        $em->persist($board);
+        $em->flush();
+        return new Response(json_encode(array("success" => true)));
+    }
+
+    public function setDescriptionAction($id, $description)
+    {
+        $board = $this->getBoardById($id);
+        $perm = json_decode($this->checkBoardPermissions($id), true);
+        if(!$perm['success'])
+        {
+            return new Response(json_encode(array("success" => false, "message" => "Cannot set description for board '".$board->getName()."'.")));
+        }
+        $board->setDescription($description);
+        $em = $this->em;
+        $em->persist($board);
+        $em->flush();
+        return new Response(json_encode(array("success" => true)));
+    }
 
     public function addBoardAction($b, $user_id)
     {
@@ -92,6 +139,24 @@ class DefaultController extends Controller
             return new Response(json_encode(array("success" => false)));
 
         }
+    }
+
+    public function deleteBoardAction($id)
+    {
+        $perm = json_decode($this->checkBoardPermissions($id), true);
+
+        if(!($perm['success']))
+        {
+            return new Response(json_encode(array("success" => false, "message" => "You have no persmissions to delete this board.")));
+        }
+
+        $board = $this->getBoardById($id);
+
+        $this->em->remove($board);
+        $this->em->flush($board);
+
+        return new Response(json_encode(array("success" => true, "message" => "Board '".$board->getName()."' was successfully deleted.")));
+
     }
 
     public function canAddPersonalBoardAction($user_id)
@@ -160,6 +225,29 @@ class DefaultController extends Controller
             return json_encode(array("success" => true, "available" => $maxPersonal - $currentPersonal));
 
     }
+
+    protected function checkBoardPermissions($id)
+    {
+        $board = $this->getBoardById($id);
+        $current_user = $this->sc->getToken()->getUser();
+
+        if($board->getOwner()!== null && $current_user !== "anon." && $current_user->getId() === $board->getOwner()->getId())
+            return json_encode(array("success" => true));
+        else
+            return json_encode(array("success" => false, "error" => "You have no permissions for this board.", "id" => $id));
+
+    }
+
+    protected function getBoardById($id)
+    {
+        $em = $this->em;
+        $board = $this->em->getRepository('AceBoardBundle:Board')->find($id);
+        if (!$board)
+            throw $this->createNotFoundException('No board found with id '.$id);
+
+        return $board;
+    }
+
 
     public function __construct(EntityManager $entityManager, SecurityContext $securityContext, ContainerInterface $container)
     {
