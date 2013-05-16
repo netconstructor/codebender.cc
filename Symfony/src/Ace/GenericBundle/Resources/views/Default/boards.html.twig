@@ -8,10 +8,6 @@
 	<p>We are working really hard on building a great tool for developers. For us, that includes supporting as many different boards and platforms as possible. You can find a list of all the currently supported boards below.</p>
 	<hr class="soften">
 
-	{% for board in boards %}
-	    <h4>{% if board["personal"] %}<i class="icon-star-empty"></i> {% endif %}{{board["name"]}}</h4>
-		<p>{{board["description"]}}</p>
-	{% endfor %}
     {% if is_granted('ROLE_USER') %}
     <div class="row-fluid">
         <h2>Add Personal Board</h2>
@@ -34,6 +30,28 @@
         </p>
         <div>
             {% endif %}
+	{% for board in boards %}
+	    <h4>{% if board["personal"] %}
+                <i class="icon-lock" title='Personal Board'></i>
+                <button title='Delete board'
+                        style='color: darkred; padding: 1px;  margin-top: -5px;'
+                        onClick="warnDeleteBoard('{{ path('AceUtilitiesBundle_deleteboard', {'id':board['id']}) }}')"
+                        class="btn btn-link">
+                    <i class="icon-trash"></i>
+                </button>
+            {% endif %}
+            <span id="{{ "name_" ~ board['id'] }}"> {{board["name"]}}</span></h4>
+		<p><span id="{{ "desc_" ~ board['id'] }}">{{board["description"]}}</span>
+            {% if board["personal"] %}
+            <button title='Edit board description'
+                    style='color: #000000; padding: 2px; margin-top: -5px;'
+                    onClick="showEditBoardModal({{  board['id'] }},'{{ board["name"] }}', '{{ board["description"] }}')"
+                    class="btn btn-link">
+                <i class="icon-pencil"></i>
+            </button>
+            {% endif %}
+        </p>
+	{% endfor %}
 	<div class="row-fluid">
 		<h2>Request Board</h2>
 		<p>The above list is by no means complete. It consists of boards we use often and boards that someone requested. If you would like us to include a <strong>commonly-used</strong> board, please send us an email at girder at codebender dot cc with the subject "Please support the following board", and we will do our best to include it as soon as possible if we find that it has value for other users as well. Thank you for your understanding. We hope you appreciate our hard work.</p>

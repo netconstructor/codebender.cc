@@ -23,6 +23,26 @@ class DefaultController extends Controller
 
 		$boards = array();
 
+        if ($this->get('security.context')->isGranted('ROLE_USER'))
+        {
+            $user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
+
+            $db_boards = $this->em->getRepository('AceBoardBundle:Board')->findByOwner($user["id"]);
+
+            foreach ($db_boards as $board)
+            {
+                $boards[] = array(
+                    "name" => $board->getName(),
+                    "upload" => json_decode($board->getUpload(), true),
+                    "bootloader" => json_decode($board->getBootloader(), true),
+                    "build" => json_decode($board->getBuild(), true),
+                    "description" => $board->getDescription(),
+                    "personal" => true,
+                    "id" => $board->getId()
+                );
+            }
+        }
+
 		$db_boards = $this->em->getRepository('AceBoardBundle:Board')->findBy(array("owner" => null));
 
 		foreach ($db_boards as $board)
@@ -33,28 +53,11 @@ class DefaultController extends Controller
 				"bootloader" => json_decode($board->getBootloader(), true),
 				"build" => json_decode($board->getBuild(), true),
 				"description" => $board->getDescription(),
-				"personal" => false
+				"personal" => false,
+                "id" => $board->getId()
 			);
 		}
 
-		if ($this->get('security.context')->isGranted('ROLE_USER'))
-		{
-			$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
-
-			$db_boards = $this->em->getRepository('AceBoardBundle:Board')->findByOwner($user["id"]);
-
-			foreach ($db_boards as $board)
-			{
-				$boards[] = array(
-					"name" => $board->getName(),
-					"upload" => json_decode($board->getUpload(), true),
-					"bootloader" => json_decode($board->getBootloader(), true),
-					"build" => json_decode($board->getBuild(), true),
-					"description" => $board->getDescription(),
-					"personal" => true
-				);
-			}
-		}
 
 		return new Response(json_encode($boards));
 	}
