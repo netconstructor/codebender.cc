@@ -2,10 +2,3 @@ AceBoardBundle_listboards:
   pattern:  /listboards
   defaults: { _controller: ace_board.defaultcontroller:listAction }
 
-#AceBoardBundle_canadd:
-#  pattern:  /canadd/{owner}
-#  defaults: { _controller: ace_board.defaultcontroller:canAddPersonalBoardAction }
-
-AceBoardBundle_newboard:
-  pattern:  /newboard
-  defaults: { _controller: ace_board.defaultcontroller:addBoardAction }
