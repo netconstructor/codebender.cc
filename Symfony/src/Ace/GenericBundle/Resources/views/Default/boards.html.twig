@@ -36,7 +36,7 @@
 </script>
 
 <h1>{{ site_name }} boards<small> le board support</small></h1>
-<div class="marketing">
+<div>
 	<p>We are working really hard on building a great tool for developers. For us, that includes supporting as many different boards and platforms as possible. You can find a list of all the currently supported boards below.</p>
 	<hr class="soften">
 
@@ -55,14 +55,14 @@
         </form>
     </div>
     {% else %}
-    <div class="row-fluid">
-        <h2>Unlock Personal Boards</h2>
-        <p style='text-align: justify'>
-            If you are interested in adding your boards to codebender, please send us an email at
-            <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject "Personal Boards".
-        </p>
-        <div>
-            {% endif %}
+	    <div class="row-fluid">
+	        <h2>Unlock Personal Boards</h2>
+	        <p style='text-align: justify'>
+	            If you are interested in adding your boards to codebender, please send us an email at
+	            <a href="mailto:girder@codebender.cc">girder@codebender.cc</a> with the subject "Personal Boards".
+	        </p>
+        </div>
+    {% endif %}
 	{% for board in boards %}
 	    <h4>{% if board["personal"] %}
                 <i class="icon-lock" title='Personal Board'></i>
