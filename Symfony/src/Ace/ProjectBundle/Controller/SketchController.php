@@ -200,6 +200,11 @@ class SketchController extends ProjectController
         return json_encode(array("success" => false, "error" => ".ino file does not exist."));
     }
 
+    protected function getProjectsRepository()
+    {
+        return $this->em->getRepository('AceProjectBundle:Project');
+    }
+
 	public function __construct(EntityManager $entityManager, MongoFilesController $mongoFilesController, DiskFilesController $diskFilesController, SecurityContext $securitycontext, $storageLayer)
 	{
 	    $this->em = $entityManager;

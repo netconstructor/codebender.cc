@@ -157,6 +157,11 @@ class LibraryController extends ProjectController
         return json_encode(array("success" => true));
     }
 
+    protected function getProjectsRepository()
+    {
+        return $this->em->getRepository('AceProjectBundle:Library');
+    }
+
 	public function __construct(EntityManager $entityManager, DiskFilesController $diskFilesController,  SecurityContext $securitycontext)
 	{
 	    $this->em = $entityManager;

@@ -2,7 +2,7 @@
 
 namespace Ace\ProjectBundle\Controller;
 
-use Ace\ProjectBundle\Entity\PrivateProjects;
+
 use Ace\ProjectBundle\Helper\ProjectErrorsHelper;
 use Doctrine\DBAL\Platforms\Keywords\ReservedKeywordsValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 
 
-class ProjectController extends Controller
+abstract class ProjectController extends Controller
 {
     protected $em;
 	protected $fc;
@@ -533,10 +533,6 @@ class ProjectController extends Controller
         return json_encode(array("success" => false));
     }
 
-    public function __construct(EntityManager $entityManager, FilesController $filesController, SecurityContext $securitycontext)
-    {
-        $this->em = $entityManager;
-        $this->sc = $securitycontext;
-        $this->fc = $filesController;
-    }
+    abstract protected function getProjectsRepository();
+
 }
