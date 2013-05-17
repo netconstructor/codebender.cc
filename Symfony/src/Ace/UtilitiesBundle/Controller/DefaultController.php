@@ -135,6 +135,7 @@ class DefaultController extends Controller
 
 		$old_filename = $this->getRequest()->request->get('oldFilename');
 		$new_filename = $this->getRequest()->request->get('newFilename');
+        $type = $this->getRequest()->request->get('type');
 
 		$projectmanager = $this->get('ace_project.sketchmanager');
 		$response = $projectmanager->renameFileAction($id, $old_filename, $new_filename)->getContent();

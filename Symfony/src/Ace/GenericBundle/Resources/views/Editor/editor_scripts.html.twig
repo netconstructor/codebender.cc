@@ -8,7 +8,7 @@ function renameFilenameModal(filename) {
 }
 
 function renameFilename() {
-    $.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename:$("#oldFilename").val(), newFilename:$("#newFilename").val()}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_renamefile', {'id':project_id} ) }}", {oldFilename:$("#oldFilename").val(), newFilename:$("#newFilename").val(), type:'{{ type }}'}, function (data) {
         $("#filenameModal").modal('hide');
         handleResponse(data);
     });
@@ -327,7 +327,7 @@ function jsObjEquals(obj1, obj2) {
 	}
 	return true;
 }
-		
+
 //Manual shallow js object copy - faster than .extend()
 function jsObjClone(obj) {
 	var objcopy = {};
