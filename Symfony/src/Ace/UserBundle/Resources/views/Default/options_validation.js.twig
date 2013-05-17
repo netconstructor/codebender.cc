@@ -62,9 +62,12 @@ function newPassValidation() {
 			info.html('<i>Sorry, your New Password is <b>too simple</b>, try mix and matching Letters, Numbers or Symbols, to make it more secure.</i>');
 	}
 }
-		
+	
 function currentPassValidation(el) {
-	resetElements(el);
+	
+	var group = $(el).closest('.control-group').removeClass().addClass("control-group");
+	var icon = $(el).siblings('span.add-on').children().removeClass();
+	var info = $(el).siblings('span.help-block').html('');
 			
 	if(window.passPost){window.passPost.abort();} // abort previous post request if present
 	var value = $(el).val();
@@ -101,7 +104,7 @@ function currentPassValidation(el) {
 							info.html('<i>Sorry, this is not your Current Password, give it another try</i>');
 						}
 					});
-				}, 1000); // inactivity timer 1000ms	
+				}, 800); // inactivity timer 800ms	
 			}
 			else
 			{
@@ -122,7 +125,10 @@ function currentPassValidation(el) {
 }
  
 function emailValidation(el) {
-	resetElements(el);
+
+	var group = $(el).closest('.control-group').removeClass().addClass("control-group");
+	var icon = $(el).siblings('span.add-on').children().removeClass();
+	var info = $(el).siblings('span.help-block').html('');
 	
 	if(window.emailPost){window.emailPost.abort();} // abort previous post request if present
 	var value = $(el).val();
@@ -159,7 +165,7 @@ function emailValidation(el) {
 					else //response.valid == "own"
 						icon.addClass("icon-envelope");
 				});
-			}, 1000); // inactivity timer 1000ms
+			}, 800); // inactivity timer 800ms
 		}
 		else
 		{
@@ -174,7 +180,10 @@ function emailValidation(el) {
 	
 function nameValidation(el)
 {
-	resetElements(el);
+	var group = $(el).closest('.control-group').removeClass().addClass("control-group");
+	var icon = $(el).siblings('span.add-on').children().removeClass();
+	var info = $(el).siblings('span.help-block').html('');
+	
 	icon.addClass("icon-user");
 	var value = $(el).val();
 	if(value.length != 0){
@@ -192,15 +201,6 @@ function nameValidation(el)
 	}
 }
     
-// reset and cache fields' group, icon and info div/i/span elements
-// global variables cause otherwise other functions cannot have access to them
-function resetElements(el)
-{
-	group = $(el).closest('.control-group').removeClass().addClass("control-group");
-	icon = $(el).siblings('span.add-on').children().removeClass();
-	info = $(el).siblings('span.help-block').html('');
-}
-
 $(document).ready(function () {
 	$("#loading").hide();
 			
