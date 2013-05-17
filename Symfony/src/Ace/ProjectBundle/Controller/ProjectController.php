@@ -29,7 +29,7 @@ abstract class ProjectController extends Controller
         if($current_user !== "anon." && $current_user->getID() == $owner)
             $private_access=true;
 
-		$projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
+		$projects = $this->getProjectsRepository()->findByOwner($owner);
 		$list = array();
 		foreach($projects as $project)
 		{
@@ -384,7 +384,7 @@ abstract class ProjectController extends Controller
 	public function searchNameAction($token)
 	{
 		$em = $this->em;
-		$repository = $this->em->getRepository('AceProjectBundle:Project');
+		$repository = $this->getProjectsRepository();
 		$projects = $repository->createQueryBuilder('p')->where('p.name LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
 		$result = array();
 		foreach($projects as $project)
@@ -404,7 +404,7 @@ abstract class ProjectController extends Controller
 	public function searchDescriptionAction($token)
 	{
 		$em = $this->em;
-		$repository = $this->em->getRepository('AceProjectBundle:Project');
+		$repository = $this->getProjectsRepository();
 		$qb = $em->createQueryBuilder();
 		$projects = $repository->createQueryBuilder('p')->where('p.description LIKE :token')->setParameter('token', "%".$token."%")->getQuery()->getResult();
 		$result = array();
@@ -425,7 +425,7 @@ abstract class ProjectController extends Controller
 	public function checkExistsAction($id)
 	{
 		$em = $this->em;
-		$project = $this->em->getRepository('AceProjectBundle:Project')->find($id);
+		$project = $this->getProjectsRepository()->find($id);
 	    if (!$project)
 			return new Response(json_encode(array("success" => false)));
 		return new Response(json_encode(array("success" => true)));
@@ -434,7 +434,7 @@ abstract class ProjectController extends Controller
 	public function getProjectById($id)
 	{
 		$em = $this->em;
-		$project = $this->em->getRepository('AceProjectBundle:Project')->find($id);
+		$project = $this->getProjectsRepository()->find($id);
 	    if (!$project)
 	        throw $this->createNotFoundException('No project found with id '.$id);			
 			// return new Response(json_encode(array(false, "Could not find project with id: ".$id)));
