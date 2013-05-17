@@ -271,7 +271,7 @@ function deleteFileModal(filename) {
 function deleteFile(filename) {
     setOperationProgress(90);
     var val = { "filename":filename };
-    $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_deletefile', {'id':project_id} ) }}", {data:JSON.stringify(val), type:'{{ type }}'}, function (data) {
         handleResponse(data);
     });
 }
