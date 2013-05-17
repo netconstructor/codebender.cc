@@ -504,40 +504,7 @@ class ProjectController extends Controller
 
 	}
 
-	public function canCreatePrivateProjectAction($owner)
-    {
-        $canCreate = $this->canCreatePrivateProject($owner);
-        return new Response($canCreate);
-    }
 
-
-    protected function canCreatePrivateProject($owner)
-    {
-        $projects = $this->em->getRepository('AceProjectBundle:Project')->findByOwner($owner);
-        $currentPrivate = 0;
-        foreach ($projects as $p)
-        {
-            if(!$p->getIsPublic())
-            {
-                $currentPrivate++;
-            }
-        }
-
-        $prv= $this->em->getRepository('AceProjectBundle:PrivateProjects')->findByOwner($owner);
-        $maxPrivate = 0;
-        foreach ($prv as $p)
-        {
-            $now = new \DateTime("now");
-            if($now>= $p->getStarts() && ($p->getExpires()==NULL || $now < $p->getExpires()))
-                $maxPrivate+=$p->getNumber();
-        }
-
-        if($currentPrivate >= $maxPrivate)
-            return json_encode(array("success" => false, "error" => "Cannot create private project."));
-        else
-            return json_encode(array("success" => true, "available" => $maxPrivate - $currentPrivate));
-
-    }
 
     protected function canCreateFile($id, $filename)
     {
