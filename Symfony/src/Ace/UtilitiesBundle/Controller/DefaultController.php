@@ -81,6 +81,8 @@ class DefaultController extends Controller
 	{
 		$projectmanager = $this->get('ace_project.sketchmanager');
 
+        $type = $this->getRequest()->request->get('type');
+
 		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
 		$is_public = $is_public["response"];
 

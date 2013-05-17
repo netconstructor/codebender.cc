@@ -278,7 +278,7 @@ function deleteFile(filename) {
 
 function changePrivacy()
 {
-	$.post("{{ path('AceUtilitiesBundle_changeprivacy', {'id':project_id} ) }}", {data: null}, function (data)
+	$.post("{{ path('AceUtilitiesBundle_changeprivacy', {'id':project_id} ) }}", {data: null, type:'{{ type }}'}, function (data)
 	{
 		handleResponse(data);
 	});
