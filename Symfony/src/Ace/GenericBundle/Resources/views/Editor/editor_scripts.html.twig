@@ -292,7 +292,7 @@ function editDescription()
 }
 
 function saveDescription() {
-    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#description").val()}, function (data)
+    $.post("{{ path('AceUtilitiesBundle_setprojectdescription', {'id':project_id} ) }}", {data:$("#description").val(), type:'{{ type }}'}, function (data)
     {
         $("#description").replaceWith("<p id='description'>" + $("#description").val() + "</p>");
         $("#description_change_link").removeClass("btn btn-primary");
