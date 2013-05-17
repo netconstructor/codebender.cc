@@ -7,7 +7,7 @@ use Ace\ProjectBundle\Controller\SketchController;
 
 class EditorController extends Controller
 {		
-	public function editAction($id)
+	public function editAction($id, $type)
 	{
 		/** @var SketchController $projectmanager */
 		$projectmanager = $this->get('ace_project.sketchmanager');
@@ -37,6 +37,6 @@ class EditorController extends Controller
 		$boardcontroller = $this->get('ace_board.defaultcontroller');
 		$boards = $boardcontroller->listAction()->getContent();
 
-		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public));
+		return $this->render('AceGenericBundle:Editor:editor.html.twig', array('project_id' => $id, 'project_name' => $name, 'files' => $files, 'boards' => $boards, "is_public" => $is_public, "type" => $type));
 	}
 }

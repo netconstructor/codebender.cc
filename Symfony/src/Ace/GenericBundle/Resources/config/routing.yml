@@ -8,7 +8,7 @@ AceGenericBundle_user:
 
 AceGenericBundle_project:
     pattern:  /sketch:{id}
-    defaults: { _controller: AceGenericBundle:Default:project }
+    defaults: { _controller: AceGenericBundle:Default:project, type:"sketch"}
 
 AceGenericBundle_projectfiles:
     pattern:  /files

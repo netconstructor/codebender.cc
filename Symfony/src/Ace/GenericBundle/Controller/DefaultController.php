@@ -69,7 +69,7 @@ class DefaultController extends Controller
 		return $this->render('AceGenericBundle:Default:user.html.twig', array('user' => $user, 'projects' => $projects, 'lastTweet' => $lastTweet, 'image' => $image));
 	}
 
-	public function projectAction($id, $embed = false)
+	public function projectAction($id, $type, $embed = false)
 	{
 
 		/** @var SketchController $projectmanager */
@@ -85,7 +85,7 @@ class DefaultController extends Controller
 		$permissions = json_decode($projectmanager->checkWriteProjectPermissionsAction($id)->getContent(), true);
 		if ($permissions["success"])
 		{
-			return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id));
+			return $this->forward('AceGenericBundle:Editor:edit', array("id" => $id, "type" => $type));
 		}
 
 		$permissions = json_decode($projectmanager->checkReadProjectPermissionsAction($id)->getContent(), true);
