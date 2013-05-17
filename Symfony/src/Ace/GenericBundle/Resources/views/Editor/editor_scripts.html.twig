@@ -307,7 +307,7 @@ function editName() {
 }
 
 function saveName() {
-    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#name").val()}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_setprojectname', {'id':project_id} ) }}", {data:$("#name").val(), type:'{{ type }}'}, function (data) {
         $("#name").replaceWith("<p id='name'>" + $("#name").val() + "</p>");
         $("#name_change_link").removeClass("btn btn-primary");
         $("#name_change_link").text("edit");
