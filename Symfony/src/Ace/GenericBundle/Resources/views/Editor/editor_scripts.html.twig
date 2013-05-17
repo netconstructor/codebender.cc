@@ -255,7 +255,7 @@ function loadCode() {
 function createFile() {
     setOperationProgress(90);
     var val = { filename:$("#createfield").val() };
-    $.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data:JSON.stringify(val)}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_createfile', {'id':project_id} ) }}", {data:JSON.stringify(val), type:'{{ type }}'}, function (data) {
         $("#creationModal").modal('hide');
         handleResponse(data);
     });

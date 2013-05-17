@@ -355,6 +355,7 @@ class DefaultController extends Controller
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$data = $this->getRequest()->request->get('data');
+        $type = $this->getRequest()->request->get('type');
 		$data = json_decode($data, true);
 
 		$projectmanager = $this->get('ace_project.sketchmanager');
