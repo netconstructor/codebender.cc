@@ -15,10 +15,10 @@ class LibraryController extends ProjectController
     protected $sl;
 
 
-    public function createprojectAction($user_id, $project_name, $code)
+    public function createprojectAction($user_id, $project_name, $code, $isPublic = true)
 	{
         $retval;
-        $response = parent::createprojectAction($user_id, $project_name, $code)->getContent();
+        $response = parent::createprojectAction($user_id, $project_name, $code, $isPublic)->getContent();
         $response=json_decode($response, true);
 		if($response["success"])
 		{
