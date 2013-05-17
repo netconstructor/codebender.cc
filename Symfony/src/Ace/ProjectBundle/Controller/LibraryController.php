@@ -112,6 +112,27 @@ class LibraryController extends ProjectController
 
     }
 
+    protected function canCreatePersonalLibrary($owner)
+    {
+        $libs = $this->em->getRepository('AceProjectBundle:Library')->findByOwner($owner);
+        $currentLibs = count($libs);
+
+        $prs= $this->em->getRepository('AceProjectBundle:PersonalLibraries')->findByOwner($owner);
+        $maxPersonal = 0;
+        foreach ($prs as $p)
+        {
+            $now = new \DateTime("now");
+            if($now>= $p->getStarts() && ($p->getExpires()==NULL || $now < $p->getExpires()))
+                $maxPersonal+=$p->getNumber();
+        }
+
+        if($currentLibs >= $maxPersonal)
+            return json_encode(array("success" => false, "error" => "Cannot create private project."));
+        else
+            return json_encode(array("success" => true, "available" => $maxPersonal - $currentLibs));
+
+    }
+
     protected function canCreateFile($id, $filename)
     {
         return json_encode(array("success" => true));
