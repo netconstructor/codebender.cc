@@ -56,7 +56,7 @@ function setOperationOutput(output) {
 function save() {
     loadCode();
     setOperationProgress(90);
-    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files)}, function (data) {
+    $.post("{{ path('AceUtilitiesBundle_savecode', {'id': project_id}) }}", {data:JSON.stringify(window.files), type:'{{ type }}' }, function (data) {
         $("#save").addClass("btn-success");
         $("#save_icon").addClass("icon-white");
         data = JSON.parse(data);
@@ -337,7 +337,7 @@ function jsObjClone(obj) {
 	}
 	return objcopy;
 }
-		
+
 function refreshFiles(){
 	loadCode();
 	var filesObj = jsObjClone(window.files);
