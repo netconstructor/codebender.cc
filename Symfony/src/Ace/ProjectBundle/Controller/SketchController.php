@@ -21,8 +21,24 @@ class SketchController extends ProjectController
 	public function createprojectAction($user_id, $project_name, $code, $isPublic = true)
 	{
 		$retval;
-		$response = parent::createprojectAction($user_id, $project_name, $code, $isPublic)->getContent();
-		$response=json_decode($response, true);
+        if(!$isPublic)
+        {
+            $canCreate = json_decode($this->canCreatePrivateProject($user_id),true);
+        }
+        else
+        {
+            $canCreate = array("success" => true);
+        }
+        if($canCreate["success"])
+        {
+            $project = new Project();
+            $response = $this->createAction($user_id, $project_name, "", $isPublic, $project)->getContent();
+            $response=json_decode($response, true);
+        }
+        else
+        {
+            $response = $canCreate;
+        }
 		if($response["success"])
 		{
 			$response2 = $this->createFileAction($response["id"], $project_name.".ino", $code)->getContent();

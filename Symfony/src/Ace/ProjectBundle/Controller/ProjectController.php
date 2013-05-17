@@ -22,32 +22,6 @@ class ProjectController extends Controller
     protected $sl = "unknown";
 
 
-	public function createprojectAction($user_id, $project_name, $code, $isPublic)
-	{
-
-        if(!$isPublic)
-        {
-            $canCreate = json_decode($this->canCreatePrivateProject($user_id),true);
-        }
-        else
-        {
-            $canCreate = array("success" => true);
-        }
-
-        if($canCreate["success"])
-        {
-            $response = $this->createAction($user_id, $project_name, "", $isPublic)->getContent();
-            $response=json_decode($response, true);
-        }
-        else
-        {
-            $response = $canCreate;
-        }
-
-		return new Response(json_encode($response));
-
-	}
-
 	public function listAction($owner)
 	{
         $private_access = false;
@@ -65,13 +39,12 @@ class ProjectController extends Controller
 		return new Response(json_encode($list));
 	}
 
-	public function createAction($owner, $name, $description, $isPublic)
+	public function createAction($owner, $name, $description, $isPublic, $project)
 	{
 		$validName = json_decode($this->nameIsValid($name), true);
 		if(!$validName["success"])
 			return new Response(json_encode($validName));
 
-		$project = new Project();
 		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
 		$project->setOwner($user);
 	    $project->setName($name);
