@@ -7,12 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Ace\ProjectBundle\Entity\Project as Project;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class LibraryController extends ProjectController
 {
     protected $em;
 	protected $fc;
     protected $sl;
+    protected $sc;
 
 
     public function createprojectAction($user_id, $project_name, $code, $isPublic = true)
@@ -155,10 +157,11 @@ class LibraryController extends ProjectController
         return json_encode(array("success" => true));
     }
 
-	public function __construct(EntityManager $entityManager, DiskFilesController $diskFilesController)
+	public function __construct(EntityManager $entityManager, DiskFilesController $diskFilesController,  SecurityContext $securitycontext)
 	{
 	    $this->em = $entityManager;
         $this->fc = $diskFilesController;
         $this->sl = "disk";
+        $this->sc = $securitycontext;
 	}
 }

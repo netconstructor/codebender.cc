@@ -39,4 +39,5 @@ services:
             arguments:
                 entityManager: "@doctrine.orm.entity_manager"
                 diskfilecontroller: "@ace_project.libdiskfilecontroller"
+                storagelayer: "%storagelayer%"
 
