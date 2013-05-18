@@ -4,7 +4,7 @@ namespace Ace\ProjectBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Ace\ProjectBundle\Entity\Project as Project;
+use Ace\ProjectBundle\Entity\Library as Library;
 use Doctrine\ORM\EntityManager;
 use Ace\ProjectBundle\Controller\MongoFilesController;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -30,9 +30,8 @@ class LibraryController extends ProjectController
         }
         if($canCreate["success"])
         {
-            $project=newLibrary();
+            $project=new Library();
             $response = $this->createAction($user_id, $project_name, "", $isPublic, $project)->getContent();
-            $response=json_decode($response, true);
         }
         else
         {
