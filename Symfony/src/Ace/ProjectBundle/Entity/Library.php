@@ -42,7 +42,7 @@ class Library
     /**
 	 * @ORM\Column(type="string", length="255")
 	 */
-    private $libraryfiles_id;
+    private $projectfiles_id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Ace\UserBundle\Entity\User")
@@ -150,9 +150,9 @@ class Library
      *
      * @param string $libraryfilesId
      */
-    public function setLibraryfilesId($libraryfilesId)
+    public function setProjectfilesId($projectfiles_Id)
     {
-        $this->libraryfiles_id = $libraryfilesId;
+        $this->projectfiles_id = $projectfiles_Id;
     }
 
     /**
@@ -160,9 +160,9 @@ class Library
      *
      * @return string 
      */
-    public function getLibraryfilesId()
+    public function getProjectfilesId()
     {
-        return $this->libraryfiles_id;
+        return $this->projectfiles_id;
     }
 
     /**
