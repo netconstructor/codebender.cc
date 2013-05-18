@@ -90,6 +90,11 @@ class LibraryController extends ProjectController
 
 	public function cloneAction($owner, $id)
 	{
+        $canCreate = json_decode($this->canCreatePersonalLibrary($owner),true);
+        if(!$canCreate["success"])
+        {
+            return new Response(json_encode($canCreate));
+        }
         $response = json_decode(parent::cloneAction($owner, $id)->getContent(), true);
         $old_name = json_decode($this->getNameAction($id)->getContent(),true);
         $old_name = $old_name["response"];
