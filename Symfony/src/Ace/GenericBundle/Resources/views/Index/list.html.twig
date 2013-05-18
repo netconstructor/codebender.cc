@@ -144,6 +144,24 @@
 			</p>
 
 		</div>
+
+        <div class="span6">
+            <h3>New Library</h3>
+            <form class="form-search" method='post' action='{{ path('AceUtilitiesBundle_newproject') }}' style="max-width:80%;">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="input-prepend input-append" style="max-width:80%;">
+                            <span class="add-on">Name:</span>
+                            <input type="text" name='project_name' style="max-width:80%;">
+                            <input type="hidden" name='type' value='library'>
+                            <button type="submit" class="btn">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
 		<div class="span6">
 			{% include "AceGenericBundle:Index:donate.html.twig" %}
 		</div>
