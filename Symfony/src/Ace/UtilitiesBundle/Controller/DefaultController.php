@@ -185,11 +185,14 @@ class DefaultController extends Controller
 	{
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
-		$files = $projectmanager->listAction($user["id"])->getContent();
+
+		$files = $this->get('ace_project.sketchmanager')->listAction($user["id"])->getContent();
 		$files=json_decode($files, true);
 
-		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
+        $libs = $this->get('ace_project.librarymanager')->listAction($user["id"])->getContent();
+        $libs=json_decode($libs, true);
+
+        return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files, 'libs'=>$libs));
 	}
 
 	public function downloadAction($id, $type)
