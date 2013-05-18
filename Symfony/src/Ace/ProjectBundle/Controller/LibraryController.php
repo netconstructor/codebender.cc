@@ -21,7 +21,10 @@ class LibraryController extends ProjectController
 	{
         $retval;
 
-        $canCreate = json_decode($this->canCreatePersonalLibrary($user_id),true);
+        if($isPublic)
+            $canCreate = json_decode($this->canCreatePersonalLibrary($user_id),true);
+        else
+            $canCreate = json_decode($this->canCreatePrivateLibrary($user_id),true);
 
         if($canCreate["success"])
         {
@@ -156,10 +159,10 @@ class LibraryController extends ProjectController
 
     protected function canCreatePersonalLibrary($owner)
     {
-        $libs = $this->em->getRepository('AceProjectBundle:Library')->findByOwner($owner);
+        $libs = $this->em->getRepository('AceProjectBundle:Library')->findBy(array('owner' => $owner, 'is_public' => true));
         $currentLibs = count($libs);
 
-        $prs= $this->em->getRepository('AceProjectBundle:PersonalLibraries')->findByOwner($owner);
+        $prs= $this->em->getRepository('AceProjectBundle:PersonalLibraries')->findBy(array('owner' => $owner, 'is_public' => true));
         $maxPersonal = 0;
         foreach ($prs as $p)
         {
@@ -169,7 +172,28 @@ class LibraryController extends ProjectController
         }
 
         if($currentLibs >= $maxPersonal)
-            return json_encode(array("success" => false, "error" => "Cannot create personal library."));
+            return json_encode(array("success" => false, "error" => "Cannot create public personal library."));
+        else
+            return json_encode(array("success" => true, "available" => $maxPersonal - $currentLibs));
+
+    }
+
+    protected function canCreatePrivateLibrary($owner)
+    {
+        $libs = $this->em->getRepository('AceProjectBundle:Library')->findBy(array('owner' => $owner, 'is_public' => false));
+        $currentLibs = count($libs);
+
+        $prs= $this->em->getRepository('AceProjectBundle:PersonalLibraries')->findBy(array('owner' => $owner, 'is_public' => false));
+        $maxPersonal = 0;
+        foreach ($prs as $p)
+        {
+            $now = new \DateTime("now");
+            if($now>= $p->getStarts() && ($p->getExpires()==NULL || $now < $p->getExpires()))
+                $maxPersonal+=$p->getNumber();
+        }
+
+        if($currentLibs >= $maxPersonal)
+            return json_encode(array("success" => false, "error" => "Cannot create private personal library."));
         else
             return json_encode(array("success" => true, "available" => $maxPersonal - $currentLibs));
 
