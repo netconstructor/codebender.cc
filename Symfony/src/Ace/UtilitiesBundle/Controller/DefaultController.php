@@ -39,12 +39,24 @@ class DefaultController extends Controller
 			$text = $utilities->default_text();
 		}
 
-		$response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text, $is_public)->getContent();
-		$response=json_decode($response, true);
-		if($response["success"])
-		{
-			return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
-		}
+        if($type=='sketch')
+        {
+            $response = $this->get('ace_project.sketchmanager')->createprojectAction($user["id"], $project_name, $text, $is_public)->getContent();
+            $response=json_decode($response, true);
+            if($response["success"])
+            {
+                return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+            }
+        }
+        else
+        {
+            $response = $this->get('ace_project.librarymanager')->createprojectAction($user["id"], $project_name, $text, $is_public)->getContent();
+            $response=json_decode($response, true);
+            if($response["success"])
+            {
+                return $this->redirect($this->generateUrl('AceGenericBundle_library',array('id' => $response["id"])));
+            }
+        }
 
 		$this->get('session')->setFlash('error', "Error: ".$response["error"]);
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
