@@ -21,6 +21,8 @@ abstract class ProjectController extends Controller
     protected $sc;
     protected $sl = "unknown";
 
+    abstract public function createprojectAction($user_id, $project_name, $code, $isPublic = true);
+    abstract public function createAction($owner, $name, $description, $isPublic);
 
 	public function listAction($owner)
 	{
@@ -39,34 +41,6 @@ abstract class ProjectController extends Controller
 		return new Response(json_encode($list));
 	}
 
-	public function createAction($owner, $name, $description, $isPublic, $project)
-	{
-		$validName = json_decode($this->nameIsValid($name), true);
-		if(!$validName["success"])
-			return new Response(json_encode($validName));
-
-		$user = $this->em->getRepository('AceUserBundle:User')->find($owner);
-		$project->setOwner($user);
-	    $project->setName($name);
-	    $project->setDescription($description);
-	    $project->setIsPublic($isPublic);
-        $project->setType($this->sl);
-        $response = json_decode($this->fc->createAction(), true);
-
-		if($response["success"])
-		{
-			$id = $response["id"];
-			$project->setProjectfilesId($id);
-
-		    $em = $this->em;
-		    $em->persist($project);
-		    $em->flush();
-
-		    return new Response(json_encode(array("success" => true, "id" => $project->getId())));
-		}
-		else
-			return new Response(json_encode(array("success" => false, "owner_id" => $user->getId(), "name" => $name)));
-	}
 	
 	public function deleteAction($id)
 	{

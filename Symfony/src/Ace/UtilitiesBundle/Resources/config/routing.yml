@@ -41,8 +41,8 @@ AceUtilitiesBundle_renamefile:
     _method:  POST
 
 AceUtilitiesBundle_clone:
-  pattern:  /clone/{id}
-  defaults: { _controller: AceUtilitiesBundle:Default:clone }
+  pattern:  /clone/{type}/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:clone, type:sketch } }
 
 AceUtilitiesBundle_download:
   pattern:  /download/{type}/{id}

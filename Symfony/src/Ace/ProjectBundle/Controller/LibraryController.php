@@ -25,8 +25,7 @@ class LibraryController extends ProjectController
 
         if($canCreate["success"])
         {
-            $project=new Library();
-            $response = json_decode($this->createAction($user_id, $project_name, "", $isPublic, $project)->getContent(), true);
+            $response = json_decode($this->createAction($user_id, $project_name, "", $isPublic)->getContent(), true);
         }
         else
         {
@@ -54,6 +53,36 @@ class LibraryController extends ProjectController
 
 		return new Response(json_encode($retval));
 	}
+
+    public function createAction($owner, $name, $description, $isPublic)
+    {
+        $validName = json_decode($this->nameIsValid($name), true);
+        if(!$validName["success"])
+            return new Response(json_encode($validName));
+
+        $project=new Library();
+        $user = $this->em->getRepository('AceUserBundle:User')->find($owner);
+        $project->setOwner($user);
+        $project->setName($name);
+        $project->setDescription($description);
+        $project->setIsPublic($isPublic);
+        $project->setType($this->sl);
+        $response = json_decode($this->fc->createAction(), true);
+
+        if($response["success"])
+        {
+            $id = $response["id"];
+            $project->setProjectfilesId($id);
+
+            $em = $this->em;
+            $em->persist($project);
+            $em->flush();
+
+            return new Response(json_encode(array("success" => true, "id" => $project->getId())));
+        }
+        else
+            return new Response(json_encode(array("success" => false, "owner_id" => $user->getId(), "name" => $name)));
+    }
 
 
 	public function cloneAction($owner, $id)

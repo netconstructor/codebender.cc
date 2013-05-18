@@ -279,20 +279,25 @@ class DefaultController extends Controller
         return new Response(json_encode($response));
 	}
 
-	public function cloneAction($id)
+	public function cloneAction($id, $type)
 	{
 		syslog(LOG_INFO, "project cloned");
 
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$name = $this->getRequest()->request->get('name');
-
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->cloneAction($user["id"], $id)->getContent();
 		$response = json_decode($response, true);
         if($response['success'])
         {
-            return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+            if($type == 'sketch')
+                return $this->redirect($this->generateUrl('AceGenericBundle_project',array('id' => $response["id"])));
+            else
+                return $this->redirect($this->generateUrl('AceGenericBundle_library',array('id' => $response["id"])));
         }
 		else
         {
