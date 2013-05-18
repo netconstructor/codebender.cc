@@ -163,6 +163,30 @@ class SketchController extends ProjectController
         return new Response($canCreate);
     }
 
+    public function currentPrivateProjectRecordsAction()
+    {
+        $current_user = $this->sc->getToken()->getUser();
+
+        if ($current_user !== "anon.")
+        {
+            $prv = $this->em->getRepository('AceProjectBundle:PrivateProjects')->findByOwner($current_user->getId());
+            $records = array();
+            foreach ($prv as $p)
+            {
+                $now = new \DateTime("now");
+                if ($now >= $p->getStarts() && ($p->getExpires() == NULL || $now < $p->getExpires()))
+                    $records[] = array("description" => $p->getDescription(),
+                        "expires" => $p->getExpires() === null? $p->getExpires() : $p->getExpires()->format('Y-m-d'),
+                        "number" => $p->getNumber());
+            }
+            return new Response(ProjectErrorsHelper::success(ProjectErrorsHelper::SUCC_CUR_USER_PRIV_PROJ_RECORDS_MSG, array("list" => $records)));
+        }
+        else
+            return new Response(ProjectErrorsHelper::fail(ProjectErrorsHelper::FAIL_CUR_USER_PRIV_PROJ_RECORDS_MSG));
+
+    }
+
+
 
     protected function canCreatePrivateProject($owner)
     {
