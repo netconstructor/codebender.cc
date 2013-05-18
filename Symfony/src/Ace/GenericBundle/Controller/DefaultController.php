@@ -72,8 +72,15 @@ class DefaultController extends Controller
 	public function projectAction($id, $type, $embed = false)
 	{
 
-		/** @var SketchController $projectmanager */
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+        {
+            /** @var SketchController $projectmanager */
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        }
+        else
+        {
+            $projectmanager = $this->get('ace_project.librarymanager');
+        }
 		$projects = NULL;
 
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);
@@ -120,9 +127,11 @@ class DefaultController extends Controller
 			{
 				$files[$key]["code"] = htmlspecialchars($file["code"]);
 			}
-
-			$json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_project', array("id" => $id), true)), "user" => array("name" => $owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user', array('user' => $owner['username']), true)), "clone_url" => $this->get('router')->generate('AceUtilitiesBundle_clone', array('id' => $id), true), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download', array('id' => $id), true), "files" => $files);
-			$json = json_encode($json);
+            if($type=='sketch')
+			    $json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_project', array("id" => $id), true)), "user" => array("name" => $owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user', array('user' => $owner['username']), true)), "clone_url" => $this->get('router')->generate('AceUtilitiesBundle_clone', array('id' => $id), true), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download', array('id' => $id), true), "files" => $files);
+			else
+                $json = array("project" => array("name" => $name, "url" => $this->get('router')->generate('AceGenericBundle_library', array("id" => $id), true)), "user" => array("name" => $owner["username"], "url" => $this->get('router')->generate('AceGenericBundle_user', array('user' => $owner['username']), true)), "clone_url" => $this->get('router')->generate('AceUtilitiesBundle_clone', array('id' => $id), true), "download_url" => $this->get('router')->generate('AceUtilitiesBundle_download', array('id' => $id), true), "files" => $files);
+            $json = json_encode($json);
 
 			if ($embed)
 				return $this->render('AceGenericBundle:Default:project_embeddable.html.twig', array("json" => $json));

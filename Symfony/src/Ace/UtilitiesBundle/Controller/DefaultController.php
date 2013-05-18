@@ -13,12 +13,13 @@ class DefaultController extends Controller
 {
 	public function newprojectAction()
 	{
-		syslog(LOG_INFO, "new project");
+        $type = $this->getRequest()->request->get('type');
+		syslog(LOG_INFO, "new project: ".$type);
 
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
 		$project_name = $this->getRequest()->request->get('project_name');
-        $type = $this->getRequest()->request->get('type');
+
 
         $is_public = true;
 

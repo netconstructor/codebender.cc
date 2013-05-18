@@ -10,6 +10,10 @@ AceGenericBundle_project:
     pattern:  /sketch:{id}
     defaults: { _controller: AceGenericBundle:Default:project, type:"sketch"}
 
+AceGenericBundle_library:
+    pattern:  /library:{id}
+    defaults: { _controller: AceGenericBundle:Default:project, type:"library"}
+
 AceGenericBundle_projectfiles:
     pattern:  /files
     defaults: { _controller: AceGenericBundle:Default:projectfiles }
