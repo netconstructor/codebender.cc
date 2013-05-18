@@ -62,20 +62,26 @@ class DefaultController extends Controller
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
-	public function deleteprojectAction($id)
+	public function deleteprojectAction($id, $type)
 	{
 
 		$user = json_decode($this->get('ace_user.usercontroller')->getCurrentUserAction()->getContent(), true);
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->deleteAction($id)->getContent();
 		$response=json_decode($response, true);
 		return $this->redirect($this->generateUrl('AceGenericBundle_index'));
 	}
 
-	public function listFilenamesAction($id, $show_ino)
+	public function listFilenamesAction($id, $show_ino, $type)
 	{
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$files = $projectmanager->listFilesAction($id)->getContent();
 		$files=json_decode($files, true);
 		$files=$files["list"];
@@ -94,9 +100,12 @@ class DefaultController extends Controller
 
 	public function changePrivacyAction($id)
 	{
-		$projectmanager = $this->get('ace_project.sketchmanager');
-
         $type = $this->getRequest()->request->get('type');
+
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 
 		$is_public = json_decode($projectmanager->getPrivacyAction($id)->getContent(), true);
 		$is_public = $is_public["response"];
@@ -110,9 +119,12 @@ class DefaultController extends Controller
 	}
 
     //TODO fix Response
-	public function getDescriptionAction($id)
+	public function getDescriptionAction($id, $type)
 	{
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->getDescriptionAction($id)->getContent();
 		$response=json_decode($response, true);
 		if($response["success"])
@@ -128,8 +140,10 @@ class DefaultController extends Controller
 
 		$description = $this->getRequest()->request->get('data');
         $type = $this->getRequest()->request->get('type');
-
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->setDescriptionAction($id, $description)->getContent();
         return new Response(json_encode($response));
 	}
@@ -142,7 +156,10 @@ class DefaultController extends Controller
 		$new_name = $this->getRequest()->request->get('data');
         $type = $this->getRequest()->request->get('type');
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->renameAction($id, $new_name)->getContent();
 		return new Response($response);
 	}
@@ -156,7 +173,10 @@ class DefaultController extends Controller
 		$new_filename = $this->getRequest()->request->get('newFilename');
         $type = $this->getRequest()->request->get('type');
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->renameFileAction($id, $old_filename, $new_filename)->getContent();
 		return new Response($response);
 	}
@@ -172,14 +192,17 @@ class DefaultController extends Controller
 		return $this->render('AceUtilitiesBundle:Default:sidebar.html.twig', array('files' => $files));
 	}
 
-	public function downloadAction($id)
+	public function downloadAction($id, $type)
 	{
 		syslog(LOG_INFO, "project download");
 
 		$htmlcode = 200;
 		$value = "";
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 
 		$name = $projectmanager->getNameAction($id)->getContent();
 		$name = json_decode($name, true);
@@ -242,7 +265,10 @@ class DefaultController extends Controller
         $type = $this->getRequest()->request->get('type');
 		$files = json_decode($files, true);
         $response;
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		foreach($files as $key => $file)
 		{
 			$response = $projectmanager->setFileAction($id, $key, htmlspecialchars_decode($file))->getContent();
@@ -377,7 +403,10 @@ class DefaultController extends Controller
         $type = $this->getRequest()->request->get('type');
 		$data = json_decode($data, true);
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->createFileAction($id, $data["filename"], "")->getContent();
 		$response = json_decode($response, true);
 		return new Response(json_encode($response));
@@ -391,7 +420,10 @@ class DefaultController extends Controller
         $type = $this->getRequest()->request->get('type');
 		$data = json_decode($data, true);
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+            $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$response = $projectmanager->deleteFileAction($id, $data["filename"])->getContent();
 		$response = json_decode($response, true);
         return new Response(json_encode($response));

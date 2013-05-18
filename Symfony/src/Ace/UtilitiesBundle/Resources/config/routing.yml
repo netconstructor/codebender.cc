@@ -5,12 +5,12 @@ AceUtilitiesBundle_newproject:
        _method:  POST
 
 AceUtilitiesBundle_deleteproject:
-   pattern:  /deleteproject/{id}
-   defaults: { _controller: AceUtilitiesBundle:Default:deleteproject }
+   pattern:  /deleteproject/{type}/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:deleteproject, type:sketch}
 
 AceUtilitiesBundle_listfilenames:
-   pattern:  /listfilenames/{id}/{show_ino}
-   defaults: { _controller: AceUtilitiesBundle:Default:listFilenames }
+   pattern:  /listfilenames/{type}/{id}/{show_ino}
+   defaults: { _controller: AceUtilitiesBundle:Default:listFilenames, type:sketch}
 
 AceUtilitiesBundle_changeprivacy:
    pattern:  /changeprivacy/{id}
@@ -19,8 +19,8 @@ AceUtilitiesBundle_changeprivacy:
       _method:  POST
 
 AceUtilitiesBundle_getprojectdescription:
-   pattern:  /getprojectdescription/{id}
-   defaults: { _controller: AceUtilitiesBundle:Default:getDescription }
+   pattern:  /getprojectdescription/{type}/{id}
+   defaults: { _controller: AceUtilitiesBundle:Default:getDescription, type:sketch}
 
 AceUtilitiesBundle_setprojectdescription:
    pattern:  /setprojectdescription/{id}
@@ -45,8 +45,8 @@ AceUtilitiesBundle_clone:
   defaults: { _controller: AceUtilitiesBundle:Default:clone }
 
 AceUtilitiesBundle_download:
-  pattern:  /download/{id}
-  defaults: { _controller: AceUtilitiesBundle:Default:download }
+  pattern:  /download/{type}/{id}
+  defaults: { _controller: AceUtilitiesBundle:Default:download, type:sketch }
 
 AceUtilitiesBundle_log:
   pattern:  /log/{message}

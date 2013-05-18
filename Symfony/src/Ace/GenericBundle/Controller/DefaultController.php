@@ -144,8 +144,12 @@ class DefaultController extends Controller
 		header('Access-Control-Allow-Origin: *');
 
 		$id = $this->getRequest()->request->get('project_id');
+        $type = $this->getRequest()->request->get('type');
 
-		$projectmanager = $this->get('ace_project.sketchmanager');
+        if($type == 'sketch')
+		    $projectmanager = $this->get('ace_project.sketchmanager');
+        else
+            $projectmanager = $this->get('ace_project.librarymanager');
 		$projects = NULL;
 
 		$project = json_decode($projectmanager->checkExistsAction($id)->getContent(), true);

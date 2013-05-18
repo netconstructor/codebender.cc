@@ -20,24 +20,19 @@ class LibraryController extends ProjectController
     public function createprojectAction($user_id, $project_name, $code, $isPublic = true)
 	{
         $retval;
-        if(!$isPublic)
-        {
-            $canCreate = json_decode($this->canCreatePersonalLibrary($user_id),true);
-        }
-        else
-        {
-            $canCreate = array("success" => true);
-        }
+
+        $canCreate = json_decode($this->canCreatePersonalLibrary($user_id),true);
+
         if($canCreate["success"])
         {
             $project=new Library();
-            $response = $this->createAction($user_id, $project_name, "", $isPublic, $project)->getContent();
+            $response = json_decode($this->createAction($user_id, $project_name, "", $isPublic, $project)->getContent(), true);
         }
         else
         {
             $response = $canCreate;
         }
-        $response=json_decode($response, true);
+
 		if($response["success"])
 		{
 			$response2 = $this->createFileAction($response["id"], $project_name.".h", $code)->getContent();
@@ -145,7 +140,7 @@ class LibraryController extends ProjectController
         }
 
         if($currentLibs >= $maxPersonal)
-            return json_encode(array("success" => false, "error" => "Cannot create private project."));
+            return json_encode(array("success" => false, "error" => "Cannot create personal library."));
         else
             return json_encode(array("success" => true, "available" => $maxPersonal - $currentLibs));
 
