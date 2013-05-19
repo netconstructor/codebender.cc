@@ -7,6 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProjectControllerPrivateTester extends ProjectController
 {
+    public function createprojectAction($user_id, $project_name, $code, $isPublic = true){}
+    public function createAction($owner, $name, $description, $isPublic){}
+    protected function getProjectsRepository(){}
+
     public function call_canCreatePrivateProject($owner)
     {
         return $this->canCreatePrivateProject($owner);
@@ -35,51 +39,19 @@ class ProjectControllerPrivateTester extends ProjectController
         return $this->nameExists($owner,$name);
     }
 
+    public function __construct($entityManager, $filesController, $securitycontext)
+    {
+        $this->em = $entityManager;
+        $this->sc = $securitycontext;
+        $this->fc = $filesController;
+    }
+
 }
 
 class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 {
 
     protected $project;
-
-    //---createprojectAction
-    public function testCreateprojectAction_CanCreatePrivate()
-    {
-        $controller = $this->setUpController($em, $fc, $security, array("canCreatePrivateProject", "createAction"));
-        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":true}'));
-        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1),$this->equalTo("projectName"),$this->equalTo(""),$this->equalTo(false))->will($this->returnValue( new Response('{"success":true,"id":1}')));
-
-        $response = $controller->createprojectAction(1,"projectName", "", false);
-        $this->assertEquals($response->getContent(), '{"success":true,"id":1}');
-    }
-
-    public function testCreateprojectAction_CannotCreatePrivate()
-    {
-        $controller = $this->setUpController($em, $fc, $security, array("canCreatePrivateProject", "createAction"));
-        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"error":"Cannot create private project."}'));
-
-
-        $response = $controller->createprojectAction(1,"projectName", "", false);
-        $this->assertEquals($response->getContent(), '{"success":false,"error":"Cannot create private project."}');
-    }
-
-    public function testCreateprojectAction_CanCreatePublic()
-    {
-        $controller = $this->setUpController($em, $fc, $security, array("createAction"));
-        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1),$this->equalTo("projectName"),$this->equalTo(""),$this->equalTo(true))->will($this->returnValue( new Response('{"success":true,"id":1}')));
-
-        $response = $controller->createprojectAction(1,"projectName", "", true);
-        $this->assertEquals($response->getContent(), '{"success":true,"id":1}');
-    }
-
-    public function testCreateprojectAction_CannotCreatePublic()
-    {
-        $controller = $this->setUpController($em, $fc, $security, array("createAction"));
-        $controller->expects($this->once())->method('createAction')->with($this->equalTo(1),$this->equalTo("projectName"),$this->equalTo(""),$this->equalTo(true))->will($this->returnValue( new Response('{"success":false,"owner_id":1,"name":"projectName"}')));
-
-        $response = $controller->createprojectAction(1,"projectName", "", true);
-        $this->assertEquals($response->getContent(), '{"success":false,"owner_id":1,"name":"projectName"}');
-    }
 
 	//---listAction
 	public function testListAction_Empty()
@@ -95,11 +67,11 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('findByOwner'))
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
 
-        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
         $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array()));
         $response = $controller->listAction(1);
         $this->assertEquals($response->getContent(), "[]");
@@ -126,11 +98,11 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
 
-        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
         $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array($private,$public)));
 
         $public->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(true));
@@ -167,12 +139,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(2));
 
-        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
         $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array($private,$public)));
 
         $public->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(true));
@@ -209,12 +181,12 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
         $token->expects($this->once())->method('getUser')->will($this->returnValue($user));
         $user->expects($this->once())->method('getID')->will($this->returnValue(1));
 
-        $em->expects($this->once())->method('getRepository')->with('AceProjectBundle:Project')->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
         $repo->expects($this->once())->method('findByOwner')->with(1)->will($this->returnValue(array($private,$public)));
 
         $public->expects($this->exactly(2))->method('getIsPublic')->will($this->returnValue(true));
@@ -231,60 +203,6 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $response = $controller->listAction(1);
         $this->assertEquals($response->getContent(),'[{"id":null,"name":null,"description":null,"is_public":false},{"id":1,"name":"name","description":"description","is_public":true}]');
     }
-	//---createAction
-    public function testCreateAction_Yes()
-    {
-        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array("find"))
-            ->getMock();
-        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
-        $controller->expects($this->once())->method("nameIsValid")->with($this->equalTo("projectName"))->will($this->returnValue('{"success":true}'));
-
-        $em->expects($this->once())->method("getRepository")->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
-        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($user));
-        $fc->expects($this->once())->method('createAction')->will($this->returnValue('{"success":true,"id":1234567890}'));
-        $em->expects($this->once())->method('persist');
-        $em->expects($this->once())->method('flush');
-
-        $response = $controller->createAction(1,'projectName','des',true);
-        $this->assertEquals($response->getContent(), '{"success":true,"id":null}');
-    }
-    public function testCreateAction_No()
-    {
-        $repo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array("find"))
-            ->getMock();
-        $user = $this->getMockBuilder('Ace\UserBundle\Entity\User')
-            ->disableOriginalConstructor()
-            ->setMethods(array("getId"))
-            ->getMock();
-
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
-        $controller->expects($this->once())->method("nameIsValid")->with($this->equalTo("projectName"))->will($this->returnValue('{"success":true}'));
-
-        $em->expects($this->once())->method("getRepository")->with($this->equalTo('AceUserBundle:User'))->will($this->returnValue($repo));
-        $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($user));
-        $fc->expects($this->once())->method('createAction')->will($this->returnValue('{"success":false}'));
-        $user->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $response = $controller->createAction(1,'projectName','des',true);
-        $this->assertEquals($response->getContent(), '{"success":false,"owner_id":1,"name":"projectName"}');
-    }
-    public function testCreateAction_InvalidName()
-    {
-
-        $controller = $this->setUpController($em, $fc, $security, array("nameIsValid"));
-        $controller->expects($this->once())->method("nameIsValid")->with($this->equalTo("projectName"))->will($this->returnValue('{"success":false,"error":"Invalid Name. Please enter a new one."}'));
-
-        $response = $controller->createAction(1,'projectName','des',true);
-        $this->assertEquals($response->getContent(), '{"success":false,"error":"Invalid Name. Please enter a new one."}');
-    }
-
 
 	//---deleteAction
     public function testDeleteAction_CanDelete()
@@ -575,9 +493,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getProjectsRepository'));
         $controller->expects($this->once())->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"message":"Read Permissions Granted."}'));
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
         $controller->getNameAction(1);
 
@@ -1018,9 +936,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
 
         $repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('p'))->will($this->returnValue($qb));
@@ -1062,9 +980,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction', 'getProjectsRepository'));
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
 
         $repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('p'))->will($this->returnValue($qb));
@@ -1074,10 +992,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
 
         $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $controller->expects($this->at(0))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
         $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(2))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
 
@@ -1109,9 +1027,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
 
         $repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('p'))->will($this->returnValue($qb));
@@ -1153,9 +1071,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
 
-        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('checkReadProjectPermissions', 'getOwnerAction', 'getProjectsRepository'));
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
 
         $repo->expects($this->once())->method('createQueryBuilder')->with($this->equalTo('p'))->will($this->returnValue($qb));
@@ -1165,10 +1083,10 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
         $query->expects($this->once())->method('getResult')->will($this->returnValue($projects));
 
         $notAccessible->expects($this->once())->method('getId')->will($this->returnValue(1));
-        $controller->expects($this->at(0))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
+        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(1))->will($this->returnValue('{"success":false}'));
 
         $accessible->expects($this->exactly(3))->method('getId')->will($this->returnValue(2));
-        $controller->expects($this->at(1))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
+        $controller->expects($this->at(2))->method('checkReadProjectPermissions')->with($this->equalTo(2))->will($this->returnValue('{"success":true}'));
 
         $controller->expects($this->once())->method('getOwnerAction')->with($this->equalTo(2))->will($this->returnValue(new Response('{"success":true,"response":{"id":"1","username":"mthrfck","firstname":"John","lastname":"Doe"}}')));
 
@@ -1190,9 +1108,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
 
-        $em->expects($this->exactly(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
         $response = $controller->checkExistsAction(1);
         $this->assertEquals($response->getContent(), json_encode(array("success" => true)));
@@ -1210,9 +1128,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
         $response = $controller->checkExistsAction(1);
         $this->assertEquals($response->getContent(), json_encode(array("success" => false)));
@@ -1230,9 +1148,9 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
         $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($this->project));
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
 
         $response = $controller->getProjectById(1);
         $this->assertEquals($response, $this->project);
@@ -1252,11 +1170,13 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array("find"))
             ->getMock();
 
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectsRepository'));
+
+        $controller->expects(($this->once()))->method('getProjectsRepository')->will($this->returnValue($repo));
+
         $repo->expects($this->once())->method('find')->with($this->equalTo(1))->will($this->returnValue($project));
 
-        $controller = $this->setUpController($em, $fc, $security, NULL);
 
-        $em->expects($this->once())->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($repo));
 
         $controller->getProjectById(1);
 
@@ -1300,262 +1220,11 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    //---canCreatePrivateProjectAction
-    public function testCanCreatePrivateProjectAction_Yes()
-    {
-        $controller = $this->setUpController($em, $fc, $security, array('canCreatePrivateProject'));
-        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":true,"availiable":1}'));
-        $response = $controller->canCreatePrivateProjectAction(1);
-        $this->assertEquals($response->getContent(), '{"success":true,"availiable":1}');
-    }
-
-    //---canCreatePrivateProjectAction
-    public function testCanCreatePrivateProjectAction_No()
-    {
-        $controller = $this->setUpController($em, $fc, $security, array('canCreatePrivateProject'));
-        $controller->expects($this->once())->method('canCreatePrivateProject')->with($this->equalTo(1))->will($this->returnValue('{"success":false,"error":"Cannot create private project."}'));
-        $response = $controller->canCreatePrivateProjectAction(1);
-        $this->assertEquals($response->getContent(), '{"success":false,"error":"Cannot create private project."}'
-        );
-    }
-
-    //---canCreatePrivateProject
-	public function testCanCreatePrivateProject_YesFromValid()
-	{
-        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $valid = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-
-        $prv = array($expired, $valid);
-
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
-
-        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
-        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($private,$public)));
-        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
-
-        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
-        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue($prv));
-
-        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
-
-        $valid->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $valid->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('3102-01-01')));
-        $valid->expects($this->once())->method('getNumber')->will($this->returnValue(2));
-
-        $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":true,"available":1}');
-	}
-
-    public function testCanCreatePrivateProject_YesFromValidThatNeverExpires()
-    {
-        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $valid = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-
-        $prv = array($expired, $valid);
-
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
-
-        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
-        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($private,$public)));
-        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
-
-        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
-        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue($prv));
-
-        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
-
-        $valid->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $valid->expects($this->once())->method('getExpires')->will($this->returnValue(NULL));
-        $valid->expects($this->once())->method('getNumber')->will($this->returnValue(2));
-
-        $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":true,"available":1}');
-    }
-
-    public function testCanCreatePrivateProject_NoHaveNoPrivate()
-    {
-
-
-        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
-
-        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
-        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($public)));
-        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-
-
-        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
-        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array()));
-
-        $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":false,"error":"Cannot create private project."}');
-    }
-
-    public function testCanCreatePrivateProject_NoExpired()
-    {
-
-
-
-        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
-
-        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
-        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($public)));
-        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-
-
-        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
-        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($expired)));
-
-        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
-
-        $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":false,"error":"Cannot create private project."}'
-        );
-    }
-
-    public function testCanCreatePrivateProject_AlreadyHasMany()
-    {
-        $private = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $public = $this->getMockBuilder('Ace\ProjectBundle\Entity\Project')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $projRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $prvRepo = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-            ->disableOriginalConstructor()
-            ->setMethods(array('findByOwner'))
-            ->getMock();
-
-        $expired = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $valid = $this->getMockBuilder('Ace\ProjectBundle\Entity\PrivateProjects')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-
-        $prv = array($expired, $valid);
-
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
-
-        $em->expects($this->at(0))->method('getRepository')->with($this->equalTo('AceProjectBundle:Project'))->will($this->returnValue($projRepo));
-        $projRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue(array($private,$public)));
-        $public->expects($this->once())->method('getIsPublic')->will($this->returnValue(true));
-        $private->expects($this->once())->method('getIsPublic')->will($this->returnValue(false));
-
-        $em->expects($this->at(1))->method('getRepository')->with($this->equalTo('AceProjectBundle:PrivateProjects'))->will($this->returnValue($prvRepo));
-        $prvRepo->expects($this->once())->method('findByOwner')->with($this->equalTo(1))->will($this->returnValue($prv));
-
-        $expired->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $expired->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('2011-01-01')));
-
-        $valid->expects($this->once())->method('getStarts')->will($this->returnValue(new \DateTime('2010-01-01')));
-        $valid->expects($this->exactly(2))->method('getExpires')->will($this->returnValue(new \DateTime('3102-01-01')));
-        $valid->expects($this->once())->method('getNumber')->will($this->returnValue(1));
-
-        $response = $controller->call_canCreatePrivateProject(1);
-        $this->assertEquals($response, '{"success":false,"error":"Cannot create private project."}');
-    }
-
 
     //---canCreateFile
     public function testCanCreateFile()
     {
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, NULL);
         $response = $controller->call_canCreateFile(1,"filename");
         $this->assertEquals($response,'{"success":true}');
 
@@ -1564,14 +1233,14 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     //---nameIsValid
     public function testNameIsValid_Yes()
     {
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, NULL);
         $response = $controller->call_nameIsValid("Valid Project Name");
         $this->assertEquals($response,'{"success":true}');
 
     }
     public function testNameIsValid_No()
     {
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, NULL);
+        $controller = $this->setUpController($em, $fc, $security, NULL);
         $response = $controller->call_nameIsValid("Invalid/ Project/ Name");
         $this->assertEquals($response,'{"success":false,"error":"Invalid Name. Please enter a new one."}');
 
@@ -1588,7 +1257,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1613,7 +1282,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1642,7 +1311,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1665,7 +1334,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1691,7 +1360,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1719,7 +1388,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1741,7 +1410,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('getProjectById'));
+        $controller = $this->setUpController($em, $fc, $security, array('getProjectById'));
 
         $controller->expects($this->once())->method('getProjectById')->with($this->equalTo(1))->will($this->returnValue($this->project));
         $security->expects($this->once())->method('getToken')->will($this->returnValue($token));
@@ -1755,7 +1424,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     //---nameExists
     public function testNameExists_Yes()
     {
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('listAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('listAction'));
         $controller->expects($this->once())->method('listAction')->with($this->equalTo(1))->will($this->returnValue(new Response('[{"id":1,"name":"name 1","description":"desc","is_public":true},{"id":2,"name":"name 2","description":"des","is_public":false}]')));
 
         $response = $controller->call_nameExists(1, "name 1");
@@ -1765,7 +1434,7 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
 
     public function testNameExists_No()
     {
-        $controller = $this->setUpPrivateTesterController($em, $fc, $security, array('listAction'));
+        $controller = $this->setUpController($em, $fc, $security, array('listAction'));
         $controller->expects($this->once())->method('listAction')->with($this->equalTo(1))->will($this->returnValue(new Response('[{"id":1,"name":"name 1","description":"desc","is_public":true},{"id":2,"name":"name 2","description":"des","is_public":false}]')));
 
         $response = $controller->call_nameExists(1, "name 3");
@@ -1782,23 +1451,6 @@ class ProjectControllerUnitTest extends \PHPUnit_Framework_TestCase
     }
 
     private function setUpController(&$em, &$fc, &$security, $m)
-    {
-        $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $security = $this->getMockBuilder('Symfony\Component\Security\Core\SecurityContext')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $fc = $this->getMockBuilder('Ace\ProjectBundle\Controller\FilesController')
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
-
-        $controller = $this->getMock('Ace\ProjectBundle\Controller\ProjectController', $methods = $m, $arguments = array($em, $fc, $security));
-        return $controller;
-    }
-    private function setUpPrivateTesterController(&$em, &$fc, &$security, $m)
     {
         $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
