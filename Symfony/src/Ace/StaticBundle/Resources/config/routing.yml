@@ -45,3 +45,7 @@ AceStaticBundle_info_karma:
 AceStaticBundle_info_private_projects:
     pattern:  /info/private_projects
     defaults: { _controller: AceStaticBundle:Default:infoPrivateProjects }
+
+AceStaticBundle_upload_bootloader:
+    pattern:  /upload/bootloader
+    defaults: { _controller: AceStaticBundle:Default:uploadBootloader}
