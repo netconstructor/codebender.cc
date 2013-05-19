@@ -105,6 +105,7 @@ class DefaultController extends Controller
 	{
 		if (file_exists(__DIR__."/../Resources/views/Walkthrough/page".intval($page).".html.twig"))
 		{
+			$this->get('ace_user.usercontroller')->setWalkthroughStatusAction(intval($page));
 			return $this->render('AceStaticBundle:Walkthrough:page'.intval($page).'.html.twig', array("page" => intval($page)));
 		}
 
