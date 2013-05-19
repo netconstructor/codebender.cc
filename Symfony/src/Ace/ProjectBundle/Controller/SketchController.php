@@ -2,6 +2,7 @@
 
 namespace Ace\ProjectBundle\Controller;
 
+use Ace\ProjectBundle\Helper\ProjectErrorsHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Ace\ProjectBundle\Entity\Project as Project;
