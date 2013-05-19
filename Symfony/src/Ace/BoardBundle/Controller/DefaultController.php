@@ -3,6 +3,7 @@
 namespace Ace\BoardBundle\Controller;
 
 use Ace\BoardBundle\Entity\Board;
+use Ace\BoardBundle\Entity\PersonalBoards;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,22 @@ class DefaultController extends Controller
     protected $em;
     protected $sc;
     protected $container;
+
+    public function createBoardsPlanAction($owner, $description, $starts, $expires, $number)
+    {
+        $plan = new PersonalBoards();
+
+        $plan->setOwner($this->em->getRepository('AceUserBundle:User')->find($owner));
+        $plan->setDescription($description);
+        $plan->setStarts($starts);
+        $plan->setExpires($expires);
+        $plan->setNumber($number);
+
+        $this->em->persist($plan);
+        $this->em->flush();
+
+        return new Response(json_encode(array("success" => true, "id" => $plan->getId())));
+    }
 
 	public function listAction()
 	{

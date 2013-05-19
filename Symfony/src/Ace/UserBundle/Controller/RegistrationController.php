@@ -110,6 +110,7 @@ class RegistrationController extends BaseController
 		$user = json_decode($this->container->get('ace_user.usercontroller')->getUserAction($username)->getContent(), true);
 		$this->container->get('ace_project.sketchmanager')->createprojectAction($user["id"], "Blink Example", $first_code)->getContent();
 		$this->container->get('ace_project.sketchmanager')->createprojectAction($user["id"], "Serial Comm Example", $second_code)->getContent();
+        $this->container->get('ace_board.defaultcontroller')->createBoardsPlanAction($user["id"], 'Signup Gift', new \DateTime('now'), NULL, 2);
 
 		if ($user["referrer_username"])
 			$referrer = json_decode($this->container->get('ace_user.usercontroller')->getUserAction($user["referrer_username"])->getContent(), true);
