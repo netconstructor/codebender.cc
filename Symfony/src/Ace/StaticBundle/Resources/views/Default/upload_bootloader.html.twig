@@ -32,7 +32,7 @@
                                 window.programmers[$("#programmer").val()]["communication"] == "serial" ? device :
                                         window.programmers[$("#programmer").val()]["communication"] == "usb" ? "usb":"" ,
                                 window.programmers[$("#programmer").val()]["speed"],
-                                window.selectedBoard["upload"]["protocol"],
+                                window.selectedBoard["build"]["mcu"],
                                 window.programmers[$("#programmer").val()]["protocol"],
                                 window.programmers[$("#programmer").val()]["force"],
                                 window.selectedBoard["bootloader"]["unlock_bits"],
@@ -138,9 +138,8 @@
 
     {% block mainspan %}
         <h3>Upload Bootloader</h3>
-        <p>Please select your device and usb port from the lists bellow and click start the begin the upload.</p>
-        <div id="step_output_text"><p>Please select your board from the list below and then click on 'Start'</p></div>
-        {#TODO: add programmers here! #}
+        <p>Please select your programmer, device and usb port from the lists bellow and click start the begin the upload.</p>
+
         <div id="programmers_div">
             <select id="programmer">
                 <script type="text/javascript">window.programmers = {};</script>
