@@ -30,6 +30,8 @@ twig:
         compiler: %compiler%
         sender: %sender%
         library: %library%
+        islocalhost: %islocalhost%
+
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -113,3 +115,5 @@ doctrine_mongodb:
             auto_mapping: true
 
 services:
+
+
