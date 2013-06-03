@@ -418,14 +418,8 @@ class DefaultController extends Controller
 				 $code = fread($file, filesize($_FILES["files"]["tmp_name"][0]));
 				 fclose($file);
 
-			     $sketch_id = $upload_handler->createUploadedProject($project_name);
-					if(isset($sketch_id)){
-						if(!$upload_handler->createUploadedFile($sketch_id, $file_name, $code)){
-							$info = $upload_handler->post("Error creating file.");
-							$json = json_encode($info);
-							return new Response($json);
-						}
-					}else {
+			     $sketch_id = $upload_handler->createUploadedProject($project_name, $code);
+					if(!isset($sketch_id)){
 							$info = $upload_handler->post("Error creating Project.");
 							$json = json_encode($info);
 							return new Response($json);
@@ -495,14 +489,8 @@ class DefaultController extends Controller
 			if($count == 1){
 
 				if(mb_detect_encoding($code, 'UTF-8', true) !== false){
-					$sketch_id = $upload_handler->createUploadedProject($project_name);
-					if(isset($sketch_id)){
-						if(!$upload_handler->createUploadedFile($sketch_id, $project_name, $code)){
-							$info = $upload_handler->post("Error creating file.");
-							$json = json_encode($info);
-							return new Response($json);
-						}
-					}else {
+					$sketch_id = $upload_handler->createUploadedProject($project_name, $code);
+					if(!isset($sketch_id)){
 							$info = $upload_handler->post("Error creating Project.");
 							$json = json_encode($info);
 							return new Response($json);
