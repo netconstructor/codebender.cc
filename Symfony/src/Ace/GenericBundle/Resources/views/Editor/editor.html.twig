@@ -217,19 +217,18 @@
 					"{{file['filename']}}":"{{file['code'] | e('js')}}",
 				{% endfor %}
 			};
-			
+
 			{% if files[0] is defined %}
 				window.selectedFile = "{{files[0]['filename']}}";
 				$(".filelist")[0].setAttribute("style", "font-weight:bold;");
 			{% endif %}
 
 			window.binary = null;
-			$("#progress").hide();
 			$("#line_count").html(editor.getSession().getValue().split("\n").length);
 
 			//Check for dirty state(unsaved changes)
 			window.savedfiles = refreshFiles();
-			
+
 			window.onbeforeunload = function () {
 				if(window.youShallNotPass){
 					window.currentfiles = refreshFiles();
@@ -239,7 +238,7 @@
 				else
 					window.youShallNotPass = true;
 			}
-			
+
 			$("#save").on('click', function(){
 				window.savedfiles = refreshFiles();
 			});
@@ -344,7 +343,7 @@
 					<div id="cb_cf" data-sketch="{{ project_id }}" data-sections="verify usbflash serialmonitor"></div>
 
 
-                    <div id="progress" class="progress progress-striped active">
+                    <div id="progress" class="progress progress-striped active" style="display:none;">
                         <div id="progress_val" class="bar" style="width: 40%;"></div>
                     </div>
                 </div>

@@ -327,7 +327,7 @@ function jsObjEquals(obj1, obj2) {
 	}
 	return true;
 }
-		
+
 //Manual shallow js object copy - faster than .extend()
 function jsObjClone(obj) {
 	var objcopy = {};
@@ -337,7 +337,7 @@ function jsObjClone(obj) {
 	}
 	return objcopy;
 }
-		
+
 function refreshFiles(){
 	loadCode();
 	var filesObj = jsObjClone(window.files);
