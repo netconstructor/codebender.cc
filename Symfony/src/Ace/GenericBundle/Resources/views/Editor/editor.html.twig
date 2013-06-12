@@ -200,6 +200,25 @@
         //editor specific stuff
 		var editor;
 		$(document).ready(function () {
+
+			$.ajaxSetup({
+				cache: true
+			});
+			$.getScript("{{ asset("astyle.js") }}")
+					.done(function (script, textStatus)
+					{
+						js_format_string = Module.cwrap('js_format_string', 'string', ['string']);
+						autoFormat =
+								function ()
+								{
+									editor.getSession().setValue(js_format_string(editor.getSession().getValue()));
+								}
+						$.ajaxSetup({
+							cache: false
+						});
+
+					});
+
 			editor = ace.edit("editor");
 			editor.setTheme("ace/theme/textmate");
 			editor.getSession().setMode("ace/mode/c_cpp");
