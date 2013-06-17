@@ -1,16 +1,16 @@
 {# src/Ace/UserBundle/Resources/views/User/resetting.email.twig #}
 
-{% block subject %}Welcome to codebender{% endblock %}
+{% block subject %}Welcome to {{ site_name }}{% endblock %}
 
 {% block body_text %}
 {% autoescape false %}
 Hello {{ user.username }} !
 
-Welcome to codebender.
+Welcome to {{ site_name }}.
 To finish activating your account - please visit {{ confirmationUrl }}
 
 Regards,
-the codebender team
+the {{ site_name }} team
 
 {% endautoescape %}
 {% endblock %}
